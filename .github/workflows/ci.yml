@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main, "feat/**", "fix/**"]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  lint-and-validate:
+    name: Lint & Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: ".claude/package.json"
+
+      - name: Validate settings.json
+        run: |
+          node -e "
+            const fs = require('fs');
+            const settings = JSON.parse(fs.readFileSync('.claude/settings.json', 'utf8'));
+            console.log('✅ .claude/settings.json is valid JSON');
+            const hooks = settings.hooks || {};
+            const events = Object.keys(hooks);
+            console.log('✅ Hook events configured:', events.join(', '));
+          "
+
+      - name: Validate CLAUDE.md size
+        run: |
+          lines=$(wc -l < CLAUDE.md)
+          echo "CLAUDE.md: $lines lines"
+          if [ "$lines" -gt 250 ]; then
+            echo "❌ CLAUDE.md exceeds 250 lines ($lines). Split into .claude/rules/ to maintain quality."
+            exit 1
+          fi
+          echo "✅ CLAUDE.md within size limit"
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "🔍 Scanning for hardcoded secrets..."
+          # Scan for common secret patterns (not in .env.example or docs)
+          if grep -rn \
+            -e 'password\s*=\s*"[^$][^"]\{4,\}"' \
+            -e 'api_key\s*=\s*"[^$][^"]\{4,\}"' \
+            -e 'secret\s*=\s*"[^$][^"]\{4,\}"' \
+            -e '"sk-[A-Za-z0-9]\{20,\}"' \
+            -e '"ghp_[A-Za-z0-9]\{20,\}"' \
+            -e '"xoxb-[A-Za-z0-9-]\{20,\}"' \
+            --include="*.py" --include="*.js" --include="*.ts" \
+            --include="*.json" --include="*.yaml" --include="*.yml" \
+            --exclude-dir=".git" --exclude="*.example" \
+            . 2>/dev/null; then
+            echo "❌ Potential hardcoded secrets detected!"
+            exit 1
+          fi
+          echo "✅ No hardcoded secrets found"
+
+      - name: Validate skill frontmatter
+        run: |
+          echo "🔍 Checking skill SKILL.md files for YAML frontmatter..."
+          missing=0
+          for skill_file in $(find .claude/skills -name "SKILL.md" 2>/dev/null); do
+            if ! head -1 "$skill_file" | grep -q "^---$"; then
+              echo "❌ Missing YAML frontmatter: $skill_file"
+              missing=$((missing + 1))
+            fi
+          done
+          if [ "$missing" -gt 0 ]; then
+            echo "❌ $missing skill(s) missing YAML frontmatter"
+            exit 1
+          fi
+          echo "✅ All skills have YAML frontmatter"
+
+      - name: Validate agent frontmatter
+        run: |
+          echo "🔍 Checking agent .md files for YAML frontmatter..."
+          missing=0
+          for agent_file in $(find .claude/agents -name "*.md" 2>/dev/null); do
+            if ! head -1 "$agent_file" | grep -q "^---$"; then
+              echo "❌ Missing YAML frontmatter: $agent_file"
+              missing=$((missing + 1))
+            fi
+          done
+          if [ "$missing" -gt 0 ]; then
+            echo "❌ $missing agent(s) missing YAML frontmatter"
+            exit 1
+          fi
+          echo "✅ All agents have YAML frontmatter"
+
+      - name: Check no .env files committed
+        run: |
+          if find . -name ".env" -not -name ".env.example" -not -path "./.git/*" | grep -q .; then
+            echo "❌ .env file(s) committed! Remove them and add to .gitignore"
+            find . -name ".env" -not -name ".env.example" -not -path "./.git/*"
+            exit 1
+          fi
+          echo "✅ No .env files committed"
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/owasp-top-ten
+            p/secrets
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+        continue-on-error: true  # Don't block CI if Semgrep token not configured

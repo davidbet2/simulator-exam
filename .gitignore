@@ -1,0 +1,94 @@
+# =============================================================================
+# SECRETS & ENTORNO LOCAL
+# =============================================================================
+.env
+.env.local
+.env.*.local
+*.secret
+
+# =============================================================================
+# CLAUDE CODE — Configuración local (overrides privados)
+# =============================================================================
+.claude/settings.local.json
+CLAUDE.local.md
+migration-plan.md
+
+# =============================================================================
+# MEMORIA DE SESIONES (generada automáticamente, no commitear)
+# =============================================================================
+memory/sessions/*.jsonl
+memory/sessions/*.md
+memory/sessions/compact-summaries/
+memory/sessions/quality-issues.jsonl
+# Mantener la carpeta con .gitkeep
+!memory/sessions/.gitkeep
+
+# =============================================================================
+# DEPENDENCIAS
+# =============================================================================
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.eggs/
+
+# =============================================================================
+# BUILDS & ARTEFACTOS
+# =============================================================================
+dist/
+build/
+out/
+target/
+*.class
+*.jar
+*.war
+
+# =============================================================================
+# LOGS
+# =============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =============================================================================
+# IDEs & EDITORES
+# =============================================================================
+.vscode/settings.json
+.vscode/launch.json
+.vscode/*.code-workspace
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =============================================================================
+# TESTING & COBERTURA
+# =============================================================================
+coverage/
+.coverage
+.pytest_cache/
+.nyc_output/
+htmlcov/
+
+# =============================================================================
+# SISTEMA OPERATIVO
+# =============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini

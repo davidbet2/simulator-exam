@@ -1,0 +1,28 @@
+# Normalizar line endings: LF en el repo, conversión automática en checkout
+* text=auto eol=lf
+
+# Archivos explícitamente de texto
+*.md text eol=lf
+*.py text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf
+*.env.example text eol=lf
+
+# Scripts de shell: siempre LF (nunca CRLF o fallarán en Unix)
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Binarios: no tocar
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.tar.gz binary
+*.pem binary
+*.key binary
+*.p12 binary

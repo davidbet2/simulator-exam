@@ -1,0 +1,54 @@
+[
+  {
+    "type": "matching",
+    "question": "Match each Appian process flow element with its correct description.",
+    "pairs": [
+      { "term": "Timer Event", "correctMatch": "D1" },
+      { "term": "XOR Gateway", "correctMatch": "D2" },
+      { "term": "AND Gateway", "correctMatch": "D3" },
+      { "term": "Script Task", "correctMatch": "D4" }
+    ],
+    "matches": {
+      "D1": "Can be added to a flow or attached to a smart service to trigger an Exception Flow or an Escalation.",
+      "D2": "Can accept one incoming path and select one outgoing path.",
+      "D3": "Can accept multiple paths: when all paths arrive, all outgoing flows are executed at the same time.",
+      "D4": "Can run automated activities"
+    }
+  },
+  {
+    "type": "matching",
+    "question": "Match each scenario with the correct database relationship type.",
+    "pairs": [
+      { "term": "You have an order with order items.", "correctMatch": "D1" },
+      { "term": "You have many employees on multiple projects.", "correctMatch": "D2" },
+      { "term": "You have a product with basic fields and an additional detailed product description with all the technical details that is regularly updated.", "correctMatch": "D3" }
+    ],
+    "matches": {
+      "D1": "One-to-many",
+      "D2": "Many-to-many",
+      "D3": "One-to-one"
+    }
+  },
+  {
+    "type": "ordering",
+    "question": "In what order is the following done when you are needing to implement a new column on an existing db table? This table, its CDTs, and data store entity are currently in use by an Appian application.",
+    "items": ["Verify Data Store", "Update db Table", "Save and Publish Data Store", "Update CDT"],
+    "correctOrder": ["Update db Table", "Update CDT", "Save and Publish Data Store", "Verify Data Store"]
+  },
+  {
+    "type": "matching",
+    "question": "Match each refresh parameter with its correct behavior description.",
+    "pairs": [
+      { "term": "refreshAlways: true", "correctMatch": "D1" },
+      { "term": "refreshOnReferencedVarChange: true", "correctMatch": "D2" },
+      { "term": "refreshOnVarChange: true", "correctMatch": "D3" }
+    ],
+    "matches": {
+      "D1": "Refresh after every user interaction",
+      "D2": "Refresh when a specific variable changes",
+      "D3": "Refresh when any referenced variable changes",
+      "D4": "Refresh each time the value of any variable it references within the value parameter is updated",
+      "D5": "Refresh on a timer"
+    }
+  }
+]

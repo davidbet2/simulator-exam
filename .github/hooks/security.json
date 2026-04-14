@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "node .claude/hooks/run-python.js .claude/hooks/pre-tool-use/security-check.py",
+        "windows": "node .claude\\hooks\\run-python.js .claude\\hooks\\pre-tool-use\\security-check.py",
+        "timeout": 15
+      }
+    ],
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "node .claude/hooks/run-python.js .claude/hooks/post-tool-use/log-activity.py",
+        "windows": "node .claude\\hooks\\run-python.js .claude\\hooks\\post-tool-use\\log-activity.py",
+        "timeout": 10
+      },
+      {
+        "type": "command",
+        "command": "node .claude/hooks/run-python.js .claude/hooks/post-tool-use/quality-check.py",
+        "windows": "node .claude\\hooks\\run-python.js .claude\\hooks\\post-tool-use\\quality-check.py",
+        "timeout": 30
+      }
+    ]
+  }
+}

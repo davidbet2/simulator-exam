@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Web Security Check",
+  "description": "Before any web request, validates the URL is not a dangerous target (SSRF protection, blocks metadata endpoints, localhost scanners).",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolNames": ["web"]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "node -e \"const url = process.env.KIRO_TOOL_INPUT || ''; const blocked = ['169.254.169.254','metadata.google','metadata.azure','localhost','127.0.0.1','0.0.0.0','::1','requestbin','webhook.site','ngrok.io','burpcollaborator','gopher://']; const lower = url.toLowerCase(); const hit = blocked.find(b => lower.includes(b)); if (hit) { process.stderr.write('BLOCKED: URL contains dangerous target: ' + hit + '. Possible SSRF attack.'); process.exit(1); } process.exit(0);\""
+  }
+}

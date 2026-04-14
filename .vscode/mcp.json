@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json.schemastore.org/vscode-mcp-servers.json",
+  "servers": {
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    },
+    "memory-files": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "memory"],
+      "cwd": "${workspaceFolder}"
+    },
+    "tavily": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "tavily-mcp"],
+      "env": {
+        "TAVILY_API_KEY": "${input:tavilyKey}"
+      }
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "semgrep": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@semgrep/mcp"],
+      "env": {
+        "SEMGREP_APP_TOKEN": "${input:semgrepToken}"
+      }
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:githubToken}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "tavilyKey",
+      "type": "promptString",
+      "description": "Tavily API Key (get from https://tavily.com)",
+      "password": true
+    },
+    {
+      "id": "semgrepToken",
+      "type": "promptString",
+      "description": "Semgrep App Token (get from https://semgrep.dev)",
+      "password": true
+    },
+    {
+      "id": "githubToken",
+      "type": "promptString",
+      "description": "GitHub Personal Access Token (get from https://github.com/settings/tokens)",
+      "password": true
+    }
+  ]
+}

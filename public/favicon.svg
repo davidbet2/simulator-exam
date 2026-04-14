@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background rounded square -->
+  <rect width="64" height="64" rx="14" ry="14" fill="#0052cc"/>
+  <!-- Document shape -->
+  <rect x="16" y="12" width="28" height="36" rx="3" ry="3" fill="white" opacity="0.15"/>
+  <rect x="16" y="12" width="28" height="36" rx="3" ry="3" fill="none" stroke="white" stroke-width="2" opacity="0.6"/>
+  <!-- Lines on document -->
+  <line x1="22" y1="22" x2="38" y2="22" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <line x1="22" y1="28" x2="38" y2="28" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <line x1="22" y1="34" x2="32" y2="34" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <!-- Green checkmark badge -->
+  <circle cx="42" cy="44" r="10" fill="#00875a"/>
+  <polyline points="37,44 40.5,47.5 47,40" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

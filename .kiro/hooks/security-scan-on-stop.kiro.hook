@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Security Scan on Agent Stop",
+  "description": "After each agent turn, reviews changed files for security vulnerabilities, hardcoded secrets, and OWASP issues.",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review any files modified in this session for security issues:\n1. Scan for hardcoded secrets, API keys, tokens, or credentials (patterns: sk-, ghp_, AKIA, password = \"...\")\n2. Check for SQL injection risks (string concatenation in queries)\n3. Check for XSS risks (unescaped output rendered as HTML)\n4. Verify no stack traces or internal details are exposed in error responses\n5. Check for missing authentication/authorization on new endpoints\n\nOnly report if you find actual issues. If everything is clean, say nothing."
+  }
+}

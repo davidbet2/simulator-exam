@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Test Coverage Check on Save",
+  "description": "When saving source files, checks if corresponding tests exist and prompts to create them if missing.",
+  "version": "1",
+  "when": {
+    "type": "fileSave",
+    "filePattern": "src/**/*.{js,ts,jsx,tsx,py,go,java}"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A source file was saved. Quickly check:\n1. Does this file have corresponding tests (*.test.*, *.spec.*, or in tests/ folder)?\n2. Were any new functions or methods added that lack test coverage?\n\nIf coverage is missing, briefly mention which functions need tests. Do NOT generate the tests yet — only report what is missing. If coverage looks adequate, say nothing."
+  }
+}

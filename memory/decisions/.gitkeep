@@ -1,0 +1,16 @@
+# Decisions
+
+Decisiones de desarrollo que no merecen un ADR completo pero sí deben recordarse entre sesiones.
+
+## Formato sugerido para nuevas entradas
+
+Crear archivo: `YYYY-MM-DD-descripcion.md`
+
+```markdown
+# Decisión: [título]
+**Fecha:** YYYY-MM-DD
+**Contexto:** [por qué surgió esta decisión]
+**Decisión:** [qué se decidió]
+**Razón:** [por qué]
+**Consecuencias:** [qué implica para el trabajo futuro]
+```

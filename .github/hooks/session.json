@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "node .claude/hooks/run-python.js .claude/hooks/session-start/inject-context.py",
+        "windows": "node .claude\\hooks\\run-python.js .claude\\hooks\\session-start\\inject-context.py",
+        "timeout": 10
+      }
+    ],
+    "PreCompact": [
+      {
+        "type": "command",
+        "command": "node .claude/hooks/run-python.js .claude/hooks/pre-compact/save-context.py",
+        "windows": "node .claude\\hooks\\run-python.js .claude\\hooks\\pre-compact\\save-context.py",
+        "timeout": 10
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "node .claude/hooks/run-python.js .claude/hooks/stop/finalize-session.py",
+        "windows": "node .claude\\hooks\\run-python.js .claude\\hooks\\stop\\finalize-session.py",
+        "timeout": 15
+      }
+    ]
+  }
+}

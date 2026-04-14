@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Questions: anyone can read (exam), only admins can write
+    match /questions/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    // Settings: anyone can read (exam uses them), only admins can write
+    match /settings/{certId} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    // Certifications: anyone can read (public simulator), only admins can write
+    match /certifications/{certId} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    // Admins: a user can read their own admin doc to check status.
+    // Existing admins can list and read all admin docs (for the admin panel).
+    // Only existing admins can write (add or remove admin docs).
+    match /admins/{adminEmail} {
+      allow read: if request.auth != null
+        && (request.auth.token.email == adminEmail
+            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+      allow write: if request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+  }
+}

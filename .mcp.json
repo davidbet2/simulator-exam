@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json.schemastore.org/mcp-servers.json",
+  "mcpServers": {
+    "caveman": {
+      "command": "npx",
+      "args": ["-y", "mcp-caveman"],
+      "env": {
+        "CAVEMAN_LOG_DIR": "${CLAUDE_PROJECT_DIR}/memory/sessions",
+        "CAVEMAN_LOG_LEVEL": "debug"
+      }
+    },
+    "claudemem": {
+      "command": "npx",
+      "args": ["-y", "mcp-claudemem", "--storage", "${CLAUDE_PROJECT_DIR}/memory"],
+      "env": {
+        "CLAUDEMEM_NAMESPACE": "AppianSimulator-Exam"
+      }
+    },
+    "engram": {
+      "command": "npx",
+      "args": ["-y", "mcp-engram"],
+      "env": {
+        "ENGRAM_STORAGE_PATH": "${CLAUDE_PROJECT_DIR}/memory/knowledge",
+        "ENGRAM_NAMESPACE": "AppianSimulator-Exam"
+      }
+    },
+    "autoskills": {
+      "command": "npx",
+      "args": ["-y", "mcp-autoskills", "--skills-dir", "${CLAUDE_PROJECT_DIR}/.claude/skills"]
+    },
+    "tavily": {
+      "command": "npx",
+      "args": ["-y", "tavily-mcp"],
+      "env": {
+        "TAVILY_API_KEY": "${TAVILY_API_KEY}"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "semgrep": {
+      "command": "npx",
+      "args": ["-y", "@semgrep/mcp"],
+      "env": {
+        "SEMGREP_APP_TOKEN": "${SEMGREP_APP_TOKEN}"
+      }
+    },
+    "preflight": {
+      "command": "npx",
+      "args": ["-y", "@preflight-dev/preflight-mcp"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    },
+    "memory-files": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${CLAUDE_PROJECT_DIR}/memory"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  }
+}

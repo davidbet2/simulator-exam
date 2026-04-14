@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|bash|runInTerminal|terminal",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/pre-tool-use/security-check.py\"",
+            "windows": "python \"${CLAUDE_PLUGIN_ROOT}\\.claude\\hooks\\pre-tool-use\\security-check.py\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "python \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/post-tool-use/log-activity.py\"",
+        "windows": "python \"${CLAUDE_PLUGIN_ROOT}\\.claude\\hooks\\post-tool-use\\log-activity.py\"",
+        "timeout": 10
+      }
+    ]
+  }
+}

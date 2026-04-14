@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Full OWASP Security Audit",
+  "description": "Manual trigger: runs a complete OWASP Top 10 security audit across the entire codebase.",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Perform a complete OWASP Top 10 security audit of this codebase:\n\n**A01 - Broken Access Control**\n- Check all endpoints have server-side authorization\n- Look for IDOR vulnerabilities (missing ownership checks on IDs)\n- Verify no client-side-only access controls\n\n**A02 - Cryptographic Failures**\n- Scan for hardcoded secrets: grep for password=, api_key=, secret=, sk-, ghp_, AKIA\n- Verify password hashing uses bcrypt/argon2/scrypt (NOT MD5, SHA1, unsalted SHA256)\n- Check HTTPS is enforced\n\n**A03 - Injection**\n- Find SQL queries built with string concatenation (not parameterized)\n- Check for shell command execution with unsanitized input\n- Identify unescaped output rendered as HTML (XSS)\n\n**A05 - Security Misconfiguration**\n- Check for debug modes enabled in production config\n- Verify error responses don't expose stack traces\n- Look for default credentials or empty passwords\n\n**A07 - Authentication Failures**\n- Verify session tokens are cryptographically random\n- Check for JWT alg:none vulnerability\n- Confirm rate limiting on auth endpoints\n\n**Output format:**\nFor each finding: severity (CRITICAL/HIGH/MEDIUM/LOW), location, description, and recommended fix.\nIf no issues found in a category, say PASS."
+  }
+}

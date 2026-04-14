@@ -1,0 +1,17 @@
+{
+  "_comment": "Este archivo es para overrides locales. Copiar como settings.local.json (NO commitear).",
+
+  "mcpServers": {
+    "caveman": {
+      "env": {
+        "CAVEMAN_LOG_LEVEL": "debug"
+      }
+    }
+  },
+
+  "permissions": {
+    "allow": [
+      "Bash(*)"
+    ]
+  }
+}

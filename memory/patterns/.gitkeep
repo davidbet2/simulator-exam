@@ -1,0 +1,26 @@
+# Patterns
+
+Patrones técnicos y de proceso que funcionaron bien en este proyecto y son reutilizables.
+
+## Formato sugerido para nuevas entradas
+
+Crear archivo: `nombre-del-patron.md`
+
+```markdown
+# Patrón: [nombre]
+**Categoría:** [arquitectura | testing | proceso | debugging | ...]
+**Descubierto:** YYYY-MM-DD
+
+## Problema
+[Qué problema resuelve]
+
+## Solución
+[Descripción del patrón]
+
+## Ejemplo en este proyecto
+[Código o referencia a archivo donde está implementado]
+
+## Cuándo usar / no usar
+- Usar cuando: ...
+- No usar cuando: ...
+```
