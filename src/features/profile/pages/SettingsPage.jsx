@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
-  Pencil, Check, X, ChevronDown, Crown, Mail, Trash2,
-  Sun, Moon, Monitor, ShieldAlert,
+  Pencil, Check, X, Crown, Mail, Trash2, ShieldAlert,
 } from 'lucide-react';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { useThemeStore } from '../../../core/store/useThemeStore';
@@ -40,116 +39,39 @@ function Divider() {
 function ModeSelect() {
   const { mode, setMode } = useThemeStore();
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, right: 0 });
-  const btnRef = useRef(null);
-
   const options = [
-    { id: 'light', label: t('settings.mode.light'), icon: Sun },
-    { id: 'dark', label: t('settings.mode.dark'), icon: Moon },
-    { id: 'auto', label: t('settings.mode.auto'), icon: Monitor },
+    { id: 'light', label: t('settings.mode.light') },
+    { id: 'dark', label: t('settings.mode.dark') },
+    { id: 'auto', label: t('settings.mode.auto') },
   ];
-  const current = options.find((o) => o.id === mode) ?? options[2];
-  const CurrentIcon = current.icon;
-
-  const handleOpen = () => {
-    if (btnRef.current) {
-      const r = btnRef.current.getBoundingClientRect();
-      setCoords({ top: r.bottom + 6, right: window.innerWidth - r.right });
-    }
-    setOpen((v) => !v);
-  };
-
   return (
-    <div>
-      <button
-        ref={btnRef}
-        type="button"
-        onClick={handleOpen}
-        className="h-9 px-3 rounded-full bg-surface-muted border border-surface-border flex items-center gap-2 text-sm font-medium text-ink hover:border-brand-500 transition-colors"
-      >
-        <CurrentIcon size={14} />
-        {current.label}
-        <ChevronDown size={14} className="text-ink-muted" />
-      </button>
-      {open && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div
-            className="fixed w-36 rounded-lg border border-surface-border bg-surface-card shadow-lg z-50 overflow-hidden"
-            style={{ top: coords.top, right: coords.right }}
-          >
-            {options.map((o) => {
-              const Icon = o.icon;
-              return (
-                <button
-                  key={o.id}
-                  type="button"
-                  onClick={() => { setMode(o.id); setOpen(false); }}
-                  className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-surface-muted ${
-                    mode === o.id ? 'text-brand-600 font-semibold' : 'text-ink'
-                  }`}
-                >
-                  <Icon size={14} />{o.label}
-                </button>
-              );
-            })}
-          </div>
-        </>
-      )}
-    </div>
+    <select
+      value={mode}
+      onChange={(e) => setMode(e.target.value)}
+      className="h-9 px-3 pr-8 rounded-full bg-surface-muted border border-surface-border text-sm font-medium text-ink hover:border-brand-500 focus:outline-none focus:border-brand-500 transition-colors cursor-pointer appearance-none"
+      style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
+    >
+      {options.map((o) => (
+        <option key={o.id} value={o.id}>{o.label}</option>
+      ))}
+    </select>
   );
 }
 
 function LangSelect() {
   const { lang, setLang } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, right: 0 });
-  const btnRef = useRef(null);
   const current = SUPPORTED_LANGS.find((l) => l.id === lang) ?? SUPPORTED_LANGS[0];
-
-  const handleOpen = () => {
-    if (btnRef.current) {
-      const r = btnRef.current.getBoundingClientRect();
-      setCoords({ top: r.bottom + 6, right: window.innerWidth - r.right });
-    }
-    setOpen((v) => !v);
-  };
-
   return (
-    <div>
-      <button
-        ref={btnRef}
-        type="button"
-        onClick={handleOpen}
-        className="h-9 px-3 rounded-full bg-surface-muted border border-surface-border flex items-center gap-2 text-sm font-medium text-ink hover:border-brand-500 transition-colors"
-      >
-        {current.label}
-        <ChevronDown size={14} className="text-ink-muted" />
-      </button>
-      {open && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div
-            className="fixed w-44 rounded-lg border border-surface-border bg-surface-card shadow-lg z-50 overflow-hidden"
-            style={{ top: coords.top, right: coords.right }}
-          >
-            {SUPPORTED_LANGS.map((l) => (
-              <button
-                key={l.id}
-                type="button"
-                onClick={() => { setLang(l.id); setOpen(false); }}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-surface-muted ${
-                  lang === l.id ? 'text-brand-600 font-semibold' : 'text-ink'
-                }`}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
+    <select
+      value={current.id}
+      onChange={(e) => setLang(e.target.value)}
+      className="h-9 px-3 pr-8 rounded-full bg-surface-muted border border-surface-border text-sm font-medium text-ink hover:border-brand-500 focus:outline-none focus:border-brand-500 transition-colors cursor-pointer appearance-none"
+      style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
+    >
+      {SUPPORTED_LANGS.map((l) => (
+        <option key={l.id} value={l.id}>{l.label}</option>
+      ))}
+    </select>
   );
 }
 
