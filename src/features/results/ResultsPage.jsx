@@ -1,48 +1,42 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import confetti from 'canvas-confetti';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../core/firebase/firebase';
+import { useAuthStore } from '../../core/store/useAuthStore';
 
 /** Modal that shows every question the user got wrong or skipped */
 function WrongAnswersModal({ wrongItems, onClose }) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 px-4 py-8 overflow-y-auto">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start justify-center z-50 px-4 py-8 overflow-y-auto">
+      <div className="glass-bright rounded-2xl shadow-card w-full max-w-2xl border border-surface-border">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 sticky top-0 bg-white rounded-t-lg z-10">
-          <h2 className="font-bold text-gray-800 text-base">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border sticky top-0 bg-surface-soft/90 backdrop-blur-md rounded-t-2xl z-10">
+          <h2 className="font-display font-bold text-ink text-base">
             Respuestas incorrectas / sin responder ({wrongItems.length})
           </h2>
-          <button
-            onClick={onClose}
-            className="text-appian-muted hover:text-gray-800 text-lg leading-none font-bold"
-          >
+          <button onClick={onClose} className="text-ink-soft hover:text-ink text-lg leading-none font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-muted transition-colors">
             ✕
           </button>
         </div>
 
         {/* List */}
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-surface-border">
           {wrongItems.map(({ idx, question, selected }) => {
             const unanswered = selected.length === 0;
-
             return (
               <div key={idx} className="px-6 py-5">
-                {/* Question header */}
                 <div className="flex items-start gap-2 mb-3">
-                  <span className="shrink-0 text-xs font-bold bg-appian-blue-light text-appian-blue px-2 py-0.5 rounded mt-0.5">
-                    #{idx + 1}
-                  </span>
+                  <span className="shrink-0 text-xs font-bold bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded-full mt-0.5">#{idx + 1}</span>
                   {unanswered && (
-                    <span className="shrink-0 text-xs font-bold bg-gray-100 text-gray-500 px-2 py-0.5 rounded mt-0.5">
-                      Sin responder
-                    </span>
+                    <span className="shrink-0 text-xs font-bold bg-surface-muted text-ink-soft px-2 py-0.5 rounded-full mt-0.5">Sin responder</span>
                   )}
-                  <p className="text-sm font-semibold text-gray-800 leading-relaxed">
-                    {question.question}
-                  </p>
+                  <p className="text-sm font-semibold text-ink leading-relaxed">{question.question}</p>
                 </div>
 
                 {/* Options — multiple choice */}
-                {!question.type || question.type === 'multiple' ? (() => {
+                {(!question.type || question.type === 'multiple') ? (() => {
                   const correctSet = new Set(question.answer);
                   const selectedSet = new Set(selected);
                   const sortedEntries = Object.keys(question.options).sort().map((k) => [k, question.options[k]]);
@@ -51,16 +45,16 @@ function WrongAnswersModal({ wrongItems, onClose }) {
                       {sortedEntries.map(([key, value]) => {
                         const isCorrect = correctSet.has(key);
                         const wasSelected = selectedSet.has(key);
-                        let cls = 'flex items-baseline gap-2 px-3 py-2 rounded border text-sm ';
-                        if (isCorrect) cls += 'bg-green-50 border-green-400 text-green-800';
-                        else if (wasSelected) cls += 'bg-red-50 border-red-400 text-red-700';
-                        else cls += 'bg-gray-50 border-gray-200 text-gray-600';
+                        let cls = 'flex items-baseline gap-2 px-3 py-2 rounded-lg border text-sm ';
+                        if (isCorrect) cls += 'bg-success-500/15 border-success-500/50 text-success-300';
+                        else if (wasSelected) cls += 'bg-danger-500/15 border-danger-500/50 text-danger-300';
+                        else cls += 'bg-surface-card border-surface-border text-ink-soft';
                         return (
                           <div key={key} className={cls}>
                             <span className="font-bold shrink-0">{key}.</span>
                             <span>{value}</span>
-                            {isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-green-600">✓ Correcta</span>}
-                            {wasSelected && !isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-red-500">✗ Tu respuesta</span>}
+                            {isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-success-400">✓ Correcta</span>}
+                            {wasSelected && !isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-danger-400">✗ Tu respuesta</span>}
                           </div>
                         );
                       })}
@@ -75,16 +69,14 @@ function WrongAnswersModal({ wrongItems, onClose }) {
                       const chosen = selected[i] ?? '';
                       const isCorrect = chosen === pair.correctMatch;
                       return (
-                        <div key={pair.term} className={`flex items-center gap-3 px-3 py-2 rounded border text-sm ${isCorrect ? 'bg-green-50 border-green-400' : 'bg-red-50 border-red-400'}`}>
-                          <span className="font-medium text-gray-800 shrink-0">{pair.term}</span>
-                          <span className="text-gray-400">→</span>
-                          <span className={isCorrect ? 'text-green-800' : 'text-red-700 line-through'}>
+                        <div key={pair.term} className={`flex items-center gap-3 px-3 py-2 rounded-lg border text-sm ${isCorrect ? 'bg-success-500/15 border-success-500/50' : 'bg-danger-500/15 border-danger-500/50'}`}>
+                          <span className="font-medium text-ink shrink-0">{pair.term}</span>
+                          <span className="text-slate-600">→</span>
+                          <span className={isCorrect ? 'text-success-300' : 'text-danger-300 line-through'}>
                             {chosen ? question.matches[chosen] : '— sin responder —'}
                           </span>
                           {!isCorrect && (
-                            <span className="ml-auto shrink-0 text-xs text-green-700 font-semibold">
-                              ✓ {question.matches[pair.correctMatch]}
-                            </span>
+                            <span className="ml-auto shrink-0 text-xs text-success-400 font-semibold">✓ {question.matches[pair.correctMatch]}</span>
                           )}
                         </div>
                       );
@@ -95,9 +87,9 @@ function WrongAnswersModal({ wrongItems, onClose }) {
                 {/* Options — ordering */}
                 {question.type === 'ordering' && (
                   <div className="flex flex-col gap-2 ml-4">
-                    <p className="text-xs text-gray-500 mb-1">Orden correcto:</p>
+                    <p className="text-xs text-ink-soft mb-1">Orden correcto:</p>
                     {question.correctOrder.map((item, i) => (
-                      <div key={item} className="flex items-center gap-3 px-3 py-2 rounded border text-sm bg-green-50 border-green-400 text-green-800">
+                      <div key={item} className="flex items-center gap-3 px-3 py-2 rounded-lg border text-sm bg-success-500/10 border-success-500/40 text-success-300">
                         <span className="font-bold shrink-0">{i + 1}.</span>
                         <span>{item}</span>
                       </div>
@@ -110,11 +102,8 @@ function WrongAnswersModal({ wrongItems, onClose }) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-100 flex justify-end">
-          <button
-            onClick={onClose}
-            className="bg-appian-blue hover:bg-appian-blue-dark text-white font-bold px-6 py-2 rounded transition-colors text-sm"
-          >
+        <div className="px-6 py-4 border-t border-surface-border flex justify-end">
+          <button onClick={onClose} className="bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-2 rounded-xl transition-colors text-sm">
             Cerrar
           </button>
         </div>
@@ -126,11 +115,32 @@ function WrongAnswersModal({ wrongItems, onClose }) {
 export function ResultsPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { user } = useAuthStore();
   const [showWrong, setShowWrong] = useState(false);
+  const [displayScore, setDisplayScore] = useState(0);
+  const savedRef = useRef(false);
 
   useEffect(() => {
     if (!state) navigate('/', { replace: true });
   }, [state, navigate]);
+
+  // Persist attempt to Firestore (once, only in exam mode, only if logged in, skip demo)
+  useEffect(() => {
+    if (!state || !user || savedRef.current) return;
+    if (state.mode === 'study') return;
+    if (state.certId === 'demo') return;
+    savedRef.current = true;
+    addDoc(collection(db, 'attempts'), {
+      uid:         user.uid,
+      certId:      state.certId ?? null,
+      certTitle:   state.certLabel ?? state.certId ?? null,
+      score:       state.score,
+      total:       state.total,
+      passPercent: state.passPercent,
+      mode:        state.mode ?? 'exam',
+      createdAt:   serverTimestamp(),
+    }).catch(() => {});
+  }, [state, user]);
 
   if (!state) return null;
 
@@ -138,17 +148,33 @@ export function ResultsPage() {
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const passed = percentage >= passPercent;
 
-  // Compute wrong/unanswered items for the modal
+  // Animate score counter + confetti on mount
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (passed && !isTimeOut) {
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 }, colors: ['#6366f1','#22c55e','#f59e0b','#ec4899'] });
+    }
+    let start = 0;
+    const duration = 1200;
+    const step = 16;
+    const increment = percentage / (duration / step);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= percentage) { setDisplayScore(percentage); clearInterval(timer); }
+      else setDisplayScore(Math.floor(start));
+    }, step);
+    return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Compute wrong/unanswered items
   const wrongItems = (displayQuestions ?? []).map((dq, idx) => {
     const sel = answers?.[idx] ?? [];
     let isCorrect = false;
     if (dq.type === 'matching') {
       isCorrect = sel.length > 0 && dq.pairs.every((p, i) => sel[i] === p.correctMatch);
     } else if (dq.type === 'ordering') {
-      isCorrect =
-        sel.length > 0 &&
-        sel.length === dq.correctOrder?.length &&
-        sel.every((v, i) => v === dq.correctOrder[i]);
+      isCorrect = sel.length > 0 && sel.length === dq.correctOrder?.length && sel.every((v, i) => v === dq.correctOrder[i]);
     } else {
       if (sel.length > 0) {
         const correct = [...dq.answer].sort();
@@ -159,60 +185,76 @@ export function ResultsPage() {
     return isCorrect ? null : { idx, question: dq, selected: sel };
   }).filter(Boolean);
 
-  return (
-    <div className="min-h-screen bg-appian-bg flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-lg rounded-lg shadow-md px-10 py-12 text-center">
+  const ringColor = passed ? '#22c55e' : '#f43f5e';
+  const RADIUS = 54;
+  const CIRC = 2 * Math.PI * RADIUS;
+  const ringOffset = CIRC * (1 - percentage / 100);
 
-        {/* Icon */}
-        <div className="text-5xl mb-4">
-          {isTimeOut ? '⏱️' : passed ? '🎉' : '📚'}
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="pointer-events-none fixed inset-0">
+        <div className={`absolute inset-0 opacity-10 ${passed ? 'bg-success-500' : 'bg-danger-500'} blur-3xl scale-150`} />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="glass-bright rounded-2xl shadow-card w-full max-w-md px-8 py-10 text-center border border-surface-border relative"
+      >
+        {/* Circular score ring */}
+        <div className="relative w-36 h-36 mx-auto mb-6">
+          <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r={RADIUS} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+            <circle
+              cx="60" cy="60" r={RADIUS}
+              fill="none"
+              stroke={ringColor}
+              strokeWidth="8"
+              strokeLinecap="round"
+              strokeDasharray={CIRC}
+              strokeDashoffset={ringOffset}
+              style={{ transition: 'stroke-dashoffset 1.2s ease-out, stroke 0.3s' }}
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className={`text-3xl font-display font-bold tabular-nums ${
+              passed ? 'text-success-400' : 'text-danger-400'
+            }`}>{displayScore}%</span>
+            <span className="text-xs text-ink-soft mt-0.5">{isTimeOut ? '⏱️' : passed ? '🎉' : '📚'}</span>
+          </div>
         </div>
 
         {/* Title */}
-        <h1
-          className={`text-2xl font-bold mb-2 ${
-            isTimeOut ? 'text-appian-error' : passed ? 'text-appian-success' : 'text-appian-error'
-          }`}
-        >
-          {isTimeOut
-            ? '¡Tiempo Agotado!'
-            : passed
-            ? '¡Felicitaciones! Aprobaste'
-            : 'No aprobaste esta vez'}
+        <h1 className={`text-xl font-display font-bold mb-1 ${
+          isTimeOut ? 'text-warning-400' : passed ? 'text-success-400' : 'text-danger-400'
+        }`}>
+          {isTimeOut ? '¡Tiempo Agotado!' : passed ? '¡Felicitaciones! Aprobaste' : 'No aprobaste esta vez'}
         </h1>
+        <p className="text-ink-soft text-sm mb-6">{certLabel}</p>
 
-        {/* Cert label */}
-        <p className="text-appian-muted text-sm mb-6">{certLabel}</p>
-
-        {/* Score card */}
-        <div className="bg-appian-bg rounded-lg p-6 mb-6 space-y-2">
+        {/* Stats */}
+        <div className="bg-surface-card rounded-xl p-4 mb-6 space-y-3 text-left border border-surface-border">
           <div className="flex justify-between text-sm">
-            <span className="text-appian-muted">Respuestas correctas</span>
-            <span className="font-bold text-gray-800">
-              {score} / {total}
-            </span>
+            <span className="text-ink-soft">Respuestas correctas</span>
+            <span className="font-bold text-ink">{score} / {total}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-appian-muted">Porcentaje obtenido</span>
-            <span
-              className={`font-bold text-lg ${
-                passed ? 'text-appian-success' : 'text-appian-error'
-              }`}
-            >
-              {percentage}%
-            </span>
+            <span className="text-ink-soft">Porcentaje obtenido</span>
+            <span className={`font-bold text-lg ${passed ? 'text-success-400' : 'text-danger-400'}`}>{percentage}%</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-appian-muted">Umbral de aprobación</span>
-            <span className="font-semibold text-gray-600">{passPercent}%</span>
+            <span className="text-ink-soft">Umbral de aprobación</span>
+            <span className="font-semibold text-ink-soft">{passPercent}%</span>
           </div>
         </div>
 
         {/* Progress bar */}
-        <div className="h-3 bg-gray-200 rounded-full mb-8 overflow-hidden">
+        <div className="h-2 bg-surface-muted rounded-full mb-8 overflow-hidden">
           <div
-            className={`h-3 rounded-full transition-all ${
-              passed ? 'bg-appian-success' : 'bg-appian-error'
+            className={`h-2 rounded-full transition-all duration-1000 ${
+              passed ? 'bg-gradient-to-r from-success-500 to-success-400' : 'bg-gradient-to-r from-danger-600 to-danger-400'
             }`}
             style={{ width: `${percentage}%` }}
           />
@@ -222,26 +264,26 @@ export function ResultsPage() {
         <div className="flex flex-col gap-3">
           <button
             onClick={() => navigate('/')}
-            className="bg-appian-blue hover:bg-appian-blue-dark text-white font-bold py-3 px-6 rounded transition-colors w-full"
+            className="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl transition-all active:scale-95 w-full"
           >
             Volver al inicio
           </button>
           <button
             onClick={() => navigate(-1)}
-            className="border border-appian-blue text-appian-blue hover:bg-appian-blue-light font-semibold py-3 px-6 rounded transition-colors w-full"
+            className="border border-brand-500/50 text-brand-400 hover:bg-brand-500/15 font-semibold py-3 px-6 rounded-xl transition-all w-full"
           >
             Reintentar mismo examen
           </button>
           {wrongItems.length > 0 && (
             <button
               onClick={() => setShowWrong(true)}
-              className="border border-appian-error text-appian-error hover:bg-red-50 font-semibold py-3 px-6 rounded transition-colors w-full"
+              className="border border-danger-500/40 text-danger-400 hover:bg-danger-500/10 font-semibold py-3 px-6 rounded-xl transition-all w-full"
             >
               📖 Ver {wrongItems.length} respuesta{wrongItems.length !== 1 ? 's' : ''} incorrecta{wrongItems.length !== 1 ? 's' : ''}
             </button>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {showWrong && (
         <WrongAnswersModal wrongItems={wrongItems} onClose={() => setShowWrong(false)} />

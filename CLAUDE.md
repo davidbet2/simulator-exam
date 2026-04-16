@@ -72,6 +72,7 @@ Invoca estas habilidades mencionando su trigger natural en conversación:
 
 | Skill               | Trigger                                | Descripción                                  |
 |---------------------|----------------------------------------|----------------------------------------------|
+| `research`          | **AUTOMÁTICO** antes de implementar · "investiga X" · "mejores prácticas de X" | **Agente principal.** Busca en fuentes confiables y actualizadas, produce `memory/research/YYYY-MM-DD-<topic>.md` |
 | `code-review`       | "revisa este código" / "audit"         | Análisis de seguridad, calidad y arquitectura |
 | `refactor`          | "refactoriza [componente]"             | Refactoring estructurado con plan             |
 | `release`           | "prepara release" / "versiona"         | Flujo completo de versionado y changelog      |
@@ -82,12 +83,15 @@ Invoca estas habilidades mencionando su trigger natural en conversación:
 | `health-check`      | `/health-check`                        | Diagnóstico completo del setup Claude Code    |
 | `gsd`               | `/gsd-*` commands                      | Spec-driven development: plan→execute→verify  |
 | `ensure-tools`      | "¿tienes X instalado?" / "instala Y"    | Verifica e instala herramientas faltantes     |
+| `lottie-animation-scripter` | "crea animación de X" / "guión lottie" / "anima estas imágenes" | Diseña guión de escenas profesional + prompts de imagen + JSON Lottie multi-frame |
 
 ## Subagentes Personalizados
 
 Disponibles directamente o vía @-mention:
 
 | Agente              | Descripción                                   | Memoria   |
+|---------------------|-----------------------------------------------|-----------||
+| `researcher`        | **Agente principal.** Investiga best practices en internet antes de cualquier implementación. Produce `memory/research/` reports. | project |
 |---------------------|-----------------------------------------------|-----------|
 | `code-reviewer`     | Revisión de código con checklist OWASP+calidad | project   |
 | `debugger`          | Debug sistemático: root cause → fix → verify  | —         |
@@ -104,11 +108,13 @@ Este proyecto usa una estrategia de memoria en capas para maximizar contexto rel
 Layer 1 — Siempre cargado:     CLAUDE.md (este archivo, ~2KB target)
 Layer 2 — Contexto modular:    src/*/CLAUDE.md  (cargado por módulo)
 Layer 3 — Memoria persistente: memory/patterns/ + memory/decisions/
-Layer 4 — Memoria de runtime:  MCP Claudemem + Engram (cross-session)
-Layer 5 — Contexto vivo:       memory/sessions/ (log de esta sesión)
+Layer 4 — Research cache:      memory/research/ (reportes < 30 días son válidos)
+Layer 5 — Memoria de runtime:  MCP Claudemem + Engram (cross-session)
+Layer 6 — Contexto vivo:       memory/sessions/ (log de esta sesión)
 ```
 
 **Regla de oro:** Si algo se repite más de 3 veces en conversaciones, muévelo a `memory/patterns/`.
+**Regla research:** Antes de implementar algo nuevo, verificar `memory/research/`. Si no hay reporte, crear uno.
 
 ---
 

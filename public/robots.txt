@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /exam
+Disallow: /results
+Disallow: /dashboard
+Disallow: /profile
+
+Sitemap: https://certzen.app/sitemap.xml

@@ -1,8 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * { box-sizing: border-box; }
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
-body { margin: 0; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background-color: #f4f5f7; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  background-color: #f8f7f4;
+  color: #1a1a1a;
+}
+
 select, input, button, textarea { font-family: inherit; }
+
+/* ── Custom scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1cdc7; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+
+/* ── Focus ring ───────────────────────────────────────── */
+:focus-visible { outline: 2px solid #0ea5e9; outline-offset: 2px; }
+
+/* ── Card component ───────────────────────────────────── */
+@layer components {
+  .card {
+    background: #ffffff;
+    border: 1px solid #e8e6e1;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .card-hover {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card-hover:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    transform: translateY(-3px);
+  }
+
+  /* Brand gradient text */
+  .text-gradient-brand {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 60%, #0369a1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Warm sunrise gradient text */
+  .text-gradient-warm {
+    background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 50%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Subtle soft blob shapes */
+  .blob {
+    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+    filter: blur(60px);
+    opacity: 0.55;
+  }
+
+  /* Shimmer loading skeleton */
+  .skeleton {
+    background: linear-gradient(90deg, #f1f0ed 25%, #e8e6e1 50%, #f1f0ed 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s linear infinite;
+  }
+
+  /* XP / score number reveal */
+  .score-reveal {
+    animation: countUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* Illustrated background dot-grid (very subtle) */
+  .dot-grid {
+    background-image: radial-gradient(circle, rgba(180,175,168,0.35) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Noise texture overlay */
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Legacy aliases — keep for exam/results pages */
+  .glass {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(232,230,225,0.9);
+  }
+
+  .glass-bright {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(14,165,233,0.20);
+  }
+
+  .text-gradient-aurora {
+    background: linear-gradient(135deg, #22c55e 0%, #38bdf8 50%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .grid-pattern {
+    background-image: radial-gradient(circle, rgba(180,175,168,0.35) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
+/* ── Keyframes ────────────────────────────────────────── */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.8); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15%  { transform: translateX(-8px); }
+  30%  { transform: translateX(8px); }
+  45%  { transform: translateX(-6px); }
+  60%  { transform: translateX(6px); }
+  75%  { transform: translateX(-3px); }
+  90%  { transform: translateX(3px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes zenBob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(34,197,94,0.3); }
+  50%       { box-shadow: 0 0 40px rgba(34,197,94,0.55), 0 0 60px rgba(34,197,94,0.2); }
+}
+

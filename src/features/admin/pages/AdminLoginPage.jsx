@@ -37,7 +37,7 @@ export function AdminLoginPage() {
         <div className="text-center mb-8">
           <span className="text-3xl">🔐</span>
           <h1 className="text-xl font-bold text-appian-blue mt-2">Panel Administrador</h1>
-          <p className="text-appian-muted text-xs mt-1">Simulador Appian</p>
+          <p className="text-appian-muted text-xs mt-1">Panel CertZen</p>
         </div>
 
         {/* Error */}

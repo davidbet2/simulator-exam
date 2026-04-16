@@ -51,4 +51,17 @@ export const CERTIFICATIONS = [
     available: true,
     color: 'purple',
   },
+  {
+    id: 'demo',
+    label: 'Demo Simulator',
+    labelEs: 'Demo del Simulador',
+    category: 'demo',
+    level: 'demo',
+    questionCount: 5,
+    timeMinutes: 5,
+    passPercent: 60,
+    available: true,
+    color: 'orange',
+    isDemo: true,
+  },
 ];

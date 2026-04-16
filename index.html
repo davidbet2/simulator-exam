@@ -4,10 +4,51 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Appian Exam Simulator</title>
+
+    <!-- Primary SEO -->
+    <title>CertZen — Domina tu Certificación | Simulador de Exámenes</title>
+    <meta name="description" content="Practica con simuladores reales de exámenes de certificación Appian, AWS, Azure y más. Modo freemium, historial de intentos y contenido de la comunidad." />
+    <meta name="keywords" content="simulador certificaciones, appian certification, práctica examen, cert prep, CertZen" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://certzen.app" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://certzen.app" />
+    <meta property="og:title" content="CertZen — Domina tu Certificación" />
+    <meta property="og:description" content="Simulador inteligente de exámenes de certificación. Practica, aprende y aprueba con confianza." />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CertZen — Domina tu Certificación" />
+    <meta name="twitter:description" content="Simulador inteligente de exámenes de certificación." />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <!-- PWA -->
+    <meta name="theme-color" content="#8b5cf6" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CertZen" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Fonts — non-blocking async load with preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Preconnect to Firebase services for faster auth/db connections -->
+    <link rel="preconnect" href="https://firebaseapp.com" crossorigin />
+    <link rel="preconnect" href="https://apis.google.com" crossorigin />
+    <!-- Async font load: avoids render-blocking -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&family=Syne:wght@600;700;800&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&family=Syne:wght@600;700;800&display=swap" />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

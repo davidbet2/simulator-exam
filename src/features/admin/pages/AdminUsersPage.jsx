@@ -12,8 +12,9 @@ export function AdminUsersPage() {
   const [revokeConfirm, setRevokeConfirm] = useState(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     loadAdmins();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function loadAdmins() {
     const data = await fetchAdmins();

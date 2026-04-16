@@ -2,26 +2,47 @@ import { create } from 'zustand';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/firebase';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db, googleProvider } from '../firebase/firebase';
+
+async function fetchUserProfile(firebaseUser) {
+  const [adminDoc, userDoc] = await Promise.all([
+    getDoc(doc(db, 'admins', firebaseUser.email)),
+    getDoc(doc(db, 'users', firebaseUser.uid)),
+  ]);
+  const profile = userDoc.exists() ? userDoc.data() : {};
+  return {
+    user:        firebaseUser,
+    isAdmin:     adminDoc.exists(),
+    isPro:       profile.plan === 'pro',
+    plan:        profile.plan ?? 'free',
+    displayName: profile.displayName ?? firebaseUser.displayName ?? firebaseUser.email.split('@')[0],
+    isLoading:   false,
+    error:       null,
+  };
+}
 
 export const useAuthStore = create((set) => ({
-  user: null,
-  isAdmin: false,
-  isLoading: true,
-  error: null,
+  user:        null,
+  isAdmin:     false,
+  isPro:       false,
+  plan:        'free',
+  displayName: null,
+  isLoading:   true,
+  error:       null,
 
   /** Call once in App.jsx — listens to auth state changes */
   init: () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        const adminDoc = await getDoc(doc(db, 'admins', firebaseUser.email));
-        set({ user: firebaseUser, isAdmin: adminDoc.exists(), isLoading: false });
+        const state = await fetchUserProfile(firebaseUser);
+        set(state);
       } else {
-        set({ user: null, isAdmin: false, isLoading: false });
+        set({ user: null, isAdmin: false, isPro: false, plan: 'free', displayName: null, isLoading: false });
       }
     });
     return unsubscribe;
@@ -37,10 +58,40 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  register: async (email, password) => {
+  loginWithGoogle: async () => {
     set({ isLoading: true, error: null });
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const result = await signInWithPopup(auth, googleProvider);
+      // Create user profile if first time
+      const userRef = doc(db, 'users', result.user.uid);
+      const existing = await getDoc(userRef);
+      if (!existing.exists()) {
+        await setDoc(userRef, {
+          uid:         result.user.uid,
+          email:       result.user.email,
+          displayName: result.user.displayName ?? result.user.email.split('@')[0],
+          plan:        'free',
+          createdAt:   serverTimestamp(),
+        });
+      }
+      // onAuthStateChanged handles the state update
+    } catch (err) {
+      set({ error: mapAuthError(err.code), isLoading: false });
+    }
+  },
+
+  register: async (email, password, displayName) => {
+    set({ isLoading: true, error: null });
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, 'users', result.user.uid), {
+        uid:         result.user.uid,
+        email,
+        displayName: displayName ?? email.split('@')[0],
+        plan:        'free',
+        createdAt:   serverTimestamp(),
+      });
+      // onAuthStateChanged handles the state update
     } catch (err) {
       set({ error: mapAuthError(err.code), isLoading: false });
     }

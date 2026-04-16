@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CERTIFICATIONS } from '../../../core/constants/certifications';
 import { useExam } from '../hooks/useExam';
@@ -8,7 +8,7 @@ import { TimerBox } from '../components/TimerBox';
 /** Wrapping chips showing each question's status */
 function QuestionNavigator({ total, current, answers, flags, revealed, displayQuestions, mode, onNavigate }) {
   return (
-    <div className="flex flex-wrap gap-1.5 px-4 py-3 bg-gray-50 border-b border-gray-200">
+      <div className="flex flex-wrap gap-1.5 px-4 py-3 bg-surface-soft border-b border-surface-border">
       {Array.from({ length: total }, (_, i) => {
         const isCurrent = i === current;
         const sel = answers[i] ?? [];
@@ -19,7 +19,7 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
         let cls =
           'shrink-0 w-8 h-8 rounded text-xs font-bold border transition-colors flex items-center justify-center cursor-pointer ';
         if (isCurrent) {
-          cls += 'bg-appian-blue text-white border-appian-blue shadow-sm';
+          cls += 'bg-brand-500 text-white border-brand-500 shadow-glow-brand';
         } else if (mode === 'study' && isRevealed) {
           const dq = displayQuestions[i];
           let isCorrect = false;
@@ -35,15 +35,15 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
             const sortedSel = [...sel].sort();
             isCorrect = sortedSel.length === correct.length && sortedSel.every((v, j) => v === correct[j]);
           }
-          cls += isCorrect ? 'bg-green-500 text-white border-green-500' : 'bg-red-400 text-white border-red-400';
+          cls += isCorrect ? 'bg-success-500 text-white border-success-500' : 'bg-danger-500 text-white border-danger-500';
         } else if (mode === 'study' && isAnswered) {
-          cls += 'bg-yellow-400 text-white border-yellow-400';
+          cls += 'bg-warning-500 text-white border-warning-500';
         } else if (isFlagged) {
-          cls += 'bg-red-500 text-white border-red-500';
+          cls += 'bg-danger-500 text-white border-danger-500';
         } else if (isAnswered) {
-          cls += 'bg-green-500 text-white border-green-500';
+          cls += 'bg-success-500 text-white border-success-500';
         } else {
-          cls += 'bg-white text-gray-500 border-gray-300 hover:border-appian-blue hover:text-appian-blue';
+          cls += 'bg-surface-card text-ink-soft border-surface-border hover:border-brand-400 hover:text-brand-300';
         }
 
         return (
@@ -60,21 +60,21 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
 function NavLegend({ mode }) {
   if (mode === 'study') {
     return (
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 bg-gray-50 border-b border-gray-100 text-xs text-gray-500">
-        <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-appian-blue" /> Actual</span>
-        <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-green-500" /> Correcta</span>
-        <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-red-400" /> Incorrecta</span>
-        <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-yellow-400" /> Sin confirmar</span>
-        <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-white border border-gray-300" /> Sin responder</span>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 bg-surface-soft/50 border-b border-surface-border text-xs text-ink-soft">
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-brand-500" /> Actual</span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-success-500" /> Correcta</span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-danger-500" /> Incorrecta</span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-warning-500" /> Sin confirmar</span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-surface-muted border border-surface-border" /> Sin responder</span>
       </div>
     );
   }
   return (
-    <div className="flex items-center gap-4 px-4 py-1.5 bg-gray-50 border-b border-gray-100 text-xs text-gray-500">
-      <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-appian-blue" /> Actual</span>
-      <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-green-500" /> Respondida</span>
-      <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-red-500" /> Con duda</span>
-      <span className="flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-white border border-gray-300" /> Sin responder</span>
+    <div className="flex items-center gap-4 px-4 py-1.5 bg-surface-soft/50 border-b border-surface-border text-xs text-ink-soft">
+      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-brand-500" /> Actual</span>
+      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-success-500" /> Respondida</span>
+      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-danger-500" /> Con duda</span>
+      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-surface-muted border border-surface-border" /> Sin responder</span>
     </div>
   );
 }
@@ -83,15 +83,15 @@ function NavLegend({ mode }) {
 function SubmitGuardModal({ unanswered, onNavigate, onConfirm, onCancel }) {
   const hasUnanswered = unanswered.length > 0;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-        <h2 className="font-bold text-gray-800 text-base mb-2">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+      <div className="glass-bright rounded-2xl shadow-card w-full max-w-md p-6 border border-surface-border">
+        <h2 className="font-display font-bold text-ink text-base mb-2">
           {hasUnanswered ? '⚠️ Preguntas sin responder' : '¿Enviar el examen?'}
         </h2>
 
         {hasUnanswered ? (
           <>
-            <p className="text-sm text-appian-muted mb-4">
+            <p className="text-sm text-ink-soft mb-4">
               {unanswered.length === 1
                 ? 'La siguiente pregunta no fue respondida. Puedes ir a responderla o enviar de todas formas.'
                 : `Las siguientes ${unanswered.length} preguntas no fueron respondidas. Puedes ir a responderlas o enviar de todas formas.`}
@@ -101,15 +101,15 @@ function SubmitGuardModal({ unanswered, onNavigate, onConfirm, onCancel }) {
                 <button
                   key={idx}
                   onClick={() => { onNavigate(idx); onCancel(); }}
-                  className="text-xs font-bold bg-gray-100 hover:bg-appian-blue-light hover:text-appian-blue border border-gray-300 hover:border-appian-blue px-3 py-1.5 rounded transition-colors"
+                  className="text-xs font-bold bg-surface-muted hover:bg-brand-500/20 hover:text-brand-300 border border-surface-border hover:border-brand-500/50 px-3 py-1.5 rounded-lg transition-colors text-ink-soft"
                 >
-                  Pregunta {idx + 1}
+                  #{idx + 1}
                 </button>
               ))}
             </div>
           </>
         ) : (
-          <p className="text-sm text-appian-muted mb-5">
+          <p className="text-sm text-ink-soft mb-5">
             Has respondido todas las preguntas. ¿Deseas enviar el examen ahora?
           </p>
         )}
@@ -117,13 +117,13 @@ function SubmitGuardModal({ unanswered, onNavigate, onConfirm, onCancel }) {
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm border border-gray-300 rounded text-gray-600 hover:bg-gray-50"
+            className="px-4 py-2 text-sm border border-surface-border rounded-xl text-ink-soft hover:bg-surface-muted transition-colors"
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 text-sm bg-appian-blue hover:bg-appian-blue-dark text-white font-bold rounded transition-colors"
+            className="px-4 py-2 text-sm bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-colors"
           >
             {hasUnanswered ? 'Enviar de todas formas' : 'Enviar examen'}
           </button>
@@ -165,10 +165,10 @@ export function ExamPage() {
     if (status === 'finished') {
       navigate('/results', {
         replace: true,
-        state: { score, total, isTimeOut, certLabel: certification?.labelEs ?? certId, passPercent, displayQuestions, answers, mode },
+        state: { score, total, isTimeOut, certLabel: certification?.labelEs ?? certId, certId, passPercent, displayQuestions, answers, mode },
       });
     }
-  }, [status, navigate, score, total, isTimeOut, certification, certId, passPercent, displayQuestions, answers]);
+  }, [status, navigate, score, total, isTimeOut, certification, certId, passPercent, displayQuestions, answers, mode]);
 
   useEffect(() => {
     if (!certification) navigate('/', { replace: true });
@@ -179,7 +179,10 @@ export function ExamPage() {
   if (status === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-appian-muted">Cargando preguntas...</p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-full border-2 border-brand-500/30 border-t-brand-500 animate-spin" />
+          <p className="text-ink-soft text-sm">Cargando preguntas...</p>
+        </div>
       </div>
     );
   }
@@ -187,8 +190,8 @@ export function ExamPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-        <p className="text-appian-error font-semibold">{error}</p>
-        <button onClick={() => navigate('/')} className="bg-appian-blue text-white font-bold py-2 px-6 rounded">
+        <p className="text-danger-500 font-semibold">{error}</p>
+        <button onClick={() => navigate('/')} className="bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 px-6 rounded-xl transition-colors">
           Volver al inicio
         </button>
       </div>
@@ -202,22 +205,23 @@ export function ExamPage() {
   );
 
   return (
-    <div className="min-h-screen bg-appian-bg flex items-start justify-center py-8 px-4">
-      <div className="bg-white w-full max-w-3xl rounded-lg shadow-md">
+    <div className="min-h-screen flex items-start justify-center py-6 px-4">
+      <div className="w-full max-w-3xl rounded-2xl overflow-hidden shadow-card bg-surface-soft border border-surface-border">
 
-        {/* Header */}
-        <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center gap-2">
-            <h1 className="text-appian-blue font-bold text-base">{certification.labelEs}</h1>
+        {/* Header — Game HUD */}
+        <header className="flex items-center justify-between px-5 py-3.5 border-b border-surface-border bg-surface-card">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
+            <h1 className="font-display font-bold text-ink text-sm">{certification.labelEs}</h1>
             {mode === 'study' ? (
-              <span className="text-xs bg-green-100 text-green-700 font-semibold px-2 py-0.5 rounded">📖 Estudio</span>
+              <span className="text-xs bg-success-500/20 text-success-500 font-semibold px-2 py-0.5 rounded-full">📖 Estudio</span>
             ) : (
-              <span className="text-xs bg-blue-100 text-appian-blue font-semibold px-2 py-0.5 rounded">🎯 Examen</span>
+              <span className="text-xs bg-brand-500/20 text-brand-400 font-semibold px-2 py-0.5 rounded-full">🎯 Examen</span>
             )}
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-appian-muted font-medium">
-              {answeredCount}/{total} respondidas
+            <span className="text-xs text-ink-soft font-medium tabular-nums">
+              <span className="text-ink font-bold">{answeredCount}</span>/{total}
             </span>
             {mode === 'exam' && <TimerBox timeLeft={timeLeft} />}
           </div>
@@ -238,16 +242,16 @@ export function ExamPage() {
         {/* Color legend */}
         <NavLegend mode={mode} />
 
-        {/* Progress bar (% answered) */}
-        <div className="h-1 bg-gray-100">
+        {/* Progress bar */}
+        <div className="h-1 bg-surface-muted">
           <div
-            className="h-1 bg-green-500 transition-all"
+            className="h-1 bg-gradient-to-r from-brand-500 to-success-500 transition-all duration-500"
             style={{ width: total > 0 ? `${(answeredCount / total) * 100}%` : '0%' }}
           />
         </div>
 
         {/* Question */}
-        <main className="px-8 py-6">
+        <main className="px-6 py-6">
           {question && (
             <QuestionCard
               question={question}
@@ -264,43 +268,43 @@ export function ExamPage() {
         </main>
 
         {/* Footer navigation */}
-        <footer className="px-8 py-4 border-t border-gray-100 flex items-center justify-between gap-3">
+        <footer className="px-6 py-4 border-t border-surface-border bg-surface-card flex items-center justify-between gap-3">
           <button
             onClick={() => navigateTo(current - 1)}
             disabled={current === 0}
-            className="px-4 py-2 text-sm border border-gray-300 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 text-sm border border-surface-border rounded-xl text-ink-soft hover:bg-surface-muted hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             ← Anterior
           </button>
 
-          {/* Study mode: confirm button appears when answer selected but not yet revealed */}
+          {/* Study mode: confirm button */}
           {mode === 'study' && (answers[current] ?? []).length > 0 && !(revealed[current] ?? false) && (
             <button
               onClick={() => confirmAnswer(current)}
-              className="px-5 py-2 text-sm bg-teal-600 hover:bg-teal-700 text-white font-bold rounded transition-colors"
+              className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
             >
-              Confirmar respuesta ✓
+              Confirmar ✓
             </button>
           )}
 
           {current < total - 1 ? (
             <button
               onClick={() => navigateTo(current + 1)}
-              className="px-5 py-2 text-sm bg-appian-blue hover:bg-appian-blue-dark text-white font-bold rounded transition-colors"
+              className="px-5 py-2 text-sm bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-all active:scale-95"
             >
               Siguiente →
             </button>
           ) : mode === 'study' ? (
             <button
               onClick={submitExam}
-              className="px-5 py-2 text-sm bg-green-600 hover:bg-green-700 text-white font-bold rounded transition-colors"
+              className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
             >
               Ver resultados ✓
             </button>
           ) : (
             <button
               onClick={() => setShowSubmitGuard(true)}
-              className="px-5 py-2 text-sm bg-green-600 hover:bg-green-700 text-white font-bold rounded transition-colors"
+              className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
             >
               Finalizar examen ✓
             </button>

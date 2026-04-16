@@ -2,6 +2,80 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../core/firebase/firebase';
 
+// ─── Demo questions (general software dev knowledge, not domain-specific) ───
+const DEMO_QUESTIONS = [
+  {
+    id: 'demo-q1',
+    type: 'multiple',
+    question: '¿Cuál de los siguientes es un principio fundamental del Manifiesto Ágil?',
+    options: {
+      A: 'Documentación exhaustiva sobre software funcionando',
+      B: 'Individuos e interacciones sobre procesos y herramientas',
+      C: 'Seguir el plan por encima de responder al cambio',
+      D: 'Negociación de contratos sobre colaboración con el cliente',
+    },
+    answer: ['B'],
+    domain: 'Metodologías Ágiles',
+    difficulty: 'medium',
+  },
+  {
+    id: 'demo-q2',
+    type: 'multiple',
+    question: '¿Qué patrón de diseño garantiza que una clase tenga una única instancia en toda la aplicación?',
+    options: {
+      A: 'Factory',
+      B: 'Observer',
+      C: 'Singleton',
+      D: 'Strategy',
+    },
+    answer: ['C'],
+    domain: 'Patrones de Diseño',
+    difficulty: 'easy',
+  },
+  {
+    id: 'demo-q3',
+    type: 'multiple',
+    question: 'En una API REST, ¿qué código HTTP indica que un recurso fue creado exitosamente?',
+    options: {
+      A: '200 OK',
+      B: '201 Created',
+      C: '204 No Content',
+      D: '301 Moved Permanently',
+    },
+    answer: ['B'],
+    domain: 'APIs y Servicios Web',
+    difficulty: 'easy',
+  },
+  {
+    id: 'demo-q4',
+    type: 'multiple',
+    question: '¿Cuál de las siguientes afirmaciones sobre Git es correcta?',
+    options: {
+      A: 'git rebase siempre crea commits de fusión (merge commits)',
+      B: 'git fetch descarga cambios del remoto y los fusiona automáticamente',
+      C: 'git pull combina git fetch y git merge en un solo comando',
+      D: 'git stash elimina permanentemente los cambios no confirmados',
+    },
+    answer: ['C'],
+    domain: 'Control de Versiones',
+    difficulty: 'medium',
+  },
+  {
+    id: 'demo-q5',
+    type: 'multiple',
+    question: '¿Cuál es la complejidad temporal de buscar un elemento en un árbol binario de búsqueda balanceado?',
+    options: {
+      A: 'O(1)',
+      B: 'O(log n)',
+      C: 'O(n)',
+      D: 'O(n log n)',
+    },
+    answer: ['B'],
+    domain: 'Estructuras de Datos',
+    difficulty: 'medium',
+  },
+];
+
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -92,6 +166,23 @@ export function useExam(certification, mode = 'exam') {
   const loadQuestions = useCallback(async () => {
     if (!certification) return;
 
+    // Demo mode — use hardcoded questions, skip Firestore entirely
+    if (certification.isDemo) {
+      const dqs = DEMO_QUESTIONS.map((q) => buildDisplayQuestion(q, mode === 'exam'));
+      const totalSecs = certification.timeMinutes * 60;
+      const initialFlags = new Array(dqs.length).fill(false);
+      const initialRevealed = new Array(dqs.length).fill(false);
+      setPassPercent(certification.passPercent ?? 60);
+      setDisplayQuestions(dqs);
+      setFlags(initialFlags);
+      setRevealed(initialRevealed);
+      setAnswers({});
+      setCurrent(0);
+      setTimeLeft(totalSecs);
+      setStatus('running');
+      return;
+    }
+
     const settingsSnap = await getDoc(doc(db, 'settings', certification.id)).catch(() => null);
     const settings = settingsSnap?.exists() ? settingsSnap.data() : {};
     const effectiveQuestionCount = settings.questionCount ?? certification.questionCount;
@@ -166,6 +257,7 @@ export function useExam(certification, mode = 'exam') {
   }, [certification, mode]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadQuestions();
     return () => clearInterval(timerRef.current);
   }, [loadQuestions]);

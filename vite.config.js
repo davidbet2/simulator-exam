@@ -1,14 +1,60 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'icons/*.png'],
+      manifest: {
+        name: 'CertZen — Domina tu Certificación',
+        short_name: 'CertZen',
+        description: 'Simulador inteligente de exámenes de certificación. Practica, aprende y aprueba con confianza.',
+        theme_color: '#6366f1',
+        background_color: '#0f172a',
+        display: 'standalone',
+        orientation: 'portrait',
+        scope: '/',
+        start_url: '/',
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        // PNGs excluidos del precache — dolphin assets son grandes y cambian frecuentemente
+        globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+        globIgnores: ['**/dolphin_full_system/**'],
+        runtimeCaching: [
+          {
+            // NetworkFirst: siempre intenta red primero → garantiza assets frescos en cada deploy
+            urlPattern: /\/dolphin_full_system\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'dolphin-assets-v1',
+              networkTimeoutSeconds: 8,
+              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 7 },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: { cacheName: 'google-fonts-cache', expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 } },
+          },
+        ],
+      },
+    }),
+  ],
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
-          'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+          firebase:      ['firebase/app', 'firebase/auth', 'firebase/firestore'],
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          framer:        ['framer-motion'],
         },
       },
     },

@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 
 // ─── Shared top-bar (flag + question text) ────────────────────────────────────
-function QuestionHeader({ question, questionNumber, flagged, isStudy, onToggleFlag }) {
+function QuestionHeader({ question, questionNumber: _questionNumber, flagged, isStudy, onToggleFlag }) {
   return (
     <>
       <div className="flex items-center justify-between mb-4">
@@ -10,10 +10,10 @@ function QuestionHeader({ question, questionNumber, flagged, isStudy, onToggleFl
           <button
             onClick={onToggleFlag}
             title={flagged ? 'Quitar bandera' : 'Marcar con duda'}
-            className={`w-8 h-8 flex items-center justify-center rounded border transition-colors ${
+            className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all ${
               flagged
-                ? 'bg-red-500 border-red-500 text-white'
-                : 'bg-white border-gray-300 text-gray-300 hover:border-red-400 hover:text-red-400'
+                ? 'bg-danger-500 border-danger-500 text-white shadow-glow-danger'
+                : 'bg-transparent border-surface-border text-ink-soft hover:border-danger-500 hover:text-danger-600'
             }`}
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -22,7 +22,7 @@ function QuestionHeader({ question, questionNumber, flagged, isStudy, onToggleFl
           </button>
         )}
       </div>
-      <h2 className="text-base font-semibold leading-relaxed text-gray-800 mb-5">
+      <h2 className="text-base font-semibold leading-relaxed text-ink mb-5">
         {question.question}
       </h2>
     </>
@@ -33,7 +33,7 @@ function QuestionHeader({ question, questionNumber, flagged, isStudy, onToggleFl
 function ExplanationBox({ text }) {
   if (!text) return null;
   return (
-    <div className="flex gap-2 mt-4 px-4 py-3 rounded-lg border border-blue-200 bg-blue-50 text-sm text-blue-900">
+    <div className="flex gap-2 mt-4 px-4 py-3 rounded-lg border border-brand-500/30 bg-brand-50 text-sm text-brand-700">
       <span className="shrink-0 text-base">💡</span>
       <p className="leading-relaxed">{text}</p>
     </div>
@@ -43,10 +43,10 @@ function ExplanationBox({ text }) {
 // ─── Feedback banner ──────────────────────────────────────────────────────────
 function FeedbackBanner({ isCorrect }) {
   return (
-    <div className={`flex items-center gap-2 px-4 py-2 rounded mb-4 text-sm font-semibold ${
+    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl mb-4 text-sm font-semibold border ${
       isCorrect
-        ? 'bg-green-50 border border-green-300 text-green-700'
-        : 'bg-red-50 border border-red-300 text-red-700'
+        ? 'bg-success-50 border-success-500/40 text-success-700'
+        : 'bg-danger-50 border-danger-500/40 text-danger-700'
     }`}>
       <span>{isCorrect ? '✅' : '❌'}</span>
       <span>
@@ -77,28 +77,28 @@ function MatchingQuestion({ question, savedSelection, revealed, onSelectionChang
         const isWrong = revealed && selected !== '' && selected !== pair.correctMatch;
         const isBlank = revealed && selected === '';
 
-        let rowCls = 'grid gap-3 p-3 rounded border ';
+        let rowCls = 'grid gap-3 p-3 rounded-lg border ';
         if (revealed) {
           rowCls += isCorrect
-            ? 'border-green-400 bg-green-50'
+            ? 'border-success-500/50 bg-success-500/10'
             : isWrong
-            ? 'border-red-400 bg-red-50'
-            : 'border-gray-300 bg-gray-50';
+            ? 'border-danger-500/50 bg-danger-500/10'
+            : 'border-surface-border bg-surface-card';
         } else {
-          rowCls += 'border-gray-200 bg-gray-50';
+          rowCls += 'border-surface-border bg-surface-card';
         }
 
         return (
           <div key={pair.term} className={rowCls} style={{ gridTemplateColumns: '1fr 1fr' }}>
-            <span className="text-sm font-medium text-gray-800 flex items-center min-w-0 break-words">{pair.term}</span>
+            <span className="text-sm font-medium text-ink flex items-center min-w-0 break-words">{pair.term}</span>
             <div className="flex items-center gap-2 min-w-0">
               <select
                 value={selected}
                 onChange={(e) => handleSelect(i, e.target.value)}
                 disabled={revealed}
-                className={`flex-1 min-w-0 w-0 border rounded px-2 py-1.5 text-sm focus:outline-none focus:border-appian-blue ${
+                className={`flex-1 min-w-0 w-0 border rounded-lg px-2 py-1.5 text-sm bg-white text-ink focus:outline-none focus:border-brand-500 ${
                   revealed ? 'cursor-default' : 'cursor-pointer'
-                } ${isCorrect ? 'border-green-400' : isWrong ? 'border-red-400' : 'border-gray-300'}`}
+                } ${isCorrect ? 'border-success-500' : isWrong ? 'border-danger-500' : 'border-surface-border'}`}
               >
                 <option value="">— Seleccionar —</option>
                 {Object.entries(question.matches).map(([key, text]) => (
@@ -112,13 +112,13 @@ function MatchingQuestion({ question, savedSelection, revealed, onSelectionChang
                 ))}
               </select>
               {revealed && (
-                <span className={`shrink-0 font-bold text-sm ${isCorrect ? 'text-green-600' : isWrong ? 'text-red-500' : 'text-gray-400'}`}>
+                <span className={`shrink-0 font-bold text-sm ${isCorrect ? 'text-success-600' : isWrong ? 'text-danger-600' : 'text-ink-muted'}`}>
                   {isCorrect ? '✓' : isWrong ? '✗' : '—'}
                 </span>
               )}
             </div>
             {revealed && (isWrong || isBlank) && (
-              <div className="col-span-2 text-xs text-green-700 font-medium bg-green-50 rounded px-2 py-1">
+              <div className="col-span-2 text-xs text-success-400 font-medium bg-success-500/10 border border-success-500/30 rounded px-2 py-1">
                 ✓ Correcto: {question.matches[pair.correctMatch]}
               </div>
             )}
@@ -186,12 +186,12 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
     <div className="grid grid-cols-2 gap-4">
       {/* Left pool */}
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+        <p className="text-xs font-semibold text-ink-soft uppercase tracking-wide mb-2">
           Elementos disponibles
         </p>
-        <div className="min-h-28 border-2 border-dashed border-gray-300 rounded-lg p-2 flex flex-col gap-2 bg-gray-50">
+        <div className="min-h-28 border-2 border-dashed border-surface-muted rounded-lg p-2 flex flex-col gap-2 bg-surface-card">
           {leftItems.length === 0 && (
-            <p className="text-xs text-gray-400 text-center mt-6">Haz clic en elementos del lado derecho para devolverlos</p>
+            <p className="text-xs text-ink-muted text-center mt-6">Haz clic en elementos del lado derecho para devolverlos</p>
           )}
           {leftItems.map((item) => (
             <div
@@ -199,7 +199,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
               draggable={!revealed}
               onDragStart={(e) => handleDragStart(e, item, 'left')}
               onClick={() => moveToRight(item)}
-              className="p-2.5 bg-white border border-gray-300 rounded text-sm cursor-grab active:cursor-grabbing hover:border-appian-blue hover:bg-blue-50 select-none transition-colors"
+              className="p-2.5 bg-surface-soft border border-surface-border rounded-lg text-sm text-ink-soft cursor-grab active:cursor-grabbing hover:border-brand-500/60 hover:bg-brand-50 select-none transition-all"
             >
               {item}
             </div>
@@ -209,22 +209,22 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
 
       {/* Right ordered list */}
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+        <p className="text-xs font-semibold text-ink-soft uppercase tracking-wide mb-2">
           Orden definido
         </p>
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDropOnRightZone}
           className={`min-h-28 border-2 border-dashed rounded-lg p-2 flex flex-col gap-2 ${
-            revealed ? 'border-gray-300 bg-gray-50' : 'border-appian-blue bg-blue-50'
+            revealed ? 'border-surface-muted bg-surface-card' : 'border-brand-500/40 bg-brand-500/5'
           }`}
         >
           {savedSelection.length === 0 && (
-            <p className="text-xs text-gray-400 text-center mt-6">Arrastra o haz clic los elementos</p>
+            <p className="text-xs text-ink-muted text-center mt-6">Arrastra o haz clic los elementos</p>
           )}
           {savedSelection.map((item, idx) => {
             const isCorrect = revealed && question.correctOrder[idx] === item;
-            const isWrong = revealed && question.correctOrder[idx] !== item;
+            const _isWrong = revealed && question.correctOrder[idx] !== item;
 
             return (
               <div
@@ -234,20 +234,20 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => handleDropOnRightItem(e, item)}
                 onClick={() => removeFromRight(item)}
-                className={`flex items-center gap-2 p-2.5 border rounded text-sm select-none transition-colors ${
+                className={`flex items-center gap-2 p-2.5 border rounded-lg text-sm select-none transition-all ${
                   revealed
                     ? isCorrect
-                      ? 'bg-green-50 border-green-400 cursor-default'
-                      : 'bg-red-50 border-red-400 cursor-default'
-                    : 'bg-white border-gray-300 cursor-grab active:cursor-grabbing hover:border-red-400 hover:bg-red-50'
+                      ? 'bg-success-50 border-success-500/50 cursor-default text-success-700'
+                      : 'bg-danger-50 border-danger-500/50 cursor-default text-danger-700'
+                    : 'bg-white border-surface-border text-ink-soft cursor-grab active:cursor-grabbing hover:border-danger-500/50 hover:bg-danger-50'
                 }`}
               >
-                <span className="w-5 h-5 flex items-center justify-center bg-gray-100 rounded-full text-xs font-bold text-gray-600 shrink-0">
+                <span className="w-5 h-5 flex items-center justify-center bg-surface-muted rounded-full text-xs font-bold text-ink-muted shrink-0">
                   {idx + 1}
                 </span>
                 <span className="flex-1">{item}</span>
                 {revealed && (
-                  <span className={`shrink-0 font-bold ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
+                  <span className={`shrink-0 font-bold ${isCorrect ? 'text-success-600' : 'text-danger-600'}`}>
                     {isCorrect ? '✓' : '✗'}
                   </span>
                 )}
@@ -256,7 +256,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
           })}
         </div>
         {revealed && (
-          <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
+          <div className={`mt-2 p-2 bg-success-50 border border-success-500/30 rounded-lg text-xs text-success-700`}>
             <strong>Orden correcto:</strong>
             <ol className="mt-1 ml-4 list-decimal space-y-0.5">
               {question.correctOrder.map((item, i) => (
@@ -276,12 +276,12 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
  * Selection is controlled via savedSelection prop — no internal state for answers.
  * In study mode, `revealed` locks options and shows correct/wrong feedback.
  */
-export function QuestionCard({ question, questionNumber, total, savedSelection, flagged, mode, revealed, onSelectionChange, onToggleFlag }) {
+export function QuestionCard({ question, questionNumber, total: _total, savedSelection, flagged, mode, revealed, onSelectionChange, onToggleFlag }) {
   const isStudy = mode === 'study';
 
   // ── Matching type ────────────────────────────────────────────────────────────
   if (question.type === 'matching') {
-    const allSelected = savedSelection.length === question.pairs.length && savedSelection.every(Boolean);
+    const _allSelected = savedSelection.length === question.pairs.length && savedSelection.every(Boolean);
     const isCorrect = revealed && question.pairs.every((p, i) => savedSelection[i] === p.correctMatch);
 
     return (
@@ -365,10 +365,10 @@ export function QuestionCard({ question, questionNumber, total, savedSelection, 
   return (
     <div>
       {revealed && (
-        <div className={`flex items-center gap-2 px-4 py-2 rounded mb-4 text-sm font-semibold ${
+        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl mb-4 text-sm font-semibold border ${
           isCorrect
-            ? 'bg-green-50 border border-green-300 text-green-700'
-            : 'bg-red-50 border border-red-300 text-red-700'
+            ? 'bg-success-50 border-success-500/40 text-success-700'
+            : 'bg-danger-50 border-danger-500/40 text-danger-700'
         }`}>
           <span>{isCorrect ? '✅' : '❌'}</span>
           <span>
@@ -384,7 +384,7 @@ export function QuestionCard({ question, questionNumber, total, savedSelection, 
       <div className="flex items-center justify-between mb-4">
         <div>
           {isMultiple && (
-            <span className="inline-block bg-appian-warning-light text-appian-warning text-xs font-semibold px-2 py-0.5 rounded">
+            <span className="inline-block bg-warning-50 text-warning-600 text-xs font-semibold px-2 py-0.5 rounded-full border border-warning-500/30">
               Selección múltiple — elige {question.answer.length} opciones
             </span>
           )}
@@ -393,10 +393,10 @@ export function QuestionCard({ question, questionNumber, total, savedSelection, 
           <button
             onClick={onToggleFlag}
             title={flagged ? 'Quitar bandera' : 'Marcar con duda'}
-            className={`w-8 h-8 flex items-center justify-center rounded border transition-colors ${
+            className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all ${
               flagged
-                ? 'bg-red-500 border-red-500 text-white'
-                : 'bg-white border-gray-300 text-gray-300 hover:border-red-400 hover:text-red-400'
+                ? 'bg-danger-500 border-danger-500 text-white shadow-glow-danger'
+                : 'bg-transparent border-surface-border text-ink-soft hover:border-danger-500 hover:text-danger-600'
             }`}
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -406,30 +406,30 @@ export function QuestionCard({ question, questionNumber, total, savedSelection, 
         )}
       </div>
 
-      <h2 className="text-base font-semibold leading-relaxed text-gray-800 mb-5">
+      <h2 className="text-base font-semibold leading-relaxed text-ink mb-5">
         {question.question}
       </h2>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2.5">
         {optionEntries.map(([key, value]) => {
           const isSelected = savedSelection.includes(key);
           const isRight = correctSet.has(key);
 
-          let cls = 'flex items-baseline gap-3 p-4 rounded border transition-colors select-none ';
+          let cls = 'flex items-baseline gap-3 p-3.5 rounded-xl border transition-all select-none ';
           if (revealed) {
             cls += 'cursor-default ';
             if (isRight) {
-              cls += 'bg-green-50 border-green-400 text-green-800';
+              cls += 'bg-success-500/15 border-success-500/60 shadow-glow-success';
             } else if (isSelected) {
-              cls += 'bg-red-50 border-red-400 text-red-700';
+              cls += 'bg-danger-500/15 border-danger-500/60 animate-shake';
             } else {
-              cls += 'bg-gray-50 border-gray-200 text-gray-500';
+              cls += 'bg-surface-card border-surface-border opacity-50';
             }
           } else {
             cls += 'cursor-pointer ';
             cls += isSelected
-              ? 'bg-appian-blue-light border-appian-blue'
-              : 'bg-gray-50 border-gray-200 hover:bg-gray-100';
+              ? 'bg-brand-500/20 border-brand-500 shadow-glow-brand'
+              : 'bg-surface-card border-surface-border hover:border-brand-500/50 hover:bg-brand-500/10';
           }
 
           return (
@@ -441,16 +441,20 @@ export function QuestionCard({ question, questionNumber, total, savedSelection, 
                 checked={isSelected}
                 onChange={() => toggleOption(key)}
                 disabled={revealed}
-                className="mt-0.5 accent-appian-blue shrink-0"
+                className="mt-0.5 accent-brand-500 shrink-0"
               />
-              <span className="text-sm text-gray-800">
+              <span className={`text-sm ${
+                revealed
+                  ? isRight ? 'text-success-700 font-medium' : isSelected ? 'text-danger-700' : 'text-ink-muted'
+                  : isSelected ? 'text-ink font-medium' : 'text-ink-soft'
+              }`}>
                 <span className="font-bold">{key}.</span> {value}
               </span>
               {revealed && isRight && (
-                <span className="ml-auto shrink-0 text-xs font-bold text-green-600">✓ Correcta</span>
+                <span className="ml-auto shrink-0 text-xs font-bold text-success-700">✓ Correcta</span>
               )}
               {revealed && isSelected && !isRight && (
-                <span className="ml-auto shrink-0 text-xs font-bold text-red-500">✗ Tu resp.</span>
+                <span className="ml-auto shrink-0 text-xs font-bold text-danger-700">✗ Tu resp.</span>
               )}
             </label>
           );

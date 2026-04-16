@@ -7,8 +7,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  query,
-  where,
   serverTimestamp,
   setDoc,
   writeBatch,

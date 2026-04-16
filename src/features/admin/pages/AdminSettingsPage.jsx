@@ -304,6 +304,7 @@ export function AdminSettingsPage() {
     setLoadState('ready');
   }, [fetchCertifications, seedCertifications]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   // ── handlers ──────────────────────────────────────────────────

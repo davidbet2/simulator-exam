@@ -1,22 +1,69 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
+
+// Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
-import { ExamPage } from '../../features/exam/pages/ExamPage';
-import { ResultsPage } from '../../features/results/ResultsPage';
-import { AdminLoginPage } from '../../features/admin/pages/AdminLoginPage';
-import { AdminDashboardPage } from '../../features/admin/pages/AdminDashboardPage';
-import { AdminQuestionsPage } from '../../features/admin/pages/AdminQuestionsPage';
-import { AdminUsersPage } from '../../features/admin/pages/AdminUsersPage';
-import { AdminSettingsPage } from '../../features/admin/pages/AdminSettingsPage';
+
+// Lazy-loaded — split into separate chunks for faster initial load
+const ExamPage           = lazy(() => import('../../features/exam/pages/ExamPage').then(m => ({ default: m.ExamPage })));
+const ResultsPage        = lazy(() => import('../../features/results/ResultsPage').then(m => ({ default: m.ResultsPage })));
+const LoginPage          = lazy(() => import('../../features/auth/pages/LoginPage').then(m => ({ default: m.LoginPage })));
+const RegisterPage       = lazy(() => import('../../features/auth/pages/RegisterPage').then(m => ({ default: m.RegisterPage })));
+const DashboardPage      = lazy(() => import('../../features/dashboard/pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const PricingPage        = lazy(() => import('../../features/plans/pages/PricingPage').then(m => ({ default: m.PricingPage })));
+const ExploreExamsPage   = lazy(() => import('../../features/explore/pages/ExploreExamsPage').then(m => ({ default: m.ExploreExamsPage })));
+const CreateExamPage     = lazy(() => import('../../features/creator/pages/CreateExamPage').then(m => ({ default: m.CreateExamPage })));
+const ProfilePage        = lazy(() => import('../../features/profile/pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
+const AboutPage          = lazy(() => import('../../features/public/pages/AboutPage').then(m => ({ default: m.AboutPage })));
+const PrivacyPage        = lazy(() => import('../../features/public/pages/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
+const TermsPage          = lazy(() => import('../../features/public/pages/TermsPage').then(m => ({ default: m.TermsPage })));
+const ContactPage        = lazy(() => import('../../features/public/pages/ContactPage').then(m => ({ default: m.ContactPage })));
+const AdminLoginPage     = lazy(() => import('../../features/admin/pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
+const AdminDashboardPage = lazy(() => import('../../features/admin/pages/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })));
+const AdminQuestionsPage = lazy(() => import('../../features/admin/pages/AdminQuestionsPage').then(m => ({ default: m.AdminQuestionsPage })));
+const AdminUsersPage     = lazy(() => import('../../features/admin/pages/AdminUsersPage').then(m => ({ default: m.AdminUsersPage })));
+const AdminSettingsPage  = lazy(() => import('../../features/admin/pages/AdminSettingsPage').then(m => ({ default: m.AdminSettingsPage })));
+
+function PageLoader() {  return (
+    <div className="min-h-screen bg-surface flex items-center justify-center" aria-busy="true" aria-label="Cargando página">
+      <div className="w-8 h-8 rounded-full border-2 border-brand-500/30 border-t-brand-500 animate-spin" />
+    </div>
+  );
+}
+
+/** Scrolls to top whenever the route changes */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [pathname]);
+  return null;
+}
 
 export function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
+      <Suspense fallback={<PageLoader />}>
       <Routes>
-        {/* Public exam routes */}
+        {/* Public routes */}
         <Route path="/" element={<WelcomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/exam" element={<ExamPage />} />
         <Route path="/results" element={<ResultsPage />} />
+
+        {/* Authenticated user routes */}
+        <Route path="/dashboard" element={<ProtectedRoute requireUser><DashboardPage /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute requireUser><ProfilePage /></ProtectedRoute>} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/explore" element={<ExploreExamsPage />} />
+        <Route path="/create-exam" element={<ProtectedRoute requireUser><CreateExamPage /></ProtectedRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
@@ -56,6 +103,7 @@ export function AppRouter() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

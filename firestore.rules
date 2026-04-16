@@ -33,5 +33,47 @@ service cloud.firestore {
       allow write: if request.auth != null
         && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
     }
+
+    // Users: each user reads and writes only their own profile document.
+    // Admins can read any user profile.
+    match /users/{uid} {
+      allow read: if request.auth != null
+        && (request.auth.uid == uid
+            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow update: if request.auth != null && request.auth.uid == uid
+        // Prevent self-promotion to pro plan
+        && (!request.resource.data.keys().hasAny(['plan'])
+            || request.resource.data.plan == resource.data.plan);
+    }
+
+    // Attempts: users can read and create their own attempts; no updates or deletes.
+    match /attempts/{attemptId} {
+      allow read: if request.auth != null
+        && (resource.data.uid == request.auth.uid
+            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid;
+    }
+
+    // ExamSets: published sets are readable by any authenticated user.
+    // Only the owner can create/update/delete their set.
+    match /examSets/{setId} {
+      allow read: if request.auth != null
+        && (resource.data.published == true || resource.data.ownerUid == request.auth.uid
+            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+      allow create: if request.auth != null
+        && request.resource.data.ownerUid == request.auth.uid;
+      allow update, delete: if request.auth != null
+        && (resource.data.ownerUid == request.auth.uid
+            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+
+      match /questions/{qId} {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null
+          && (get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid == request.auth.uid
+              || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+      }
+    }
   }
 }

@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "type": "prompt",
+        "description": "Research gate — intercepts implementation requests and routes them through the research skill first",
+        "command": "node .claude/hooks/run-python.js .claude/hooks/user-prompt/research-gate.py",
+        "windows": "node .claude\\hooks\\run-python.js .claude\\hooks\\user-prompt\\research-gate.py",
+        "timeout": 8,
+        "async": false
+      }
+    ]
+  }
+}

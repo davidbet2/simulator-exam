@@ -31,7 +31,7 @@ export function AdminDashboardPage() {
           <span className="text-xl">🧩</span>
           <div>
             <h1 className="text-appian-blue font-bold text-base">Panel Administrador</h1>
-            <p className="text-xs text-appian-muted">Simulador Appian</p>
+              <p className="text-xs text-appian-muted">Panel CertZen</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
