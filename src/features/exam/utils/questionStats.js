@@ -129,3 +129,57 @@ export async function fetchStatsSummary({ uid, setId }) {
   });
   return { weak, due, mastered, seen: snap.size };
 }
+
+/**
+ * Compute per-domain mastery for a set by joining user question stats with each
+ * question's `domain` field. Mastery = % of domain questions with Leitner box >= 4.
+ *
+ * Returns an array of { domain, label, total, mastered, seen, percent } sorted by domain label.
+ */
+export async function fetchDomainMastery({ uid, setId, questions }) {
+  if (!setId || !Array.isArray(questions) || questions.length === 0) return [];
+  // Group all questions by their domain field (fallback 'Otros').
+  const byDomain = new Map();
+  for (const q of questions) {
+    const d = (q.domain || q.category || 'Otros').trim() || 'Otros';
+    if (!byDomain.has(d)) byDomain.set(d, []);
+    byDomain.get(d).push(q.id);
+  }
+  // Load user stats (best effort — anon users get zeroed mastery).
+  let statsByQid = new Map();
+  if (uid) {
+    try {
+      const snap = await getDocs(query(
+        collection(db, 'users', uid, 'questionStats'),
+        where('setId', '==', setId),
+      ));
+      snap.forEach((d) => {
+        const s = d.data();
+        statsByQid.set(s.questionId, s);
+      });
+    } catch { /* fall through with empty map */ }
+  }
+  const rows = [];
+  for (const [domain, qids] of byDomain.entries()) {
+    let mastered = 0;
+    let seen = 0;
+    for (const qid of qids) {
+      const s = statsByQid.get(qid);
+      if (s) {
+        seen += 1;
+        if ((s.box ?? 1) >= 4) mastered += 1;
+      }
+    }
+    const total = qids.length;
+    rows.push({
+      domain,
+      label: domain,
+      total,
+      seen,
+      mastered,
+      percent: total > 0 ? Math.round((mastered / total) * 100) : 0,
+    });
+  }
+  rows.sort((a, b) => a.label.localeCompare(b.label));
+  return rows;
+}

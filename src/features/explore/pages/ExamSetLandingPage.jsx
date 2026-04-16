@@ -6,12 +6,12 @@ import { doc, getDoc, collection, getDocs, limit, query } from 'firebase/firesto
 import {
   ArrowLeft, BookOpen, Clock, Target, User, Play,
   Lock, CheckCircle2, Tag, GraduationCap, Zap, TimerReset,
-  Brain, TrendingDown, Sparkles, Dice5,
+  Brain, TrendingDown, Sparkles, Dice5, Layers,
 } from 'lucide-react';
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { getDomain } from '../../../core/constants/domains';
-import { fetchStatsSummary } from '../../exam/utils/questionStats';
+import { fetchStatsSummary, fetchDomainMastery } from '../../exam/utils/questionStats';
 import { AppShell } from '../../../components/layout/AppShell';
 import { Card, CardBody } from '../../../components/ui/Card';
 import { Badge } from '../../../components/ui/Badge';
@@ -20,6 +20,7 @@ import { RatingStars } from '../../social/components/RatingStars';
 import { FavoriteButton } from '../../social/components/FavoriteButton';
 import { AuthorChip } from '../../social/components/AuthorChip';
 import { SaveToFolderButton } from '../../home/components/SaveToFolderButton';
+import DomainPath from '../components/DomainPath';
 
 function MetaStat({ icon: Icon, label, value }) {
   return (
@@ -144,6 +145,7 @@ export function ExamSetLandingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [stats, setStats] = useState({ weak: 0, due: 0, mastered: 0, seen: 0 });
+  const [domains, setDomains] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -181,6 +183,26 @@ export function ExamSetLandingPage() {
     fetchStatsSummary({ uid: user.uid, setId: slug })
       .then((s) => { if (active) setStats(s); })
       .catch(() => { /* non-critical */ });
+    return () => { active = false; };
+  }, [user?.uid, slug]);
+
+  // Load domain mastery map (Ruta de Dominio). Fetches all question domains in the set
+  // and joins with user Leitner stats. Best-effort — anon users see 0% progression.
+  useEffect(() => {
+    if (!slug) return;
+    let active = true;
+    (async () => {
+      try {
+        const qsSnap = await getDocs(collection(db, 'examSets', slug, 'questions'));
+        if (!active) return;
+        const questions = qsSnap.docs.map((d) => {
+          const data = d.data();
+          return { id: d.id, domain: data.domain, category: data.category };
+        });
+        const rows = await fetchDomainMastery({ uid: user?.uid, setId: slug, questions });
+        if (active) setDomains(rows);
+      } catch { /* non-critical */ }
+    })();
     return () => { active = false; };
   }, [user?.uid, slug]);
 
@@ -329,6 +351,30 @@ export function ExamSetLandingPage() {
           <MetaStat icon={Target}   label="Aprobar"   value={`${set.passPercent ?? 70}%`} />
           <MetaStat icon={User}     label="Intentos"  value={set.attempts ?? 0} />
         </motion.section>
+
+        {/* Ruta de Dominio — domain-level mastery map */}
+        {domains.length > 1 && (
+          <motion.section
+            id="domain-path"
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.07 }}
+            className="space-y-4 scroll-mt-20"
+          >
+            <div>
+              <h2 className="text-xl font-bold text-ink flex items-center gap-2">
+                <Layers size={20} className="text-brand-600" />
+                Ruta de Dominio
+              </h2>
+              <p className="text-sm text-ink-soft mt-1">
+                Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada.
+              </p>
+            </div>
+            <DomainPath
+              domains={domains}
+              locked={!user}
+              onSelect={(domainName) => launchMode({ mode: 'study', domain: domainName })}
+            />
+          </motion.section>
+        )}
 
         {/* Study modes */}
         <motion.section

@@ -90,10 +90,11 @@ function shuffle(arr) {
   return a;
 }
 
-function sessionKey(certId, mode) {
+function sessionKey(certId, mode, domainFilter) {
   // v2 suffix for study mode invalidates old sessions that had shuffled options
-  if (isStudyLikeMode(mode)) return `study_v2_session_${certId}_${mode}`;
-  return `${mode}_session_${certId}`;
+  const suffix = domainFilter ? `_dom_${String(domainFilter).replace(/\W/g, '')}` : '';
+  if (isStudyLikeMode(mode)) return `study_v2_session_${certId}_${mode}${suffix}`;
+  return `${mode}_session_${certId}${suffix}`;
 }
 
 /** Shuffles option values while keeping keys sorted A→B→C→D. Remaps answer keys.
@@ -143,7 +144,7 @@ function computeScore(displayQuestions, answers) {
   }, 0);
 }
 
-export function useExam(certification, mode = 'exam', countOverride = null) {
+export function useExam(certification, mode = 'exam', countOverride = null, domainFilter = null) {
   const { user } = useAuthStore();
   const [displayQuestions, setDisplayQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
@@ -160,8 +161,8 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
 
   const clearSession = useCallback(() => {
     if (!certification) return;
-    sessionStorage.removeItem(sessionKey(certification.id, mode));
-  }, [certification, mode]);
+    sessionStorage.removeItem(sessionKey(certification.id, mode, domainFilter));
+  }, [certification, mode, domainFilter]);
 
   useEffect(() => {
     if (status === 'finished') clearSession();
@@ -196,7 +197,7 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
     setPassPercent(effectivePassPercent);
 
     // Try to restore session
-    const savedRaw = sessionStorage.getItem(sessionKey(certification.id, mode));
+    const savedRaw = sessionStorage.getItem(sessionKey(certification.id, mode, domainFilter));
     if (savedRaw) {
       try {
         const saved = JSON.parse(savedRaw);
@@ -221,7 +222,7 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
           return;
         }
       } catch { /* start fresh */ }
-      sessionStorage.removeItem(sessionKey(certification.id, mode));
+      sessionStorage.removeItem(sessionKey(certification.id, mode, domainFilter));
     }
 
     // Fresh start
@@ -265,6 +266,20 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
         }
       }
 
+      // Domain filter (used by Ruta de Dominio — study a single Appian domain).
+      if (domainFilter) {
+        const target = String(domainFilter).trim().toLowerCase();
+        all = all.filter((q) => {
+          const d = (q.domain || q.category || '').trim().toLowerCase();
+          return d === target;
+        });
+        if (all.length === 0) {
+          setError(`No hay preguntas en el dominio "${domainFilter}" para este set.`);
+          setStatus('finished');
+          return;
+        }
+      }
+
       // Study-like modes normally use all filtered questions; if an explicit countOverride is provided
       // (e.g. Quick Practice), shuffle and take that many questions.
       // Wager mode is study-like for reveal/recording but uses a bounded set (like exam) so the
@@ -288,14 +303,14 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
       setTimeLeft(totalSecs);
       setStatus('running');
       sessionStorage.setItem(
-        sessionKey(certification.id, mode),
+        sessionKey(certification.id, mode, domainFilter),
         JSON.stringify({ displayQuestions: dqs, answers: {}, flags: initialFlags, revealed: initialRevealed, confidence: {}, current: 0, startTimestamp: startTs, totalSeconds: totalSecs })
       );
     } catch (e) {
       setError(e.message);
       setStatus('finished');
     }
-  }, [certification, mode, countOverride, user]);
+  }, [certification, mode, countOverride, domainFilter, user]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -321,68 +336,68 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
 
   const navigateTo = useCallback((idx) => {
     setCurrent(idx);
-    const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode));
+    const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode, domainFilter));
     if (savedRaw) {
       try {
         const saved = JSON.parse(savedRaw);
-        sessionStorage.setItem(sessionKey(certification.id, mode), JSON.stringify({ ...saved, current: idx }));
+        sessionStorage.setItem(sessionKey(certification.id, mode, domainFilter), JSON.stringify({ ...saved, current: idx }));
       } catch { /* ignore */ }
     }
-  }, [certification, mode]);
+  }, [certification, mode, domainFilter]);
 
   const saveAnswer = useCallback((idx, keys) => {
     setAnswers((prev) => {
       const next = { ...prev, [idx]: keys };
-      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode));
+      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode, domainFilter));
       if (savedRaw) {
         try {
           const saved = JSON.parse(savedRaw);
-          sessionStorage.setItem(sessionKey(certification.id, mode), JSON.stringify({ ...saved, answers: next }));
+          sessionStorage.setItem(sessionKey(certification.id, mode, domainFilter), JSON.stringify({ ...saved, answers: next }));
         } catch { /* ignore */ }
       }
       return next;
     });
-  }, [certification, mode]);
+  }, [certification, mode, domainFilter]);
 
   const toggleFlag = useCallback((idx) => {
     setFlags((prev) => {
       const next = [...prev];
       next[idx] = !next[idx];
-      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode));
+      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode, domainFilter));
       if (savedRaw) {
         try {
           const saved = JSON.parse(savedRaw);
-          sessionStorage.setItem(sessionKey(certification.id, mode), JSON.stringify({ ...saved, flags: next }));
+          sessionStorage.setItem(sessionKey(certification.id, mode, domainFilter), JSON.stringify({ ...saved, flags: next }));
         } catch { /* ignore */ }
       }
       return next;
     });
-  }, [certification, mode]);
+  }, [certification, mode, domainFilter]);
 
   // Wager mode: set confidence multiplier (1, 2, or 3) for a given question.
   const setConfidenceFor = useCallback((idx, level) => {
     setConfidence((prev) => {
       const next = { ...prev, [idx]: level };
-      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode));
+      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode, domainFilter));
       if (savedRaw) {
         try {
           const saved = JSON.parse(savedRaw);
-          sessionStorage.setItem(sessionKey(certification.id, mode), JSON.stringify({ ...saved, confidence: next }));
+          sessionStorage.setItem(sessionKey(certification.id, mode, domainFilter), JSON.stringify({ ...saved, confidence: next }));
         } catch { /* ignore */ }
       }
       return next;
     });
-  }, [certification, mode]);
+  }, [certification, mode, domainFilter]);
 
   const confirmAnswer = useCallback((idx) => {
     setRevealed((prev) => {
       const next = [...prev];
       next[idx] = true;
-      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode));
+      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode, domainFilter));
       if (savedRaw) {
         try {
           const saved = JSON.parse(savedRaw);
-          sessionStorage.setItem(sessionKey(certification.id, mode), JSON.stringify({ ...saved, revealed: next }));
+          sessionStorage.setItem(sessionKey(certification.id, mode, domainFilter), JSON.stringify({ ...saved, revealed: next }));
         } catch { /* ignore */ }
       }
       return next;
@@ -400,7 +415,7 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
         }).catch(() => { /* best-effort, don't block UX */ });
       }
     }
-  }, [certification, mode, user, displayQuestions, answers]);
+  }, [certification, mode, domainFilter, user, displayQuestions, answers]);
 
   const submitExam = useCallback(() => {
     clearInterval(timerRef.current);

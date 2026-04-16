@@ -188,6 +188,7 @@ export function ExamPage() {
   const mode = searchParams.get('mode') ?? 'exam';
   const countParam = Number(searchParams.get('count'));
   const countOverride = Number.isFinite(countParam) && countParam > 0 ? countParam : null;
+  const domainFilter = searchParams.get('domain') || null;
   const staticCertification = CERTIFICATIONS.find((c) => c.id === certId);
   const [setCertification, setSetCertification] = useState(null);
   const [setLoadError, setSetLoadError]         = useState(false);
@@ -245,7 +246,7 @@ export function ExamPage() {
     setConfidenceFor,
     confirmAnswer,
     submitExam,
-  } = useExam(certification, mode, countOverride);
+  } = useExam(certification, mode, countOverride, domainFilter);
 
   useEffect(() => {
     if (status === 'finished') {
