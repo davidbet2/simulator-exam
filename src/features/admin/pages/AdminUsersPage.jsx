@@ -1,175 +1,387 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  Search, UserRound, ShieldAlert, Zap, Ban, CheckCircle2,
+  ChevronRight, Loader2, Mail, Calendar, Crown, Activity,
+} from 'lucide-react';
+import { AdminShell } from '../components/AdminShell';
 import { useAdmin } from '../hooks/useAdmin';
-import { useAuthStore } from '../../../core/store/useAuthStore';
+import { useAudit } from '../hooks/useAudit';
+import { Modal } from '../../../components/ui/Modal';
+import Button from '../../../components/ui/Button';
+
+function formatDate(v) {
+  if (!v) return '—';
+  const d = v.toDate ? v.toDate() : new Date(v.seconds ? v.seconds * 1000 : v);
+  return d.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function PlanBadge({ plan }) {
+  if (plan === 'pro') {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+        <Crown size={10} /> Pro
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-surface-muted text-ink-soft border border-surface-border">
+      Free
+    </span>
+  );
+}
+
+function StatusBadge({ banned }) {
+  if (banned) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-danger-50 text-danger-600 border border-danger-500/30">
+        <Ban size={10} /> Baneado
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-success-50 text-success-600 border border-success-500/30">
+      <CheckCircle2 size={10} /> Activo
+    </span>
+  );
+}
 
 export function AdminUsersPage() {
-  const currentUser = useAuthStore((s) => s.user);
-  const { loading, error, grantAdmin, revokeAdmin, fetchAdmins } = useAdmin();
-  const [admins, setAdmins] = useState([]);
-  const [newEmail, setNewEmail] = useState('');
-  const [feedback, setFeedback] = useState(null);
-  const [revokeConfirm, setRevokeConfirm] = useState(null);
+  const {
+    fetchUsers, searchUserByEmail, updateUserPlan, setUserBanned, fetchUserAttemptCount,
+  } = useAdmin();
+  const { logAction } = useAudit();
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/immutability
-    loadAdmins();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const [users, setUsers]           = useState([]);
+  const [lastDoc, setLastDoc]       = useState(null);
+  const [loading, setLoading]       = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore]       = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchMode, setSearchMode] = useState(false);
 
-  async function loadAdmins() {
-    const data = await fetchAdmins();
-    setAdmins(data);
+  const [detailUser, setDetailUser]   = useState(null);
+  const [attemptCount, setAttemptCount] = useState(null);
+  const [actionBusy, setActionBusy]   = useState(false);
+  const [actionError, setActionError] = useState(null);
+  const [confirmBan, setConfirmBan]   = useState(false);
+  const [banReason, setBanReason]     = useState('');
+
+  // ── Initial load ────────────────────────────────────────────────
+  const loadInitial = useCallback(async () => {
+    setLoading(true);
+    const { users: list, lastDoc: last } = await fetchUsers({ pageSize: 25 });
+    setUsers(list);
+    setLastDoc(last);
+    setHasMore(list.length === 25);
+    setLoading(false);
+  }, [fetchUsers]);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { loadInitial(); }, [loadInitial]);
+
+  async function loadMore() {
+    if (!lastDoc) return;
+    setLoadingMore(true);
+    const { users: more, lastDoc: next } = await fetchUsers({ pageSize: 25, afterDoc: lastDoc });
+    setUsers((prev) => [...prev, ...more]);
+    setLastDoc(next);
+    setHasMore(more.length === 25);
+    setLoadingMore(false);
   }
 
-  async function handleGrant(e) {
+  async function handleSearch(e) {
     e.preventDefault();
-    const email = newEmail.trim().toLowerCase();
-    if (!email) return;
-    const ok = await grantAdmin(email);
-    if (ok) {
-      setFeedback({ type: 'success', msg: `Acceso otorgado a ${email}` });
-      setNewEmail('');
-      loadAdmins();
-    } else {
-      setFeedback({ type: 'error', msg: 'No se pudo otorgar acceso.' });
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) {
+      setSearchMode(false);
+      loadInitial();
+      return;
     }
-    setTimeout(() => setFeedback(null), 3000);
+    setSearchMode(true);
+    setLoading(true);
+    const results = await searchUserByEmail(term);
+    setUsers(results);
+    setHasMore(false);
+    setLoading(false);
   }
 
-  async function handleRevoke(email) {
-    const ok = await revokeAdmin(email);
-    if (ok) {
-      setAdmins((prev) => prev.filter((a) => a.email !== email));
-      setFeedback({ type: 'success', msg: `Acceso revocado para ${email}` });
-    } else {
-      setFeedback({ type: 'error', msg: 'No se pudo revocar el acceso.' });
-    }
-    setRevokeConfirm(null);
-    setTimeout(() => setFeedback(null), 3000);
+  function clearSearch() {
+    setSearchTerm('');
+    setSearchMode(false);
+    loadInitial();
   }
 
+  // ── Detail modal ────────────────────────────────────────────────
+  async function openDetail(u) {
+    setDetailUser(u);
+    setAttemptCount(null);
+    setActionError(null);
+    setConfirmBan(false);
+    setBanReason(u.bannedReason ?? '');
+    const count = await fetchUserAttemptCount(u.id);
+    setAttemptCount(count);
+  }
+
+  function closeDetail() {
+    setDetailUser(null);
+    setConfirmBan(false);
+  }
+
+  async function togglePlan() {
+    if (!detailUser) return;
+    const current = detailUser.plan ?? 'free';
+    const next = current === 'pro' ? 'free' : 'pro';
+    setActionBusy(true);
+    setActionError(null);
+    const ok = await updateUserPlan(detailUser.id, next);
+    if (ok) {
+      await logAction({
+        action: 'user.plan.update',
+        target: 'users',
+        targetId: detailUser.id,
+        diff: { plan: { from: current, to: next } },
+      });
+      setDetailUser((prev) => ({ ...prev, plan: next }));
+      setUsers((prev) => prev.map((u) => (u.id === detailUser.id ? { ...u, plan: next } : u)));
+    } else {
+      setActionError('No se pudo actualizar el plan.');
+    }
+    setActionBusy(false);
+  }
+
+  async function toggleBan() {
+    if (!detailUser) return;
+    const willBan = !detailUser.banned;
+    setActionBusy(true);
+    setActionError(null);
+    const ok = await setUserBanned(detailUser.id, willBan, banReason);
+    if (ok) {
+      await logAction({
+        action: willBan ? 'user.ban' : 'user.unban',
+        target: 'users',
+        targetId: detailUser.id,
+        note: willBan ? banReason : null,
+      });
+      setDetailUser((prev) => ({
+        ...prev,
+        banned: willBan,
+        bannedReason: willBan ? banReason : null,
+      }));
+      setUsers((prev) => prev.map((u) => (u.id === detailUser.id ? { ...u, banned: willBan } : u)));
+      setConfirmBan(false);
+    } else {
+      setActionError('No se pudo completar la acción.');
+    }
+    setActionBusy(false);
+  }
+
+  // ── Render ──────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-appian-bg">
-      {/* Topbar */}
-      <header className="bg-white shadow-sm px-6 py-4 flex items-center gap-4">
-        <Link to="/admin" className="text-appian-muted hover:text-appian-blue text-sm">← Dashboard</Link>
-        <div className="h-4 border-l border-gray-300" />
-        <h1 className="font-bold text-gray-800 text-base">Administradores</h1>
-      </header>
-
-      <main className="max-w-2xl mx-auto px-4 py-8">
-        {/* Feedback */}
-        {feedback && (
-          <div
-            className={`text-sm rounded p-3 mb-4 font-medium ${
-              feedback.type === 'success'
-                ? 'bg-appian-success-light text-appian-success'
-                : 'bg-appian-error-light text-appian-error'
-            }`}
-          >
-            {feedback.msg}
-          </div>
+    <AdminShell
+      title="Usuarios"
+      subtitle="Busca, inspecciona y gestiona cuentas de usuarios finales."
+    >
+      {/* Search bar */}
+      <form onSubmit={handleSearch} className="flex gap-2 mb-5">
+        <div className="relative flex-1">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
+          <input
+            type="search"
+            placeholder="Buscar por email exacto (ej: user@example.com)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-9 pr-4 h-10 rounded-xl bg-white border border-surface-border text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+          />
+        </div>
+        <Button type="submit" size="md">Buscar</Button>
+        {searchMode && (
+          <Button type="button" variant="ghost" size="md" onClick={clearSearch}>Limpiar</Button>
         )}
+      </form>
 
-        {/* Error */}
-        {error && (
-          <div className="bg-appian-error-light text-appian-error text-sm rounded p-3 mb-4">{error}</div>
-        )}
-
-        {/* Grant form */}
-        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-6 mb-6">
-          <h2 className="font-bold text-gray-800 text-sm mb-1">Otorgar acceso de administrador</h2>
-          <p className="text-xs text-appian-muted mb-4">
-            El usuario debe registrarse con este correo en la página de login.
+      {/* Loading */}
+      {loading ? (
+        <div className="py-16 text-center text-ink-soft">
+          <Loader2 size={24} className="inline animate-spin text-brand-500 mr-2" />
+          Cargando usuarios…
+        </div>
+      ) : users.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-2xl border border-surface-border">
+          <UserRound size={32} className="mx-auto text-ink-muted mb-2" />
+          <p className="text-sm text-ink-soft">
+            {searchMode ? 'No se encontraron usuarios con ese email.' : 'No hay usuarios registrados.'}
           </p>
-          <form onSubmit={handleGrant} className="flex gap-3">
-            <input
-              type="email"
-              required
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              placeholder="correo@empresa.com"
-              className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-appian-blue"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-appian-blue hover:bg-appian-blue-dark text-white font-bold px-4 py-2 rounded text-sm disabled:bg-gray-300"
-            >
-              Agregar
-            </button>
-          </form>
         </div>
-
-        {/* Admins list */}
-        <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
-          <div className="px-5 py-3 border-b border-gray-100">
-            <span className="text-xs font-semibold text-appian-muted">
-              {admins.length} administrador{admins.length !== 1 ? 'es' : ''}
-            </span>
-          </div>
-          {admins.length === 0 && (
-            <p className="text-center text-appian-muted text-sm py-8">Sin administradores registrados.</p>
-          )}
-          <ul className="divide-y divide-gray-100">
-            {admins.map((admin) => {
-              const isSelf = admin.email === currentUser?.email;
-              return (
-                <li key={admin.email} className="px-5 py-3 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">
-                      {admin.email}
-                      {isSelf && (
-                        <span className="ml-2 text-xs bg-appian-success-light text-appian-success font-semibold px-1.5 py-0.5 rounded">
-                          Tú
-                        </span>
-                      )}
-                    </p>
-                    {admin.grantedBy && (
-                      <p className="text-xs text-appian-muted">Otorgado por: {admin.grantedBy}</p>
-                    )}
-                  </div>
-                  {!isSelf && (
-                    <button
-                      onClick={() => setRevokeConfirm(admin.email)}
-                      className="text-xs text-appian-error hover:underline font-semibold"
-                    >
-                      Revocar
-                    </button>
-                  )}
+      ) : (
+        <>
+          <div className="bg-white rounded-2xl border border-surface-border shadow-card overflow-hidden">
+            <div className="px-5 py-3 border-b border-surface-border flex items-center justify-between">
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider">
+                {users.length} {searchMode ? 'resultado(s)' : 'usuarios'}
+              </span>
+            </div>
+            <ul className="divide-y divide-surface-border">
+              {users.map((u) => (
+                <li key={u.id}>
+                  <button
+                    onClick={() => openDetail(u)}
+                    className="w-full px-5 py-3 flex items-center gap-3 hover:bg-surface-muted/60 transition-colors text-left"
+                  >
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                      {(u.displayName ?? u.email ?? 'U').slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-ink truncate">
+                        {u.displayName ?? u.email}
+                      </p>
+                      <p className="text-xs text-ink-muted truncate">{u.email}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <PlanBadge plan={u.plan ?? 'free'} />
+                      {u.banned && <StatusBadge banned />}
+                      <ChevronRight size={15} className="text-ink-muted" />
+                    </div>
+                  </button>
                 </li>
-              );
-            })}
-          </ul>
-        </div>
-      </main>
+              ))}
+            </ul>
+          </div>
 
-      {/* Revoke confirm modal */}
-      {revokeConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
-            <h3 className="font-bold text-gray-800 mb-2">¿Revocar acceso?</h3>
-            <p className="text-sm text-appian-muted mb-1">
-              Se eliminará el acceso de administrador para:
-            </p>
-            <p className="text-sm font-semibold text-gray-800 mb-6">{revokeConfirm}</p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setRevokeConfirm(null)}
-                className="px-4 py-2 text-sm border border-gray-300 rounded text-gray-600 hover:bg-gray-50"
+          {hasMore && !searchMode && (
+            <div className="mt-5 text-center">
+              <Button variant="outline" onClick={loadMore} disabled={loadingMore}>
+                {loadingMore ? 'Cargando…' : 'Cargar más'}
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Detail modal */}
+      <Modal
+        open={!!detailUser}
+        onClose={closeDetail}
+        title="Detalle de usuario"
+        size="lg"
+      >
+        {detailUser && (
+          <div className="space-y-5">
+            {/* Identity */}
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center font-bold text-base shrink-0">
+                {(detailUser.displayName ?? detailUser.email ?? 'U').slice(0, 2).toUpperCase()}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-base font-bold text-ink truncate">
+                  {detailUser.displayName ?? detailUser.email}
+                </h3>
+                <div className="flex items-center gap-1.5 text-xs text-ink-soft mt-0.5">
+                  <Mail size={11} />
+                  <span className="truncate">{detailUser.email}</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                  <PlanBadge plan={detailUser.plan ?? 'free'} />
+                  <StatusBadge banned={detailUser.banned === true} />
+                </div>
+              </div>
+            </div>
+
+            {/* Metadata grid */}
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-3 rounded-lg bg-surface-soft border border-surface-border">
+                <p className="text-ink-muted flex items-center gap-1"><Calendar size={11} />Registrado</p>
+                <p className="font-semibold text-ink mt-0.5">{formatDate(detailUser.createdAt)}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-surface-soft border border-surface-border">
+                <p className="text-ink-muted flex items-center gap-1"><Activity size={11} />Intentos totales</p>
+                <p className="font-semibold text-ink mt-0.5">
+                  {attemptCount === null ? '…' : attemptCount}
+                </p>
+              </div>
+              {detailUser.planChangedBy && (
+                <div className="p-3 rounded-lg bg-surface-soft border border-surface-border col-span-2">
+                  <p className="text-ink-muted">Plan cambiado por</p>
+                  <p className="font-medium text-ink mt-0.5 truncate">
+                    {detailUser.planChangedBy} — {formatDate(detailUser.planChangedAt)}
+                  </p>
+                </div>
+              )}
+              {detailUser.banned && detailUser.bannedReason && (
+                <div className="p-3 rounded-lg bg-danger-50 border border-danger-500/30 col-span-2">
+                  <p className="text-danger-600 font-semibold flex items-center gap-1">
+                    <ShieldAlert size={11} /> Razón del ban
+                  </p>
+                  <p className="text-ink mt-1">{detailUser.bannedReason}</p>
+                  {detailUser.bannedBy && (
+                    <p className="text-xs text-ink-muted mt-1">Por: {detailUser.bannedBy}</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            {actionError && (
+              <div className="text-xs text-danger-600 bg-danger-50 border border-danger-500/30 rounded-lg px-3 py-2">
+                {actionError}
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-surface-border">
+              <Button
+                variant={detailUser.plan === 'pro' ? 'outline' : 'primary'}
+                size="sm"
+                disabled={actionBusy}
+                onClick={togglePlan}
+                className="inline-flex items-center"
               >
-                Cancelar
-              </button>
-              <button
-                onClick={() => handleRevoke(revokeConfirm)}
-                className="px-4 py-2 text-sm bg-appian-error text-white font-bold rounded hover:opacity-90"
-              >
-                Sí, revocar
-              </button>
+                <Zap size={13} className="mr-1.5" />
+                {detailUser.plan === 'pro' ? 'Degradar a Free' : 'Promover a Pro'}
+              </Button>
+
+              <Link to={`/admin/attempts?uid=${detailUser.id}`}>
+                <Button variant="outline" size="sm" className="inline-flex items-center">
+                  <Activity size={13} className="mr-1.5" /> Ver intentos
+                </Button>
+              </Link>
+
+              {confirmBan ? (
+                <div className="w-full flex flex-col gap-2 p-3 rounded-lg bg-danger-50 border border-danger-500/30">
+                  <label className="text-xs font-semibold text-danger-600">
+                    {detailUser.banned ? '¿Revertir ban?' : 'Razón del ban:'}
+                  </label>
+                  {!detailUser.banned && (
+                    <input
+                      value={banReason}
+                      onChange={(e) => setBanReason(e.target.value)}
+                      placeholder="Ej: conducta abusiva, spam…"
+                      className="w-full border border-surface-border rounded px-2 py-1 text-sm"
+                    />
+                  )}
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="danger" onClick={toggleBan} disabled={actionBusy}>
+                      {actionBusy ? '…' : detailUser.banned ? 'Sí, revertir' : 'Sí, banear'}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => setConfirmBan(false)}>
+                      Cancelar
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  variant={detailUser.banned ? 'outline' : 'danger'}
+                  size="sm"
+                  onClick={() => setConfirmBan(true)}
+                  className="inline-flex items-center"
+                >
+                  <Ban size={13} className="mr-1.5" />
+                  {detailUser.banned ? 'Quitar ban' : 'Banear'}
+                </Button>
+              )}
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </Modal>
+    </AdminShell>
   );
 }

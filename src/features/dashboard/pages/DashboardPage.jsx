@@ -2,9 +2,10 @@
 import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore'
-import { Trophy, Clock, Target, Zap, ChevronRight, BookOpen, Plus } from 'lucide-react'
+import { Trophy, Clock, Target, ChevronRight, BookOpen, Plus } from 'lucide-react'
 import { useAuthStore } from '../../../core/store/useAuthStore'
 import { db } from '../../../core/firebase/firebase'
+import { AppShell } from '../../../components/layout/AppShell'
 import { Card, CardBody, CardHeader } from '../../../components/ui/Card'
 import { Badge } from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
@@ -68,24 +69,8 @@ export function DashboardPage() {
   const avgScore  = total ? Math.round(attempts.reduce((s, a) => s + (a.score / a.total) * 100, 0) / total) : 0
 
   return (
-    <div className="min-h-screen bg-surface">
-      <header className="border-b border-surface-border bg-surface-soft/60 backdrop-blur-md sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="text-xl font-bold bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">
-            CertZen
-          </Link>
-          <div className="flex items-center gap-3">
-            {!isPro && (
-              <Link to="/pricing">
-                <Badge variant="pro"><Zap size={10} />Pro</Badge>
-              </Link>
-            )}
-            <Link to="/" className="text-sm text-ink-soft hover:text-ink">Exámenes</Link>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <AppShell>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
         {/* Welcome */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-2xl font-bold text-ink">
@@ -156,7 +141,7 @@ export function DashboardPage() {
             </CardBody>
           </Card>
         </motion.div>
-      </main>
-    </div>
+      </div>
+    </AppShell>
   )
 }

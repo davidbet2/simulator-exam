@@ -76,6 +76,7 @@ export default {
       fontFamily: {
         sans:    ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         display: ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        toon:    ['Fredoka', 'Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         'xl':  '12px',

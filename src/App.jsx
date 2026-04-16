@@ -2,14 +2,20 @@ import { useEffect } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { AppRouter } from './core/router/AppRouter';
 import { useAuthStore } from './core/store/useAuthStore';
+import { useThemeStore } from './core/store/useThemeStore';
 
 function App() {
   const init = useAuthStore((s) => s.init);
+  const initTheme = useThemeStore((s) => s.init);
 
   useEffect(() => {
     const unsubscribe = init();
-    return unsubscribe;
-  }, [init]);
+    const unsubscribeTheme = initTheme();
+    return () => {
+      unsubscribe?.();
+      unsubscribeTheme?.();
+    };
+  }, [init, initTheme]);
 
   return (
     <HelmetProvider>

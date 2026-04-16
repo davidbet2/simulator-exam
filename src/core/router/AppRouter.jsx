@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
+import { useAuthStore } from '../store/useAuthStore';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
@@ -11,8 +12,12 @@ const ResultsPage        = lazy(() => import('../../features/results/ResultsPage
 const LoginPage          = lazy(() => import('../../features/auth/pages/LoginPage').then(m => ({ default: m.LoginPage })));
 const RegisterPage       = lazy(() => import('../../features/auth/pages/RegisterPage').then(m => ({ default: m.RegisterPage })));
 const DashboardPage      = lazy(() => import('../../features/dashboard/pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const HomePage           = lazy(() => import('../../features/home/pages/HomePage').then(m => ({ default: m.HomePage })));
+const FolderPage         = lazy(() => import('../../features/home/pages/FolderPage').then(m => ({ default: m.FolderPage })));
+const SettingsPage       = lazy(() => import('../../features/profile/pages/SettingsPage').then(m => ({ default: m.SettingsPage })));
 const PricingPage        = lazy(() => import('../../features/plans/pages/PricingPage').then(m => ({ default: m.PricingPage })));
 const ExploreExamsPage   = lazy(() => import('../../features/explore/pages/ExploreExamsPage').then(m => ({ default: m.ExploreExamsPage })));
+const ExamSetLandingPage = lazy(() => import('../../features/explore/pages/ExamSetLandingPage').then(m => ({ default: m.ExamSetLandingPage })));
 const CreateExamPage     = lazy(() => import('../../features/creator/pages/CreateExamPage').then(m => ({ default: m.CreateExamPage })));
 const ProfilePage        = lazy(() => import('../../features/profile/pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
 const AboutPage          = lazy(() => import('../../features/public/pages/AboutPage').then(m => ({ default: m.AboutPage })));
@@ -22,8 +27,13 @@ const ContactPage        = lazy(() => import('../../features/public/pages/Contac
 const AdminLoginPage     = lazy(() => import('../../features/admin/pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
 const AdminDashboardPage = lazy(() => import('../../features/admin/pages/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })));
 const AdminQuestionsPage = lazy(() => import('../../features/admin/pages/AdminQuestionsPage').then(m => ({ default: m.AdminQuestionsPage })));
-const AdminUsersPage     = lazy(() => import('../../features/admin/pages/AdminUsersPage').then(m => ({ default: m.AdminUsersPage })));
-const AdminSettingsPage  = lazy(() => import('../../features/admin/pages/AdminSettingsPage').then(m => ({ default: m.AdminSettingsPage })));
+const AdminUsersPage          = lazy(() => import('../../features/admin/pages/AdminUsersPage').then(m => ({ default: m.AdminUsersPage })));
+const AdminAdminsPage         = lazy(() => import('../../features/admin/pages/AdminAdminsPage').then(m => ({ default: m.AdminAdminsPage })));
+const AdminCertificationsPage = lazy(() => import('../../features/admin/pages/AdminCertificationsPage').then(m => ({ default: m.AdminCertificationsPage })));
+const AdminExamSetsPage       = lazy(() => import('../../features/admin/pages/AdminExamSetsPage').then(m => ({ default: m.AdminExamSetsPage })));
+const AdminAttemptsPage       = lazy(() => import('../../features/admin/pages/AdminAttemptsPage').then(m => ({ default: m.AdminAttemptsPage })));
+const AdminFlagsPage          = lazy(() => import('../../features/admin/pages/AdminFlagsPage').then(m => ({ default: m.AdminFlagsPage })));
+const AdminAuditLogPage       = lazy(() => import('../../features/admin/pages/AdminAuditLogPage').then(m => ({ default: m.AdminAuditLogPage })));
 
 function PageLoader() {  return (
     <div className="min-h-screen bg-surface flex items-center justify-center" aria-busy="true" aria-label="Cargando página">
@@ -41,6 +51,14 @@ function ScrollToTop() {
   return null;
 }
 
+/** If logged in and on `/`, redirect to `/home` (Quizlet-style authenticated landing). */
+function RootRoute() {
+  const { user, isLoading } = useAuthStore();
+  if (isLoading) return null;
+  if (user) return <Navigate to="/home" replace />;
+  return <WelcomePage />;
+}
+
 export function AppRouter() {
   return (
     <BrowserRouter>
@@ -48,7 +66,7 @@ export function AppRouter() {
       <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* Public routes */}
-        <Route path="/" element={<WelcomePage />} />
+        <Route path="/" element={<RootRoute />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/terms" element={<TermsPage />} />
@@ -59,10 +77,14 @@ export function AppRouter() {
         <Route path="/results" element={<ResultsPage />} />
 
         {/* Authenticated user routes */}
+        <Route path="/home" element={<ProtectedRoute requireUser><HomePage /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute requireUser><DashboardPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute requireUser><ProfilePage /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute requireUser><SettingsPage /></ProtectedRoute>} />
+        <Route path="/folders/:folderId" element={<ProtectedRoute requireUser><FolderPage /></ProtectedRoute>} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/explore" element={<ExploreExamsPage />} />
+        <Route path="/exam-sets/:slug" element={<ExamSetLandingPage />} />
         <Route path="/create-exam" element={<ProtectedRoute requireUser><CreateExamPage /></ProtectedRoute>} />
 
         {/* Admin routes */}
@@ -92,13 +114,55 @@ export function AppRouter() {
           }
         />
         <Route
-          path="/admin/settings"
+          path="/admin/admins"
           element={
             <ProtectedRoute>
-              <AdminSettingsPage />
+              <AdminAdminsPage />
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin/exam-sets"
+          element={
+            <ProtectedRoute>
+              <AdminExamSetsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/attempts"
+          element={
+            <ProtectedRoute>
+              <AdminAttemptsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/certifications"
+          element={
+            <ProtectedRoute>
+              <AdminCertificationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/flags"
+          element={
+            <ProtectedRoute>
+              <AdminFlagsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/audit-log"
+          element={
+            <ProtectedRoute>
+              <AdminAuditLogPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Legacy redirect */}
+        <Route path="/admin/settings" element={<Navigate to="/admin/certifications" replace />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -28,10 +28,15 @@ export function PrivacyPage() {
 
       <div id="main-content" />
 
-      <header className="border-b border-surface-border bg-surface-soft/60 backdrop-blur-md sticky top-0 z-10" role="banner">
-        <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="text-xl font-display font-bold text-gradient-brand" aria-label="CertZen — inicio">
-            CertZen
+      <header className="border-b border-surface-border bg-white/90 backdrop-blur-xl sticky top-0 z-20" role="banner">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2" aria-label="CertZen inicio">
+            <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center">
+              <span className="text-white font-black text-xs leading-none">CZ</span>
+            </div>
+            <span className="text-xl font-display font-black text-ink tracking-tight">
+              Cert<span className="text-brand-500">Zen</span>
+            </span>
           </Link>
           <Link to="/" className="text-sm text-ink-soft hover:text-ink transition-colors">← Volver al inicio</Link>
         </div>

@@ -188,7 +188,7 @@ export function WelcomePage() {
         canonical="/"
       />
 
-      <div className="min-h-screen" style={{ backgroundColor: '#f8f7f4' }}>
+      <div className="min-h-screen bg-surface-soft">
 
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• HEADER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <header className="sticky top-0 z-20 border-b border-surface-border bg-white/90 backdrop-blur-xl">
@@ -245,10 +245,7 @@ export function WelcomePage() {
         <main id="main-content" tabIndex={-1} className="outline-none">
 
           {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• HERO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-          <section
-            className="relative overflow-hidden min-h-[90vh] flex items-center py-20 sm:py-28"
-            style={{ background: 'linear-gradient(165deg, #f0f9ff 0%, #f8f7f4 45%, #fefce8 100%)' }}
-          >
+          <section className="welcome-hero-bg relative overflow-hidden min-h-[90vh] flex items-center py-20 sm:py-28">
             {/* Parallax blobs */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
               <Parallax speed={-8} className="absolute -top-24 -left-24 w-[520px] h-[520px]">
@@ -407,7 +404,7 @@ export function WelcomePage() {
             {/* Hero bottom wave */}
             <div className="absolute bottom-0 left-0 right-0 pointer-events-none" aria-hidden="true">
               <svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-                <path d="M0,32 C320,64 720,0 1440,32 L1440,64 L0,64 Z" fill="#f8f7f4" />
+                <path d="M0,32 C320,64 720,0 1440,32 L1440,64 L0,64 Z" className="fill-[#f8f7f4] dark:fill-[#0b1120]" />
               </svg>
             </div>
           </section>

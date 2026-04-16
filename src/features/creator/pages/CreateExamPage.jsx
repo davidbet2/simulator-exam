@@ -4,6 +4,7 @@ import { Plus, Trash2, ArrowLeft, Clock, Target, Pencil, FileJson, FileSpreadshe
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../../../core/firebase/firebase'
 import { useAuthStore } from '../../../core/store/useAuthStore'
+import { AppShell } from '../../../components/layout/AppShell'
 import { QuestionForm } from '../../admin/components/QuestionForm'
 import { parseXLSX, extractPDFText, parseTextToQuestions } from '../utils/importParsers'
 
@@ -140,14 +141,16 @@ export function CreateExamPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-surface-soft flex items-center justify-center p-4">
-        <div className="text-center space-y-4">
-          <p className="text-ink-muted">Debes iniciar sesión para crear sets de examen.</p>
-          <Link to="/login" className="inline-block px-5 py-2 bg-brand-500 text-white rounded font-semibold text-sm">Iniciar sesión
-            Iniciar sesión
-          </Link>
+      <AppShell>
+        <div className="flex items-center justify-center p-4 py-20">
+          <div className="text-center space-y-4">
+            <p className="text-ink-muted">Debes iniciar sesión para crear sets de examen.</p>
+            <Link to="/login" className="inline-block px-5 py-2 bg-brand-500 text-white rounded font-semibold text-sm">
+              Iniciar sesión
+            </Link>
+          </div>
         </div>
-      </div>
+      </AppShell>
     )
   }
 
@@ -264,19 +267,14 @@ export function CreateExamPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-16">
-      {/* Header */}
-      <header className="border-b border-surface-border bg-surface-card sticky top-0 z-10 shadow-sm">
-        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <span className="text-base font-bold text-brand-600">CertZen</span>
+    <AppShell>
+      <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-ink">Crear set de examen</h1>
           <Link to="/explore" className="text-sm text-ink-muted hover:text-ink flex items-center gap-1">
             <ArrowLeft size={14} /> Explorar
           </Link>
         </div>
-      </header>
-
-      <main className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-        <h1 className="text-2xl font-bold text-ink">Crear set de examen</h1>
 
         <form onSubmit={handleSubmit} noValidate className="space-y-6">
 
@@ -547,7 +545,7 @@ export function CreateExamPage() {
             {saving ? 'Guardando…' : 'Publicar set'}
           </button>
         </form>
-      </main>
+      </div>
 
       {/* QuestionForm modal */}
       {showForm && (
@@ -559,7 +557,7 @@ export function CreateExamPage() {
           hideMeta={true}
         />
       )}
-    </div>
+    </AppShell>
   )
 }
 

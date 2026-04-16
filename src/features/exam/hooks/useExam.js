@@ -221,13 +221,20 @@ export function useExam(certification, mode = 'exam') {
     // Fresh start
     setStatus('loading');
     try {
-      const q = query(
-        collection(db, 'questions'),
-        where('category', '==', certification.category),
-        where('level', '==', certification.level)
-      );
-      const snapshot = await getDocs(q);
-      const all = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      // ExamSets path: fetch from examSets/{id}/questions (community + official sets)
+      let all;
+      if (certification.isExamSet && certification.setId) {
+        const snapshot = await getDocs(collection(db, 'examSets', certification.setId, 'questions'));
+        all = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      } else {
+        const q = query(
+          collection(db, 'questions'),
+          where('category', '==', certification.category),
+          where('level', '==', certification.level)
+        );
+        const snapshot = await getDocs(q);
+        all = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      }
       if (all.length === 0) {
         setError('No hay preguntas disponibles para esta certificación aún.');
         setStatus('finished');

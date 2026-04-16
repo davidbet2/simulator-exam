@@ -264,7 +264,7 @@ function NewCertForm({ existingIds, onCreate, onCancel }) {
 }
 
 // ── AdminSettingsPage ─────────────────────────────────────────────
-export function AdminSettingsPage() {
+export function AdminCertificationsPage() {
   const { fetchCertifications, seedCertifications, saveCertification, createCertification, deleteCertification } = useAdmin();
 
   const [certs, setCerts]         = useState([]);

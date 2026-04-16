@@ -7,7 +7,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db, googleProvider } from '../firebase/firebase';
+import { auth, db, googleProvider, githubProvider, microsoftProvider } from '../firebase/firebase';
 
 async function fetchUserProfile(firebaseUser) {
   const [adminDoc, userDoc] = await Promise.all([
@@ -80,6 +80,46 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  loginWithGithub: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const result = await signInWithPopup(auth, githubProvider);
+      const userRef = doc(db, 'users', result.user.uid);
+      const existing = await getDoc(userRef);
+      if (!existing.exists()) {
+        await setDoc(userRef, {
+          uid:         result.user.uid,
+          email:       result.user.email,
+          displayName: result.user.displayName ?? (result.user.email ? result.user.email.split('@')[0] : 'user'),
+          plan:        'free',
+          createdAt:   serverTimestamp(),
+        });
+      }
+    } catch (err) {
+      set({ error: mapAuthError(err.code), isLoading: false });
+    }
+  },
+
+  loginWithMicrosoft: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const result = await signInWithPopup(auth, microsoftProvider);
+      const userRef = doc(db, 'users', result.user.uid);
+      const existing = await getDoc(userRef);
+      if (!existing.exists()) {
+        await setDoc(userRef, {
+          uid:         result.user.uid,
+          email:       result.user.email,
+          displayName: result.user.displayName ?? (result.user.email ? result.user.email.split('@')[0] : 'user'),
+          plan:        'free',
+          createdAt:   serverTimestamp(),
+        });
+      }
+    } catch (err) {
+      set({ error: mapAuthError(err.code), isLoading: false });
+    }
+  },
+
   register: async (email, password, displayName) => {
     set({ isLoading: true, error: null });
     try {
@@ -124,6 +164,8 @@ function mapAuthError(code) {
     'auth/email-already-in-use': 'Este correo ya está registrado.',
     'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
     'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde.',
+    'auth/popup-closed-by-user': 'Cerraste la ventana antes de completar el inicio de sesión.',
+    'auth/account-exists-with-different-credential': 'Ya existe una cuenta con ese correo usando otro proveedor.',
   };
   return map[code] || `Error de autenticación (${code}).`;
 }

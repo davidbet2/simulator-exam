@@ -10,6 +10,8 @@
     "lint:critical": "eslint src/ --rule '{\"react/jsx-no-undef\":\"error\"}' --max-warnings 0",
     "preview": "vite preview",
     "seed": "node scripts/seed.mjs",
+    "seed:official-sets": "node scripts/seed-official-sets.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
     "deploy": "npm run lint:critical && npm run build && firebase deploy --only \"hosting,firestore\"",
     "test": "vitest",
     "test:ui": "vitest --ui",

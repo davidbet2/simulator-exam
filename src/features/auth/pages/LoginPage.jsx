@@ -14,6 +14,21 @@ const GoogleIcon = () => (
     <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
   </svg>
 )
+
+const GitHubIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.3-.51-1.48.11-3.08 0 0 .97-.31 3.18 1.18a11.01 11.01 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.62 1.6.23 2.78.11 3.08.74.81 1.18 1.84 1.18 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56C20.22 21.39 23.5 17.08 23.5 12 23.5 5.73 18.27.5 12 .5z"/>
+  </svg>
+)
+
+const MicrosoftIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
+    <rect x="12" y="1" width="10" height="10" fill="#7FBA00"/>
+    <rect x="1" y="12" width="10" height="10" fill="#00A4EF"/>
+    <rect x="12" y="12" width="10" height="10" fill="#FFB900"/>
+  </svg>
+)
 import { useAuthStore } from '../../../core/store/useAuthStore'
 import Button from '../../../components/ui/Button'
 import Input from '../../../components/ui/Input'
@@ -25,7 +40,7 @@ const schema = z.object({
 
 export function LoginPage() {
   const navigate = useNavigate()
-  const { login, loginWithGoogle, user, isLoading, error, clearError } = useAuthStore()
+  const { login, loginWithGoogle, loginWithGithub, loginWithMicrosoft, user, isLoading, error, clearError } = useAuthStore()
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -98,15 +113,38 @@ export function LoginPage() {
             </div>
           </div>
 
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={loginWithGoogle}
-            disabled={isLoading}
-          >
-            <GoogleIcon />
-            Google
-          </Button>
+          <div className="grid grid-cols-3 gap-2">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={loginWithGoogle}
+              disabled={isLoading}
+              aria-label="Ingresar con Google"
+            >
+              <GoogleIcon />
+              <span className="hidden sm:inline">Google</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={loginWithGithub}
+              disabled={isLoading}
+              aria-label="Ingresar con GitHub"
+            >
+              <GitHubIcon />
+              <span className="hidden sm:inline">GitHub</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={loginWithMicrosoft}
+              disabled={isLoading}
+              aria-label="Ingresar con Microsoft"
+            >
+              <MicrosoftIcon />
+              <span className="hidden sm:inline">Microsoft</span>
+            </Button>
+          </div>
 
           <p className="text-center text-sm text-ink-soft">
             ¿No tienes cuenta?{' '}

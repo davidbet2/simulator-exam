@@ -10,6 +10,7 @@ import {
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { Badge } from '../../../components/ui/Badge';
+import { AppShell } from '../../../components/layout/AppShell';
 
 // ── Avatar initials ───────────────────────────────────────────────────────────
 function AvatarLetters({ name, size = 'lg' }) {
@@ -144,9 +145,10 @@ export function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <AppShell>
+      <div className="relative">
       {/* Background blobs */}
-      <div className="pointer-events-none fixed inset-0">
+      <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-brand-600/15 blur-3xl animate-float" />
         <div className="absolute bottom-20 right-10 w-56 h-56 rounded-full bg-purple-600/10 blur-3xl animate-float" style={{ animationDelay: '-4s' }} />
       </div>
@@ -520,6 +522,7 @@ export function ProfilePage() {
           </button>
         </div>
       </div>
-    </div>
+      </div>
+    </AppShell>
   );
 }

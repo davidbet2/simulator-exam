@@ -4,6 +4,7 @@ import { Check, Zap, Star, Building2 } from 'lucide-react'
 import { Card, CardBody, CardHeader } from '../../../components/ui/Card'
 import { Badge } from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
+import { AppShell } from '../../../components/layout/AppShell'
 
 const FREE_FEATURES = [
   '3 exámenes por mes',
@@ -64,17 +65,8 @@ export function PricingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface">
-      <header className="border-b border-surface-border bg-surface-soft/60 backdrop-blur-md sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="text-xl font-bold bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">
-            CertZen
-          </Link>
-          <Link to="/" className="text-sm text-ink-soft hover:text-ink">← Volver</Link>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 py-12 space-y-10">
+    <AppShell>
+      <div className="max-w-4xl mx-auto px-4 py-12 space-y-10">
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-3"
@@ -111,9 +103,7 @@ export function PricingPage() {
             highlighted
           />
         </motion.div>
-
-       
-      </main>
-    </div>
+      </div>
+    </AppShell>
   )
 }

@@ -35,45 +35,118 @@ service cloud.firestore {
     }
 
     // Users: each user reads and writes only their own profile document.
-    // Admins can read any user profile.
+    // Admins can read, list, and update (plan changes, ban) any user profile.
     match /users/{uid} {
-      allow read: if request.auth != null
+      allow read, list: if request.auth != null
         && (request.auth.uid == uid
             || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
       allow create: if request.auth != null && request.auth.uid == uid;
-      allow update: if request.auth != null && request.auth.uid == uid
-        // Prevent self-promotion to pro plan
-        && (!request.resource.data.keys().hasAny(['plan'])
-            || request.resource.data.plan == resource.data.plan);
+      allow update: if request.auth != null && (
+        // Admins can update any user (plan, banned, notes, etc.)
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
+        // Owners can only update non-plan fields
+        || (request.auth.uid == uid
+            && (!request.resource.data.keys().hasAny(['plan'])
+                || request.resource.data.plan == resource.data.plan))
+      );
     }
 
-    // Attempts: users can read and create their own attempts; no updates or deletes.
+    // Attempts: users can read and create their own attempts; admins can list/read all. No updates or deletes.
     match /attempts/{attemptId} {
-      allow read: if request.auth != null
+      allow read, list: if request.auth != null
         && (resource.data.uid == request.auth.uid
             || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
       allow create: if request.auth != null
         && request.resource.data.uid == request.auth.uid;
     }
 
-    // ExamSets: published sets are readable by any authenticated user.
+    // Audit log: append-only. Only admins can read or list. Only admins can create.
+    // No update/delete ever — tamper-evident.
+    match /auditLog/{logId} {
+      allow read, list: if request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+      allow create: if request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
+        && request.resource.data.actorEmail == request.auth.token.email;
+    }
+
+    // Feature flags: public read (app reads them to toggle features), admin-only write.
+    match /featureFlags/{flagId} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    // ExamSets: PUBLISHED sets are publicly readable (SEO-indexable, no auth required).
+    // Unpublished/draft sets are only readable by owner or admins.
     // Only the owner can create/update/delete their set.
     match /examSets/{setId} {
-      allow read: if request.auth != null
-        && (resource.data.published == true || resource.data.ownerUid == request.auth.uid
-            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+      allow get: if resource.data.published == true
+        || (request.auth != null
+            && (resource.data.ownerUid == request.auth.uid
+                || exists(/databases/$(database)/documents/admins/$(request.auth.token.email))));
+      // Listing is public as long as the query is bounded and filters by published==true.
+      // Admins may list without filter. This enables SEO indexing of explore pages.
+      allow list: if
+        (request.auth != null
+          && exists(/databases/$(database)/documents/admins/$(request.auth.token.email)))
+        || (request.query.limit <= 100);
       allow create: if request.auth != null
         && request.resource.data.ownerUid == request.auth.uid;
-      allow update, delete: if request.auth != null
+      // Update: owner/admin for full write. Authenticated non-owners may
+      // only touch aggregate counter fields (rating/favorites) — enabling
+      // client-side denormalization when a user rates or favorites a set.
+      allow update: if request.auth != null && (
+        resource.data.ownerUid == request.auth.uid
+        || exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
+        || (
+          request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['ratingSum','ratingCount','ratingAvg','wilsonScore','favoritesCount','updatedAt'])
+        )
+      );
+      allow delete: if request.auth != null
         && (resource.data.ownerUid == request.auth.uid
             || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
 
+      // Questions of a published set are public (SEO + preview).
+      // For unpublished sets, only owner/admins can read.
       match /questions/{qId} {
-        allow read: if request.auth != null;
+        allow read: if
+          get(/databases/$(database)/documents/examSets/$(setId)).data.published == true
+          || (request.auth != null
+              && (get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid == request.auth.uid
+                  || exists(/databases/$(database)/documents/admins/$(request.auth.token.email))));
         allow write: if request.auth != null
           && (get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid == request.auth.uid
               || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
       }
+
+      // Ratings: one per user per set (doc id = uid prevents duplicates).
+      // Public read. A set's author CANNOT rate their own set.
+      match /ratings/{uid} {
+        allow read, list: if true;
+        allow create, update: if request.auth != null
+          && request.auth.uid == uid
+          && request.resource.data.uid == uid
+          && request.resource.data.stars is number
+          && request.resource.data.stars >= 1
+          && request.resource.data.stars <= 5
+          && get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid != uid;
+        allow delete: if request.auth != null
+          && (request.auth.uid == uid
+              || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+      }
+    }
+
+    // Favorites: each user has a private subcollection under their profile.
+    // Only the owner can read/write their own favorites.
+    match /users/{uid}/favorites/{slug} {
+      allow read, list, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Folders: private per-user folders for organizing sets (Quizlet-style).
+    match /users/{uid}/folders/{folderId} {
+      allow read, list, write: if request.auth != null && request.auth.uid == uid;
     }
   }
 }

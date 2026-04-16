@@ -10,6 +10,11 @@ import {
   serverTimestamp,
   setDoc,
   writeBatch,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
 } from 'firebase/firestore';
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
@@ -252,6 +257,248 @@ export function useAdmin() {
     }
   }, []);
 
+  // ── Users (real end-users, not admins) ──────────────────────────
+  const fetchUsers = useCallback(async ({ pageSize = 25, afterDoc = null } = {}) => {
+    try {
+      const clauses = [orderBy('createdAt', 'desc')];
+      if (afterDoc) clauses.push(startAfter(afterDoc));
+      clauses.push(limit(pageSize));
+      const snap = await getDocs(query(collection(db, 'users'), ...clauses));
+      return {
+        users:   snap.docs.map((d) => ({ id: d.id, ...d.data() })),
+        lastDoc: snap.docs[snap.docs.length - 1] ?? null,
+      };
+    } catch (e) {
+      setError(e.message);
+      return { users: [], lastDoc: null };
+    }
+  }, []);
+
+  const searchUserByEmail = useCallback(async (email) => {
+    try {
+      const q = query(
+        collection(db, 'users'),
+        where('email', '==', email.trim().toLowerCase()),
+        limit(5),
+      );
+      const snap = await getDocs(q);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    } catch (e) {
+      setError(e.message);
+      return [];
+    }
+  }, []);
+
+  const fetchUserById = useCallback(async (uid) => {
+    try {
+      const snap = await getDoc(doc(db, 'users', uid));
+      return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const updateUserPlan = useCallback(
+    async (uid, newPlan) => {
+      try {
+        await updateDoc(doc(db, 'users', uid), {
+          plan:          newPlan,
+          planChangedBy: user?.email ?? 'admin',
+          planChangedAt: serverTimestamp(),
+        });
+        return true;
+      } catch (e) {
+        setError(e.message);
+        return false;
+      }
+    },
+    [user],
+  );
+
+  const setUserBanned = useCallback(
+    async (uid, banned, reason = null) => {
+      try {
+        await updateDoc(doc(db, 'users', uid), {
+          banned,
+          bannedReason: banned ? (reason ?? '') : null,
+          bannedBy:     banned ? (user?.email ?? 'admin') : null,
+          bannedAt:     banned ? serverTimestamp() : null,
+        });
+        return true;
+      } catch (e) {
+        setError(e.message);
+        return false;
+      }
+    },
+    [user],
+  );
+
+  const fetchUserAttemptCount = useCallback(async (uid) => {
+    try {
+      const snap = await getDocs(
+        query(collection(db, 'attempts'), where('uid', '==', uid)),
+      );
+      return snap.size;
+    } catch {
+      return 0;
+    }
+  }, []);
+
+  // ── ExamSets (community-generated) ──────────────────────────────
+  const fetchExamSets = useCallback(
+    async ({ pageSize = 25, afterDoc = null, onlyPublished = false } = {}) => {
+      try {
+        const clauses = [];
+        if (onlyPublished) clauses.push(where('published', '==', true));
+        clauses.push(orderBy('createdAt', 'desc'));
+        if (afterDoc) clauses.push(startAfter(afterDoc));
+        clauses.push(limit(pageSize));
+        const snap = await getDocs(query(collection(db, 'examSets'), ...clauses));
+        return {
+          sets:    snap.docs.map((d) => ({ id: d.id, ...d.data() })),
+          lastDoc: snap.docs[snap.docs.length - 1] ?? null,
+        };
+      } catch (e) {
+        setError(e.message);
+        return { sets: [], lastDoc: null };
+      }
+    },
+    [],
+  );
+
+  const fetchExamSetById = useCallback(async (setId) => {
+    try {
+      const [setSnap, qSnap] = await Promise.all([
+        getDoc(doc(db, 'examSets', setId)),
+        getDocs(collection(db, 'examSets', setId, 'questions')),
+      ]);
+      if (!setSnap.exists()) return null;
+      return {
+        id: setSnap.id,
+        ...setSnap.data(),
+        questions: qSnap.docs.map((d) => ({ id: d.id, ...d.data() })),
+      };
+    } catch (e) {
+      setError(e.message);
+      return null;
+    }
+  }, []);
+
+  const setExamSetPublished = useCallback(
+    async (setId, published) => {
+      try {
+        await updateDoc(doc(db, 'examSets', setId), {
+          published,
+          moderatedBy: user?.email ?? 'admin',
+          moderatedAt: serverTimestamp(),
+        });
+        return true;
+      } catch (e) {
+        setError(e.message);
+        return false;
+      }
+    },
+    [user],
+  );
+
+  const softDeleteExamSet = useCallback(
+    async (setId, reason = null) => {
+      try {
+        await updateDoc(doc(db, 'examSets', setId), {
+          deleted:       true,
+          deletedBy:     user?.email ?? 'admin',
+          deletedAt:     serverTimestamp(),
+          deletedReason: reason,
+          published:     false,
+        });
+        return true;
+      } catch (e) {
+        setError(e.message);
+        return false;
+      }
+    },
+    [user],
+  );
+
+  const setExamSetFeatured = useCallback(async (setId, featured) => {
+    try {
+      await updateDoc(doc(db, 'examSets', setId), { featured });
+      return true;
+    } catch (e) {
+      setError(e.message);
+      return false;
+    }
+  }, []);
+
+  // ── Attempts (read-only for admin) ──────────────────────────────
+  const fetchAttempts = useCallback(
+    async ({ pageSize = 30, afterDoc = null, uid = null } = {}) => {
+      try {
+        const clauses = [];
+        if (uid) clauses.push(where('uid', '==', uid));
+        clauses.push(orderBy('createdAt', 'desc'));
+        if (afterDoc) clauses.push(startAfter(afterDoc));
+        clauses.push(limit(pageSize));
+        const snap = await getDocs(query(collection(db, 'attempts'), ...clauses));
+        return {
+          attempts: snap.docs.map((d) => ({ id: d.id, ...d.data() })),
+          lastDoc:  snap.docs[snap.docs.length - 1] ?? null,
+        };
+      } catch (e) {
+        setError(e.message);
+        return { attempts: [], lastDoc: null };
+      }
+    },
+    [],
+  );
+
+  // ── Dashboard KPIs ──────────────────────────────────────────────
+  const fetchDashboardKPIs = useCallback(async () => {
+    const now = Date.now();
+    const D1  = now - 24 * 60 * 60 * 1000;
+    const D7  = now - 7  * 24 * 60 * 60 * 1000;
+    const D30 = now - 30 * 24 * 60 * 60 * 1000;
+    const toMillis = (v) => {
+      if (!v) return 0;
+      if (typeof v.toMillis === 'function') return v.toMillis();
+      if (v.seconds) return v.seconds * 1000;
+      return 0;
+    };
+    try {
+      const [usersSnap, attemptsSnap, setsSnap, questionsSnap] = await Promise.all([
+        getDocs(collection(db, 'users')),
+        getDocs(collection(db, 'attempts')),
+        getDocs(collection(db, 'examSets')),
+        getDocs(collection(db, 'questions')),
+      ]);
+      const users    = usersSnap.docs.map((d) => d.data());
+      const attempts = attemptsSnap.docs.map((d) => d.data());
+      const sets     = setsSnap.docs.map((d) => d.data());
+
+      const totalUsers    = users.length;
+      const proUsers      = users.filter((u) => u.plan === 'pro').length;
+      const newUsers7d    = users.filter((u) => toMillis(u.createdAt) >= D7).length;
+      const newUsers30d   = users.filter((u) => toMillis(u.createdAt) >= D30).length;
+      const bannedUsers   = users.filter((u) => u.banned === true).length;
+      const attempts24h   = attempts.filter((a) => toMillis(a.createdAt) >= D1).length;
+      const attempts7d    = attempts.filter((a) => toMillis(a.createdAt) >= D7).length;
+      const totalAttempts = attempts.length;
+      const publishedSets = sets.filter((s) => s.published && !s.deleted).length;
+      const totalSets     = sets.filter((s) => !s.deleted).length;
+      const conversionPct = totalUsers > 0 ? Math.round((proUsers / totalUsers) * 100) : 0;
+
+      return {
+        totalUsers, proUsers, newUsers7d, newUsers30d, bannedUsers, conversionPct,
+        attempts24h, attempts7d, totalAttempts,
+        publishedSets, totalSets,
+        totalQuestions: questionsSnap.size,
+      };
+    } catch (e) {
+      console.error('KPI fetch error:', e.message);
+      return null;
+    }
+  }, []);
+
   return {
     questions,
     loading,
@@ -273,5 +520,22 @@ export function useAdmin() {
     saveCertification,
     createCertification,
     deleteCertification,
+    // Users
+    fetchUsers,
+    searchUserByEmail,
+    fetchUserById,
+    updateUserPlan,
+    setUserBanned,
+    fetchUserAttemptCount,
+    // ExamSets
+    fetchExamSets,
+    fetchExamSetById,
+    setExamSetPublished,
+    softDeleteExamSet,
+    setExamSetFeatured,
+    // Attempts
+    fetchAttempts,
+    // KPIs
+    fetchDashboardKPIs,
   };
 }

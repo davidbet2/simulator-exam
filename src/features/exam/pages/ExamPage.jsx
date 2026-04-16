@@ -1,5 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../core/firebase/firebase';
 import { CERTIFICATIONS } from '../../../core/constants/certifications';
 import { useExam } from '../hooks/useExam';
 import { QuestionCard } from '../components/QuestionCard';
@@ -137,9 +139,44 @@ export function ExamPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const certId = searchParams.get('cert');
+  const setId  = searchParams.get('setId');
   const mode = searchParams.get('mode') ?? 'exam';
-  const certification = CERTIFICATIONS.find((c) => c.id === certId);
+  const staticCertification = CERTIFICATIONS.find((c) => c.id === certId);
+  const [setCertification, setSetCertification] = useState(null);
+  const [setLoadError, setSetLoadError]         = useState(false);
+  const certification = staticCertification ?? setCertification;
   const [showSubmitGuard, setShowSubmitGuard] = useState(false);
+
+  // ExamSet path: load set metadata and build a virtual certification
+  useEffect(() => {
+    if (staticCertification || !setId) return;
+    let active = true;
+    (async () => {
+      try {
+        const snap = await getDoc(doc(db, 'examSets', setId));
+        if (!active) return;
+        if (!snap.exists()) { setSetLoadError(true); return; }
+        const data = snap.data();
+        setSetCertification({
+          id: `set:${setId}`,
+          setId,
+          isExamSet: true,
+          label: data.title ?? setId,
+          labelEs: data.title ?? setId,
+          category: data.category ?? data.domain ?? 'other',
+          level: data.level ?? 'beginner',
+          questionCount: data.questionCount ?? 10,
+          timeMinutes: data.timeMinutes ?? 30,
+          passPercent: data.passPercent ?? 70,
+          available: true,
+          color: 'blue',
+        });
+      } catch {
+        if (active) setSetLoadError(true);
+      }
+    })();
+    return () => { active = false; };
+  }, [setId, staticCertification]);
 
   const {
     displayQuestions,
@@ -171,8 +208,10 @@ export function ExamPage() {
   }, [status, navigate, score, total, isTimeOut, certification, certId, passPercent, displayQuestions, answers, mode]);
 
   useEffect(() => {
-    if (!certification) navigate('/', { replace: true });
-  }, [certification, navigate]);
+    if (setLoadError) { navigate('/explore', { replace: true }); return; }
+    // Wait for either a static cert or async-loaded set metadata before redirecting
+    if (!certification && !setId) navigate('/', { replace: true });
+  }, [certification, navigate, setId, setLoadError]);
 
   if (!certification) return null;
 
