@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../core/firebase/firebase';
+import { useAuthStore } from '../../../core/store/useAuthStore';
+import { recordAnswer, recordAnswersBatch, fetchQuestionIdsForMode } from '../utils/questionStats';
+
+// Modes that behave like study (reveal feedback, no timer): 'study', 'weak', 'srs'.
+const isStudyLikeMode = (m) => m === 'study' || m === 'weak' || m === 'srs';
 
 // ─── Demo questions (general software dev knowledge, not domain-specific) ───
 const DEMO_QUESTIONS = [
@@ -87,7 +92,7 @@ function shuffle(arr) {
 
 function sessionKey(certId, mode) {
   // v2 suffix for study mode invalidates old sessions that had shuffled options
-  if (mode === 'study') return `study_v2_session_${certId}`;
+  if (isStudyLikeMode(mode)) return `study_v2_session_${certId}_${mode}`;
   return `${mode}_session_${certId}`;
 }
 
@@ -117,31 +122,29 @@ function buildDisplayQuestion(q, shouldShuffle = true) {
   return { ...q, options: newOptions, answer: newAnswer };
 }
 
+function isAnswerCorrect(dq, sel) {
+  if (!sel || sel.length === 0) return false;
+  if (dq.type === 'matching') {
+    return dq.pairs.every((p, i) => sel[i] === p.correctMatch);
+  }
+  if (dq.type === 'ordering') {
+    return sel.length === dq.correctOrder.length
+      && sel.every((v, i) => v === dq.correctOrder[i]);
+  }
+  const correct = [...dq.answer].sort();
+  const sortedSel = [...sel].sort();
+  return sortedSel.length === correct.length && sortedSel.every((v, i) => v === correct[i]);
+}
+
 function computeScore(displayQuestions, answers) {
   return displayQuestions.reduce((acc, dq, idx) => {
     const sel = answers[idx] ?? [];
-    if (!sel || sel.length === 0) return acc;
-
-    if (dq.type === 'matching') {
-      // sel[i] = selected matchKey for pairs[i]; '' means not selected
-      const ok = dq.pairs.every((p, i) => sel[i] === p.correctMatch);
-      return acc + (ok ? 1 : 0);
-    }
-    if (dq.type === 'ordering') {
-      // sel is the ordered array of items placed on the right
-      const ok = sel.length === dq.correctOrder.length &&
-        sel.every((v, i) => v === dq.correctOrder[i]);
-      return acc + (ok ? 1 : 0);
-    }
-    // Multiple choice
-    const correct = [...dq.answer].sort();
-    const sortedSel = [...sel].sort();
-    const ok = sortedSel.length === correct.length && sortedSel.every((v, i) => v === correct[i]);
-    return acc + (ok ? 1 : 0);
+    return acc + (isAnswerCorrect(dq, sel) ? 1 : 0);
   }, 0);
 }
 
-export function useExam(certification, mode = 'exam') {
+export function useExam(certification, mode = 'exam', countOverride = null) {
+  const { user } = useAuthStore();
   const [displayQuestions, setDisplayQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});   // { [idx]: string[] }
@@ -197,7 +200,7 @@ export function useExam(certification, mode = 'exam') {
         const saved = JSON.parse(savedRaw);
         let canRestore = false;
         let remaining = 0;
-        if (mode === 'study' && saved.displayQuestions?.length > 0) {
+        if (isStudyLikeMode(mode) && saved.displayQuestions?.length > 0) {
           canRestore = true;
         } else if (mode === 'exam') {
           const elapsed = Math.floor((Date.now() - saved.startTimestamp) / 1000);
@@ -240,7 +243,31 @@ export function useExam(certification, mode = 'exam') {
         setStatus('finished');
         return;
       }
-      const selected = mode === 'study' ? all : shuffle(all).slice(0, effectiveQuestionCount);
+
+      // Weak / SRS modes: filter to only questions matching the user's stats.
+      if ((mode === 'weak' || mode === 'srs') && user?.uid && certification.setId) {
+        const ids = await fetchQuestionIdsForMode({ uid: user.uid, setId: certification.setId, mode });
+        if (!ids || ids.size === 0) {
+          setError(mode === 'weak'
+            ? 'No tienes preguntas falladas en este set todavía. Responde algunas en Estudio Guiado o Modo Examen primero.'
+            : 'No tienes preguntas pendientes de repasar. ¡Todo al día!');
+          setStatus('finished');
+          return;
+        }
+        all = all.filter((q) => ids.has(q.id));
+        if (all.length === 0) {
+          setError('Las preguntas marcadas ya no existen en el set.');
+          setStatus('finished');
+          return;
+        }
+      }
+
+      // Study-like modes normally use all filtered questions; if an explicit countOverride is provided
+      // (e.g. Quick Practice), shuffle and take that many questions.
+      const limited = countOverride && countOverride > 0 && countOverride < all.length;
+      const selected = isStudyLikeMode(mode) && !limited
+        ? all
+        : shuffle(all).slice(0, limited ? countOverride : effectiveQuestionCount);
       const dqs = selected.map((q) => buildDisplayQuestion(q, mode === 'exam'));
       const totalSecs = effectiveTimeMinutes * 60;
       const startTs = Date.now();
@@ -261,7 +288,7 @@ export function useExam(certification, mode = 'exam') {
       setError(e.message);
       setStatus('finished');
     }
-  }, [certification, mode]);
+  }, [certification, mode, countOverride, user]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -270,7 +297,7 @@ export function useExam(certification, mode = 'exam') {
   }, [loadQuestions]);
 
   useEffect(() => {
-    if (status !== 'running' || mode === 'study') return;
+    if (status !== 'running' || isStudyLikeMode(mode)) return;
     timerRef.current = setInterval(() => {
       setTimeLeft((t) => {
         if (t <= 1) {
@@ -338,12 +365,36 @@ export function useExam(certification, mode = 'exam') {
       }
       return next;
     });
-  }, [certification, mode]);
+    // Record stats for study-like modes (study, weak, srs) — only for real examSets.
+    if (isStudyLikeMode(mode) && user?.uid && certification?.setId) {
+      const dq = displayQuestions[idx];
+      const sel = answers[idx] ?? [];
+      if (dq?.id) {
+        recordAnswer({
+          uid: user.uid,
+          setId: certification.setId,
+          questionId: dq.id,
+          correct: isAnswerCorrect(dq, sel),
+        }).catch(() => { /* best-effort, don't block UX */ });
+      }
+    }
+  }, [certification, mode, user, displayQuestions, answers]);
 
   const submitExam = useCallback(() => {
     clearInterval(timerRef.current);
     setStatus('finished');
-  }, []);
+    // Batch-record stats for exam mode (study-like modes already recorded per confirm).
+    if (mode === 'exam' && user?.uid && certification?.setId && displayQuestions.length > 0) {
+      const results = displayQuestions.map((dq, idx) => ({
+        questionId: dq.id,
+        correct: isAnswerCorrect(dq, answers[idx] ?? []),
+      })).filter((r) => r.questionId);
+      if (results.length > 0) {
+        recordAnswersBatch({ uid: user.uid, setId: certification.setId, results })
+          .catch(() => { /* best-effort */ });
+      }
+    }
+  }, [mode, user, certification, displayQuestions, answers]);
 
   const score = computeScore(displayQuestions, answers);
 

@@ -127,7 +127,7 @@ export function ResultsPage() {
   // Persist attempt to Firestore (once, only in exam mode, only if logged in, skip demo)
   useEffect(() => {
     if (!state || !user || savedRef.current) return;
-    if (state.mode === 'study') return;
+    if (state.mode === 'study' || state.mode === 'weak' || state.mode === 'srs') return;
     if (state.certId === 'demo') return;
     savedRef.current = true;
     addDoc(collection(db, 'attempts'), {

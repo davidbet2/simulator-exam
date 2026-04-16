@@ -5,11 +5,13 @@ import { Helmet } from 'react-helmet-async';
 import { doc, getDoc, collection, getDocs, limit, query } from 'firebase/firestore';
 import {
   ArrowLeft, BookOpen, Clock, Target, User, Play,
-  Lock, CheckCircle2, Tag,
+  Lock, CheckCircle2, Tag, GraduationCap, Zap, TimerReset,
+  Brain, TrendingDown, Sparkles,
 } from 'lucide-react';
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { getDomain } from '../../../core/constants/domains';
+import { fetchStatsSummary } from '../../exam/utils/questionStats';
 import { AppShell } from '../../../components/layout/AppShell';
 import { Card, CardBody } from '../../../components/ui/Card';
 import { Badge } from '../../../components/ui/Badge';
@@ -29,6 +31,72 @@ function MetaStat({ icon: Icon, label, value }) {
         <p className="text-xs text-ink-muted">{label}</p>
         <p className="text-sm font-semibold text-ink truncate">{value}</p>
       </div>
+    </div>
+  );
+}
+
+// ── Study mode card ──────────────────────────────────────────────────────────
+function ModeCard({
+  icon: Icon, title, subtitle, description, technique, meta, ctaLabel,
+  accent = 'brand', onClick, disabled = false, soon = false, highlighted = false,
+}) {
+  const accentMap = {
+    brand:   { ring: 'ring-brand-500/30',   bg: 'bg-brand-500/10',   text: 'text-brand-600'   },
+    violet:  { ring: 'ring-violet-500/30',  bg: 'bg-violet-500/10',  text: 'text-violet-600'  },
+    amber:   { ring: 'ring-amber-500/30',   bg: 'bg-amber-500/10',   text: 'text-amber-600'   },
+    rose:    { ring: 'ring-rose-500/30',    bg: 'bg-rose-500/10',    text: 'text-rose-600'    },
+    emerald: { ring: 'ring-emerald-500/30', bg: 'bg-emerald-500/10', text: 'text-emerald-600' },
+  };
+  const a = accentMap[accent] ?? accentMap.brand;
+  return (
+    <div
+      className={`group relative flex flex-col rounded-2xl border p-5 transition-all ${
+        disabled
+          ? 'border-surface-border bg-surface-soft/60 opacity-70'
+          : highlighted
+            ? `border-transparent bg-gradient-to-br from-brand-500/10 to-brand-500/5 ring-1 ${a.ring} hover:shadow-lg hover:-translate-y-0.5`
+            : 'border-surface-border bg-white hover:border-brand-500/40 hover:shadow-md hover:-translate-y-0.5'
+      }`}
+    >
+      {soon && (
+        <span className="absolute top-3 right-3 text-[10px] font-semibold uppercase tracking-wider bg-ink-muted/10 text-ink-muted rounded-full px-2 py-0.5">
+          Próximamente
+        </span>
+      )}
+      {highlighted && !soon && (
+        <span className="absolute top-3 right-3 text-[10px] font-semibold uppercase tracking-wider bg-brand-500 text-white rounded-full px-2 py-0.5 flex items-center gap-1">
+          <Sparkles size={9} />Recomendado
+        </span>
+      )}
+      <div className={`w-11 h-11 rounded-xl ${a.bg} ${a.text} flex items-center justify-center mb-3`}>
+        <Icon size={20} />
+      </div>
+      <h3 className="text-base font-semibold text-ink">{title}</h3>
+      <p className="text-xs text-ink-muted mt-0.5 mb-2">{subtitle}</p>
+      <p className="text-sm text-ink-soft flex-1 leading-relaxed">{description}</p>
+      {technique && (
+        <p className="text-[11px] text-ink-muted mt-3 italic">
+          Técnica: {technique}
+        </p>
+      )}
+      {meta && (
+        <div className="flex flex-wrap items-center gap-2 mt-3 text-[11px] text-ink-muted">
+          {meta.map((m, i) => (
+            <span key={i} className="inline-flex items-center gap-1 bg-surface-soft border border-surface-border rounded-full px-2 py-0.5">
+              {m.icon && <m.icon size={10} />}{m.label}
+            </span>
+          ))}
+        </div>
+      )}
+      <Button
+        onClick={onClick}
+        disabled={disabled}
+        variant={highlighted ? 'primary' : 'secondary'}
+        size="sm"
+        className="mt-4 w-full"
+      >
+        {disabled ? <><Lock size={13} />{ctaLabel}</> : <><Play size={13} />{ctaLabel}</>}
+      </Button>
     </div>
   );
 }
@@ -75,6 +143,7 @@ export function ExamSetLandingPage() {
   const [preview, setPreview] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [stats, setStats] = useState({ weak: 0, due: 0, mastered: 0, seen: 0 });
 
   useEffect(() => {
     let active = true;
@@ -104,6 +173,16 @@ export function ExamSetLandingPage() {
     load();
     return () => { active = false; };
   }, [slug]);
+
+  // Load per-user stats (best-effort) to power Zona Débil + Repaso Inteligente counts.
+  useEffect(() => {
+    if (!user?.uid || !slug) return;
+    let active = true;
+    fetchStatsSummary({ uid: user.uid, setId: slug })
+      .then((s) => { if (active) setStats(s); })
+      .catch(() => { /* non-critical */ });
+    return () => { active = false; };
+  }, [user?.uid, slug]);
 
   if (loading) {
     return (
@@ -154,6 +233,12 @@ export function ExamSetLandingPage() {
   const startAction = () => {
     if (!user) { navigate('/register'); return; }
     navigate(`/exam?setId=${slug}`);
+  };
+
+  const launchMode = (params) => {
+    if (!user) { navigate('/register'); return; }
+    const qs = new URLSearchParams({ setId: slug, ...params }).toString();
+    navigate(`/exam?${qs}`);
   };
 
   return (
@@ -219,8 +304,12 @@ export function ExamSetLandingPage() {
 
           {/* CTA band */}
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Button size="lg" onClick={startAction}>
-              {user ? <><Play size={16} />Empezar examen</> : <><Lock size={16} />Regístrate para practicar</>}
+            <Button size="lg" onClick={() => {
+              const el = document.getElementById('study-modes');
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              else startAction();
+            }}>
+              {user ? <><Play size={16} />Empezar ahora</> : <><Lock size={16} />Regístrate para practicar</>}
             </Button>
             {!user && (
               <span className="text-xs text-ink-muted">
@@ -239,6 +328,108 @@ export function ExamSetLandingPage() {
           <MetaStat icon={Clock}    label="Duración"  value={`${set.timeMinutes ?? 30} min`} />
           <MetaStat icon={Target}   label="Aprobar"   value={`${set.passPercent ?? 70}%`} />
           <MetaStat icon={User}     label="Intentos"  value={set.attempts ?? 0} />
+        </motion.section>
+
+        {/* Study modes */}
+        <motion.section
+          id="study-modes"
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
+          className="space-y-4 scroll-mt-20"
+        >
+          <div>
+            <h2 className="text-xl font-bold text-ink flex items-center gap-2">
+              <GraduationCap size={20} className="text-brand-600" />
+              Elige tu modo de estudio
+            </h2>
+            <p className="text-sm text-ink-soft mt-1">
+              Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <ModeCard
+              icon={GraduationCap}
+              title="Estudio Guiado"
+              subtitle="Aprende sin presión"
+              description="Responde, confirma y ve la explicación al instante. Sin tiempo, revisa cuantas veces quieras."
+              technique="Retrieval practice + feedback inmediato"
+              meta={[
+                { icon: BookOpen, label: `${set.questionCount ?? preview.length} preguntas` },
+                { icon: TimerReset, label: 'Sin tiempo' },
+              ]}
+              accent="emerald"
+              highlighted
+              ctaLabel={user ? 'Empezar' : 'Regístrate'}
+              onClick={() => launchMode({ mode: 'study' })}
+            />
+
+            <ModeCard
+              icon={Zap}
+              title="Práctica Rápida"
+              subtitle="10 preguntas · sesión corta"
+              description="Sesión exprés ideal para 5–10 minutos: aleatoria, con explicación inmediata. Perfecta para el día a día."
+              technique="Espaciado + sesiones breves (micro-learning)"
+              meta={[
+                { icon: BookOpen, label: '10 preguntas' },
+                { icon: Clock, label: '~5 min' },
+              ]}
+              accent="amber"
+              ctaLabel={user ? 'Practicar' : 'Regístrate'}
+              onClick={() => launchMode({ mode: 'study', count: '10' })}
+            />
+
+            <ModeCard
+              icon={Target}
+              title="Modo Examen"
+              subtitle="Simulacro cronometrado"
+              description={`Condiciones reales: ${set.timeMinutes ?? 30} min · ${set.passPercent ?? 70}% para aprobar · sin pistas. Evalúa tu preparación real.`}
+              technique="Testing effect + feedback diferido"
+              meta={[
+                { icon: Clock, label: `${set.timeMinutes ?? 30} min` },
+                { icon: Target, label: `${set.passPercent ?? 70}% aprobar` },
+              ]}
+              accent="rose"
+              ctaLabel={user ? 'Empezar examen' : 'Regístrate'}
+              onClick={() => launchMode({ mode: 'exam' })}
+            />
+
+            <ModeCard
+              icon={TrendingDown}
+              title="Zona Débil"
+              subtitle="Ataca tus errores"
+              description="Te enfoca en las preguntas que fallaste. Aprendizaje dirigido a tus lagunas reales."
+              technique="Práctica focalizada (targeted practice)"
+              meta={[
+                user && stats.weak > 0
+                  ? { icon: BookOpen, label: `${stats.weak} pregunta${stats.weak !== 1 ? 's' : ''} por repasar` }
+                  : { icon: Sparkles, label: 'Responde preguntas primero' },
+              ]}
+              accent="violet"
+              disabled={!user || stats.weak === 0}
+              ctaLabel={!user ? 'Regístrate' : stats.weak === 0 ? 'Sin errores aún' : 'Empezar'}
+              onClick={() => launchMode({ mode: 'weak' })}
+            />
+
+            <ModeCard
+              icon={Brain}
+              title="Repaso Inteligente"
+              subtitle="Repetición espaciada"
+              description="Algoritmo Leitner que programa cuándo repasar cada pregunta para consolidar memoria a largo plazo al mínimo esfuerzo."
+              technique="Spaced repetition (Leitner 5 cajas)"
+              meta={[
+                user && stats.due > 0
+                  ? { icon: Brain, label: `${stats.due} pregunta${stats.due !== 1 ? 's' : ''} por repasar hoy` }
+                  : user && stats.seen > 0
+                    ? { icon: Sparkles, label: 'Todo al día 🎉' }
+                    : { icon: Sparkles, label: 'Responde preguntas primero' },
+                user && stats.mastered > 0 ? { icon: CheckCircle2, label: `${stats.mastered} dominada${stats.mastered !== 1 ? 's' : ''}` } : null,
+              ].filter(Boolean)}
+              accent="brand"
+              disabled={!user || stats.due === 0}
+              ctaLabel={!user ? 'Regístrate' : stats.due === 0 ? (stats.seen > 0 ? 'Nada por repasar' : 'Sin historial') : 'Repasar ahora'}
+              onClick={() => launchMode({ mode: 'srs' })}
+            />
+          </div>
         </motion.section>
 
         {/* Source & tags */}

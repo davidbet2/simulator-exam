@@ -9,6 +9,7 @@ import { TimerBox } from '../components/TimerBox';
 
 /** Wrapping chips showing each question's status */
 function QuestionNavigator({ total, current, answers, flags, revealed, displayQuestions, mode, onNavigate }) {
+  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs';
   return (
       <div className="flex flex-wrap gap-1.5 px-4 py-3 bg-surface-soft border-b border-surface-border">
       {Array.from({ length: total }, (_, i) => {
@@ -22,7 +23,7 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
           'shrink-0 w-8 h-8 rounded text-xs font-bold border transition-colors flex items-center justify-center cursor-pointer ';
         if (isCurrent) {
           cls += 'bg-brand-500 text-white border-brand-500 shadow-glow-brand';
-        } else if (mode === 'study' && isRevealed) {
+        } else if (isStudy && isRevealed) {
           const dq = displayQuestions[i];
           let isCorrect = false;
           if (dq.type === 'matching') {
@@ -38,7 +39,7 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
             isCorrect = sortedSel.length === correct.length && sortedSel.every((v, j) => v === correct[j]);
           }
           cls += isCorrect ? 'bg-success-500 text-white border-success-500' : 'bg-danger-500 text-white border-danger-500';
-        } else if (mode === 'study' && isAnswered) {
+        } else if (isStudy && isAnswered) {
           cls += 'bg-warning-500 text-white border-warning-500';
         } else if (isFlagged) {
           cls += 'bg-danger-500 text-white border-danger-500';
@@ -60,7 +61,8 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
 
 /** Legend for chip colors */
 function NavLegend({ mode }) {
-  if (mode === 'study') {
+  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs';
+  if (isStudy) {
     return (
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 bg-surface-soft/50 border-b border-surface-border text-xs text-ink-soft">
         <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-brand-500" /> Actual</span>
@@ -141,6 +143,8 @@ export function ExamPage() {
   const certId = searchParams.get('cert');
   const setId  = searchParams.get('setId');
   const mode = searchParams.get('mode') ?? 'exam';
+  const countParam = Number(searchParams.get('count'));
+  const countOverride = Number.isFinite(countParam) && countParam > 0 ? countParam : null;
   const staticCertification = CERTIFICATIONS.find((c) => c.id === certId);
   const [setCertification, setSetCertification] = useState(null);
   const [setLoadError, setSetLoadError]         = useState(false);
@@ -196,7 +200,7 @@ export function ExamPage() {
     toggleFlag,
     confirmAnswer,
     submitExam,
-  } = useExam(certification, mode);
+  } = useExam(certification, mode, countOverride);
 
   useEffect(() => {
     if (status === 'finished') {
@@ -254,6 +258,10 @@ export function ExamPage() {
             <h1 className="font-display font-bold text-ink text-sm">{certification.labelEs}</h1>
             {mode === 'study' ? (
               <span className="text-xs bg-success-500/20 text-success-500 font-semibold px-2 py-0.5 rounded-full">📖 Estudio</span>
+            ) : mode === 'weak' ? (
+              <span className="text-xs bg-violet-500/20 text-violet-500 font-semibold px-2 py-0.5 rounded-full">🎯 Zona Débil</span>
+            ) : mode === 'srs' ? (
+              <span className="text-xs bg-amber-500/20 text-amber-500 font-semibold px-2 py-0.5 rounded-full">🧠 Repaso</span>
             ) : (
               <span className="text-xs bg-brand-500/20 text-brand-400 font-semibold px-2 py-0.5 rounded-full">🎯 Examen</span>
             )}
@@ -317,7 +325,7 @@ export function ExamPage() {
           </button>
 
           {/* Study mode: confirm button */}
-          {mode === 'study' && (answers[current] ?? []).length > 0 && !(revealed[current] ?? false) && (
+          {(mode === 'study' || mode === 'weak' || mode === 'srs') && (answers[current] ?? []).length > 0 && !(revealed[current] ?? false) && (
             <button
               onClick={() => confirmAnswer(current)}
               className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
@@ -333,7 +341,7 @@ export function ExamPage() {
             >
               Siguiente →
             </button>
-          ) : mode === 'study' ? (
+          ) : (mode === 'study' || mode === 'weak' || mode === 'srs') ? (
             <button
               onClick={submitExam}
               className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"

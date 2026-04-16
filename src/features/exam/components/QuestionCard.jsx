@@ -45,8 +45,8 @@ function FeedbackBanner({ isCorrect }) {
   return (
     <div className={`flex items-center gap-2 px-4 py-2 rounded-xl mb-4 text-sm font-semibold border ${
       isCorrect
-        ? 'bg-success-50 border-success-500/40 text-success-700'
-        : 'bg-danger-50 border-danger-500/40 text-danger-700'
+        ? 'bg-success-50 border-success-500/40 text-success-600 dark:bg-emerald-500/15 dark:border-emerald-400/50 dark:text-emerald-200'
+        : 'bg-danger-50 border-danger-500/40 text-danger-600 dark:bg-rose-500/15 dark:border-rose-400/50 dark:text-rose-200'
     }`}>
       <span>{isCorrect ? '✅' : '❌'}</span>
       <span>
@@ -277,7 +277,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
  * In study mode, `revealed` locks options and shows correct/wrong feedback.
  */
 export function QuestionCard({ question, questionNumber, total: _total, savedSelection, flagged, mode, revealed, onSelectionChange, onToggleFlag }) {
-  const isStudy = mode === 'study';
+  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs';
 
   // ── Matching type ────────────────────────────────────────────────────────────
   if (question.type === 'matching') {
@@ -367,8 +367,8 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
       {revealed && (
         <div className={`flex items-center gap-2 px-4 py-2 rounded-xl mb-4 text-sm font-semibold border ${
           isCorrect
-            ? 'bg-success-50 border-success-500/40 text-success-700'
-            : 'bg-danger-50 border-danger-500/40 text-danger-700'
+            ? 'bg-success-50 border-success-500/40 text-success-600 dark:bg-emerald-500/15 dark:border-emerald-400/50 dark:text-emerald-200'
+            : 'bg-danger-50 border-danger-500/40 text-danger-600 dark:bg-rose-500/15 dark:border-rose-400/50 dark:text-rose-200'
         }`}>
           <span>{isCorrect ? '✅' : '❌'}</span>
           <span>
