@@ -24,8 +24,8 @@ const SITE_JSON_LD = {
 const FEATURES = [
   {
     icon: BookOpen,
-    title: 'Banco de preguntas real',
-    body: 'Preguntas extraídas de los exámenes oficiales de certificación, organizadas por dominio y nivel de dificultad. Actualizadas constantemente.',
+    title: 'Banco de preguntas',
+    body: 'Preguntas similares a los exámenes oficiales de certificación, organizadas por dominio y nivel de dificultad. Actualizadas constantemente.',
     color: 'bg-brand-500/20 text-brand-600',
   },
   {
@@ -43,7 +43,7 @@ const FEATURES = [
   {
     icon: Shield,
     title: 'Privacidad primero',
-    body: 'Sin publicidad, sin venta de datos. Tu historial de práctica es tuyo. Autenticación segura vía Firebase Auth con email verificado.',
+    body: 'Sin publicidad con el plan pro. Tu historial de práctica es tuyo.',
     color: 'bg-purple-500/20 text-purple-400',
   },
   {

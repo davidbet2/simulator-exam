@@ -112,27 +112,7 @@ export function PricingPage() {
           />
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="max-w-2xl mx-auto"
-        >
-          <Card className="border-slate-600">
-            <CardBody className="flex items-center gap-4 p-5">
-              <div className="rounded-xl bg-surface-muted p-3 shrink-0">
-                <Building2 size={20} className="text-ink-soft" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Empresas y equipos</h3>
-                <p className="text-sm text-ink-soft mt-0.5">
-                  Planes B2B con acceso para múltiples empleados, reportes y certificaciones personalizadas.
-                </p>
-              </div>
-              <Button variant="secondary" size="sm" className="shrink-0">
-                Contactar
-              </Button>
-            </CardBody>
-          </Card>
-        </motion.div>
+       
       </main>
     </div>
   )

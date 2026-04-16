@@ -20,7 +20,7 @@ const FEATURES = [
   {
     icon: Target,
     title: 'Simulación Real',
-    description: 'Mismo formato que el examen oficial: cronómetro, navegación libre y revisión de errores al finalizar.',
+    description: 'Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar.',
     color: 'bg-brand-50 text-brand-600',
   },
   {
@@ -315,8 +315,8 @@ export function WelcomePage() {
                     transition={{ duration: 0.5, delay: 0.16 }}
                     className="text-ink-soft text-base sm:text-lg leading-relaxed mb-8 max-w-md font-semibold"
                   >
-                    Simuladores con el formato exacto del examen, banco de preguntas
-                    oficial y seguimiento de progreso. Gratis para empezar hoy.
+                    Simuladores con el formato similar del examen, banco de preguntas
+                    y seguimiento de progreso. Gratis para empezar hoy.
                   </motion.p>
 
                   <motion.div

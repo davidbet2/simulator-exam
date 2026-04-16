@@ -101,6 +101,17 @@ export const useAuthStore = create((set) => ({
     await signOut(auth);
   },
 
+  /** Update display name in Firestore + Firebase Auth + local store */
+  updateDisplayName: async (uid, newName) => {
+    const { updateProfile } = await import('firebase/auth');
+    const { updateDoc } = await import('firebase/firestore');
+    await Promise.all([
+      updateProfile(auth.currentUser, { displayName: newName }),
+      updateDoc(doc(db, 'users', uid), { displayName: newName }),
+    ]);
+    set({ displayName: newName });
+  },
+
   clearError: () => set({ error: null }),
 }));
 

@@ -25,7 +25,7 @@ export function ZenDolphin({ size = 200, mood: _mood = "default", bob = false })
         <Lottie
           animationData={animData}
           renderer="svg"
-          loop={true}
+          loop={false}
           autoplay={true}
           style={{ width: size, height: size, background: 'transparent' }}
           rendererSettings={{ preserveAspectRatio: 'xMidYMid meet', progressiveLoad: true }}

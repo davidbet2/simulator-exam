@@ -166,7 +166,7 @@ function MatchingForm({ form, errors, set }) {
 }
 
 // ─── Main form ────────────────────────────────────────────────────────────────
-export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave, onCancel, loading }) {
+export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave, onCancel, loading, hideMeta = false }) {
   const [form, setForm] = useState(initial ? formFromQuestion(initial) : emptyMultiple());
   const [errors, setErrors] = useState({});
 
@@ -269,6 +269,7 @@ export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave,
           </div>
 
           {/* Category + Level */}
+          {!hideMeta && (
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">Certificación</label>
@@ -289,6 +290,7 @@ export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave,
               </select>
             </div>
           </div>
+          )}
 
           {/* Question */}
           <div>

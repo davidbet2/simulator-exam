@@ -31,7 +31,7 @@ const FRAMES = [
 
 const CANVAS  = 512;
 const FILL_PC = 0.95;
-const TOTAL   = 218; // 210 + xfade of last frame (8) so fade-out completes before loop
+const TOTAL   = 210; // animation ends at last frame's op (no fade-out needed — loop=false)
 const FPS     = 60;
 
 // --- Background removal via flood-fill from edges --------------------------
@@ -395,8 +395,12 @@ for (let i = 0; i < FRAMES.length; i++) {
 
   process.stdout.write('  ' + String(i + 1).padStart(2) + '. ' + name.padEnd(22) + ' -> ...');
 
-  // 1. Remove background
-  const noBg = await removeBgByColor(fpath);
+  // 1. Images are pre-processed with transparent background — skip removeBgByColor.
+  //    Load PNG directly (already RGBA).
+  const { channels, hasAlpha } = await sharp(fpath).metadata();
+  const noBg = hasAlpha
+    ? await sharp(fpath).png().toBuffer()
+    : await removeBgByColor(fpath); // fallback for legacy solid-bg images
 
   // 2. Manual bounding box — trim() falla por artifacts en bordes; usamos alpha>20
   const { width, height } = await sharp(noBg).metadata();
