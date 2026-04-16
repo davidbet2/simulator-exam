@@ -15,12 +15,6 @@ const STORAGE_KEY = 'certzen:lang';
 export const SUPPORTED_LANGS = [
   { id: 'es', label: 'Español' },
   { id: 'en', label: 'English (USA)' },
-  { id: 'fr', label: 'Français' },
-  { id: 'pt', label: 'Português' },
-  { id: 'de', label: 'Deutsch' },
-  { id: 'it', label: 'Italiano' },
-  { id: 'zh', label: '中文' },
-  { id: 'ja', label: '日本語' },
 ];
 
 const dict = {
@@ -410,15 +404,23 @@ const dict = {
   },
 };
 
+const VALID_LANGS = new Set(['es', 'en']);
+
 export const useLangStore = create(
   persist(
     (set) => ({
       lang: 'es',
-      setLang: (lang) => set({ lang }),
+      setLang: (lang) => set({ lang: VALID_LANGS.has(lang) ? lang : 'es' }),
     }),
     {
       name: STORAGE_KEY,
       partialize: (s) => ({ lang: s.lang }),
+      // On rehydration, reset invalid languages saved from a previous version.
+      onRehydrateStorage: () => (state) => {
+        if (state && !VALID_LANGS.has(state.lang)) {
+          state.lang = 'es';
+        }
+      },
     },
   ),
 );
