@@ -51,7 +51,7 @@ function ModeSelect() {
   const CurrentIcon = current.icon;
 
   return (
-    <div className="relative">
+    <div className="relative z-10">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -63,8 +63,8 @@ function ModeSelect() {
       </button>
       {open && (
         <>
-          <div className="fixed inset-0 z-20" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-1 w-36 rounded-lg border border-surface-border bg-surface-card shadow-lg z-30 overflow-hidden">
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 mt-1 w-36 rounded-lg border border-surface-border bg-surface-card shadow-lg z-50 overflow-hidden">
             {options.map((o) => {
               const Icon = o.icon;
               return (
@@ -92,7 +92,7 @@ function LangSelect() {
   const [open, setOpen] = useState(false);
   const current = SUPPORTED_LANGS.find((l) => l.id === lang) ?? SUPPORTED_LANGS[0];
   return (
-    <div className="relative">
+    <div className="relative z-10">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -103,8 +103,8 @@ function LangSelect() {
       </button>
       {open && (
         <>
-          <div className="fixed inset-0 z-20" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-1 w-44 rounded-lg border border-surface-border bg-surface-card shadow-lg z-30 overflow-hidden">
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 mt-1 w-44 rounded-lg border border-surface-border bg-surface-card shadow-lg z-50 overflow-hidden">
             {SUPPORTED_LANGS.map((l) => (
               <button
                 key={l.id}
