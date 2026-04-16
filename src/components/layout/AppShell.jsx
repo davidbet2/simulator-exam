@@ -1,10 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, Library, Search, Plus, FolderPlus, Folder,
   Settings, Trophy, LogOut, Sun, Moon, Monitor, Menu, X,
   PanelLeftClose, PanelLeftOpen, MessageCircle, ArrowRight,
 } from 'lucide-react';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
+import { db } from '../../core/firebase/firebase';
+import { getDomain } from '../../core/constants/domains';
 import Button from '../ui/Button';
 import { useAuthStore } from '../../core/store/useAuthStore';
 import { useThemeStore } from '../../core/store/useThemeStore';
@@ -308,14 +311,99 @@ function UserMenu() {
   );
 }
 
+// ── Search helpers ────────────────────────────────────────────────────────────
+function SearchHighlight({ text, needle }) {
+  if (!needle || !text) return text ?? null;
+  const idx = text.toLowerCase().indexOf(needle.toLowerCase());
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-brand-500/20 text-ink rounded-sm not-italic">{text.slice(idx, idx + needle.length)}</mark>
+      {text.slice(idx + needle.length)}
+    </>
+  );
+}
+
 // ── Topbar ───────────────────────────────────────────────────────────────────
 function TopBar({ onToggleSidebar, authed }) {
   const navigate = useNavigate();
   const [q, setQ] = useState('');
+  const [catalog, setCatalog] = useState([]);
+  const fetchedRef = useRef(false);
+  const [showSugg, setShowSugg] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const containerRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const suggestions = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    if (needle.length < 2 || catalog.length === 0) return [];
+    const seen = new Set();
+    const results = [];
+    for (const s of catalog) {
+      if (results.length >= 8) break;
+      const title = s.title ?? '';
+      if (title.toLowerCase().includes(needle) && !seen.has(title.toLowerCase())) {
+        seen.add(title.toLowerCase());
+        results.push({ label: title, kind: 'set', domain: s.domain });
+      }
+    }
+    for (const s of catalog) {
+      for (const tag of s.tags ?? []) {
+        if (results.length >= 8) break;
+        const t = tag.toLowerCase();
+        if (t.includes(needle) && !seen.has(t)) {
+          seen.add(t);
+          results.push({ label: tag, kind: 'tag' });
+        }
+      }
+    }
+    return results;
+  }, [catalog, q]);
+
+  // Lazy-load catalog on first focus
+  function ensureCatalog() {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+    getDocs(query(collection(db, 'examSets'), where('published', '==', true), limit(200)))
+      .then((snap) => setCatalog(snap.docs.map((d) => ({ id: d.id, title: d.data().title, domain: d.data().domain, tags: d.data().tags }))))
+      .catch((err) => console.error('[TopBar] catalog fetch failed:', err));
+  }
+
+  // Click-outside closes dropdown
+  useEffect(() => {
+    function handleClick(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setShowSugg(false);
+        setActiveIdx(-1);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  function applySearch(val) {
+    setQ(val);
+    setShowSugg(false);
+    setActiveIdx(-1);
+    if (val.trim()) navigate(`/explore?q=${encodeURIComponent(val.trim())}`);
+  }
+
+  function handleKeyDown(e) {
+    if (!showSugg || suggestions.length === 0) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, suggestions.length - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, 0)); }
+    else if (e.key === 'Enter' && activeIdx >= 0) { e.preventDefault(); applySearch(suggestions[activeIdx].label); }
+    else if (e.key === 'Escape') { setShowSugg(false); setActiveIdx(-1); }
+  }
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (q.trim()) navigate(`/explore?q=${encodeURIComponent(q.trim())}`);
+    if (q.trim()) {
+      setShowSugg(false);
+      navigate(`/explore?q=${encodeURIComponent(q.trim())}`);
+    }
   };
 
   return (
@@ -333,15 +421,69 @@ function TopBar({ onToggleSidebar, authed }) {
           >
             <Menu size={20} />
           </button>
-          <form onSubmit={onSubmit} className="flex-1 max-w-xl mx-auto relative">
+          <form onSubmit={onSubmit} className="flex-1 max-w-xl mx-auto relative" ref={containerRef} role="search">
             <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
             <input
+              ref={inputRef}
               type="search"
+              autoComplete="off"
               value={q}
-              onChange={(e) => setQ(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setQ(val);
+                setActiveIdx(-1);
+                setShowSugg(val.trim().length >= 2);
+              }}
+              onFocus={() => {
+                ensureCatalog();
+                if (q.trim().length >= 2 && suggestions.length > 0) setShowSugg(true);
+              }}
+              onKeyDown={handleKeyDown}
               placeholder="Buscar exámenes…"
               className="h-11 w-full rounded-full bg-surface-card border border-surface-border px-11 text-sm text-ink placeholder-ink-soft ring-1 ring-transparent focus:outline-none focus:ring-brand-500/40 focus:border-brand-500/40 transition-all"
+              aria-label="Buscar sets de examen"
+              aria-autocomplete="list"
+              aria-haspopup="listbox"
+              aria-expanded={showSugg && suggestions.length > 0}
+              aria-activedescendant={activeIdx >= 0 ? `topbar-sugg-${activeIdx}` : undefined}
             />
+            {q && (
+              <button
+                type="button"
+                onClick={() => { setQ(''); setShowSugg(false); inputRef.current?.focus(); }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-ink-soft hover:text-ink transition-colors"
+                aria-label="Limpiar búsqueda"
+              >
+                <X size={14} />
+              </button>
+            )}
+            {showSugg && suggestions.length > 0 && (
+              <ul
+                role="listbox"
+                aria-label="Sugerencias de búsqueda"
+                className="absolute z-50 top-full mt-1.5 left-0 w-full rounded-xl border border-surface-border bg-white shadow-lg overflow-hidden"
+              >
+                {suggestions.map((s, i) => (
+                  <li
+                    key={s.label}
+                    id={`topbar-sugg-${i}`}
+                    role="option"
+                    aria-selected={i === activeIdx}
+                    onMouseDown={(e) => { e.preventDefault(); applySearch(s.label); }}
+                    onMouseEnter={() => setActiveIdx(i)}
+                    className={`flex items-center gap-2.5 px-4 py-2.5 text-sm cursor-pointer transition-colors ${
+                      i === activeIdx ? 'bg-brand-500/10 text-brand-700' : 'text-ink hover:bg-surface-soft'
+                    }`}
+                  >
+                    {s.kind === 'tag'
+                      ? <span className="text-xs bg-surface-soft border border-surface-border rounded px-1.5 py-0.5 text-ink-soft shrink-0">#</span>
+                      : (() => { const d = getDomain(s.domain); return <span className="text-base shrink-0" aria-hidden>{d.icon}</span>; })()
+                    }
+                    <SearchHighlight text={s.label} needle={q} />
+                  </li>
+                ))}
+              </ul>
+            )}
           </form>
           <div className="flex items-center gap-2">
             <button
