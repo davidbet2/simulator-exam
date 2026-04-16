@@ -4,8 +4,8 @@ import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { recordAnswer, recordAnswersBatch, fetchQuestionIdsForMode } from '../utils/questionStats';
 
-// Modes that behave like study (reveal feedback, no timer): 'study', 'weak', 'srs'.
-const isStudyLikeMode = (m) => m === 'study' || m === 'weak' || m === 'srs';
+// Modes that behave like study (reveal feedback, no timer): 'study', 'weak', 'srs', 'wager'.
+const isStudyLikeMode = (m) => m === 'study' || m === 'weak' || m === 'srs' || m === 'wager';
 
 // ─── Demo questions (general software dev knowledge, not domain-specific) ───
 const DEMO_QUESTIONS = [
@@ -150,6 +150,7 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
   const [answers, setAnswers] = useState({});   // { [idx]: string[] }
   const [flags, setFlags] = useState([]);        // boolean[]
   const [revealed, setRevealed] = useState([]);  // study mode: confirmed answers
+  const [confidence, setConfidence] = useState({}); // wager mode: { [idx]: 1 | 2 | 3 }
   const [timeLeft, setTimeLeft] = useState(0);
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState(null);
@@ -180,6 +181,7 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
       setFlags(initialFlags);
       setRevealed(initialRevealed);
       setAnswers({});
+      setConfidence({});
       setCurrent(0);
       setTimeLeft(totalSecs);
       setStatus('running');
@@ -212,6 +214,7 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
           setAnswers(saved.answers ?? {});
           setFlags(saved.flags ?? new Array(saved.displayQuestions.length).fill(false));
           setRevealed(saved.revealed ?? new Array(saved.displayQuestions.length).fill(false));
+          setConfidence(saved.confidence ?? {});
           setCurrent(saved.current ?? 0);
           if (mode === 'exam') setTimeLeft(remaining);
           setStatus('running');
@@ -264,10 +267,13 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
 
       // Study-like modes normally use all filtered questions; if an explicit countOverride is provided
       // (e.g. Quick Practice), shuffle and take that many questions.
+      // Wager mode is study-like for reveal/recording but uses a bounded set (like exam) so the
+      // calibration score is meaningful.
       const limited = countOverride && countOverride > 0 && countOverride < all.length;
-      const selected = isStudyLikeMode(mode) && !limited
-        ? all
-        : shuffle(all).slice(0, limited ? countOverride : effectiveQuestionCount);
+      const isBoundedSession = mode === 'exam' || mode === 'wager' || limited;
+      const selected = isBoundedSession
+        ? shuffle(all).slice(0, limited ? countOverride : effectiveQuestionCount)
+        : all;
       const dqs = selected.map((q) => buildDisplayQuestion(q, mode === 'exam'));
       const totalSecs = effectiveTimeMinutes * 60;
       const startTs = Date.now();
@@ -277,12 +283,13 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
       setFlags(initialFlags);
       setRevealed(initialRevealed);
       setAnswers({});
+      setConfidence({});
       setCurrent(0);
       setTimeLeft(totalSecs);
       setStatus('running');
       sessionStorage.setItem(
         sessionKey(certification.id, mode),
-        JSON.stringify({ displayQuestions: dqs, answers: {}, flags: initialFlags, revealed: initialRevealed, current: 0, startTimestamp: startTs, totalSeconds: totalSecs })
+        JSON.stringify({ displayQuestions: dqs, answers: {}, flags: initialFlags, revealed: initialRevealed, confidence: {}, current: 0, startTimestamp: startTs, totalSeconds: totalSecs })
       );
     } catch (e) {
       setError(e.message);
@@ -352,6 +359,21 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
     });
   }, [certification, mode]);
 
+  // Wager mode: set confidence multiplier (1, 2, or 3) for a given question.
+  const setConfidenceFor = useCallback((idx, level) => {
+    setConfidence((prev) => {
+      const next = { ...prev, [idx]: level };
+      const savedRaw = sessionStorage.getItem(sessionKey(certification?.id, mode));
+      if (savedRaw) {
+        try {
+          const saved = JSON.parse(savedRaw);
+          sessionStorage.setItem(sessionKey(certification.id, mode), JSON.stringify({ ...saved, confidence: next }));
+        } catch { /* ignore */ }
+      }
+      return next;
+    });
+  }, [certification, mode]);
+
   const confirmAnswer = useCallback((idx) => {
     setRevealed((prev) => {
       const next = [...prev];
@@ -404,6 +426,7 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
     answers,
     flags,
     revealed,
+    confidence,
     score,
     timeLeft,
     status,
@@ -414,6 +437,7 @@ export function useExam(certification, mode = 'exam', countOverride = null) {
     navigateTo,
     saveAnswer,
     toggleFlag,
+    setConfidenceFor,
     confirmAnswer,
     submitExam,
   };

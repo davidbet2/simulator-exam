@@ -277,7 +277,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
  * In study mode, `revealed` locks options and shows correct/wrong feedback.
  */
 export function QuestionCard({ question, questionNumber, total: _total, savedSelection, flagged, mode, revealed, onSelectionChange, onToggleFlag }) {
-  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs';
+  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
 
   // ── Matching type ────────────────────────────────────────────────────────────
   if (question.type === 'matching') {

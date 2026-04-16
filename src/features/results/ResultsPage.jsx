@@ -127,7 +127,7 @@ export function ResultsPage() {
   // Persist attempt to Firestore (once, only in exam mode, only if logged in, skip demo)
   useEffect(() => {
     if (!state || !user || savedRef.current) return;
-    if (state.mode === 'study' || state.mode === 'weak' || state.mode === 'srs') return;
+    if (state.mode === 'study' || state.mode === 'weak' || state.mode === 'srs' || state.mode === 'wager') return;
     if (state.certId === 'demo') return;
     savedRef.current = true;
     addDoc(collection(db, 'attempts'), {
@@ -144,9 +144,38 @@ export function ResultsPage() {
 
   if (!state) return null;
 
-  const { score, total, isTimeOut, certLabel, passPercent, displayQuestions, answers } = state;
+  const { score, total, isTimeOut, certLabel, passPercent, displayQuestions, answers, mode, confidence } = state;
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const passed = percentage >= passPercent;
+  const isWager = mode === 'wager';
+
+  // ── Wager mode calibration ────────────────────────────────────────────────
+  // For each confidence level (1/2/3), compute correct vs total and signed points.
+  const wagerStats = isWager ? (() => {
+    const buckets = { 1: { correct: 0, total: 0 }, 2: { correct: 0, total: 0 }, 3: { correct: 0, total: 0 } };
+    let points = 0;
+    let totalBet = 0;
+    (displayQuestions ?? []).forEach((dq, idx) => {
+      const sel = answers?.[idx] ?? [];
+      const lvl = confidence?.[idx];
+      if (!lvl) return;
+      let correct = false;
+      if (dq.type === 'matching') {
+        correct = sel.length > 0 && dq.pairs.every((p, i) => sel[i] === p.correctMatch);
+      } else if (dq.type === 'ordering') {
+        correct = sel.length > 0 && sel.length === dq.correctOrder?.length && sel.every((v, i) => v === dq.correctOrder[i]);
+      } else {
+        const c = [...dq.answer].sort();
+        const s = [...sel].sort();
+        correct = s.length === c.length && s.every((v, i) => v === c[i]);
+      }
+      buckets[lvl].total += 1;
+      if (correct) buckets[lvl].correct += 1;
+      points += correct ? lvl : -lvl;
+      totalBet += lvl;
+    });
+    return { buckets, points, totalBet };
+  })() : null;
 
   // Animate score counter + confetti on mount
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -249,6 +278,53 @@ export function ResultsPage() {
             <span className="font-semibold text-ink-soft">{passPercent}%</span>
           </div>
         </div>
+
+        {/* Wager calibration panel */}
+        {isWager && wagerStats && (
+          <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 text-left">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-display font-bold text-ink text-sm flex items-center gap-1.5">
+                <span>🎲</span>Apuesta · Calibración
+              </h3>
+              <span className={`text-lg font-bold tabular-nums ${
+                wagerStats.points >= 0 ? 'text-success-500' : 'text-danger-500'
+              }`}>
+                {wagerStats.points >= 0 ? '+' : ''}{wagerStats.points}
+              </span>
+            </div>
+            <p className="text-xs text-ink-soft mb-3">
+              Puntos netos: <span className="font-semibold">{wagerStats.points}</span> de{' '}
+              <span className="font-semibold">{wagerStats.totalBet}</span> apostados.
+              {(() => {
+                const badBet = wagerStats.buckets[3].total > 0 && (wagerStats.buckets[3].correct / wagerStats.buckets[3].total) < 0.7;
+                if (badBet) return ' ⚠️ Tu seguridad (×3) no se corresponde con tu precisión — revisa esas preguntas.';
+                if (wagerStats.points > wagerStats.totalBet * 0.5) return ' 🎯 Buena calibración: sabes cuándo sabes.';
+                return '';
+              })()}
+            </p>
+            <div className="space-y-1.5">
+              {[
+                { level: 3, label: '⚡ Seguro · ×3', color: 'bg-rose-500' },
+                { level: 2, label: '✓ Creo · ×2',   color: 'bg-amber-500' },
+                { level: 1, label: '🤔 Dudo · ×1',  color: 'bg-brand-500' },
+              ].map(({ level, label, color }) => {
+                const b = wagerStats.buckets[level];
+                const pct = b.total > 0 ? Math.round((b.correct / b.total) * 100) : 0;
+                return (
+                  <div key={level} className="flex items-center gap-2 text-xs">
+                    <span className="text-ink-soft w-24 shrink-0">{label}</span>
+                    <div className="flex-1 h-2 bg-surface-muted rounded-full overflow-hidden">
+                      <div className={`h-full ${color} transition-all`} style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className="font-semibold text-ink tabular-nums w-16 text-right shrink-0">
+                      {b.correct}/{b.total} ({pct}%)
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Progress bar */}
         <div className="h-2 bg-surface-muted rounded-full mb-8 overflow-hidden">

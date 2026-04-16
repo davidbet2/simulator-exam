@@ -7,9 +7,52 @@ import { useExam } from '../hooks/useExam';
 import { QuestionCard } from '../components/QuestionCard';
 import { TimerBox } from '../components/TimerBox';
 
+/** Wager mode — 3-button confidence multiplier selector (×1 Dudo / ×2 Creo / ×3 Seguro). */
+function ConfidencePicker({ value, onPick, disabled }) {
+  const options = [
+    { level: 1, label: 'Dudo',  emoji: '🤔', hint: '×1' },
+    { level: 2, label: 'Creo',  emoji: '✓',  hint: '×2' },
+    { level: 3, label: 'Seguro', emoji: '⚡', hint: '×3' },
+  ];
+  return (
+    <div className="px-6 pb-4">
+      <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 dark:bg-rose-500/10 p-3">
+        <p className="text-xs font-semibold text-ink-soft mb-2 flex items-center gap-1.5">
+          <span>🎲</span>
+          <span>¿Cuánto apuestas por tu respuesta?</span>
+          {!value && <span className="ml-auto text-[10px] uppercase tracking-wider text-rose-600 font-bold">Requerido</span>}
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          {options.map((opt) => {
+            const selected = value === opt.level;
+            return (
+              <button
+                key={opt.level}
+                type="button"
+                disabled={disabled}
+                onClick={() => onPick(opt.level)}
+                aria-pressed={selected}
+                className={`flex flex-col items-center justify-center gap-0.5 rounded-lg border-2 px-3 py-2.5 text-sm font-semibold transition-all active:scale-95 ${
+                  selected
+                    ? 'border-rose-500 bg-rose-500 text-white shadow-md'
+                    : 'border-surface-border bg-surface-card text-ink-soft hover:border-rose-400 hover:text-rose-600'
+                } ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+              >
+                <span className="text-lg leading-none">{opt.emoji}</span>
+                <span className="text-xs">{opt.label}</span>
+                <span className={`text-[10px] font-bold ${selected ? 'text-white/90' : 'text-rose-600'}`}>{opt.hint}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Wrapping chips showing each question's status */
 function QuestionNavigator({ total, current, answers, flags, revealed, displayQuestions, mode, onNavigate }) {
-  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs';
+  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
   return (
       <div className="flex flex-wrap gap-1.5 px-4 py-3 bg-surface-soft border-b border-surface-border">
       {Array.from({ length: total }, (_, i) => {
@@ -61,7 +104,7 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
 
 /** Legend for chip colors */
 function NavLegend({ mode }) {
-  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs';
+  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
   if (isStudy) {
     return (
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 bg-surface-soft/50 border-b border-surface-border text-xs text-ink-soft">
@@ -188,6 +231,7 @@ export function ExamPage() {
     answers,
     flags,
     revealed,
+    confidence,
     score,
     timeLeft,
     status,
@@ -198,6 +242,7 @@ export function ExamPage() {
     navigateTo,
     saveAnswer,
     toggleFlag,
+    setConfidenceFor,
     confirmAnswer,
     submitExam,
   } = useExam(certification, mode, countOverride);
@@ -206,10 +251,10 @@ export function ExamPage() {
     if (status === 'finished') {
       navigate('/results', {
         replace: true,
-        state: { score, total, isTimeOut, certLabel: certification?.labelEs ?? certId, certId, passPercent, displayQuestions, answers, mode },
+        state: { score, total, isTimeOut, certLabel: certification?.labelEs ?? certId, certId, passPercent, displayQuestions, answers, mode, confidence },
       });
     }
-  }, [status, navigate, score, total, isTimeOut, certification, certId, passPercent, displayQuestions, answers, mode]);
+  }, [status, navigate, score, total, isTimeOut, certification, certId, passPercent, displayQuestions, answers, mode, confidence]);
 
   useEffect(() => {
     if (setLoadError) { navigate('/explore', { replace: true }); return; }
@@ -262,6 +307,8 @@ export function ExamPage() {
               <span className="text-xs bg-violet-500/20 text-violet-500 font-semibold px-2 py-0.5 rounded-full">🎯 Zona Débil</span>
             ) : mode === 'srs' ? (
               <span className="text-xs bg-amber-500/20 text-amber-500 font-semibold px-2 py-0.5 rounded-full">🧠 Repaso</span>
+            ) : mode === 'wager' ? (
+              <span className="text-xs bg-rose-500/20 text-rose-600 font-semibold px-2 py-0.5 rounded-full">🎲 Apuesta</span>
             ) : (
               <span className="text-xs bg-brand-500/20 text-brand-400 font-semibold px-2 py-0.5 rounded-full">🎯 Examen</span>
             )}
@@ -314,6 +361,14 @@ export function ExamPage() {
           )}
         </main>
 
+        {/* Wager mode — confidence picker (shown before reveal) */}
+        {mode === 'wager' && question && !(revealed[current] ?? false) && (
+          <ConfidencePicker
+            value={confidence?.[current]}
+            onPick={(lvl) => setConfidenceFor(current, lvl)}
+          />
+        )}
+
         {/* Footer navigation */}
         <footer className="px-6 py-4 border-t border-surface-border bg-surface-card flex items-center justify-between gap-3">
           <button
@@ -324,15 +379,24 @@ export function ExamPage() {
             ← Anterior
           </button>
 
-          {/* Study mode: confirm button */}
-          {(mode === 'study' || mode === 'weak' || mode === 'srs') && (answers[current] ?? []).length > 0 && !(revealed[current] ?? false) && (
-            <button
-              onClick={() => confirmAnswer(current)}
-              className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
-            >
-              Confirmar ✓
-            </button>
-          )}
+          {/* Study / wager mode: confirm button */}
+          {(mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager') && (answers[current] ?? []).length > 0 && !(revealed[current] ?? false) && (() => {
+            const needsConfidence = mode === 'wager' && !confidence?.[current];
+            return (
+              <button
+                onClick={() => !needsConfidence && confirmAnswer(current)}
+                disabled={needsConfidence}
+                title={needsConfidence ? 'Elige tu nivel de confianza antes de confirmar' : undefined}
+                className={`px-5 py-2 text-sm text-white font-bold rounded-xl transition-all active:scale-95 ${
+                  needsConfidence
+                    ? 'bg-success-500/40 cursor-not-allowed'
+                    : 'bg-success-500 hover:bg-success-600'
+                }`}
+              >
+                Confirmar ✓
+              </button>
+            );
+          })()}
 
           {current < total - 1 ? (
             <button
@@ -341,7 +405,7 @@ export function ExamPage() {
             >
               Siguiente →
             </button>
-          ) : (mode === 'study' || mode === 'weak' || mode === 'srs') ? (
+          ) : (mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager') ? (
             <button
               onClick={submitExam}
               className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"

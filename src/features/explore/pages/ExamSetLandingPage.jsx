@@ -6,7 +6,7 @@ import { doc, getDoc, collection, getDocs, limit, query } from 'firebase/firesto
 import {
   ArrowLeft, BookOpen, Clock, Target, User, Play,
   Lock, CheckCircle2, Tag, GraduationCap, Zap, TimerReset,
-  Brain, TrendingDown, Sparkles,
+  Brain, TrendingDown, Sparkles, Dice5,
 } from 'lucide-react';
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
@@ -428,6 +428,21 @@ export function ExamSetLandingPage() {
               disabled={!user || stats.due === 0}
               ctaLabel={!user ? 'Regístrate' : stats.due === 0 ? (stats.seen > 0 ? 'Nada por repasar' : 'Sin historial') : 'Repasar ahora'}
               onClick={() => launchMode({ mode: 'srs' })}
+            />
+
+            <ModeCard
+              icon={Dice5}
+              title="Apuesta tu Confianza"
+              subtitle="Apuesta ×1, ×2 o ×3"
+              description="Antes de revelar, apuesta qué tan seguro estás. Aciertas con ×3 y ganas; fallas con ×3 y pierdes. Descubre dónde crees saber sin saber."
+              technique="Calibración metacognitiva (Brainscape CBR · Dunning-Kruger)"
+              meta={[
+                { icon: BookOpen, label: `${Math.min(20, set.questionCount ?? 20)} preguntas` },
+                { icon: Sparkles, label: 'Nuevo ✨' },
+              ]}
+              accent="rose"
+              ctaLabel={user ? 'Apostar' : 'Regístrate'}
+              onClick={() => launchMode({ mode: 'wager', count: String(Math.min(20, set.questionCount ?? 20)) })}
             />
           </div>
         </motion.section>
