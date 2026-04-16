@@ -252,11 +252,6 @@ export function ExamSetLandingPage() {
     },
   };
 
-  const startAction = () => {
-    if (!user) { navigate('/register'); return; }
-    navigate(`/exam?setId=${slug}`);
-  };
-
   const launchMode = (params) => {
     if (!user) { navigate('/register'); return; }
     const qs = new URLSearchParams({ setId: slug, ...params }).toString();
@@ -324,21 +319,17 @@ export function ExamSetLandingPage() {
             <SaveToFolderButton slug={slug} />
           </div>
 
-          {/* CTA band */}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Button size="lg" onClick={() => {
-              const el = document.getElementById('study-modes');
-              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              else startAction();
-            }}>
-              {user ? <><Play size={16} />Empezar ahora</> : <><Lock size={16} />Regístrate para practicar</>}
-            </Button>
-            {!user && (
+          {/* Anon prompt */}
+          {!user && (
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <Button size="lg" onClick={() => navigate('/register')}>
+                <Lock size={16} />Regístrate para practicar
+              </Button>
               <span className="text-xs text-ink-muted">
-                Explora gratis · regístrate para empezar intentos
+                Gratis · guarda tu progreso y ve explicaciones completas
               </span>
-            )}
-          </div>
+            </div>
+          )}
         </motion.section>
 
         {/* Meta stats */}
@@ -540,23 +531,21 @@ export function ExamSetLandingPage() {
           </motion.section>
         )}
 
-        {/* Final CTA */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-brand-500/10 p-8 text-center"
-        >
-          <h2 className="text-xl font-semibold text-ink">
-            {user ? '¿Listo para este examen?' : 'Regístrate para empezar'}
-          </h2>
-          <p className="text-sm text-ink-soft mt-2 mb-5 max-w-xl mx-auto">
-            {user
-              ? 'Tus respuestas se guardan automáticamente. Revisa resultados y repasa cada pregunta.'
-              : 'El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas.'}
-          </p>
-          <Button size="lg" onClick={startAction}>
-            {user ? 'Empezar ahora' : 'Crear cuenta gratis'}
-          </Button>
-        </motion.section>
+        {/* Final CTA — anon only */}
+        {!user && (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-brand-500/10 p-8 text-center"
+          >
+            <h2 className="text-xl font-semibold text-ink">Regístrate para empezar</h2>
+            <p className="text-sm text-ink-soft mt-2 mb-5 max-w-xl mx-auto">
+              El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas.
+            </p>
+            <Button size="lg" onClick={() => navigate('/register')}>
+              Crear cuenta gratis
+            </Button>
+          </motion.section>
+        )}
       </div>
     </AppShell>
   );

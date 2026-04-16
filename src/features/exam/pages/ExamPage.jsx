@@ -6,6 +6,7 @@ import { CERTIFICATIONS } from '../../../core/constants/certifications';
 import { useExam } from '../hooks/useExam';
 import { QuestionCard } from '../components/QuestionCard';
 import { TimerBox } from '../components/TimerBox';
+import { X, FlagOff } from 'lucide-react';
 
 /** Wager mode — 3-button confidence multiplier selector (×1 Dudo / ×2 Creo / ×3 Seguro). */
 function ConfidencePicker({ value, onPick, disabled }) {
@@ -126,6 +127,48 @@ function NavLegend({ mode }) {
   );
 }
 
+/** Exit confirmation modal */
+function ExitGuardModal({ mode, onExit, onFinish, onCancel }) {
+  const isExam = mode === 'exam';
+  const isStudyLike = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+      <div className="glass-bright rounded-2xl shadow-card w-full max-w-sm p-6 border border-surface-border">
+        <h2 className="font-display font-bold text-ink text-base mb-2">
+          {isExam ? '⚠️ ¿Salir del examen?' : '¿Salir de la sesión?'}
+        </h2>
+        <p className="text-sm text-ink-soft mb-5">
+          {isExam
+            ? 'Si sales, perderás todo el progreso de este examen. Las respuestas no se guardarán.'
+            : 'Tu progreso está guardado automáticamente. Podrás retomar desde donde lo dejaste cuando vuelvas.'}
+        </p>
+        <div className="flex flex-col gap-2">
+          {isStudyLike && (
+            <button
+              onClick={onFinish}
+              className="w-full px-4 py-2.5 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-colors"
+            >
+              Finalizar y ver resultados ✓
+            </button>
+          )}
+          <button
+            onClick={onExit}
+            className="w-full px-4 py-2.5 text-sm border border-surface-border rounded-xl text-ink-soft hover:bg-surface-muted transition-colors"
+          >
+            {isExam ? 'Salir sin guardar' : 'Guardar y salir'}
+          </button>
+          <button
+            onClick={onCancel}
+            className="w-full px-4 py-2.5 text-sm text-brand-600 dark:text-brand-400 font-medium hover:underline transition-colors"
+          >
+            Continuar la sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Submit confirmation / unanswered-warning modal */
 function SubmitGuardModal({ unanswered, onNavigate, onConfirm, onCancel }) {
   const hasUnanswered = unanswered.length > 0;
@@ -194,6 +237,7 @@ export function ExamPage() {
   const [setLoadError, setSetLoadError]         = useState(false);
   const certification = staticCertification ?? setCertification;
   const [showSubmitGuard, setShowSubmitGuard] = useState(false);
+  const [showExitGuard, setShowExitGuard] = useState(false);
 
   // ExamSet path: load set metadata and build a virtual certification
   useEffect(() => {
@@ -300,7 +344,15 @@ export function ExamPage() {
         {/* Header — Game HUD */}
         <header className="flex items-center justify-between px-5 py-3.5 border-b border-surface-border bg-surface-card">
           <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
+            <button
+              type="button"
+              onClick={() => setShowExitGuard(true)}
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-ink-muted hover:text-ink hover:bg-surface-muted transition-colors"
+              title="Salir"
+              aria-label="Salir de la sesión"
+            >
+              <X size={15} />
+            </button>
             <h1 className="font-display font-bold text-ink text-sm">{certification.labelEs}</h1>
             {mode === 'study' ? (
               <span className="text-xs bg-success-500/20 text-success-500 font-semibold px-2 py-0.5 rounded-full">📖 Estudio</span>
@@ -319,6 +371,16 @@ export function ExamPage() {
               <span className="text-ink font-bold">{answeredCount}</span>/{total}
             </span>
             {mode === 'exam' && <TimerBox timeLeft={timeLeft} />}
+            {(mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager') && (
+              <button
+                type="button"
+                onClick={submitExam}
+                className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-success-500/40 text-success-600 dark:text-success-400 hover:bg-success-500/10 transition-colors"
+                title="Finalizar sesión y ver resultados"
+              >
+                Finalizar ✓
+              </button>
+            )}
           </div>
         </header>
 
@@ -430,6 +492,23 @@ export function ExamPage() {
           onNavigate={navigateTo}
           onConfirm={() => { setShowSubmitGuard(false); submitExam(); }}
           onCancel={() => setShowSubmitGuard(false)}
+        />
+      )}
+
+      {showExitGuard && (
+        <ExitGuardModal
+          mode={mode}
+          onFinish={() => { setShowExitGuard(false); submitExam(); }}
+          onExit={() => {
+            setShowExitGuard(false);
+            // For exam mode, session is already cleared on finish; for study modes
+            // sessionStorage is preserved so the user can resume.
+            const backUrl = certification?.isExamSet
+              ? `/exam-sets/${certification.setId}`
+              : '/explore';
+            navigate(backUrl);
+          }}
+          onCancel={() => setShowExitGuard(false)}
         />
       )}
     </div>
