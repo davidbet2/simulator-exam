@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -41,6 +41,8 @@ function ModeSelect() {
   const { mode, setMode } = useThemeStore();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState({ top: 0, right: 0 });
+  const btnRef = useRef(null);
 
   const options = [
     { id: 'light', label: t('settings.mode.light'), icon: Sun },
@@ -50,11 +52,20 @@ function ModeSelect() {
   const current = options.find((o) => o.id === mode) ?? options[2];
   const CurrentIcon = current.icon;
 
+  const handleOpen = () => {
+    if (btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setCoords({ top: r.bottom + 6, right: window.innerWidth - r.right });
+    }
+    setOpen((v) => !v);
+  };
+
   return (
-    <div className="relative z-10">
+    <div>
       <button
+        ref={btnRef}
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={handleOpen}
         className="h-9 px-3 rounded-full bg-surface-muted border border-surface-border flex items-center gap-2 text-sm font-medium text-ink hover:border-brand-500 transition-colors"
       >
         <CurrentIcon size={14} />
@@ -64,7 +75,10 @@ function ModeSelect() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-1 w-36 rounded-lg border border-surface-border bg-surface-card shadow-lg z-50 overflow-hidden">
+          <div
+            className="fixed w-36 rounded-lg border border-surface-border bg-surface-card shadow-lg z-50 overflow-hidden"
+            style={{ top: coords.top, right: coords.right }}
+          >
             {options.map((o) => {
               const Icon = o.icon;
               return (
@@ -90,12 +104,24 @@ function ModeSelect() {
 function LangSelect() {
   const { lang, setLang } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState({ top: 0, right: 0 });
+  const btnRef = useRef(null);
   const current = SUPPORTED_LANGS.find((l) => l.id === lang) ?? SUPPORTED_LANGS[0];
+
+  const handleOpen = () => {
+    if (btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setCoords({ top: r.bottom + 6, right: window.innerWidth - r.right });
+    }
+    setOpen((v) => !v);
+  };
+
   return (
-    <div className="relative z-10">
+    <div>
       <button
+        ref={btnRef}
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={handleOpen}
         className="h-9 px-3 rounded-full bg-surface-muted border border-surface-border flex items-center gap-2 text-sm font-medium text-ink hover:border-brand-500 transition-colors"
       >
         {current.label}
@@ -104,7 +130,10 @@ function LangSelect() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-1 w-44 rounded-lg border border-surface-border bg-surface-card shadow-lg z-50 overflow-hidden">
+          <div
+            className="fixed w-44 rounded-lg border border-surface-border bg-surface-card shadow-lg z-50 overflow-hidden"
+            style={{ top: coords.top, right: coords.right }}
+          >
             {SUPPORTED_LANGS.map((l) => (
               <button
                 key={l.id}
