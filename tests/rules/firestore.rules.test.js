@@ -328,7 +328,8 @@ describe('examSets/{setId}', () => {
 
   it('public list query MUST filter published==true', async () => {
     const db = anonDb();
-    // Sin filtro published → debe fallar
+    // Sin filtro published → la regla evalúa per-doc y al encontrar uno
+    // con published==false rechaza la query completa.
     await assertFails(getDocs(query(collection(db, 'examSets'), limit(10))));
     // Con filtro published==true → debe pasar
     await assertSucceeds(
