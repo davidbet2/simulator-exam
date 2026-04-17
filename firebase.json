@@ -21,6 +21,11 @@
     ],
     "rewrites": [
       {
+        "source": "/api/dodo/webhook",
+        "function": "dodoWebhook",
+        "region": "us-central1"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

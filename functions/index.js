@@ -6,9 +6,16 @@ const { getFirestore } = require('firebase-admin/firestore')
 
 initializeApp()
 
+// ─── Secrets ──────────────────────────────────────────────────────────────────
 // Turnstile secret key stored in Firebase Secret Manager (never in client code).
 // Deploy with: firebase functions:secrets:set TURNSTILE_SECRET_KEY
 const TURNSTILE_SECRET = defineSecret('TURNSTILE_SECRET_KEY')
+
+// Dodo Payments secrets
+// Deploy with: firebase functions:secrets:set DODO_API_KEY
+//              firebase functions:secrets:set DODO_WEBHOOK_KEY
+const DODO_API_KEY     = defineSecret('DODO_API_KEY')
+const DODO_WEBHOOK_KEY = defineSecret('DODO_WEBHOOK_KEY')
 
 /**
  * Verifies a Cloudflare Turnstile token server-side.
@@ -325,3 +332,141 @@ exports.getPublicFlags = onRequest({ cors: true }, async (req, res) => {
     res.status(500).json({ ok: false, flags: {} })
   }
 })
+
+// ─── Dodo Payments ────────────────────────────────────────────────────────────
+
+/**
+ * Creates a Dodo Payments checkout session for the Pro plan.
+ * Called from PricingPage → opens overlay checkout via dodopayments-checkout.
+ */
+exports.createDodoCheckout = onCall(
+  { secrets: [DODO_API_KEY] },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Login required')
+    }
+
+    const DodoPayments = require('dodopayments').default
+    const client = new DodoPayments({
+      bearerToken: DODO_API_KEY.value(),
+      environment: 'test_mode',
+    })
+
+    const { productId } = request.data
+    if (!productId || typeof productId !== 'string') {
+      throw new HttpsError('invalid-argument', 'Missing productId')
+    }
+
+    const session = await client.checkoutSessions.create({
+      product_cart: [{ product_id: productId, quantity: 1 }],
+      customer: {
+        create_new_customer: {
+          email: request.auth.token.email,
+          name:  request.auth.token.name ?? request.auth.token.email.split('@')[0],
+        },
+      },
+      payment_link: true,
+    })
+
+    return { checkoutUrl: session.payment_link }
+  }
+)
+
+/**
+ * Receives Dodo Payments webhooks, verifies the signature, and updates
+ * the user's plan in Firestore.
+ * Register this URL in Dodo Dashboard → Webhooks:
+ *   https://us-central1-simulatorexam-dec4b.cloudfunctions.net/dodoWebhook
+ */
+exports.dodoWebhook = onRequest(
+  { secrets: [DODO_API_KEY, DODO_WEBHOOK_KEY] },
+  async (req, res) => {
+    const DodoPayments = require('dodopayments').default
+    const client = new DodoPayments({
+      bearerToken:  DODO_API_KEY.value(),
+      webhookKey:   DODO_WEBHOOK_KEY.value(),
+      environment:  'test_mode',
+    })
+
+    const rawBody   = req.rawBody?.toString() ?? ''
+    const webhookId = req.headers['webhook-id']
+
+    // Idempotency — skip already-processed events
+    const db = getFirestore()
+    const processed = await db.collection('processedWebhooks').doc(webhookId).get()
+    if (processed.exists) {
+      res.status(200).json({ received: true, duplicate: true })
+      return
+    }
+
+    let event
+    try {
+      event = client.webhooks.unwrap(rawBody, {
+        headers: {
+          'webhook-id':        req.headers['webhook-id'],
+          'webhook-signature': req.headers['webhook-signature'],
+          'webhook-timestamp': req.headers['webhook-timestamp'],
+        },
+      })
+    } catch (err) {
+      console.error('dodoWebhook: invalid signature', err.message)
+      res.status(401).json({ error: 'Invalid signature' })
+      return
+    }
+
+    // Respond 200 immediately — Dodo retries if we take > 15s
+    res.status(200).json({ received: true })
+
+    // Mark as processed
+    await db.collection('processedWebhooks').doc(webhookId).set({
+      processedAt: new Date(),
+      eventType:   event.type,
+    })
+
+    console.log('dodoWebhook event:', event.type)
+
+    try {
+      switch (event.type) {
+        case 'subscription.active':
+        case 'subscription.renewed': {
+          // Find user by email and upgrade to pro
+          const email = event.data?.customer?.email
+          if (email) {
+            const users = await db.collection('users').where('email', '==', email).limit(1).get()
+            if (!users.empty) {
+              await users.docs[0].ref.update({
+                plan:               'pro',
+                isPro:              true,
+                dodoSubscriptionId: event.data?.subscription_id ?? null,
+                dodoCustomerId:     event.data?.customer?.customer_id ?? null,
+                updatedAt:          new Date(),
+              })
+            }
+          }
+          break
+        }
+
+        case 'subscription.cancelled':
+        case 'subscription.expired': {
+          const email = event.data?.customer?.email
+          if (email) {
+            const users = await db.collection('users').where('email', '==', email).limit(1).get()
+            if (!users.empty) {
+              await users.docs[0].ref.update({
+                plan:      'free',
+                isPro:     false,
+                updatedAt: new Date(),
+              })
+            }
+          }
+          break
+        }
+
+        default:
+          console.log('dodoWebhook: unhandled event type', event.type)
+      }
+    } catch (err) {
+      console.error('dodoWebhook: error processing event', event.type, err)
+    }
+  }
+)

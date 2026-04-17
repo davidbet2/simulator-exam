@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Check, Zap, Star, Building2, Loader2 } from 'lucide-react'
 import { Trans, useLingui } from '@lingui/react/macro'
-import { createCheckoutSession } from '@invertase/firestore-stripe-payments'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { getApp } from 'firebase/app'
 import { Card, CardBody, CardHeader } from '../../../components/ui/Card'
@@ -12,7 +11,6 @@ import Button from '../../../components/ui/Button'
 import { AppShell } from '../../../components/layout/AppShell'
 import { SEOHead } from '../../../components/SEOHead'
 import { useAuthStore } from '../../../core/store/useAuthStore'
-import { payments } from '../../../core/stripe/stripePayments'
 
 const FREE_FEATURES = [
   '3 exámenes por mes',
@@ -86,24 +84,30 @@ export function PricingPage() {
   ]
 
   const handleUpgrade = async () => {
-    const priceId = import.meta.env.VITE_STRIPE_PRO_PRICE_ID
-    if (!priceId) {
-      window.open('https://buy.stripe.com/placeholder', '_blank', 'noopener,noreferrer')
-      return
-    }
     try {
       setLoading(true)
       setError(null)
-      const session = await createCheckoutSession(payments, {
-        price: priceId,
-        success_url: `${window.location.origin}/pricing?success=true`,
-        cancel_url: `${window.location.origin}/pricing`,
+
+      // 1. Ask Cloud Function to create a Dodo checkout session
+      const fns       = getFunctions(getApp())
+      const createCheckout = httpsCallable(fns, 'createDodoCheckout')
+      const { data } = await createCheckout({
+        productId: import.meta.env.VITE_DODO_PRO_PRODUCT_ID,
       })
-      window.location.assign(session.url)
+
+      if (!data?.checkoutUrl) throw new Error('No checkout URL returned')
+
+      // 2. Open Dodo overlay
+      const { DodoPayments } = await import('dodopayments-checkout')
+      DodoPayments.Checkout.open({
+        checkoutUrl: data.checkoutUrl,
+        theme: 'dark',
+        onSuccess: () => window.location.reload(),
+        onClose: () => setLoading(false),
+      })
     } catch (err) {
       console.error('Checkout error', err)
       setError(t`No se pudo iniciar el pago. Intenta de nuevo.`)
-    } finally {
       setLoading(false)
     }
   }
@@ -112,15 +116,8 @@ export function PricingPage() {
     try {
       setLoading(true)
       setError(null)
-      const functions = getFunctions(getApp())
-      const portalLinkFn = httpsCallable(functions, 'ext-firestore-stripe-payments-createPortalLink')
-      const { data } = await portalLinkFn({
-        returnUrl: `${window.location.origin}/pricing`,
-      })
-      window.location.assign(data.url)
-    } catch (err) {
-      console.error('Portal error', err)
-      setError(t`No se pudo abrir el portal de suscripción.`)
+      // TODO: implementar portal de suscripción Dodo cuando esté disponible
+      window.open('https://app.dodopayments.com/', '_blank', 'noopener,noreferrer')
     } finally {
       setLoading(false)
     }
