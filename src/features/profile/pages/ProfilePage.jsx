@@ -87,6 +87,9 @@ export function ProfilePage() {
   const [cancelError, setCancelError] = useState(null);
   const [cancelSuccess, setCancelSuccess] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [reactivating, setReactivating] = useState(false);
+  const [reactivateError, setReactivateError] = useState(null);
+  const [reactivateSuccess, setReactivateSuccess] = useState(false);
 
   const loadPayments = useCallback(async () => {
     if (paymentsLoading) return;
@@ -113,11 +116,29 @@ export function ProfilePage() {
       const fn  = httpsCallable(fns, 'cancelDodoSubscription');
       await fn({ subscriptionId: dodoSubscriptionId });
       setCancelSuccess(true);
+      setReactivateSuccess(false);
       setConfirmCancel(false);
     } catch (err) {
       setCancelError(err.message || 'No se pudo cancelar la renovación');
     } finally {
       setCancelling(false);
+    }
+  }
+
+  async function handleReactivateRenewal() {
+    if (!dodoSubscriptionId) return;
+    setReactivating(true);
+    setReactivateError(null);
+    try {
+      const fns = getFunctions(getApp());
+      const fn  = httpsCallable(fns, 'reactivateDodoSubscription');
+      await fn({ subscriptionId: dodoSubscriptionId });
+      setReactivateSuccess(true);
+      setCancelSuccess(false);
+    } catch (err) {
+      setReactivateError(err.message || 'No se pudo reactivar la renovación');
+    } finally {
+      setReactivating(false);
     }
   }
 
@@ -381,7 +402,7 @@ export function ProfilePage() {
           className="glass rounded-2xl border border-surface-border p-5 space-y-4"
         >
           <h2 className="font-display font-bold text-ink text-sm flex items-center gap-2">
-            <CreditCard size={15} className="text-ink-muted" /> <Trans>Suscripción y facturación</Trans>
+            <CreditCard size={15} className="text-ink-muted" /> Suscripción y facturación
           </h2>
 
           {/* Plan header */}
@@ -468,7 +489,7 @@ export function ProfilePage() {
                 className="flex items-center gap-2 text-xs text-ink-soft hover:text-ink transition-colors"
               >
                 <Receipt size={13} />
-                <Trans>Historial de pagos</Trans>
+                Historial de pagos
                 {showPayments ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
               </button>
 
@@ -540,8 +561,9 @@ export function ProfilePage() {
             </div>
           )}
 
-          {/* Cancel renewal (only for active Pro with a subscription ID) */}
-          {isPro && dodoSubscriptionId && !cancelSuccess && subscriptionStatus !== 'cancelled' && (
+          {/* Cancel renewal (only for active Pro, not already cancelled/reactivated) */}
+          {isPro && dodoSubscriptionId && !cancelSuccess && !reactivateSuccess
+           && subscriptionStatus !== 'cancelled' && (
             <div className="border-t border-surface-border/60 pt-4">
               {!confirmCancel ? (
                 <button
@@ -583,12 +605,37 @@ export function ProfilePage() {
             </div>
           )}
 
-          {/* Cancellation confirmed */}
-          {cancelSuccess && (
+          {/* Cancellation confirmed + reactivate option */}
+          {(cancelSuccess || subscriptionStatus === 'cancelled') && !reactivateSuccess && (
+            <div className="border-t border-surface-border/60 pt-4 space-y-3">
+              <div className="flex items-start gap-2 p-3 rounded-xl bg-surface-muted/30 border border-surface-border">
+                <AlertTriangle size={13} className="text-warning-500 mt-0.5 shrink-0" />
+                <p className="text-xs text-ink-soft">
+                  Renovación cancelada. Tu acceso Pro continúa hasta{' '}
+                  <strong>{formatDate(subscriptionRenewsAt)}</strong>.
+                </p>
+              </div>
+              {reactivateError && (
+                <p className="text-xs text-danger-400">{reactivateError}</p>
+              )}
+              <button
+                type="button"
+                disabled={reactivating}
+                onClick={handleReactivateRenewal}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-500/10 text-brand-400 text-xs font-medium hover:bg-brand-500/20 transition-colors disabled:opacity-50"
+              >
+                <RefreshCw size={12} className={reactivating ? 'animate-spin' : ''} />
+                {reactivating ? 'Reactivando...' : 'Reactivar renovación automática'}
+              </button>
+            </div>
+          )}
+
+          {/* Reactivation confirmed */}
+          {reactivateSuccess && (
             <div className="flex items-start gap-2 p-3 rounded-xl bg-success-500/5 border border-success-500/20">
               <Check size={13} className="text-success-500 mt-0.5 shrink-0" />
               <p className="text-xs text-ink-soft">
-                Renovación cancelada. Tu acceso Pro continúa hasta{' '}
+                ¡Renovación reactivada! Tu plan Pro se renovará el{' '}
                 <strong>{formatDate(subscriptionRenewsAt)}</strong>.
               </p>
             </div>

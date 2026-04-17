@@ -648,3 +648,52 @@ exports.getDodoPayments = onCall(
   }
 )
 
+/**
+ * Reactivates a previously cancelled Dodo subscription (re-enables auto-renewal).
+ * The subscription must still be within its active period (not yet expired).
+ */
+exports.reactivateDodoSubscription = onCall(
+  { secrets: [DODO_API_KEY] },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Login required')
+    }
+
+    const { subscriptionId } = request.data ?? {}
+    if (!subscriptionId || typeof subscriptionId !== 'string') {
+      throw new HttpsError('invalid-argument', 'Missing subscriptionId')
+    }
+
+    // Verify ownership
+    const db = getFirestore()
+    const users = await db.collection('users').where('email', '==', request.auth.token.email).limit(1).get()
+    if (users.empty) {
+      throw new HttpsError('not-found', 'User not found')
+    }
+    const profile = users.docs[0].data()
+    if (profile.dodoSubscriptionId !== subscriptionId) {
+      throw new HttpsError('permission-denied', 'Subscription does not belong to this account')
+    }
+
+    const DodoPayments = require('dodopayments').default
+    const client = new DodoPayments({
+      bearerToken: DODO_API_KEY.value(),
+      environment: 'test_mode',
+    })
+
+    try {
+      await client.subscriptions.update(subscriptionId, { status: 'active' })
+    } catch (err) {
+      console.error('reactivateDodoSubscription: failed', err.message)
+      throw new HttpsError('internal', 'Could not reactivate subscription via Dodo API')
+    }
+
+    await users.docs[0].ref.update({
+      subscriptionStatus: 'active',
+      updatedAt:          new Date(),
+    })
+
+    return { reactivated: true }
+  }
+)
+
