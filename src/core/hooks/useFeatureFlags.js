@@ -17,24 +17,17 @@ export const DEFAULT_FLAGS = {
 };
 
 /**
- * Fetches featureFlags/global via the Firestore REST API, bypassing App Check.
+ * Fetches featureFlags via the getPublicFlags Cloud Function, which bypasses App Check.
  * Used as fallback when onSnapshot fails (e.g. App Check 403 in incognito).
  */
 async function fetchFlagsViaRest(projectId) {
   try {
-    const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/featureFlags/global`;
+    const url = `https://us-central1-${projectId}.cloudfunctions.net/getPublicFlags`;
     const res = await fetch(url);
     if (!res.ok) return null;
     const data = await res.json();
-    if (!data.fields) return null;
-    // Parse Firestore REST response format: { fieldName: { booleanValue: true } }
-    const parsed = {};
-    for (const [key, val] of Object.entries(data.fields)) {
-      if ('booleanValue' in val) parsed[key] = val.booleanValue;
-      else if ('stringValue' in val) parsed[key] = val.stringValue;
-      else if ('integerValue' in val) parsed[key] = Number(val.integerValue);
-    }
-    return parsed;
+    if (!data.ok || !data.flags) return null;
+    return data.flags;
   } catch {
     return null;
   }

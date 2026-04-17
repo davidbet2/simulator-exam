@@ -1,5 +1,5 @@
 const { onDocumentWritten, onDocumentCreated } = require('firebase-functions/v2/firestore')
-const { onCall, HttpsError } = require('firebase-functions/v2/https')
+const { onCall, onRequest, HttpsError } = require('firebase-functions/v2/https')
 const { defineSecret } = require('firebase-functions/params')
 const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
@@ -307,3 +307,21 @@ exports.sendContactEmail = onCall(
     return { ok: true }
   }
 )
+
+/**
+ * Public HTTP endpoint that returns featureFlags/global without requiring App Check.
+ * Used as fallback by useFeatureFlags when App Check blocks the Firestore SDK
+ * (e.g. incognito windows where reCAPTCHA v3 scores too low).
+ */
+exports.getPublicFlags = onRequest({ cors: true }, async (req, res) => {
+  try {
+    const snap = await getFirestore().doc('featureFlags/global').get()
+    const data = snap.exists ? snap.data() : {}
+    // Strip server-side metadata fields before returning to client
+    const { updatedAt, updatedBy, ...flags } = data
+    res.json({ ok: true, flags })
+  } catch (err) {
+    console.error('getPublicFlags error:', err)
+    res.status(500).json({ ok: false, flags: {} })
+  }
+})
