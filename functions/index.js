@@ -363,6 +363,7 @@ exports.createDodoCheckout = onCall(
         email: request.auth.token.email,
         name:  request.auth.token.name ?? request.auth.token.email.split('@')[0],
       },
+      return_url: 'https://certzen.app/pricing?payment=success',
     })
 
     const checkoutUrl = session.checkout_url
