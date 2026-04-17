@@ -16,7 +16,10 @@ const TURNSTILE_SECRET = defineSecret('TURNSTILE_SECRET_KEY')
  * Returns { valid: true } or throws HttpsError('permission-denied').
  */
 exports.verifyTurnstile = onCall(
-  { secrets: [TURNSTILE_SECRET] },
+  {
+    secrets: [TURNSTILE_SECRET],
+    cors: ['https://certzen.app', 'https://www.certzen.app'],
+  },
   async (request) => {
     const { token } = request.data
     if (!token || typeof token !== 'string') {

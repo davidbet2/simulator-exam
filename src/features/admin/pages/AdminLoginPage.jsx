@@ -41,6 +41,7 @@ export function AdminLoginPage() {
   const [locked, setLocked]             = useState(false);
   const [countdown, setCountdown]       = useState(0);
   const [turnstileKey, setTurnstileKey] = useState(0);
+  const [captchaError, setCaptchaError] = useState('');
 
   const { register, handleSubmit, control, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -82,12 +83,14 @@ export function AdminLoginPage() {
   const onSubmit = async ({ email, password, captchaToken }) => {
     if (locked) return;
     clearError();
+    setCaptchaError('');
 
     if (TURNSTILE_KEY && captchaToken) {
       try {
         const verifyTurnstile = httpsCallable(getFunctions(getApp()), 'verifyTurnstile');
         await verifyTurnstile({ token: captchaToken });
       } catch {
+        setCaptchaError('Error al verificar el captcha. Inténtalo de nuevo.');
         resetTurnstile();
         return;
       }
@@ -153,9 +156,9 @@ export function AdminLoginPage() {
           )}
 
           {/* Auth error */}
-          {error && !locked && (
+          {(error || captchaError) && !locked && (
             <div className="rounded-lg bg-danger-500/10 border border-danger-500/30 px-4 py-3 text-sm text-red-400" role="alert">
-              {error}
+              {captchaError || error}
             </div>
           )}
 
