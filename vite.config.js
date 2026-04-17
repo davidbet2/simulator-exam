@@ -31,6 +31,8 @@ export default defineConfig({
         ],
       },
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
         // PNGs excluidos del precache — dolphin assets son grandes y cambian frecuentemente
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         globIgnores: ['**/dolphin_full_system/**'],
