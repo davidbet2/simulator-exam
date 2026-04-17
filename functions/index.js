@@ -25,7 +25,13 @@ const DODO_WEBHOOK_KEY = defineSecret('DODO_WEBHOOK_KEY')
 exports.verifyTurnstile = onCall(
   {
     secrets: [TURNSTILE_SECRET],
-    cors: true,
+    cors: [
+      'https://certzen.app',
+      'https://www.certzen.app',
+      /^https:\/\/.*\.web\.app$/,
+      /^https:\/\/.*\.firebaseapp\.com$/,
+      /^http:\/\/localhost:\d+$/,
+    ],
   },
   async (request) => {
     const { token } = request.data
