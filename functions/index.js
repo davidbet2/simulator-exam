@@ -363,10 +363,14 @@ exports.createDodoCheckout = onCall(
         email: request.auth.token.email,
         name:  request.auth.token.name ?? request.auth.token.email.split('@')[0],
       },
-      payment_link: true,
     })
 
-    return { checkoutUrl: session.payment_link }
+    const checkoutUrl = session.checkout_url
+    if (!checkoutUrl) {
+      throw new HttpsError('internal', 'No checkout URL returned from Dodo')
+    }
+
+    return { checkoutUrl }
   }
 )
 
