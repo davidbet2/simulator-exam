@@ -382,7 +382,19 @@ exports.createDodoCheckout = onCall(
  *   https://certzen.app/api/dodo/webhook
  */
 exports.dodoWebhook = onRequest(
-  { secrets: [DODO_API_KEY, DODO_WEBHOOK_KEY] },
+  {
+    secrets: [DODO_API_KEY, DODO_WEBHOOK_KEY],
+    // Rate-limiting / DoS hardening:
+    //  - concurrency: cap simultaneous in-flight requests per instance.
+    //    Dodo retries are per-event, so 20 is plenty headroom.
+    //  - maxInstances: hard ceiling on horizontal scale; protects billing
+    //    from runaway loops and limits blast radius if signature
+    //    verification is bypassed for any reason.
+    //  - cpu: 1 is enough for signature verify + 1-2 Firestore writes.
+    concurrency: 20,
+    maxInstances: 10,
+    cpu: 1,
+  },
   async (req, res) => {
     const DodoPayments = require('dodopayments').default
     const client = new DodoPayments({
