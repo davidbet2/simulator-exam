@@ -26,13 +26,15 @@ async function fetchUserProfile(firebaseUser) {
   ]);
   const profile = userDoc.exists() ? userDoc.data() : {};
   return {
-    user:        firebaseUser,
-    isAdmin:     adminDoc.exists(),
-    isPro:       profile.plan === 'pro',
-    plan:        profile.plan ?? 'free',
-    displayName: profile.displayName ?? firebaseUser.displayName ?? firebaseUser.email.split('@')[0],
-    isLoading:   false,
-    error:       null,
+    user:                firebaseUser,
+    isAdmin:             adminDoc.exists(),
+    isPro:               profile.plan === 'pro',
+    plan:                profile.plan ?? 'free',
+    displayName:         profile.displayName ?? firebaseUser.displayName ?? firebaseUser.email.split('@')[0],
+    subscriptionStatus:  profile.subscriptionStatus ?? null,
+    subscriptionRenewsAt: profile.subscriptionRenewsAt ?? null,
+    isLoading:           false,
+    error:               null,
   };
 }
 

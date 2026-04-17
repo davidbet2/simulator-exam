@@ -438,11 +438,14 @@ exports.dodoWebhook = onRequest(
             const users = await db.collection('users').where('email', '==', email).limit(1).get()
             if (!users.empty) {
               await users.docs[0].ref.update({
-                plan:               'pro',
-                isPro:              true,
-                dodoSubscriptionId: event.data?.subscription_id ?? null,
-                dodoCustomerId:     event.data?.customer?.customer_id ?? null,
-                updatedAt:          new Date(),
+                plan:                  'pro',
+                isPro:                 true,
+                dodoSubscriptionId:    event.data?.subscription_id ?? null,
+                dodoCustomerId:        event.data?.customer?.customer_id ?? null,
+                subscriptionStatus:    event.data?.status ?? 'active',
+                subscriptionStartedAt: event.data?.previous_billing_date ?? event.data?.created_at ?? null,
+                subscriptionRenewsAt:  event.data?.next_billing_date ?? null,
+                updatedAt:             new Date(),
               })
             }
           }
@@ -450,15 +453,34 @@ exports.dodoWebhook = onRequest(
         }
 
         case 'subscription.cancelled':
-        case 'subscription.expired': {
+        case 'subscription.expired':
+        case 'subscription.failed': {
           const email = event.data?.customer?.email
           if (email) {
             const users = await db.collection('users').where('email', '==', email).limit(1).get()
             if (!users.empty) {
               await users.docs[0].ref.update({
-                plan:      'free',
-                isPro:     false,
-                updatedAt: new Date(),
+                plan:               'free',
+                isPro:              false,
+                subscriptionStatus: event.type.split('.')[1],
+                subscriptionEndedAt: new Date(),
+                updatedAt:          new Date(),
+              })
+            }
+          }
+          break
+        }
+
+        case 'subscription.on_hold':
+        case 'subscription.past_due': {
+          // Payment failed but user still has access — give grace period
+          const email = event.data?.customer?.email
+          if (email) {
+            const users = await db.collection('users').where('email', '==', email).limit(1).get()
+            if (!users.empty) {
+              await users.docs[0].ref.update({
+                subscriptionStatus: event.type.split('.')[1],
+                updatedAt:          new Date(),
               })
             }
           }
