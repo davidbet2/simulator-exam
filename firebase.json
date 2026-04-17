@@ -58,7 +58,7 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googleapis.com https://apis.google.com https://www.google.com https://challenges.cloudflare.com https://www.recaptcha.net https://recaptcha.net https://media.ethicalads.io https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://storage.googleapis.com https://lh3.googleusercontent.com https://media.ethicalads.io https://www.gstatic.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com wss://*.firebaseio.com https://www.google.com https://challenges.cloudflare.com https://server.ethicalads.io https://api.stripe.com https://*.dodopayments.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://www.google.com https://challenges.cloudflare.com https://js.stripe.com https://hooks.stripe.com https://*.dodopayments.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com; frame-ancestors 'self'"
+            "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googleapis.com https://apis.google.com https://www.google.com https://challenges.cloudflare.com https://www.recaptcha.net https://recaptcha.net https://media.ethicalads.io https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://storage.googleapis.com https://lh3.googleusercontent.com https://media.ethicalads.io https://www.gstatic.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com wss://*.firebaseio.com https://www.google.com https://challenges.cloudflare.com https://server.ethicalads.io https://api.stripe.com https://*.dodopayments.com https://*.dodopayments.tech https://*.hs.dodopayments.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://www.google.com https://challenges.cloudflare.com https://js.stripe.com https://hooks.stripe.com https://*.dodopayments.com https://*.dodopayments.tech https://*.hs.dodopayments.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com; frame-ancestors 'self'"
           },
           {
             "key": "X-Content-Type-Options",
@@ -78,7 +78,7 @@
           },
           {
             "key": "Permissions-Policy",
-            "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+            "value": "camera=(), microphone=(), geolocation=(), payment=(self \"https://*.dodopayments.com\" \"https://*.dodopayments.tech\" \"https://*.hs.dodopayments.com\"), usb=()"
           },
           {
             "key": "Cross-Origin-Opener-Policy",
