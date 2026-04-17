@@ -17,6 +17,11 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:rules": "firebase emulators:exec --only firestore \"vitest run -c vitest.rules.config.js\"",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed",
+    "e2e:ui": "playwright test --ui",
+    "e2e:install": "playwright install chromium",
     "prepare": "husky"
   },
   "dependencies": {
@@ -49,10 +54,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@firebase/rules-unit-testing": "^5.0.0",
     "@lingui/babel-plugin-lingui-macro": "~5.9.5",
     "@lingui/cli": "~5.9.5",
     "@lingui/vite-plugin": "~5.9.5",
     "@playwright/test": "^1.59.1",
+    "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",

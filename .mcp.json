@@ -13,7 +13,7 @@
       "command": "npx",
       "args": ["-y", "mcp-claudemem", "--storage", "${CLAUDE_PROJECT_DIR}/memory"],
       "env": {
-        "CLAUDEMEM_NAMESPACE": "AppianSimulator-Exam"
+        "CLAUDEMEM_NAMESPACE": "Simulator-Exam"
       }
     },
     "engram": {
@@ -21,7 +21,7 @@
       "args": ["-y", "mcp-engram"],
       "env": {
         "ENGRAM_STORAGE_PATH": "${CLAUDE_PROJECT_DIR}/memory/knowledge",
-        "ENGRAM_NAMESPACE": "AppianSimulator-Exam"
+        "ENGRAM_NAMESPACE": "Simulator-Exam"
       }
     },
     "autoskills": {

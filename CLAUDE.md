@@ -8,7 +8,7 @@
 
 | Campo         | Valor                          |
 |---------------|--------------------------------|
-| **Nombre**    | `AppianSimulator-Exam`               |
+| **Nombre**    | `Simulator-Exam`                     |
 | **Tipo**      | `spa`                           |
 | **Versión**   | `0.0.0`                        |
 | **Stack**     | `React 19 · Vite · Firebase (Auth + Firestore) · Zustand · Tailwind CSS · React Router v7` |

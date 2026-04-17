@@ -9,7 +9,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Name** | `AppianSimulator-Exam` |
+| **Name** | `Simulator-Exam` |
 | **Type** | `spa` |
 | **Stack** | `[to be defined per project]` |
 | **Version** | `0.0.0` |

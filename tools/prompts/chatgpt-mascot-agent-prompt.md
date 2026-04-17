@@ -22,7 +22,7 @@ Al terminar, entregas un ZIP descargable con todo listo.
 
 ## Contexto del proyecto
 
-**App:** AppianSimulator-Exam — simulador de exámenes de certificación Appian  
+**App:** Simulator-Exam — simulador de exámenes de certificación  
 **Stack:** React 19 + Vite + Tailwind CSS  
 **Mascota:** ZenDolphin — un delfín animado que acompaña al usuario  
 **Uso:** Hero de la WelcomePage, indicador de estado en examen (cargando, éxito, error, vacío, bienvenida)  

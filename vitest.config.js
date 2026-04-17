@@ -8,6 +8,16 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.js',
     css: false,
+    // Rules tests run against the Firestore emulator with a separate config.
+    // Functions tests run with Jest in functions/ — exclude them from Vitest.
+    exclude: [
+      'node_modules/**',
+      'dist/**',
+      'tests/rules/**',
+      'e2e/**',
+      'functions/**',
+      'load-tests/**',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov', 'html'],

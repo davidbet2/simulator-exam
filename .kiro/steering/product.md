@@ -6,7 +6,7 @@ inclusion: always
 
 | Campo | Valor |
 |---|---|
-| **Nombre** | `AppianSimulator-Exam` |
+| **Nombre** | `Simulator-Exam` |
 | **Tipo** | `spa` |
 | **Versión** | `0.0.0` |
 | **Stack** | `Node.js · React, Tailwind CSS` |
