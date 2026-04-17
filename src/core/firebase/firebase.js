@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,23 +12,9 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
-// Firebase App Check — validates every Firebase request server-side via reCAPTCHA v3.
-// In development, VITE_APPCHECK_DEBUG_TOKEN is whitelisted in Firebase Console → App Check.
-const RECAPTCHA_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-if (!RECAPTCHA_KEY && import.meta.env.PROD) {
-  throw new Error('[CertZen] VITE_RECAPTCHA_SITE_KEY is required in production. App Check cannot be disabled.');
-}
-if (RECAPTCHA_KEY) {
-  // Expose debug token before initializeAppCheck so the SDK picks it up.
-  if (import.meta.env.DEV && import.meta.env.VITE_APPCHECK_DEBUG_TOKEN) {
-    self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_APPCHECK_DEBUG_TOKEN;
-  }
-  initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(RECAPTCHA_KEY),
-    isTokenAutoRefreshEnabled: true,
-  });
-}
+// App Check is set to Monitor mode in Firebase Console — not enforced.
+// Client-side initialization is disabled to prevent SDK throttle errors
+// that block auth and Firestore calls after a failed token fetch.
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
