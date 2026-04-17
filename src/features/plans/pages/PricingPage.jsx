@@ -1,8 +1,6 @@
 ﻿import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Check, Zap, Star, Building2, Loader2 } from 'lucide-react'
-import { Trans, useLingui } from '@lingui/react/macro'
+import { Check, Zap, Star, Loader2 } from 'lucide-react'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { getApp } from 'firebase/app'
 import { Card, CardBody, CardHeader } from '../../../components/ui/Card'
@@ -63,25 +61,9 @@ function PlanCard({ title, price, period, badge, features, cta, onClick, highlig
 }
 
 export function PricingPage() {
-  const { t } = useLingui()
   const { isPro } = useAuthStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-
-  const FREE_FEATURES_I18N = [
-    t`3 exámenes por mes`,
-    t`Acceso a certificaciones oficiales`,
-    t`Resultados básicos`,
-    t`Modo estudio`,
-  ]
-  const PRO_FEATURES_I18N = [
-    t`Exámenes ilimitados`,
-    t`Historial completo de intentos`,
-    t`Análisis por dominio y categoría`,
-    t`Crea y comparte tus propios sets`,
-    t`Acceso anticipado a nuevas certs`,
-    t`Sin anuncios`,
-  ]
 
   const handleUpgrade = async () => {
     try {
@@ -97,17 +79,24 @@ export function PricingPage() {
 
       if (!data?.checkoutUrl) throw new Error('No checkout URL returned')
 
-      // 2. Open Dodo overlay
+      // 2. Initialize Dodo SDK then open overlay
       const { DodoPayments } = await import('dodopayments-checkout')
+      DodoPayments.Initialize({
+        mode: 'test',
+        displayType: 'overlay',
+        onEvent: (event) => {
+          if (event?.event_type === 'checkout.closed') setLoading(false)
+          if (event?.event_type === 'checkout.redirect') {
+            window.location.reload()
+          }
+        },
+      })
       DodoPayments.Checkout.open({
         checkoutUrl: data.checkoutUrl,
-        theme: 'dark',
-        onSuccess: () => window.location.reload(),
-        onClose: () => setLoading(false),
       })
     } catch (err) {
       console.error('Checkout error', err)
-      setError(t`No se pudo iniciar el pago. Intenta de nuevo.`)
+      setError('No se pudo iniciar el pago. Intenta de nuevo.')
       setLoading(false)
     }
   }
@@ -126,8 +115,8 @@ export function PricingPage() {
   return (
     <AppShell>
       <SEOHead
-        title={t`Planes y precios`}
-        description={t`Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado.`}
+        title="Planes y precios"
+        description="Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado."
         path="/pricing"
       />
       <div className="max-w-4xl mx-auto px-4 py-12 space-y-10">
@@ -135,12 +124,12 @@ export function PricingPage() {
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-3"
         >
-          <Badge variant="brand"><Zap size={11} /><Trans>Planes CertZen</Trans></Badge>
+          <Badge variant="brand"><Zap size={11} /> Planes CertZen</Badge>
           <h1 className="text-3xl font-bold text-ink">
-            <Trans>Elige el plan que te lleva a la certificación</Trans>
+            Elige el plan que te lleva a la certificación
           </h1>
           <p className="text-ink-soft max-w-lg mx-auto">
-            <Trans>Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado.</Trans>
+            Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado.
           </p>
         </motion.div>
 
@@ -155,25 +144,25 @@ export function PricingPage() {
           className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto"
         >
           <PlanCard
-            title={t`Free`}
+            title="Free"
             price="$0"
-            badge={t`Gratis`}
-            features={FREE_FEATURES_I18N}
-            cta={isPro ? t`Plan básico` : t`Tu plan actual`}
+            badge="Gratis"
+            features={FREE_FEATURES}
+            cta={isPro ? 'Plan básico' : 'Tu plan actual'}
             onClick={() => {}}
           />
           <PlanCard
-            title={t`Pro`}
+            title="Pro"
             price="$9.99"
-            period={t`mes`}
-            badge={<><Star size={10} /> <Trans>Recomendado</Trans></>}
-            features={PRO_FEATURES_I18N}
+            period="mes"
+            badge={<><Star size={10} /> Recomendado</>}
+            features={PRO_FEATURES}
             cta={
               loading
-                ? <span className="flex items-center justify-center gap-2"><Loader2 size={14} className="animate-spin" /><Trans>Procesando...</Trans></span>
+                ? <span className="flex items-center justify-center gap-2"><Loader2 size={14} className="animate-spin" /> Procesando...</span>
                 : isPro
-                ? t`Administrar suscripción`
-                : t`Actualizar a Pro →`
+                ? 'Administrar suscripción'
+                : 'Actualizar a Pro →'
             }
             onClick={isPro ? handleManageSubscription : handleUpgrade}
             highlighted
@@ -182,7 +171,7 @@ export function PricingPage() {
 
         {isPro && (
           <p className="text-center text-sm text-success-600">
-            <Trans>✓ Eres usuario Pro — gracias por tu apoyo.</Trans>
+            ✓ Eres usuario Pro — gracias por tu apoyo.
           </p>
         )}
       </div>
