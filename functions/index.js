@@ -18,7 +18,7 @@ const TURNSTILE_SECRET = defineSecret('TURNSTILE_SECRET_KEY')
 exports.verifyTurnstile = onCall(
   {
     secrets: [TURNSTILE_SECRET],
-    cors: ['https://certzen.app', 'https://www.certzen.app'],
+    cors: true,
   },
   async (request) => {
     const { token } = request.data
