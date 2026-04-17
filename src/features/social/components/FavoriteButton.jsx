@@ -3,6 +3,7 @@ import { Bookmark } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { useFavorite } from '../hooks/useFavorite';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 /**
  * FavoriteButton — bookmark toggle with optimistic UI.
@@ -16,6 +17,7 @@ import { useFavorite } from '../hooks/useFavorite';
 export function FavoriteButton({ slug, setMeta, count = 0, variant = 'icon' }) {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { t } = useLingui();
   const { isFav, busy, toggle } = useFavorite(slug, setMeta);
   const [err, setErr] = useState('');
 
@@ -34,7 +36,7 @@ export function FavoriteButton({ slug, setMeta, count = 0, variant = 'icon' }) {
     }
   };
 
-  const label = isFav ? 'Quitar de favoritos' : 'Guardar en favoritos';
+  const label = isFav ? t`Quitar de favoritos` : t`Guardar en favoritos`;
 
   if (variant === 'inline') {
     return (
@@ -54,7 +56,7 @@ export function FavoriteButton({ slug, setMeta, count = 0, variant = 'icon' }) {
         `}
       >
         <Bookmark size={12} className={isFav ? 'fill-brand-500 stroke-brand-500' : ''} />
-        {isFav ? 'Guardado' : 'Guardar'}
+        {isFav ? <Trans>Guardado</Trans> : <Trans>Guardar</Trans>}
         {count > 0 && <span className="opacity-60">· {count}</span>}
       </button>
     );

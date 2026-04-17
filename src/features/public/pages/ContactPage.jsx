@@ -1,13 +1,14 @@
 ﻿import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { PageSEO } from '../../../components/seo/PageSEO';
 import { Footer } from '../../../components/layout/Footer';
 
-const SUBJECTS = [
-  { value: 'support', label: 'Soporte técnico' },
-  { value: 'billing', label: 'Cuenta y facturación' },
-  { value: 'content', label: 'Reporte de contenido' },
-  { value: 'other', label: 'Otro' },
+const buildSubjects = (t) => [
+  { value: 'support', label: t`Soporte técnico` },
+  { value: 'billing', label: t`Cuenta y facturación` },
+  { value: 'content', label: t`Reporte de contenido` },
+  { value: 'other',   label: t`Otro` },
 ];
 
 function Field({ label, id, error, children }) {
@@ -25,6 +26,8 @@ function Field({ label, id, error, children }) {
 }
 
 export function ContactPage() {
+  const { t } = useLingui();
+  const SUBJECTS = buildSubjects(t);
   const formId = useId();
   const nameId = `${formId}-name`;
   const emailId = `${formId}-email`;
@@ -37,15 +40,15 @@ export function ContactPage() {
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = 'El nombre es obligatorio.';
+    if (!form.name.trim()) e.name = t`El nombre es obligatorio.`;
     if (!form.email.trim()) {
-      e.email = 'El correo es obligatorio.';
+      e.email = t`El correo es obligatorio.`;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      e.email = 'El formato del correo no es válido.';
+      e.email = t`El formato del correo no es válido.`;
     }
-    if (!form.subject) e.subject = 'Elige un asunto.';
-    if (!form.message.trim()) e.message = 'El mensaje es obligatorio.';
-    else if (form.message.trim().length < 20) e.message = 'El mensaje debe tener al menos 20 caracteres.';
+    if (!form.subject) e.subject = t`Elige un asunto.`;
+    if (!form.message.trim()) e.message = t`El mensaje es obligatorio.`;
+    else if (form.message.trim().length < 20) e.message = t`El mensaje debe tener al menos 20 caracteres.`;
     return e;
   }
 
@@ -87,8 +90,8 @@ export function ContactPage() {
   return (
     <>
       <PageSEO
-        title="Contacto"
-        description="¿Tienes alguna pregunta o problema con CertZen? Escríbenos y te respondemos lo antes posible."
+        title={t`Contacto`}
+        description={t`¿Tienes alguna pregunta o problema con CertZen? Escríbenos y te respondemos lo antes posible.`}
         canonical="/contact"
       />
 
@@ -104,31 +107,31 @@ export function ContactPage() {
               Cert<span className="text-brand-500">Zen</span>
             </span>
           </Link>
-          <Link to="/" className="text-sm text-ink-soft hover:text-ink transition-colors">← Volver al inicio</Link>
+          <Link to="/" className="text-sm text-ink-soft hover:text-ink transition-colors"><Trans>← Volver al inicio</Trans></Link>
         </div>
       </header>
 
       <main id="contact-content" tabIndex={-1} className="max-w-3xl mx-auto px-4 py-12">
         <div className="mb-10">
-          <h1 className="text-3xl font-display font-bold text-ink mb-2">Contacto</h1>
+          <h1 className="text-3xl font-display font-bold text-ink mb-2"><Trans>Contacto</Trans></h1>
           <p className="text-ink-soft text-sm">
-            ¿Tienes dudas, encontraste un bug o necesitas ayuda? Escríbenos y te respondemos en máximo
-            <strong className="text-ink-soft"> 2 días hábiles</strong>.
+            <Trans>¿Tienes dudas, encontraste un bug o necesitas ayuda? Escríbenos y te respondemos en máximo</Trans>
+            <strong className="text-ink-soft"> <Trans>2 días hábiles</Trans></strong>.
           </p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-5">
           {/* Contact info column */}
-          <aside className="md:col-span-2 space-y-5" aria-label="Información de contacto">
+          <aside className="md:col-span-2 space-y-5" aria-label={t`Información de contacto`}>
             <div className="glass rounded-2xl border border-surface-border p-5 space-y-4">
               <h2 className="font-display font-semibold text-ink text-sm tracking-wide uppercase">
-                Canales de soporte
+                <Trans>Canales de soporte</Trans>
               </h2>
               <ul className="space-y-3 text-sm" role="list">
                 <li className="flex items-start gap-3">
                   <span className="text-lg" aria-hidden="true">✉️</span>
                   <div>
-                    <p className="text-ink-soft text-xs mb-0.5">Soporte general</p>
+                    <p className="text-ink-soft text-xs mb-0.5"><Trans>Soporte general</Trans></p>
                     <a href="mailto:support@certzen.app" className="text-brand-600 hover:text-brand-700 underline">
                       support@certzen.app
                     </a>
@@ -137,7 +140,7 @@ export function ContactPage() {
                 <li className="flex items-start gap-3">
                   <span className="text-lg" aria-hidden="true">🔒</span>
                   <div>
-                    <p className="text-ink-soft text-xs mb-0.5">Privacidad y legal</p>
+                    <p className="text-ink-soft text-xs mb-0.5"><Trans>Privacidad y legal</Trans></p>
                     <a href="mailto:privacy@certzen.app" className="text-brand-600 hover:text-brand-700 underline">
                       privacy@certzen.app
                     </a>
@@ -146,8 +149,8 @@ export function ContactPage() {
                 <li className="flex items-start gap-3">
                   <span className="text-lg" aria-hidden="true">⚡</span>
                   <div>
-                    <p className="text-ink-soft text-xs mb-0.5">Tiempo de respuesta</p>
-                    <p className="text-ink-soft">≤ 2 días hábiles</p>
+                    <p className="text-ink-soft text-xs mb-0.5"><Trans>Tiempo de respuesta</Trans></p>
+                    <p className="text-ink-soft"><Trans>≤ 2 días hábiles</Trans></p>
                   </div>
                 </li>
               </ul>
@@ -155,22 +158,22 @@ export function ContactPage() {
 
             <div className="glass rounded-2xl border border-surface-border p-5 space-y-2">
               <h2 className="font-display font-semibold text-ink text-sm tracking-wide uppercase">
-                Recursos útiles
+                <Trans>Recursos útiles</Trans>
               </h2>
               <ul className="space-y-1 text-sm" role="list">
                 <li>
                   <Link to="/about" className="text-brand-600 hover:text-brand-700 transition-colors">
-                    Cómo funciona CertZen →
+                    <Trans>Cómo funciona CertZen →</Trans>
                   </Link>
                 </li>
                 <li>
                   <Link to="/privacy" className="text-brand-600 hover:text-brand-700 transition-colors">
-                    Política de privacidad →
+                    <Trans>Política de privacidad →</Trans>
                   </Link>
                 </li>
                 <li>
                   <Link to="/terms" className="text-brand-600 hover:text-brand-700 transition-colors">
-                    Términos de uso →
+                    <Trans>Términos de uso →</Trans>
                   </Link>
                 </li>
               </ul>
@@ -186,11 +189,11 @@ export function ContactPage() {
                 className="glass rounded-2xl border border-surface-border p-8 text-center space-y-3"
               >
                 <span className="text-4xl" aria-hidden="true">✅</span>
-                <h2 className="font-display font-bold text-ink text-xl">¡Mensaje enviado!</h2>
+                <h2 className="font-display font-bold text-ink text-xl"><Trans>¡Mensaje enviado!</Trans></h2>
                 <p className="text-ink-soft text-sm">
-                  Se abrió tu cliente de correo con el mensaje preparado. Si no se abrió,{' '}
+                  <Trans>Se abrió tu cliente de correo con el mensaje preparado. Si no se abrió,</Trans>{' '}
                   <a href="mailto:support@certzen.app" className="text-brand-600 underline">
-                    envíanos un correo directamente
+                    <Trans>envíens un correo directamente</Trans>
                   </a>
                   .
                 </p>
@@ -199,17 +202,17 @@ export function ContactPage() {
                   onClick={() => { setSent(false); setForm({ name: '', email: '', subject: '', message: '' }); }}
                   className="mt-2 text-sm text-ink-soft hover:text-ink underline transition-colors"
                 >
-                  Enviar otro mensaje
+                  <Trans>Enviar otro mensaje</Trans>
                 </button>
               </div>
             ) : (
               <form
                 onSubmit={handleSubmit}
                 noValidate
-                aria-label="Formulario de contacto"
+                aria-label={t`Formulario de contacto`}
                 className="glass rounded-2xl border border-surface-border p-6 sm:p-7 space-y-5"
               >
-                <Field label="Nombre completo" id={nameId} error={errors.name}>
+                <Field label={t`Nombre completo`} id={nameId} error={errors.name}>
                   <input
                     id={nameId}
                     name="name"
@@ -220,12 +223,12 @@ export function ContactPage() {
                     aria-required="true"
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? `${nameId}-error` : undefined}
-                    placeholder="Tu nombre"
+                    placeholder={t`Tu nombre`}
                     className={`${inputClass} ${errors.name ? errorInputClass : ''}`}
                   />
                 </Field>
 
-                <Field label="Correo electrónico" id={emailId} error={errors.email}>
+                <Field label={t`Correo electrónico`} id={emailId} error={errors.email}>
                   <input
                     id={emailId}
                     name="email"
@@ -235,12 +238,12 @@ export function ContactPage() {
                     onChange={handleChange}
                     aria-required="true"
                     aria-invalid={!!errors.email}
-                    placeholder="tu@correo.com"
+                    placeholder={t`tu@correo.com`}
                     className={`${inputClass} ${errors.email ? errorInputClass : ''}`}
                   />
                 </Field>
 
-                <Field label="Asunto" id={subjectId} error={errors.subject}>
+                <Field label={t`Asunto`} id={subjectId} error={errors.subject}>
                   <select
                     id={subjectId}
                     name="subject"
@@ -250,14 +253,14 @@ export function ContactPage() {
                     aria-invalid={!!errors.subject}
                     className={`${inputClass} ${errors.subject ? errorInputClass : ''}`}
                   >
-                    <option value="">Selecciona un asunto…</option>
+                    <option value="">{t`Selecciona un asunto…`}</option>
                     {SUBJECTS.map(s => (
                       <option key={s.value} value={s.value}>{s.label}</option>
                     ))}
                   </select>
                 </Field>
 
-                <Field label="Mensaje" id={messageId} error={errors.message}>
+                <Field label={t`Mensaje`} id={messageId} error={errors.message}>
                   <textarea
                     id={messageId}
                     name="message"
@@ -266,7 +269,7 @@ export function ContactPage() {
                     onChange={handleChange}
                     aria-required="true"
                     aria-invalid={!!errors.message}
-                    placeholder="Describe tu consulta con el mayor detalle posible…"
+                    placeholder={t`Describe tu consulta con el mayor detalle posible…`}
                     className={`${inputClass} resize-y ${errors.message ? errorInputClass : ''}`}
                   />
                 </Field>
@@ -275,13 +278,13 @@ export function ContactPage() {
                   type="submit"
                   className="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition-colors focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                 >
-                  Enviar mensaje
+                  <Trans>Enviar mensaje</Trans>
                 </button>
 
                 <p className="text-xs text-slate-600 text-center">
-                  Al enviar aceptas nuestra{' '}
+                  <Trans>Al enviar aceptas nuestra</Trans>{' '}
                   <Link to="/privacy" className="underline hover:text-ink-soft transition-colors">
-                    política de privacidad
+                    <Trans>política de privacidad</Trans>
                   </Link>
                   .
                 </p>

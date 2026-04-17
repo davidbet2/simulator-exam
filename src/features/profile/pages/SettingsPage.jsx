@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { Trans, useLingui } from '@lingui/react/macro';
 import {
   Pencil, Check, X, Crown, Mail, Trash2, ShieldAlert,
 } from 'lucide-react';
@@ -38,11 +39,11 @@ function Divider() {
 
 function ModeSelect() {
   const { mode, setMode } = useThemeStore();
-  const { t } = useTranslation();
+  const { t: tMacro } = useLingui();
   const options = [
-    { id: 'light', label: t('settings.mode.light') },
-    { id: 'dark', label: t('settings.mode.dark') },
-    { id: 'auto', label: t('settings.mode.auto') },
+    { id: 'light', label: tMacro`Claro` },
+    { id: 'dark', label: tMacro`Oscuro` },
+    { id: 'auto', label: tMacro`Auto` },
   ];
   return (
     <select
@@ -100,7 +101,7 @@ function Toggle({ checked, onChange, ariaLabel }) {
 export function SettingsPage() {
   const navigate = useNavigate();
   const { user, displayName, isPro, updateDisplayName } = useAuthStore();
-  const { t } = useTranslation();
+  const { t: tMacro } = useLingui();
 
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState(displayName ?? '');
@@ -124,15 +125,15 @@ export function SettingsPage() {
 
   async function saveName() {
     const trimmed = nameValue.trim();
-    if (trimmed.length < 2) { setNameError('Mínimo 2 caracteres.'); return; }
-    if (trimmed.length > 40) { setNameError('Máximo 40 caracteres.'); return; }
+    if (trimmed.length < 2) { setNameError(tMacro`Mínimo 2 caracteres.`); return; }
+    if (trimmed.length > 40) { setNameError(tMacro`Máximo 40 caracteres.`); return; }
     setSavingName(true);
     setNameError(null);
     try {
       await updateDisplayName(user.uid, trimmed);
       setEditingName(false);
     } catch (err) {
-      setNameError(err.message ?? 'Error al guardar');
+      setNameError(err.message ?? tMacro`Error al guardar`);
     } finally {
       setSavingName(false);
     }
@@ -146,13 +147,13 @@ export function SettingsPage() {
   return (
     <AppShell>
       <Helmet>
-        <title>{t('settings.title')} — CertZen</title>
+        <title>{tMacro`Ajustes`} — CertZen</title>
       </Helmet>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-10">
-        <h1 className="text-3xl font-bold text-ink">{t('settings.title')}</h1>
+        <h1 className="text-3xl font-bold text-ink"><Trans>Ajustes</Trans></h1>
 
         {/* Suscripción */}
-        <Section title={t('settings.subscription')}>
+        <Section title={tMacro`Suscripción`}>
           <Card>
             <CardBody className="p-5 flex items-start justify-between gap-4">
               <div>
@@ -165,13 +166,13 @@ export function SettingsPage() {
                 </p>
                 <p className="text-xs text-ink-muted mt-1">
                   {isPro
-                    ? 'Acceso ilimitado a exámenes y funciones premium.'
-                    : 'Plan gratuito. Actualiza para acceso ilimitado.'}
+                    ? <Trans>Acceso ilimitado a exámenes y funciones premium.</Trans>
+                    : <Trans>Plan gratuito. Actualiza para acceso ilimitado.</Trans>}
                 </p>
               </div>
               {!isPro && (
                 <Button size="sm" onClick={() => navigate('/pricing')}>
-                  Actualizar
+                  <Trans>Actualizar</Trans>
                 </Button>
               )}
             </CardBody>
@@ -179,11 +180,11 @@ export function SettingsPage() {
         </Section>
 
         {/* Información personal */}
-        <Section title={t('settings.personalInfo')}>
+        <Section title={tMacro`Información personal`}>
           <Card>
             <div className="divide-y divide-surface-border">
               <Row
-                title="Nombre"
+                title={tMacro`Nombre`}
                 subtitle={!editingName ? (displayName ?? '—') : null}
               >
                 {editingName ? (
@@ -202,7 +203,7 @@ export function SettingsPage() {
                         onClick={saveName}
                         disabled={savingName}
                         className="h-9 w-9 flex items-center justify-center rounded-md bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-50"
-                        aria-label={t('common.save')}
+                        aria-label={tMacro`Guardar`}
                       >
                         <Check size={14} />
                       </button>
@@ -210,7 +211,7 @@ export function SettingsPage() {
                         type="button"
                         onClick={() => { setEditingName(false); setNameError(null); }}
                         className="h-9 w-9 flex items-center justify-center rounded-md bg-surface-muted border border-surface-border text-ink-soft hover:bg-surface-muted"
-                        aria-label={t('common.cancel')}
+                        aria-label={tMacro`Cancelar`}
                       >
                         <X size={14} />
                       </button>
@@ -223,13 +224,13 @@ export function SettingsPage() {
                     onClick={() => { setNameValue(displayName ?? ''); setEditingName(true); }}
                     className="text-sm text-brand-600 font-medium hover:underline flex items-center gap-1"
                   >
-                    <Pencil size={12} />{t('common.edit')}
+                    <Pencil size={12} /><Trans>Editar</Trans>
                   </button>
                 )}
               </Row>
-              <Row title="Email" subtitle={user.email}>
+              <Row title={tMacro`Email`} subtitle={user.email}>
                 <span className="text-xs text-ink-muted flex items-center gap-1">
-                  <Mail size={12} />Verificado
+                  <Mail size={12} /><Trans>Verificado</Trans>
                 </span>
               </Row>
             </div>
@@ -237,13 +238,13 @@ export function SettingsPage() {
         </Section>
 
         {/* Apariencia */}
-        <Section title={t('settings.appearance')}>
+        <Section title={tMacro`Apariencia`}>
           <Card>
             <div className="divide-y divide-surface-border">
-              <Row title={t('settings.mode')} subtitle="Auto sigue el tema del sistema">
+              <Row title={tMacro`Modo`} subtitle={tMacro`Auto sigue el tema del sistema`}>
                 <ModeSelect />
               </Row>
-              <Row title={t('settings.language')} subtitle="La interfaz se traduce al idioma seleccionado">
+              <Row title={tMacro`Idioma`} subtitle={tMacro`La interfaz se traduce al idioma seleccionado`}>
                 <LangSelect />
               </Row>
             </div>
@@ -251,37 +252,37 @@ export function SettingsPage() {
         </Section>
 
         {/* Notificaciones */}
-        <Section title={t('settings.notifications')}>
+        <Section title={tMacro`Notificaciones`}>
           <Card>
             <div className="divide-y divide-surface-border">
               <Row
-                title="Actualizaciones de estudio"
-                subtitle="Recordatorios, rutinas e insignias"
+                title={tMacro`Actualizaciones de estudio`}
+                subtitle={tMacro`Recordatorios, rutinas e insignias`}
               >
                 <Toggle
                   checked={notifStudy}
                   onChange={(v) => persist('study', v, setNotifStudy)}
-                  ariaLabel="Activar actualizaciones de estudio"
+                  ariaLabel={tMacro`Activar actualizaciones de estudio`}
                 />
               </Row>
               <Row
-                title="Novedades de CertZen"
-                subtitle="Nuevas funciones y consejos"
+                title={tMacro`Novedades de CertZen`}
+                subtitle={tMacro`Nuevas funciones y consejos`}
               >
                 <Toggle
                   checked={notifNews}
                   onChange={(v) => persist('news', v, setNotifNews)}
-                  ariaLabel="Activar novedades"
+                  ariaLabel={tMacro`Activar novedades`}
                 />
               </Row>
               <Row
-                title="Promociones"
-                subtitle="Ofertas y sorteos"
+                title={tMacro`Promociones`}
+                subtitle={tMacro`Ofertas y sorteos`}
               >
                 <Toggle
                   checked={notifPromos}
                   onChange={(v) => persist('promos', v, setNotifPromos)}
-                  ariaLabel="Activar promociones"
+                  ariaLabel={tMacro`Activar promociones`}
                 />
               </Row>
             </div>
@@ -289,37 +290,37 @@ export function SettingsPage() {
         </Section>
 
         {/* Cuenta y privacidad */}
-        <Section title={t('settings.account')}>
+        <Section title={tMacro`Cuenta y privacidad`}>
           <Card>
             <div className="divide-y divide-surface-border">
-              <Row title={t('settings.changePassword')} subtitle="Cambia tu contraseña por email">
+              <Row title={tMacro`Cambiar la contraseña`} subtitle={tMacro`Cambia tu contraseña por email`}>
                 <button
                   type="button"
                   onClick={() => navigate('/login?reset=1')}
                   className="text-sm text-brand-600 font-medium hover:underline"
                 >
-                  {t('common.edit')}
+                  <Trans>Editar</Trans>
                 </button>
               </Row>
               <Row
-                title={t('settings.deleteAccount')}
-                subtitle={t('settings.deleteAccountHelp')}
+                title={tMacro`Elimina tu cuenta`}
+                subtitle={tMacro`Esta acción borrará todos tus datos y no puede deshacerse.`}
                 danger
               >
                 <button
                   type="button"
                   disabled
-                  title="Contacta soporte para eliminar tu cuenta"
+                  title={tMacro`Contacta soporte para eliminar tu cuenta`}
                   className="h-9 px-4 rounded-full bg-danger-500/10 text-danger-600 text-sm font-semibold border border-danger-500/20 opacity-60 cursor-not-allowed flex items-center gap-1.5"
                 >
-                  <Trash2 size={12} />Borrar cuenta
+                  <Trash2 size={12} /><Trans>Borrar cuenta</Trans>
                 </button>
               </Row>
             </div>
           </Card>
           <p className="text-xs text-ink-muted flex items-center gap-1.5 px-1">
             <ShieldAlert size={12} />
-            La eliminación de cuenta está temporalmente manejada por soporte.
+            <Trans>La eliminación de cuenta está temporalmente manejada por soporte.</Trans>
           </p>
         </Section>
       </div>

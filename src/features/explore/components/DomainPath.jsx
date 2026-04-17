@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, ChevronDown, Layers, Lock } from 'lucide-react';
+import { Trans, Plural, useLingui } from '@lingui/react/macro';
 
 /**
  * DomainPath — compact mastery grid for exam-set domains.
@@ -39,12 +40,30 @@ export default function DomainPath({ domains, onSelect, locked = false }) {
   const untouchedCount = sorted.length - masteredCount - inProgressCount;
 
   return (
+    <DomainPathInner
+      masteredCount={masteredCount}
+      inProgressCount={inProgressCount}
+      untouchedCount={untouchedCount}
+      overflow={overflow}
+      expanded={expanded}
+      setExpanded={setExpanded}
+      sorted={sorted}
+      visible={visible}
+      locked={locked}
+      onSelect={onSelect}
+    />
+  );
+}
+
+function DomainPathInner({ masteredCount, inProgressCount, untouchedCount, overflow, expanded, setExpanded, sorted, visible, locked, onSelect }) {
+  const { t } = useLingui();
+  return (
     <div className="space-y-3">
       {/* Summary chips */}
       <div className="flex items-center gap-2 flex-wrap text-xs">
-        <SummaryChip tone="emerald" label={`${masteredCount} dominado${masteredCount !== 1 ? 's' : ''}`} />
-        <SummaryChip tone="brand" label={`${inProgressCount} en progreso`} />
-        <SummaryChip tone="neutral" label={`${untouchedCount} sin empezar`} />
+        <SummaryChip tone="emerald" label={<Plural value={masteredCount} one="# dominado" other="# dominados" />} />
+        <SummaryChip tone="brand" label={t`${inProgressCount} en progreso`} />
+        <SummaryChip tone="neutral" label={t`${untouchedCount} sin empezar`} />
       </div>
 
       {/* Grid */}
@@ -71,7 +90,7 @@ export default function DomainPath({ domains, onSelect, locked = false }) {
             className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 px-3 py-1.5 rounded-full bg-brand-500/5 hover:bg-brand-500/10 border border-brand-500/20 transition-colors"
             aria-expanded={expanded}
           >
-            {expanded ? 'Ver menos' : `Ver todos (${sorted.length})`}
+            {expanded ? <Trans>Ver menos</Trans> : t`Ver todos (${sorted.length})`}
             <ChevronDown size={14} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} />
           </button>
         </div>
@@ -94,6 +113,7 @@ function SummaryChip({ tone, label }) {
 }
 
 function DomainNode({ domain, index, locked, onSelect }) {
+  const { t } = useLingui();
   const { label, total, seen, mastered, percent } = domain;
   const isMastered = percent >= 80;
   const isStarted = seen > 0;
@@ -128,7 +148,7 @@ function DomainNode({ domain, index, locked, onSelect }) {
           ${cardBg}
           hover:shadow-sm hover:-translate-y-[1px]
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40`}
-        aria-label={`Practicar ${label}: ${mastered} de ${total} dominadas, ${percent}%`}
+        aria-label={t`Practicar ${label}: ${mastered} de ${total} dominadas, ${percent}%`}
       >
         <div className="relative shrink-0" style={{ width: 40, height: 40 }}>
           <svg width="40" height="40" viewBox="0 0 40 40" className="-rotate-90">

@@ -6,9 +6,11 @@ import { useEffect, useRef, useState } from 'react';
 import { FolderPlus, Check, Plus, X } from 'lucide-react';
 import { useFolders } from '../hooks/useFolders';
 import { useAuthStore } from '../../../core/store/useAuthStore';
+import { Trans, useLingui, Plural } from '@lingui/react/macro';
 
 export function SaveToFolderButton({ slug, compact = false }) {
   const { user } = useAuthStore();
+  const { t } = useLingui();
   const { folders, createFolder, addSlugToFolder, removeSlugFromFolder } = useFolders();
   const [open, setOpen] = useState(false);
   const [adding, setAdding] = useState(false);
@@ -62,8 +64,8 @@ export function SaveToFolderButton({ slug, compact = false }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label="Guardar en carpeta"
-        title="Guardar en carpeta"
+        aria-label={t`Guardar en carpeta`}
+        title={t`Guardar en carpeta`}
         className={`rounded-full border flex items-center gap-2 transition-all ${
           compact
             ? `h-8 w-8 justify-center ${isInAny ? 'bg-brand-500/10 border-brand-500/40 text-brand-600 hover:bg-brand-500/20' : 'bg-transparent border-surface-border text-ink-soft hover:text-ink hover:border-brand-500/40 hover:bg-surface-muted/50'}`
@@ -71,22 +73,22 @@ export function SaveToFolderButton({ slug, compact = false }) {
         }`}
       >
         <FolderPlus size={15} />
-        {!compact && <span>{isInAny ? `${inFolders.length} carpeta${inFolders.length > 1 ? 's' : ''}` : 'Guardar'}</span>}
+        {!compact && <span>{isInAny ? <Plural value={inFolders.length} one="# carpeta" other="# carpetas" /> : <Trans>Guardar</Trans>}</span>}
       </button>
 
       {open && (
         <div
           className="absolute left-0 top-full mt-2 w-64 rounded-2xl bg-surface-card border border-surface-border shadow-[0_10px_40px_-12px_rgba(0,0,0,0.25)] z-50 overflow-hidden"
           role="dialog"
-          aria-label="Carpetas"
+          aria-label={t`Carpetas`}
         >
           <div className="px-4 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide border-b border-surface-border">
-            Guardar en carpeta
+            <Trans>Guardar en carpeta</Trans>
           </div>
 
           {folders.length === 0 && !adding && (
             <div className="px-4 py-3 text-sm text-ink-muted">
-              Aún no tienes carpetas.
+              <Trans>Aún no tienes carpetas.</Trans>
             </div>
           )}
 
@@ -125,7 +127,7 @@ export function SaveToFolderButton({ slug, compact = false }) {
                   type="text"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Nombre de carpeta"
+                  placeholder={t`Nombre de carpeta`}
                   className="flex-1 h-8 px-3 text-xs rounded-lg bg-surface-muted/60 border border-transparent focus:outline-none focus:border-brand-500 text-ink placeholder-ink-muted"
                 />
                 <button
@@ -150,7 +152,7 @@ export function SaveToFolderButton({ slug, compact = false }) {
                 className="w-full flex items-center gap-2 h-8 px-3 rounded-lg text-xs text-ink-muted hover:text-ink hover:bg-surface-muted/60 transition-colors"
               >
                 <Plus size={13} />
-                Nueva carpeta
+                <Trans>Nueva carpeta</Trans>
               </button>
             )}
           </div>

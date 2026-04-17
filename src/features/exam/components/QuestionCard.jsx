@@ -1,7 +1,9 @@
 import { useRef } from 'react';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-// ─── Shared top-bar (flag + question text) ────────────────────────────────────
+// ─── Shared top-bar (flag + question text) ──────────────────────────────
 function QuestionHeader({ question, questionNumber: _questionNumber, flagged, isStudy, onToggleFlag }) {
+  const { t } = useLingui();
   return (
     <>
       <div className="flex items-center justify-between mb-4">
@@ -9,7 +11,7 @@ function QuestionHeader({ question, questionNumber: _questionNumber, flagged, is
         {!isStudy && (
           <button
             onClick={onToggleFlag}
-            title={flagged ? 'Quitar bandera' : 'Marcar con duda'}
+            title={flagged ? t`Quitar bandera` : t`Marcar con duda`}
             className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all ${
               flagged
                 ? 'bg-danger-500 border-danger-500 text-white shadow-glow-danger'
@@ -51,16 +53,16 @@ function FeedbackBanner({ isCorrect }) {
       <span>{isCorrect ? '✅' : '❌'}</span>
       <span>
         {isCorrect
-          ? '¡Respuesta correcta!'
-          : '¡Respuesta incorrecta! Revisa las correcciones en verde.'}
+          ? <Trans>¡Respuesta correcta!</Trans>
+          : <Trans>¡Respuesta incorrecta! Revisa las correcciones en verde.</Trans>}
       </span>
     </div>
   );
 }
 
 // ─── Matching question ────────────────────────────────────────────────────────
-function MatchingQuestion({ question, savedSelection, revealed, onSelectionChange }) {
-  // savedSelection[i] = selected matchKey for pairs[i], '' if none
+function MatchingQuestion({ question, savedSelection, revealed, onSelectionChange }) {  const { t } = useLingui();
+  const tSel = t`Seleccionar`;  // savedSelection[i] = selected matchKey for pairs[i], '' if none
   const selectedSet = new Set(savedSelection.filter(Boolean));
 
   function handleSelect(pairIdx, val) {
@@ -100,7 +102,7 @@ function MatchingQuestion({ question, savedSelection, revealed, onSelectionChang
                   revealed ? 'cursor-default' : 'cursor-pointer'
                 } ${isCorrect ? 'border-success-500' : isWrong ? 'border-danger-500' : 'border-surface-border'}`}
               >
-                <option value="">— Seleccionar —</option>
+                <option value="">{'— '}{tSel}{' —'}</option>
                 {Object.entries(question.matches).map(([key, text]) => (
                   <option
                     key={key}
@@ -119,7 +121,7 @@ function MatchingQuestion({ question, savedSelection, revealed, onSelectionChang
             </div>
             {revealed && (isWrong || isBlank) && (
               <div className="col-span-2 text-xs text-success-400 font-medium bg-success-500/10 border border-success-500/30 rounded px-2 py-1">
-                ✓ Correcto: {question.matches[pair.correctMatch]}
+                <Trans>✓ Correcto: {question.matches[pair.correctMatch]}</Trans>
               </div>
             )}
           </div>
@@ -187,11 +189,11 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
       {/* Left pool */}
       <div>
         <p className="text-xs font-semibold text-ink-soft uppercase tracking-wide mb-2">
-          Elementos disponibles
+          <Trans>Elementos disponibles</Trans>
         </p>
         <div className="min-h-28 border-2 border-dashed border-surface-muted rounded-lg p-2 flex flex-col gap-2 bg-surface-card">
           {leftItems.length === 0 && (
-            <p className="text-xs text-ink-muted text-center mt-6">Haz clic en elementos del lado derecho para devolverlos</p>
+            <p className="text-xs text-ink-muted text-center mt-6"><Trans>Haz clic en elementos del lado derecho para devolverlos</Trans></p>
           )}
           {leftItems.map((item) => (
             <div
@@ -210,7 +212,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
       {/* Right ordered list */}
       <div>
         <p className="text-xs font-semibold text-ink-soft uppercase tracking-wide mb-2">
-          Orden definido
+          <Trans>Orden definido</Trans>
         </p>
         <div
           onDragOver={(e) => e.preventDefault()}
@@ -220,7 +222,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
           }`}
         >
           {savedSelection.length === 0 && (
-            <p className="text-xs text-ink-muted text-center mt-6">Arrastra o haz clic los elementos</p>
+            <p className="text-xs text-ink-muted text-center mt-6"><Trans>Arrastra o haz clic los elementos</Trans></p>
           )}
           {savedSelection.map((item, idx) => {
             const isCorrect = revealed && question.correctOrder[idx] === item;
@@ -277,6 +279,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
  * In study mode, `revealed` locks options and shows correct/wrong feedback.
  */
 export function QuestionCard({ question, questionNumber, total: _total, savedSelection, flagged, mode, revealed, onSelectionChange, onToggleFlag }) {
+  const { t: tMacro } = useLingui();
   const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
 
   // ── Matching type ────────────────────────────────────────────────────────────
@@ -295,7 +298,7 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
           onToggleFlag={onToggleFlag}
         />
         <p className="text-xs text-gray-500 mb-3 italic">
-          Selecciona la definición correcta para cada término. Cada opción sólo se puede usar una vez.
+          <Trans>Selecciona la definición correcta para cada término. Cada opción sólo se puede usar una vez.</Trans>
         </p>
         <MatchingQuestion
           question={question}
@@ -325,7 +328,7 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
           onToggleFlag={onToggleFlag}
         />
         <p className="text-xs text-gray-500 mb-3 italic">
-          Arrastra los elementos al lado derecho y ordénalos correctamente. Haz clic en un elemento del lado derecho para devolverlo.
+          <Trans>Arrastra los elementos al lado derecho y ordénalos correctamente. Haz clic en un elemento del lado derecho para devolverlo.</Trans>
         </p>
         <OrderingQuestion
           question={question}
@@ -373,10 +376,10 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
           <span>{isCorrect ? '✅' : '❌'}</span>
           <span>
             {isCorrect
-              ? '¡Respuesta correcta!'
+              ? <Trans>¡Respuesta correcta!</Trans>
               : savedSelection.length === 0
-              ? 'Sin responder — la respuesta correcta está marcada en verde'
-              : 'Respuesta incorrecta — la respuesta correcta está marcada en verde'}
+              ? <Trans>Sin responder — la respuesta correcta está marcada en verde</Trans>
+              : <Trans>Respuesta incorrecta — la respuesta correcta está marcada en verde</Trans>}
           </span>
         </div>
       )}
@@ -385,14 +388,14 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
         <div>
           {isMultiple && (
             <span className="inline-block bg-warning-50 text-warning-600 text-xs font-semibold px-2 py-0.5 rounded-full border border-warning-500/30">
-              Selección múltiple — elige {question.answer.length} opciones
+              <Trans>Selección múltiple — elige {question.answer.length} opciones</Trans>
             </span>
           )}
         </div>
         {!isStudy && (
           <button
             onClick={onToggleFlag}
-            title={flagged ? 'Quitar bandera' : 'Marcar con duda'}
+            title={flagged ? tMacro`Quitar bandera` : tMacro`Marcar con duda`}
             className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all ${
               flagged
                 ? 'bg-danger-500 border-danger-500 text-white shadow-glow-danger'
@@ -451,10 +454,10 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
                 <span className="font-bold">{key}.</span> {value}
               </span>
               {revealed && isRight && (
-                <span className="ml-auto shrink-0 text-xs font-bold text-success-700">✓ Correcta</span>
+                <span className="ml-auto shrink-0 text-xs font-bold text-success-700"><Trans>✓ Correcta</Trans></span>
               )}
               {revealed && isSelected && !isRight && (
-                <span className="ml-auto shrink-0 text-xs font-bold text-danger-700">✗ Tu resp.</span>
+                <span className="ml-auto shrink-0 text-xs font-bold text-danger-700"><Trans>✗ Tu resp.</Trans></span>
               )}
             </label>
           );

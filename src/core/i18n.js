@@ -1,20 +1,63 @@
 /**
- * i18n — lightweight translation helper.
+ * i18n — translation layer.
  *
- * Currently supports Spanish (es) and English (en).
- * Usage:
- *   import { useTranslation } from '../core/i18n';
- *   const { t } = useTranslation();
- *   <h1>{t('home.title')}</h1>
+ * Two parallel APIs during migration:
+ *   1. Legacy flat-dict (backward compatible):
+ *        const { t } = useTranslation();
+ *        <h1>{t('home.title')}</h1>
+ *   2. Lingui macro (preferred for new code):
+ *        import { Trans } from '@lingui/react/macro';
+ *        <h1><Trans>Inicio</Trans></h1>
+ *
+ * Both are fed from the same `dict` below. New <Trans> calls without a
+ * translation fall back to the source Spanish text automatically.
+ *
+ * ─────────────────────────────────────────────────────────────────────────
+ * SCOPE RULE — what gets translated and what does NOT:
+ *
+ *   ✅ DO translate: UI chrome — buttons, labels, modals, navigation,
+ *      settings, feedback banners, tooltips, aria-labels, hardcoded copy.
+ *
+ *   ❌ DO NOT translate: exam content from Firestore — question statements,
+ *      answer options, explanations, domains, references, exam-set titles,
+ *      or any field sourced from the database. These are data, not UI,
+ *      and must be rendered verbatim in their original language.
+ *
+ *   Practical test: if the string comes from a literal in JSX, it gets
+ *   wrapped in <Trans>. If it comes from a variable/prop/fetch, leave it.
+ * ─────────────────────────────────────────────────────────────────────────
+ *
+ * See memory/research/2026-04-16-react-i18n-strategy.md for full plan.
  */
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { i18n } from '@lingui/core';
+import { messages as esMsgs } from '../locales/es/messages.mjs';
+import { messages as enMsgs } from '../locales/en/messages.mjs';
+import { messages as frMsgs } from '../locales/fr/messages.mjs';
+import { messages as ptMsgs } from '../locales/pt/messages.mjs';
+import { messages as deMsgs } from '../locales/de/messages.mjs';
+import { messages as itMsgs } from '../locales/it/messages.mjs';
+import { messages as zhMsgs } from '../locales/zh/messages.mjs';
+import { messages as jaMsgs } from '../locales/ja/messages.mjs';
+
+const compiledCatalogs = {
+  es: esMsgs,
+  en: enMsgs, fr: frMsgs, pt: ptMsgs,
+  de: deMsgs, it: itMsgs, zh: zhMsgs, ja: jaMsgs,
+};
 
 const STORAGE_KEY = 'certzen:lang';
 
 export const SUPPORTED_LANGS = [
   { id: 'es', label: 'Español' },
   { id: 'en', label: 'English (USA)' },
+  { id: 'fr', label: 'Français' },
+  { id: 'pt', label: 'Português' },
+  { id: 'de', label: 'Deutsch' },
+  { id: 'it', label: 'Italiano' },
+  { id: 'zh', label: '中文' },
+  { id: 'ja', label: '日本語' },
 ];
 
 const dict = {
@@ -404,7 +447,7 @@ const dict = {
   },
 };
 
-const VALID_LANGS = new Set(['es', 'en']);
+const VALID_LANGS = new Set(SUPPORTED_LANGS.map((l) => l.id));
 
 export const useLangStore = create(
   persist(
@@ -430,3 +473,30 @@ export function useTranslation() {
   const t = (key) => dict[lang]?.[key] ?? dict.en?.[key] ?? dict.es[key] ?? key;
   return { t, lang, setLang };
 }
+
+// ---------------------------------------------------------------------------
+// Lingui runtime initialization
+//
+// Each locale gets TWO layers of messages merged together:
+//   1. Legacy flat dict (keys like 'nav.home') — for callers that still use
+//      useTranslation().t('nav.home').
+//   2. Content-based msgids from src/locales/messages.js — produced by the
+//      @lingui/babel-plugin-lingui-macro from <Trans> macros. The Spanish
+//      source text IS the msgid, so translations live keyed by that text.
+//
+// Unknown msgids fall back to the source Spanish, which keeps the UI legible
+// while the migration is in progress.
+// ---------------------------------------------------------------------------
+for (const id of VALID_LANGS) {
+  i18n.load(id, compiledCatalogs[id] ?? {});
+}
+i18n.activate(useLangStore.getState().lang);
+
+// Keep Lingui in sync with the Zustand store.
+useLangStore.subscribe((state) => {
+  if (VALID_LANGS.has(state.lang)) {
+    i18n.activate(state.lang);
+  }
+});
+
+export { i18n };

@@ -9,6 +9,7 @@ import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import { db } from '../../core/firebase/firebase';
 import { getDomain } from '../../core/constants/domains';
 import Button from '../ui/Button';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { useAuthStore } from '../../core/store/useAuthStore';
 import { useThemeStore } from '../../core/store/useThemeStore';
 import { useUIStore } from '../../core/store/useUIStore';
@@ -68,6 +69,7 @@ function FolderRow({ folder, onClick }) {
 
 function Sidebar({ onClose, collapsed = false, onToggleCollapse }) {
   const { t } = useTranslation();
+  const { t: tMacro } = useLingui();
   const { folders, createFolder } = useFolders();
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [folderName, setFolderName] = useState('');
@@ -85,7 +87,7 @@ function Sidebar({ onClose, collapsed = false, onToggleCollapse }) {
   };
 
   return (
-    <nav className="flex flex-col h-full p-3 gap-1" aria-label="Navegación principal">
+    <nav className="flex flex-col h-full p-3 gap-1" aria-label={tMacro`Navegación principal`}>
       <div className="flex items-center justify-between h-14 mb-3">
         <Link
           to="/home"
@@ -107,8 +109,8 @@ function Sidebar({ onClose, collapsed = false, onToggleCollapse }) {
             type="button"
             onClick={onToggleCollapse}
             className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted hover:text-ink hover:bg-surface-muted/60 transition-colors"
-            aria-label="Colapsar menú"
-            title="Colapsar menú"
+            aria-label={tMacro`Colapsar menú`}
+            title={tMacro`Colapsar menú`}
           >
             <PanelLeftClose size={16} />
           </button>
@@ -120,8 +122,8 @@ function Sidebar({ onClose, collapsed = false, onToggleCollapse }) {
           type="button"
           onClick={onToggleCollapse}
           className="hidden lg:flex h-10 w-full items-center justify-center rounded-xl text-ink-muted hover:text-ink hover:bg-surface-muted/60 transition-colors mb-1"
-          aria-label="Expandir menú"
-          title="Expandir menú"
+          aria-label={tMacro`Expandir menú`}
+          title={tMacro`Expandir menú`}
         >
           <PanelLeftOpen size={18} />
         </button>
@@ -192,6 +194,7 @@ function UserMenu() {
   const { user, displayName, logout } = useAuthStore();
   const { mode, setMode } = useThemeStore();
   const { t } = useTranslation();
+  const { t: tMacro } = useLingui();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -222,7 +225,7 @@ function UserMenu() {
       <button
         onClick={() => setOpen((v) => !v)}
         className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-400 via-brand-500 to-violet-500 text-white font-bold text-xs flex items-center justify-center ring-2 ring-white/40 dark:ring-white/10 hover:ring-brand-400/60 transition-all shadow-sm"
-        aria-label="Menú de usuario"
+        aria-label={tMacro`Menú de usuario`}
         aria-expanded={open}
       >
         {user.photoURL ? (
@@ -263,7 +266,7 @@ function UserMenu() {
               className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-ink hover:bg-surface-muted/60 transition-colors"
               role="menuitem"
             >
-              <MessageCircle size={16} className="text-ink-soft" />Contáctenos
+              <MessageCircle size={16} className="text-ink-soft" /><Trans>Contáctenos</Trans>
             </Link>
           </div>
 
@@ -298,11 +301,11 @@ function UserMenu() {
 
           <div className="px-4 py-2 border-t border-surface-border/60 bg-surface-muted/20 flex items-center gap-3 text-[11px] text-ink-muted">
             <Link to="/privacy" onClick={() => setOpen(false)} className="hover:text-ink transition-colors" role="menuitem">
-              Privacidad
+              <Trans>Privacidad</Trans>
             </Link>
             <span aria-hidden>·</span>
             <Link to="/terms" onClick={() => setOpen(false)} className="hover:text-ink transition-colors" role="menuitem">
-              Términos
+              <Trans>Términos</Trans>
             </Link>
           </div>
         </div>
@@ -328,6 +331,7 @@ function SearchHighlight({ text, needle }) {
 // ── Topbar ───────────────────────────────────────────────────────────────────
 function TopBar({ onToggleSidebar, authed }) {
   const navigate = useNavigate();
+  const { t: tMacro } = useLingui();
   const [q, setQ] = useState('');
   const [catalog, setCatalog] = useState([]);
   const fetchedRef = useRef(false);
@@ -417,7 +421,7 @@ function TopBar({ onToggleSidebar, authed }) {
           <button
             onClick={onToggleSidebar}
             className="lg:hidden h-10 w-10 flex items-center justify-center rounded-full text-ink-soft hover:bg-surface-muted/60 transition-colors"
-            aria-label="Abrir menú"
+            aria-label={tMacro`Abrir menú`}
           >
             <Menu size={20} />
           </button>
@@ -439,9 +443,9 @@ function TopBar({ onToggleSidebar, authed }) {
                 if (q.trim().length >= 2 && suggestions.length > 0) setShowSugg(true);
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Buscar exámenes…"
+              placeholder={tMacro`Buscar exámenes…`}
               className="h-11 w-full rounded-full bg-surface-card border border-surface-border px-11 text-sm text-ink placeholder-ink-soft ring-1 ring-transparent focus:outline-none focus:ring-brand-500/40 focus:border-brand-500/40 transition-all"
-              aria-label="Buscar sets de examen"
+              aria-label={tMacro`Buscar sets de examen`}
               aria-autocomplete="list"
               aria-haspopup="listbox"
               aria-expanded={showSugg && suggestions.length > 0}
@@ -452,7 +456,7 @@ function TopBar({ onToggleSidebar, authed }) {
                 type="button"
                 onClick={() => { setQ(''); setShowSugg(false); inputRef.current?.focus(); }}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-ink-soft hover:text-ink transition-colors"
-                aria-label="Limpiar búsqueda"
+                aria-label={tMacro`Limpiar búsqueda`}
               >
                 <X size={14} />
               </button>
@@ -460,7 +464,7 @@ function TopBar({ onToggleSidebar, authed }) {
             {showSugg && suggestions.length > 0 && (
               <ul
                 role="listbox"
-                aria-label="Sugerencias de búsqueda"
+                aria-label={tMacro`Sugerencias de búsqueda`}
                 className="absolute z-50 top-full mt-1.5 left-0 w-full rounded-xl border border-surface-border bg-white shadow-lg overflow-hidden"
               >
                 {suggestions.map((s, i) => (
@@ -490,7 +494,7 @@ function TopBar({ onToggleSidebar, authed }) {
               type="button"
               onClick={() => navigate('/create-exam')}
               className="hidden sm:flex h-10 w-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 text-white items-center justify-center hover:shadow-[0_6px_20px_-6px_rgba(14,165,233,0.6)] transition-shadow"
-              aria-label="Crear examen"
+              aria-label={tMacro`Crear examen`}
             >
               <Plus size={16} />
             </button>
@@ -499,7 +503,7 @@ function TopBar({ onToggleSidebar, authed }) {
         </div>
       ) : (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2 shrink-0" aria-label="CertZen inicio">
+          <Link to="/" className="flex items-center gap-2 shrink-0" aria-label={tMacro`CertZen inicio`}>
             <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center shadow-brand">
               <span className="text-white font-black text-xs leading-none">CZ</span>
             </div>
@@ -509,11 +513,11 @@ function TopBar({ onToggleSidebar, authed }) {
           </Link>
           <nav className="flex items-center gap-2">
             <Link to="/login">
-              <Button variant="ghost" size="sm">Ingresar</Button>
+              <Button variant="ghost" size="sm"><Trans>Ingresar</Trans></Button>
             </Link>
             <Link to="/register">
               <Button size="sm">
-                Registro gratis
+                <Trans>Registro gratis</Trans>
                 <ArrowRight size={13} />
               </Button>
             </Link>

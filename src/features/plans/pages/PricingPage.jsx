@@ -1,10 +1,12 @@
 ﻿import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Check, Zap, Star, Building2 } from 'lucide-react'
+import { Trans, useLingui } from '@lingui/react/macro'
 import { Card, CardBody, CardHeader } from '../../../components/ui/Card'
 import { Badge } from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
 import { AppShell } from '../../../components/layout/AppShell'
+import { SEOHead } from '../../../components/SEOHead'
 
 const FREE_FEATURES = [
   '3 exámenes por mes',
@@ -57,6 +59,21 @@ function PlanCard({ title, price, period, badge, features, cta, onClick, highlig
 }
 
 export function PricingPage() {
+  const { t } = useLingui()
+  const FREE_FEATURES_I18N = [
+    t`3 exámenes por mes`,
+    t`Acceso a certificaciones oficiales`,
+    t`Resultados básicos`,
+    t`Modo estudio`,
+  ]
+  const PRO_FEATURES_I18N = [
+    t`Exámenes ilimitados`,
+    t`Historial completo de intentos`,
+    t`Análisis por dominio y categoría`,
+    t`Crea y comparte tus propios sets`,
+    t`Acceso anticipado a nuevas certs`,
+    t`Sin anuncios`,
+  ]
   // Stripe checkout would redirect to a Stripe payment link / session
   const handleUpgrade = () => {
     // TODO: integrate Firebase Extension "Run Payments with Stripe"
@@ -66,17 +83,22 @@ export function PricingPage() {
 
   return (
     <AppShell>
+      <SEOHead
+        title={t`Planes y precios`}
+        description={t`Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado.`}
+        path="/pricing"
+      />
       <div className="max-w-4xl mx-auto px-4 py-12 space-y-10">
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-3"
         >
-          <Badge variant="brand"><Zap size={11} />Planes CertZen</Badge>
+          <Badge variant="brand"><Zap size={11} /><Trans>Planes CertZen</Trans></Badge>
           <h1 className="text-3xl font-bold text-ink">
-            Elige el plan que te lleva a la certificación
+            <Trans>Elige el plan que te lleva a la certificación</Trans>
           </h1>
           <p className="text-ink-soft max-w-lg mx-auto">
-            Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado.
+            <Trans>Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado.</Trans>
           </p>
         </motion.div>
 
@@ -85,20 +107,20 @@ export function PricingPage() {
           className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto"
         >
           <PlanCard
-            title="Free"
+            title={t`Free`}
             price="$0"
-            badge="Gratis"
-            features={FREE_FEATURES}
-            cta="Tu plan actual"
+            badge={t`Gratis`}
+            features={FREE_FEATURES_I18N}
+            cta={t`Tu plan actual`}
             onClick={() => {}}
           />
           <PlanCard
-            title="Pro"
+            title={t`Pro`}
             price="$15"
-            period="mes"
-            badge={<><Star size={10} /> Recomendado</>}
-            features={PRO_FEATURES}
-            cta="Actualizar a Pro →"
+            period={t`mes`}
+            badge={<><Star size={10} /> <Trans>Recomendado</Trans></>}
+            features={PRO_FEATURES_I18N}
+            cta={t`Actualizar a Pro →`}
             onClick={handleUpgrade}
             highlighted
           />

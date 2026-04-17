@@ -9,6 +9,8 @@ import { AppShell } from '../../../components/layout/AppShell'
 import { Card, CardBody, CardHeader } from '../../../components/ui/Card'
 import { Badge } from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
+import { Trans, useLingui } from '@lingui/react/macro'
+import { SEOHead } from '../../../components/SEOHead'
 
 function StatCard({ icon: Icon, label, value, color }) {
   return (
@@ -38,7 +40,7 @@ function AttemptRow({ attempt }) {
       </div>
       <div className="flex items-center gap-3 ml-4 shrink-0">
         <span className="text-sm font-semibold text-ink">{pct}%</span>
-        <Badge variant={passed ? 'success' : 'danger'}>{passed ? 'Aprobado' : 'No aprobado'}</Badge>
+        <Badge variant={passed ? 'success' : 'danger'}>{passed ? <Trans>Aprobado</Trans> : <Trans>No aprobado</Trans>}</Badge>
       </div>
     </div>
   )
@@ -47,6 +49,7 @@ function AttemptRow({ attempt }) {
 export function DashboardPage() {
   const { user, displayName, isPro, plan } = useAuthStore()
   const navigate = useNavigate()
+  const { t } = useLingui()
   const [attempts, setAttempts] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -70,19 +73,20 @@ export function DashboardPage() {
 
   return (
     <AppShell>
+      <SEOHead title={t`Dashboard`} description={t`Tu panel con historial de exámenes y progreso.`} path="/dashboard" noindex />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
         {/* Welcome */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-2xl font-bold text-ink">
-            Hola, {displayName} 👋
+            <Trans>Hola, {displayName} 👋</Trans>
           </h1>
           <p className="text-ink-soft mt-1">
-            Plan: <span className="font-medium text-ink-soft capitalize">{plan}</span>
+            <Trans>Plan:</Trans> <span className="font-medium text-ink-soft capitalize">{plan}</span>
             {!isPro && (
               <>
                 {' · '}
                 <Link to="/pricing" className="text-brand-600 hover:text-brand-700">
-                  Actualizar a Pro
+                  <Trans>Actualizar a Pro</Trans>
                 </Link>
               </>
             )}
@@ -94,9 +98,9 @@ export function DashboardPage() {
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="grid grid-cols-2 sm:grid-cols-3 gap-4"
         >
-          <StatCard icon={BookOpen} label="Exámenes tomados" value={total} color="bg-brand-500" />
-          <StatCard icon={Trophy}   label="Aprobados"        value={passed} color="bg-success-500" />
-          <StatCard icon={Target}   label="Promedio"         value={`${avgScore}%`} color="bg-warning-500" />
+          <StatCard icon={BookOpen} label={t`Exámenes tomados`} value={total} color="bg-brand-500" />
+          <StatCard icon={Trophy}   label={t`Aprobados`}        value={passed} color="bg-success-500" />
+          <StatCard icon={Target}   label={t`Promedio`}         value={`${avgScore}%`} color="bg-warning-500" />
         </motion.div>
 
         {/* Actions */}
@@ -106,15 +110,15 @@ export function DashboardPage() {
         >
           <Button onClick={() => navigate('/')} variant="primary">
             <ChevronRight size={16} />
-            Tomar examen
+            <Trans>Tomar examen</Trans>
           </Button>
           <Button onClick={() => navigate('/explore')} variant="secondary">
             <BookOpen size={16} />
-            Explorar sets
+            <Trans>Explorar sets</Trans>
           </Button>
           <Button onClick={() => navigate('/create-exam')} variant="ghost">
             <Plus size={16} />
-            Crear set
+            <Trans>Crear set</Trans>
           </Button>
         </motion.div>
 
@@ -124,16 +128,16 @@ export function DashboardPage() {
             <CardHeader>
               <h2 className="text-base font-semibold text-ink flex items-center gap-2">
                 <Clock size={16} className="text-brand-600" />
-                Historial de intentos
+                <Trans>Historial de intentos</Trans>
               </h2>
             </CardHeader>
             <CardBody>
               {loading ? (
-                <p className="text-sm text-ink-soft text-center py-4">Cargando…</p>
+                <p className="text-sm text-ink-soft text-center py-4"><Trans>Cargando…</Trans></p>
               ) : attempts.length === 0 ? (
                 <p className="text-sm text-ink-soft text-center py-4">
-                  Aún no has tomado ningún examen.{' '}
-                  <Link to="/" className="text-brand-600 hover:text-brand-700">¡Empieza ahora!</Link>
+                  <Trans>Aún no has tomado ningún examen.</Trans>{' '}
+                  <Link to="/" className="text-brand-600 hover:text-brand-700"><Trans>¡Empieza ahora!</Trans></Link>
                 </p>
               ) : (
                 attempts.map((a) => <AttemptRow key={a.id} attempt={a} />)

@@ -5,16 +5,19 @@ import confetti from 'canvas-confetti';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../core/firebase/firebase';
 import { useAuthStore } from '../../core/store/useAuthStore';
+import { Trans, useLingui, Plural } from '@lingui/react/macro';
+import { SEOHead } from '../../components/SEOHead';
 
 /** Modal that shows every question the user got wrong or skipped */
 function WrongAnswersModal({ wrongItems, onClose }) {
+  const { t } = useLingui();
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start justify-center z-50 px-4 py-8 overflow-y-auto">
       <div className="glass-bright rounded-2xl shadow-card w-full max-w-2xl border border-surface-border">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border sticky top-0 bg-surface-soft/90 backdrop-blur-md rounded-t-2xl z-10">
           <h2 className="font-display font-bold text-ink text-base">
-            Respuestas incorrectas / sin responder ({wrongItems.length})
+            <Trans>Respuestas incorrectas / sin responder ({wrongItems.length})</Trans>
           </h2>
           <button onClick={onClose} className="text-ink-soft hover:text-ink text-lg leading-none font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-muted transition-colors">
             ✕
@@ -30,7 +33,7 @@ function WrongAnswersModal({ wrongItems, onClose }) {
                 <div className="flex items-start gap-2 mb-3">
                   <span className="shrink-0 text-xs font-bold bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded-full mt-0.5">#{idx + 1}</span>
                   {unanswered && (
-                    <span className="shrink-0 text-xs font-bold bg-surface-muted text-ink-soft px-2 py-0.5 rounded-full mt-0.5">Sin responder</span>
+                    <span className="shrink-0 text-xs font-bold bg-surface-muted text-ink-soft px-2 py-0.5 rounded-full mt-0.5"><Trans>Sin responder</Trans></span>
                   )}
                   <p className="text-sm font-semibold text-ink leading-relaxed">{question.question}</p>
                 </div>
@@ -53,8 +56,8 @@ function WrongAnswersModal({ wrongItems, onClose }) {
                           <div key={key} className={cls}>
                             <span className="font-bold shrink-0">{key}.</span>
                             <span>{value}</span>
-                            {isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-success-400">✓ Correcta</span>}
-                            {wasSelected && !isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-danger-400">✗ Tu respuesta</span>}
+                            {isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-success-400"><Trans>✓ Correcta</Trans></span>}
+                            {wasSelected && !isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-danger-400"><Trans>✗ Tu respuesta</Trans></span>}
                           </div>
                         );
                       })}
@@ -73,7 +76,7 @@ function WrongAnswersModal({ wrongItems, onClose }) {
                           <span className="font-medium text-ink shrink-0">{pair.term}</span>
                           <span className="text-slate-600">→</span>
                           <span className={isCorrect ? 'text-success-300' : 'text-danger-300 line-through'}>
-                            {chosen ? question.matches[chosen] : '— sin responder —'}
+                            {chosen ? question.matches[chosen] : t`— sin responder —`}
                           </span>
                           {!isCorrect && (
                             <span className="ml-auto shrink-0 text-xs text-success-400 font-semibold">✓ {question.matches[pair.correctMatch]}</span>
@@ -87,7 +90,7 @@ function WrongAnswersModal({ wrongItems, onClose }) {
                 {/* Options — ordering */}
                 {question.type === 'ordering' && (
                   <div className="flex flex-col gap-2 ml-4">
-                    <p className="text-xs text-ink-soft mb-1">Orden correcto:</p>
+                    <p className="text-xs text-ink-soft mb-1"><Trans>Orden correcto:</Trans></p>
                     {question.correctOrder.map((item, i) => (
                       <div key={item} className="flex items-center gap-3 px-3 py-2 rounded-lg border text-sm bg-success-500/10 border-success-500/40 text-success-300">
                         <span className="font-bold shrink-0">{i + 1}.</span>
@@ -104,7 +107,7 @@ function WrongAnswersModal({ wrongItems, onClose }) {
         {/* Footer */}
         <div className="px-6 py-4 border-t border-surface-border flex justify-end">
           <button onClick={onClose} className="bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-2 rounded-xl transition-colors text-sm">
-            Cerrar
+            <Trans>Cerrar</Trans>
           </button>
         </div>
       </div>
@@ -116,6 +119,7 @@ export function ResultsPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { user } = useAuthStore();
+  const { t } = useLingui();
   const [showWrong, setShowWrong] = useState(false);
   const [displayScore, setDisplayScore] = useState(0);
   const savedRef = useRef(false);
@@ -221,6 +225,7 @@ export function ResultsPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden">
+      <SEOHead title={t`Resultados`} description={t`Resultados de tu examen de práctica.`} path="/results" noindex />
       {/* Background blobs */}
       <div className="pointer-events-none fixed inset-0">
         <div className={`absolute inset-0 opacity-10 ${passed ? 'bg-success-500' : 'bg-danger-500'} blur-3xl scale-150`} />
@@ -259,22 +264,22 @@ export function ResultsPage() {
         <h1 className={`text-xl font-display font-bold mb-1 ${
           isTimeOut ? 'text-warning-400' : passed ? 'text-success-400' : 'text-danger-400'
         }`}>
-          {isTimeOut ? '¡Tiempo Agotado!' : passed ? '¡Felicitaciones! Aprobaste' : 'No aprobaste esta vez'}
+          {isTimeOut ? <Trans>¡Tiempo Agotado!</Trans> : passed ? <Trans>¡Felicitaciones! Aprobaste</Trans> : <Trans>No aprobaste esta vez</Trans>}
         </h1>
         <p className="text-ink-soft text-sm mb-6">{certLabel}</p>
 
         {/* Stats */}
         <div className="bg-surface-card rounded-xl p-4 mb-6 space-y-3 text-left border border-surface-border">
           <div className="flex justify-between text-sm">
-            <span className="text-ink-soft">Respuestas correctas</span>
+            <span className="text-ink-soft"><Trans>Respuestas correctas</Trans></span>
             <span className="font-bold text-ink">{score} / {total}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-ink-soft">Porcentaje obtenido</span>
+            <span className="text-ink-soft"><Trans>Porcentaje obtenido</Trans></span>
             <span className={`font-bold text-lg ${passed ? 'text-success-400' : 'text-danger-400'}`}>{percentage}%</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-ink-soft">Umbral de aprobación</span>
+            <span className="text-ink-soft"><Trans>Umbral de aprobación</Trans></span>
             <span className="font-semibold text-ink-soft">{passPercent}%</span>
           </div>
         </div>
@@ -284,7 +289,7 @@ export function ResultsPage() {
           <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 text-left">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-display font-bold text-ink text-sm flex items-center gap-1.5">
-                <span>🎲</span>Apuesta · Calibración
+                <span>🎲</span><Trans>Apuesta · Calibración</Trans>
               </h3>
               <span className={`text-lg font-bold tabular-nums ${
                 wagerStats.points >= 0 ? 'text-success-500' : 'text-danger-500'
@@ -304,9 +309,9 @@ export function ResultsPage() {
             </p>
             <div className="space-y-1.5">
               {[
-                { level: 3, label: '⚡ Seguro · ×3', color: 'bg-rose-500' },
-                { level: 2, label: '✓ Creo · ×2',   color: 'bg-amber-500' },
-                { level: 1, label: '🤔 Dudo · ×1',  color: 'bg-brand-500' },
+                { level: 3, label: t`⚡ Seguro · ×3`, color: 'bg-rose-500' },
+                { level: 2, label: t`✓ Creo · ×2`,   color: 'bg-amber-500' },
+                { level: 1, label: t`🤔 Dudo · ×1`,  color: 'bg-brand-500' },
               ].map(({ level, label, color }) => {
                 const b = wagerStats.buckets[level];
                 const pct = b.total > 0 ? Math.round((b.correct / b.total) * 100) : 0;
@@ -342,20 +347,20 @@ export function ResultsPage() {
             onClick={() => navigate('/')}
             className="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl transition-all active:scale-95 w-full"
           >
-            Volver al inicio
+            <Trans>Volver al inicio</Trans>
           </button>
           <button
             onClick={() => navigate(-1)}
             className="border border-brand-500/50 text-brand-400 hover:bg-brand-500/15 font-semibold py-3 px-6 rounded-xl transition-all w-full"
           >
-            Reintentar mismo examen
+            <Trans>Reintentar mismo examen</Trans>
           </button>
           {wrongItems.length > 0 && (
             <button
               onClick={() => setShowWrong(true)}
               className="border border-danger-500/40 text-danger-400 hover:bg-danger-500/10 font-semibold py-3 px-6 rounded-xl transition-all w-full"
             >
-              📖 Ver {wrongItems.length} respuesta{wrongItems.length !== 1 ? 's' : ''} incorrecta{wrongItems.length !== 1 ? 's' : ''}
+              📖 <Plural value={wrongItems.length} one="Ver # respuesta incorrecta" other="Ver # respuestas incorrectas" />
             </button>
           )}
         </div>

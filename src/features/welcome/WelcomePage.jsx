@@ -7,6 +7,7 @@ import {
   LayoutDashboard, User, Zap, Sparkles, CheckCircle2,
   Shield, Target,
 } from 'lucide-react';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { useAuthStore } from '../../core/store/useAuthStore';
 import { useUserPlan } from '../plans/hooks/useUserPlan';
 import { PageSEO } from '../../components/seo/PageSEO';
@@ -16,39 +17,39 @@ import Button from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 
 // â”€â”€â”€ Features list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const FEATURES = [
+const buildFeatures = (t) => [
   {
     icon: Target,
-    title: 'Simulación Real',
-    description: 'Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar.',
+    title: t`Simulación Real`,
+    description: t`Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar.`,
     color: 'bg-brand-50 text-brand-600',
   },
   {
     icon: BookOpen,
-    title: 'Banco Oficial',
-    description: 'Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad.',
+    title: t`Banco Oficial`,
+    description: t`Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad.`,
     color: 'bg-sky-50 text-sky-600',
   },
   {
     icon: BarChart2,
-    title: 'Progreso Inteligente',
-    description: 'Registra cada intento, identifica tus debilidades y construye confianza antes del día del examen.',
+    title: t`Progreso Inteligente`,
+    description: t`Registra cada intento, identifica tus debilidades y construye confianza antes del día del examen.`,
     color: 'bg-amber-50 text-amber-600',
   },
 ];
 
 // â”€â”€â”€ Social proof numbers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const STATS = [
-  { value: '3',    label: 'Modos de práctica', emoji: '🎯' },
-  { value: 'Multi', label: 'Certificaciones',   emoji: '🏅' },
-  { value: 'Pro',  label: 'Sin límites',         emoji: '🚀' },
+const buildStats = (t) => [
+  { value: '3',    label: t`Modos de práctica`, emoji: '🎯' },
+  { value: 'Multi', label: t`Certificaciones`,   emoji: '🏅' },
+  { value: 'Pro',  label: t`Sin límites`,         emoji: '🚀' },
 ];
 
 // â”€â”€â”€ Trust items â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const TRUST = [
-  'Acceso inmediato',
-  'Progreso guardado',
-  'Plan gratuito disponible',
+const buildTrust = (t) => [
+  t`Acceso inmediato`,
+  t`Progreso guardado`,
+  t`Plan gratuito disponible`,
 ];
 
 // â”€â”€â”€ Animation variants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -71,13 +72,13 @@ function FloatingShape({ className, delay = 0, duration = 7 }) {
 
 // â”€â”€â”€ Exam launch card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ─── Practice modes ──────────────────────────────────────────────────────────
-const MODES = [
+const buildModes = (t) => [
   {
     id: 'exam',
     emoji: '🎯',
-    title: 'Modo Examen',
-    description: 'Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen.',
-    tag: 'Más usado',
+    title: t`Modo Examen`,
+    description: t`Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen.`,
+    tag: t`Más usado`,
     tagColor: 'bg-brand-100 text-brand-700 border-brand-200',
     border: 'border-brand-200',
     bg: 'bg-brand-50',
@@ -88,9 +89,9 @@ const MODES = [
   {
     id: 'study',
     emoji: '📖',
-    title: 'Modo Estudio',
-    description: 'Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta.',
-    tag: 'Para aprender',
+    title: t`Modo Estudio`,
+    description: t`Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta.`,
+    tag: t`Para aprender`,
     tagColor: 'bg-sky-100 text-sky-700 border-sky-200',
     border: 'border-sky-200',
     bg: 'bg-sky-50',
@@ -101,9 +102,9 @@ const MODES = [
   {
     id: 'flashcards',
     emoji: '🃏',
-    title: 'Flashcards',
-    description: 'Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar.',
-    tag: 'Próximamente',
+    title: t`Flashcards`,
+    description: t`Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar.`,
+    tag: t`Próximamente`,
     tagColor: 'bg-amber-100 text-amber-700 border-amber-200',
     border: 'border-amber-200',
     bg: 'bg-amber-50',
@@ -114,9 +115,9 @@ const MODES = [
   {
     id: 'quick',
     emoji: '⚡',
-    title: 'Repaso Rápido',
-    description: '10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos.',
-    tag: 'Próximamente',
+    title: t`Repaso Rápido`,
+    description: t`10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos.`,
+    tag: t`Próximamente`,
     tagColor: 'bg-violet-100 text-violet-700 border-violet-200',
     border: 'border-violet-200',
     bg: 'bg-violet-50',
@@ -157,12 +158,12 @@ function ModeCard({ mode, onLaunch }) {
         <div className={`flex items-center justify-center gap-2 rounded-2xl
                          ${mode.btn} text-white text-sm font-black py-2.5 px-4
                          transition-colors duration-200`}>
-          Probar demo <ArrowRight size={13} />
+          <Trans>Probar demo</Trans> <ArrowRight size={13} />
         </div>
       ) : (
         <div className="flex items-center justify-center rounded-2xl
                         bg-surface-muted text-ink-muted text-sm font-bold py-2.5 px-4 border border-surface-border">
-          Próximamente
+          <Trans>Próximamente</Trans>
         </div>
       )}
     </motion.div>
@@ -170,11 +171,17 @@ function ModeCard({ mode, onLaunch }) {
 }
 
 export function WelcomePage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const { remaining, isPro, isLoading: planLoading } = useUserPlan();
   const [_showGate, _setShowGate]   = useState(false);
   const [mascotMood, setMascotMood] = useState('default');
+
+  const FEATURES = buildFeatures(t);
+  const STATS = buildStats(t);
+  const TRUST = buildTrust(t);
+  const MODES = buildModes(t);
 
   function launchMode(modeId) {
     navigate(`/exam?cert=demo&mode=${modeId}`);
@@ -183,8 +190,8 @@ export function WelcomePage() {
   return (
     <ParallaxProvider>
       <PageSEO
-        title="Simuladores de Certificación Profesional"
-        description="Prepárate para tus certificaciones con simuladores reales, banco de preguntas oficial y seguimiento de progreso. Gratis para empezar."
+        title={t`Simuladores de Certificación Profesional`}
+        description={t`Prepárate para tus certificaciones con simuladores reales, banco de preguntas oficial y seguimiento de progreso. Gratis para empezar.`}
         canonical="/"
       />
 
@@ -194,7 +201,7 @@ export function WelcomePage() {
         <header className="sticky top-0 z-20 border-b border-surface-border bg-white/90 backdrop-blur-xl">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 group" aria-label="CertZen inicio">
+            <Link to="/" className="flex items-center gap-2 group" aria-label={t`CertZen inicio`}>
               <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center shadow-brand">
                 <span className="text-white font-black text-xs leading-none">CZ</span>
               </div>
@@ -215,24 +222,24 @@ export function WelcomePage() {
                   <Link to="/dashboard">
                     <Button variant="ghost" size="sm">
                       <LayoutDashboard size={14} />
-                      <span className="hidden sm:inline">Dashboard</span>
+                      <span className="hidden sm:inline"><Trans>Dashboard</Trans></span>
                     </Button>
                   </Link>
                   <Link to="/profile">
                     <Button variant="ghost" size="sm">
                       <User size={14} />
-                      <span className="hidden sm:inline">Perfil</span>
+                      <span className="hidden sm:inline"><Trans>Perfil</Trans></span>
                     </Button>
                   </Link>
                 </>
               ) : (
                 <>
                   <Link to="/login">
-                    <Button variant="ghost" size="sm">Ingresar</Button>
+                    <Button variant="ghost" size="sm"><Trans>Ingresar</Trans></Button>
                   </Link>
                   <Link to="/register">
                     <Button size="sm">
-                      Registro gratis
+                      <Trans>Registro gratis</Trans>
                       <ArrowRight size={13} />
                     </Button>
                   </Link>
@@ -286,7 +293,7 @@ export function WelcomePage() {
                     <span className="inline-flex items-center gap-2 rounded-full border border-brand-200
                                      bg-brand-50 px-4 py-1.5 text-xs font-black text-brand-600 tracking-wider uppercase">
                       <Sparkles size={10} />
-                      Simulador de Certificaciones
+                      <Trans>Simulador de Certificaciones</Trans>
                     </span>
                   </motion.div>
 
@@ -298,7 +305,7 @@ export function WelcomePage() {
                   >
                     Aprueba con{' '}
                     <span className="relative inline-block">
-                      <span className="text-gradient-brand">confianza</span>
+                      <span className="text-gradient-brand"><Trans>confianza</Trans></span>
                       <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none" aria-hidden="true">
                         <path d="M2 8 C30 2, 60 12, 90 6 C120 0, 150 10, 198 5"
                               stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.65"/>
@@ -312,8 +319,7 @@ export function WelcomePage() {
                     transition={{ duration: 0.5, delay: 0.16 }}
                     className="text-ink-soft text-base sm:text-lg leading-relaxed mb-8 max-w-md font-semibold"
                   >
-                    Simuladores con el formato similar del examen, banco de preguntas
-                    y seguimiento de progreso. Gratis para empezar hoy.
+                    <Trans>Simuladores con el formato similar del examen, banco de preguntas y seguimiento de progreso. Gratis para empezar hoy.</Trans>
                   </motion.p>
 
                   <motion.div
@@ -328,7 +334,7 @@ export function WelcomePage() {
                                    active:scale-[0.97] text-white font-black text-base px-8 py-3.5
                                    shadow-brand-lg transition-all duration-200"
                       >
-                        Empezar gratis
+                        <Trans>Empezar gratis</Trans>
                         <ArrowRight size={16} />
                       </Link>
                     )}
@@ -339,7 +345,7 @@ export function WelcomePage() {
                                  text-ink font-bold text-base px-7 py-3.5
                                  transition-all duration-200 shadow-card"
                     >
-                      Ver simuladores
+                      <Trans>Ver simuladores</Trans>
                     </a>
                     {user && !isPro && !planLoading && remaining <= 1 && (
                       <Link
@@ -348,7 +354,7 @@ export function WelcomePage() {
                                    bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold
                                    text-base px-7 py-3.5 transition-all duration-200"
                       >
-                        <Zap size={14} /> Actualizar a Pro
+                        <Zap size={14} /> <Trans>Actualizar a Pro</Trans>
                       </Link>
                     )}
                   </motion.div>
@@ -420,11 +426,11 @@ export function WelcomePage() {
                 className="text-center mb-14"
               >
                 <h2 className="font-display font-black text-3xl sm:text-4xl text-ink mb-3 tracking-tight">
-                  Todo lo que necesitas{' '}
-                  <span className="text-gradient-brand">para aprobar</span>
+                  <Trans>Todo lo que necesitas</Trans>{' '}
+                  <span className="text-gradient-brand"><Trans>para aprobar</Trans></span>
                 </h2>
                 <p className="text-ink-soft text-sm sm:text-base max-w-lg mx-auto font-semibold">
-                  Sin distracciones. Solo las herramientas que te acercan a tu certificación.
+                  <Trans>Sin distracciones. Solo las herramientas que te acercan a tu certificación.</Trans>
                 </p>
               </motion.div>
             </Parallax>
@@ -480,11 +486,11 @@ export function WelcomePage() {
                 className="mb-10"
               >
                 <h2 className="font-display font-black text-3xl sm:text-4xl text-ink tracking-tight mb-2">
-                  Elige tu{' '}
-                  <span className="text-gradient-brand">modo de práctica</span>
+                  <Trans>Elige tu</Trans>{' '}
+                  <span className="text-gradient-brand"><Trans>modo de práctica</Trans></span>
                 </h2>
                 <p className="text-ink-soft text-sm sm:text-base font-semibold">
-                  Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos.
+                  <Trans>Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos.</Trans>
                 </p>
               </motion.div>
 
@@ -504,9 +510,9 @@ export function WelcomePage() {
               <div className="flex items-center justify-between text-xs text-ink-soft mt-10 pt-8
                               border-t border-surface-border">
                 <Link to="/explore" className="flex items-center gap-1.5 hover:text-ink transition-colors font-bold">
-                  <BookOpen size={12} /> Explorar sets de la comunidad
+                  <BookOpen size={12} /> <Trans>Explorar sets de la comunidad</Trans>
                 </Link>
-                <a href="/admin/login" className="hover:text-ink-soft transition-colors">Administrador</a>
+                <a href="/admin/login" className="hover:text-ink-soft transition-colors"><Trans>Administrador</Trans></a>
               </div>
             </div>
           </section>
@@ -537,14 +543,13 @@ export function WelcomePage() {
                     </div>
                     <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-100 text-brand-700
                                     text-xs font-black px-4 py-1 mb-4">
-                      <Shield size={11} /> Freemium · Plan gratuito disponible
+                      <Shield size={11} /> <Trans>Freemium · Plan gratuito disponible</Trans>
                     </div>
                     <h2 className="font-display font-black text-3xl sm:text-4xl text-ink mb-3">
-                      Empieza gratis hoy
+                      <Trans>Empieza gratis hoy</Trans>
                     </h2>
                     <p className="text-ink-soft text-sm sm:text-base mb-8 max-w-md mx-auto leading-relaxed font-semibold">
-                      Crea tu cuenta en segundos y practica con simuladores reales.
-                      Plan gratuito para siempre. Actualiza cuando lo necesites.
+                      <Trans>Crea tu cuenta en segundos y practica con simuladores reales. Plan gratuito para siempre. Actualiza cuando lo necesites.</Trans>
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                       <Link
@@ -553,7 +558,7 @@ export function WelcomePage() {
                                    active:scale-[0.97] text-white font-black text-base px-8 py-3.5
                                    shadow-brand-lg transition-all duration-200 w-full sm:w-auto justify-center"
                       >
-                        Crear cuenta gratis
+                        <Trans>Crear cuenta gratis</Trans>
                         <ArrowRight size={16} />
                       </Link>
                       <Link
@@ -563,7 +568,7 @@ export function WelcomePage() {
                                    text-base px-7 py-3.5 transition-all duration-200
                                    w-full sm:w-auto justify-center"
                       >
-                        Ya tengo cuenta
+                        <Trans>Ya tengo cuenta</Trans>
                       </Link>
                     </div>
                   </div>

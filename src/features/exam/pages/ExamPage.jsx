@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
+import { Trans, useLingui, Plural } from '@lingui/react/macro';
 import { db } from '../../../core/firebase/firebase';
 import { CERTIFICATIONS } from '../../../core/constants/certifications';
 import { useExam } from '../hooks/useExam';
@@ -11,17 +12,17 @@ import { X, FlagOff } from 'lucide-react';
 /** Wager mode — 3-button confidence multiplier selector (×1 Dudo / ×2 Creo / ×3 Seguro). */
 function ConfidencePicker({ value, onPick, disabled }) {
   const options = [
-    { level: 1, label: 'Dudo',  emoji: '🤔', hint: '×1' },
-    { level: 2, label: 'Creo',  emoji: '✓',  hint: '×2' },
-    { level: 3, label: 'Seguro', emoji: '⚡', hint: '×3' },
+    { level: 1, label: /* i18n */ <Trans>Dudo</Trans>,  emoji: '🤔', hint: '×1' },
+    { level: 2, label: /* i18n */ <Trans>Creo</Trans>,  emoji: '✓',  hint: '×2' },
+    { level: 3, label: /* i18n */ <Trans>Seguro</Trans>, emoji: '⚡', hint: '×3' },
   ];
   return (
     <div className="px-6 pb-4">
       <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 dark:bg-rose-500/10 p-3">
         <p className="text-xs font-semibold text-ink-soft mb-2 flex items-center gap-1.5">
           <span>🎲</span>
-          <span>¿Cuánto apuestas por tu respuesta?</span>
-          {!value && <span className="ml-auto text-[10px] uppercase tracking-wider text-rose-600 font-bold">Requerido</span>}
+          <span><Trans>¿Cuánto apuestas por tu respuesta?</Trans></span>
+          {!value && <span className="ml-auto text-[10px] uppercase tracking-wider text-rose-600 font-bold"><Trans>Requerido</Trans></span>}
         </p>
         <div className="grid grid-cols-3 gap-2">
           {options.map((opt) => {
@@ -53,6 +54,7 @@ function ConfidencePicker({ value, onPick, disabled }) {
 
 /** Wrapping chips showing each question's status */
 function QuestionNavigator({ total, current, answers, flags, revealed, displayQuestions, mode, onNavigate }) {
+  const { t } = useLingui();
   const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
   return (
       <div className="flex flex-wrap gap-1.5 px-4 py-3 bg-surface-soft border-b border-surface-border">
@@ -94,7 +96,7 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
         }
 
         return (
-          <button key={i} className={cls} onClick={() => onNavigate(i)} title={`Pregunta ${i + 1}`}>
+          <button key={i} className={cls} onClick={() => onNavigate(i)} title={t`Pregunta ${i + 1}`}>
             {i + 1}
           </button>
         );
@@ -109,20 +111,20 @@ function NavLegend({ mode }) {
   if (isStudy) {
     return (
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 bg-surface-soft/50 border-b border-surface-border text-xs text-ink-soft">
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-brand-500" /> Actual</span>
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-success-500" /> Correcta</span>
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-danger-500" /> Incorrecta</span>
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-warning-500" /> Sin confirmar</span>
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-surface-muted border border-surface-border" /> Sin responder</span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-brand-500" /> <Trans>Actual</Trans></span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-success-500" /> <Trans>Correcta</Trans></span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-danger-500" /> <Trans>Incorrecta</Trans></span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-warning-500" /> <Trans>Sin confirmar</Trans></span>
+        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-surface-muted border border-surface-border" /> <Trans>Sin responder</Trans></span>
       </div>
     );
   }
   return (
     <div className="flex items-center gap-4 px-4 py-1.5 bg-surface-soft/50 border-b border-surface-border text-xs text-ink-soft">
-      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-brand-500" /> Actual</span>
-      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-success-500" /> Respondida</span>
-      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-danger-500" /> Con duda</span>
-      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-surface-muted border border-surface-border" /> Sin responder</span>
+      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-brand-500" /> <Trans>Actual</Trans></span>
+      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-success-500" /> <Trans>Respondida</Trans></span>
+      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-danger-500" /> <Trans>Con duda</Trans></span>
+      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-surface-muted border border-surface-border" /> <Trans>Sin responder</Trans></span>
     </div>
   );
 }
@@ -135,12 +137,12 @@ function ExitGuardModal({ mode, onExit, onFinish, onCancel }) {
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
       <div className="glass-bright rounded-2xl shadow-card w-full max-w-sm p-6 border border-surface-border">
         <h2 className="font-display font-bold text-ink text-base mb-2">
-          {isExam ? '⚠️ ¿Salir del examen?' : '¿Salir de la sesión?'}
+          {isExam ? <Trans>⚠️ ¿Salir del examen?</Trans> : <Trans>¿Salir de la sesión?</Trans>}
         </h2>
         <p className="text-sm text-ink-soft mb-5">
           {isExam
-            ? 'Si sales, perderás todo el progreso de este examen. Las respuestas no se guardarán.'
-            : 'Tu progreso está guardado automáticamente. Podrás retomar desde donde lo dejaste cuando vuelvas.'}
+            ? <Trans>Si sales, perderás todo el progreso de este examen. Las respuestas no se guardarán.</Trans>
+            : <Trans>Tu progreso está guardado automáticamente. Podrás retomar desde donde lo dejaste cuando vuelvas.</Trans>}
         </p>
         <div className="flex flex-col gap-2">
           {isStudyLike && (
@@ -148,20 +150,20 @@ function ExitGuardModal({ mode, onExit, onFinish, onCancel }) {
               onClick={onFinish}
               className="w-full px-4 py-2.5 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-colors"
             >
-              Finalizar y ver resultados ✓
+              <Trans>Finalizar y ver resultados ✓</Trans>
             </button>
           )}
           <button
             onClick={onExit}
             className="w-full px-4 py-2.5 text-sm border border-surface-border rounded-xl text-ink-soft hover:bg-surface-muted transition-colors"
           >
-            {isExam ? 'Salir sin guardar' : 'Guardar y salir'}
+            {isExam ? <Trans>Salir sin guardar</Trans> : <Trans>Guardar y salir</Trans>}
           </button>
           <button
             onClick={onCancel}
             className="w-full px-4 py-2.5 text-sm text-brand-600 dark:text-brand-400 font-medium hover:underline transition-colors"
           >
-            Continuar la sesión
+            <Trans>Continuar la sesión</Trans>
           </button>
         </div>
       </div>
@@ -176,15 +178,17 @@ function SubmitGuardModal({ unanswered, onNavigate, onConfirm, onCancel }) {
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
       <div className="glass-bright rounded-2xl shadow-card w-full max-w-md p-6 border border-surface-border">
         <h2 className="font-display font-bold text-ink text-base mb-2">
-          {hasUnanswered ? '⚠️ Preguntas sin responder' : '¿Enviar el examen?'}
+          {hasUnanswered ? <Trans>⚠️ Preguntas sin responder</Trans> : <Trans>¿Enviar el examen?</Trans>}
         </h2>
 
         {hasUnanswered ? (
           <>
             <p className="text-sm text-ink-soft mb-4">
-              {unanswered.length === 1
-                ? 'La siguiente pregunta no fue respondida. Puedes ir a responderla o enviar de todas formas.'
-                : `Las siguientes ${unanswered.length} preguntas no fueron respondidas. Puedes ir a responderlas o enviar de todas formas.`}
+              <Plural
+                value={unanswered.length}
+                one="La siguiente pregunta no fue respondida. Puedes ir a responderla o enviar de todas formas."
+                other="Las siguientes # preguntas no fueron respondidas. Puedes ir a responderlas o enviar de todas formas."
+              />
             </p>
             <div className="flex flex-wrap gap-2 mb-5">
               {unanswered.map((idx) => (
@@ -200,7 +204,7 @@ function SubmitGuardModal({ unanswered, onNavigate, onConfirm, onCancel }) {
           </>
         ) : (
           <p className="text-sm text-ink-soft mb-5">
-            Has respondido todas las preguntas. ¿Deseas enviar el examen ahora?
+            <Trans>Has respondido todas las preguntas. ¿Deseas enviar el examen ahora?</Trans>
           </p>
         )}
 
@@ -209,13 +213,13 @@ function SubmitGuardModal({ unanswered, onNavigate, onConfirm, onCancel }) {
             onClick={onCancel}
             className="px-4 py-2 text-sm border border-surface-border rounded-xl text-ink-soft hover:bg-surface-muted transition-colors"
           >
-            Cancelar
+            <Trans>Cancelar</Trans>
           </button>
           <button
             onClick={onConfirm}
             className="px-4 py-2 text-sm bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-colors"
           >
-            {hasUnanswered ? 'Enviar de todas formas' : 'Enviar examen'}
+            {hasUnanswered ? <Trans>Enviar de todas formas</Trans> : <Trans>Enviar examen</Trans>}
           </button>
         </div>
       </div>
@@ -224,6 +228,7 @@ function SubmitGuardModal({ unanswered, onNavigate, onConfirm, onCancel }) {
 }
 
 export function ExamPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const certId = searchParams.get('cert');
@@ -314,7 +319,7 @@ export function ExamPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 rounded-full border-2 border-brand-500/30 border-t-brand-500 animate-spin" />
-          <p className="text-ink-soft text-sm">Cargando preguntas...</p>
+          <p className="text-ink-soft text-sm"><Trans>Cargando preguntas...</Trans></p>
         </div>
       </div>
     );
@@ -325,7 +330,7 @@ export function ExamPage() {
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <p className="text-danger-500 font-semibold">{error}</p>
         <button onClick={() => navigate('/')} className="bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 px-6 rounded-xl transition-colors">
-          Volver al inicio
+          <Trans>Volver al inicio</Trans>
         </button>
       </div>
     );
@@ -348,22 +353,22 @@ export function ExamPage() {
               type="button"
               onClick={() => setShowExitGuard(true)}
               className="w-7 h-7 flex items-center justify-center rounded-lg text-ink-muted hover:text-ink hover:bg-surface-muted transition-colors"
-              title="Salir"
-              aria-label="Salir de la sesión"
+              title={t`Salir`}
+              aria-label={t`Salir de la sesión`}
             >
               <X size={15} />
             </button>
             <h1 className="font-display font-bold text-ink text-sm">{certification.labelEs}</h1>
             {mode === 'study' ? (
-              <span className="text-xs bg-success-500/20 text-success-500 font-semibold px-2 py-0.5 rounded-full">📖 Estudio</span>
+              <span className="text-xs bg-success-500/20 text-success-500 font-semibold px-2 py-0.5 rounded-full">📖 <Trans>Estudio</Trans></span>
             ) : mode === 'weak' ? (
-              <span className="text-xs bg-violet-500/20 text-violet-500 font-semibold px-2 py-0.5 rounded-full">🎯 Zona Débil</span>
+              <span className="text-xs bg-violet-500/20 text-violet-500 font-semibold px-2 py-0.5 rounded-full">🎯 <Trans>Zona Débil</Trans></span>
             ) : mode === 'srs' ? (
-              <span className="text-xs bg-amber-500/20 text-amber-500 font-semibold px-2 py-0.5 rounded-full">🧠 Repaso</span>
+              <span className="text-xs bg-amber-500/20 text-amber-500 font-semibold px-2 py-0.5 rounded-full">🧠 <Trans>Repaso</Trans></span>
             ) : mode === 'wager' ? (
-              <span className="text-xs bg-rose-500/20 text-rose-600 font-semibold px-2 py-0.5 rounded-full">🎲 Apuesta</span>
+              <span className="text-xs bg-rose-500/20 text-rose-600 font-semibold px-2 py-0.5 rounded-full">🎲 <Trans>Apuesta</Trans></span>
             ) : (
-              <span className="text-xs bg-brand-500/20 text-brand-400 font-semibold px-2 py-0.5 rounded-full">🎯 Examen</span>
+              <span className="text-xs bg-brand-500/20 text-brand-400 font-semibold px-2 py-0.5 rounded-full">🎯 <Trans>Examen</Trans></span>
             )}
           </div>
           <div className="flex items-center gap-3">
@@ -376,9 +381,9 @@ export function ExamPage() {
                 type="button"
                 onClick={submitExam}
                 className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-success-500/40 text-success-600 dark:text-success-400 hover:bg-success-500/10 transition-colors"
-                title="Finalizar sesión y ver resultados"
+                title={t`Finalizar sesión y ver resultados`}
               >
-                Finalizar ✓
+                <Trans>Finalizar ✓</Trans>
               </button>
             )}
           </div>
@@ -439,7 +444,7 @@ export function ExamPage() {
             disabled={current === 0}
             className="px-4 py-2 text-sm border border-surface-border rounded-xl text-ink-soft hover:bg-surface-muted hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
-            ← Anterior
+            <Trans>← Anterior</Trans>
           </button>
 
           {/* Study / wager mode: confirm button */}
@@ -449,14 +454,14 @@ export function ExamPage() {
               <button
                 onClick={() => !needsConfidence && confirmAnswer(current)}
                 disabled={needsConfidence}
-                title={needsConfidence ? 'Elige tu nivel de confianza antes de confirmar' : undefined}
+                title={needsConfidence ? t`Elige tu nivel de confianza antes de confirmar` : undefined}
                 className={`px-5 py-2 text-sm text-white font-bold rounded-xl transition-all active:scale-95 ${
                   needsConfidence
                     ? 'bg-success-500/40 cursor-not-allowed'
                     : 'bg-success-500 hover:bg-success-600'
                 }`}
               >
-                Confirmar ✓
+                <Trans>Confirmar ✓</Trans>
               </button>
             );
           })()}
@@ -466,21 +471,21 @@ export function ExamPage() {
               onClick={() => navigateTo(current + 1)}
               className="px-5 py-2 text-sm bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-all active:scale-95"
             >
-              Siguiente →
+              <Trans>Siguiente →</Trans>
             </button>
           ) : (mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager') ? (
             <button
               onClick={submitExam}
               className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
             >
-              Ver resultados ✓
+              <Trans>Ver resultados ✓</Trans>
             </button>
           ) : (
             <button
               onClick={() => setShowSubmitGuard(true)}
               className="px-5 py-2 text-sm bg-success-500 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
             >
-              Finalizar examen ✓
+              <Trans>Finalizar examen ✓</Trans>
             </button>
           )}
         </footer>

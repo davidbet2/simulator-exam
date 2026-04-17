@@ -8,6 +8,7 @@ import { ArrowLeft, Folder, Pencil, Check, X, Trash2, Plus } from 'lucide-react'
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { useTranslation } from '../../../core/i18n';
+import { Trans, useLingui, Plural } from '@lingui/react/macro';
 import { AppShell } from '../../../components/layout/AppShell';
 import { Card, CardBody } from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
@@ -18,6 +19,7 @@ export function FolderPage() {
   const { folderId } = useParams();
   const { user } = useAuthStore();
   const { t } = useTranslation();
+  const { t: tMacro } = useLingui();
   const navigate = useNavigate();
   const { renameFolder, removeFolder, removeSlugFromFolder } = useFolders();
 
@@ -58,7 +60,7 @@ export function FolderPage() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('¿Eliminar esta carpeta? Los sets no se eliminarán.')) return;
+    if (!confirm(tMacro`¿Eliminar esta carpeta? Los sets no se eliminarán.`)) return;
     await removeFolder(folderId);
     navigate('/home');
   };
@@ -70,7 +72,7 @@ export function FolderPage() {
   return (
     <AppShell>
       <Helmet>
-        <title>{folder?.name ?? 'Carpeta'} — CertZen</title>
+        <title>{folder?.name ?? tMacro`Carpeta`} — CertZen</title>
       </Helmet>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         <Link to="/home" className="text-sm text-ink-soft hover:text-ink flex items-center gap-1.5">
@@ -81,7 +83,7 @@ export function FolderPage() {
           <div className="h-20 rounded-xl bg-surface-soft animate-pulse" />
         ) : !folder ? (
           <Card><CardBody className="p-8 text-center">
-            <p className="text-ink-soft">Carpeta no encontrada.</p>
+            <p className="text-ink-soft"><Trans>Carpeta no encontrada.</Trans></p>
           </CardBody></Card>
         ) : (
           <>
@@ -141,15 +143,15 @@ export function FolderPage() {
             </div>
 
             <p className="text-sm text-ink-muted">
-              {sets.length} {sets.length === 1 ? 'set' : 'sets'}
+              <Plural value={sets.length} one="# set" other="# sets" />
             </p>
 
             {sets.length === 0 ? (
               <Card><CardBody className="p-8 text-center space-y-3">
                 <Folder size={40} className="text-ink-muted mx-auto" />
-                <p className="text-sm text-ink-soft">Esta carpeta está vacía.</p>
+                <p className="text-sm text-ink-soft"><Trans>Esta carpeta está vacía.</Trans></p>
                 <Button onClick={() => navigate('/explore')}>
-                  <Plus size={14} />Agregar sets
+                  <Plus size={14} /><Trans>Agregar sets</Trans>
                 </Button>
               </CardBody></Card>
             ) : (
@@ -165,15 +167,15 @@ export function FolderPage() {
                           </span>
                           <div className="min-w-0">
                             <p className="text-sm font-semibold text-ink truncate">{s.title}</p>
-                            <p className="text-xs text-ink-muted">{s.questionCount ?? '?'} preguntas</p>
+                            <p className="text-xs text-ink-muted"><Trans>{s.questionCount ?? '?'} preguntas</Trans></p>
                           </div>
                         </Link>
                         <button
                           type="button"
                           onClick={() => handleRemoveSet(s.id)}
                           className="h-8 w-8 rounded-md text-ink-muted hover:text-danger-600 hover:bg-danger-500/10 flex items-center justify-center shrink-0"
-                          aria-label="Quitar de carpeta"
-                          title="Quitar de carpeta"
+                          aria-label={tMacro`Quitar de carpeta`}
+                          title={tMacro`Quitar de carpeta`}
                         >
                           <X size={14} />
                         </button>

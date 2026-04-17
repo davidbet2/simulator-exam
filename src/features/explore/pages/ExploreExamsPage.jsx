@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import { Search, BookOpen, Users, Plus, X } from 'lucide-react';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { DOMAINS, getDomain } from '../../../core/constants/domains';
@@ -29,6 +30,7 @@ function Highlight({ text, needle }) {
 }
 
 const ExamSetCard = memo(function ExamSetCard({ set, needle }) {
+  const { t } = useLingui();
   const domain = getDomain(set.domain);
   const ratingCount = set.ratingCount ?? 0;
   const ratingAvg = ratingCount > 0 ? (set.ratingSum ?? 0) / ratingCount : 0;
@@ -76,8 +78,8 @@ const ExamSetCard = memo(function ExamSetCard({ set, needle }) {
             readOnly
           />
           <div className="flex items-center gap-3 text-xs text-ink-muted">
-            <span className="flex items-center gap-1"><BookOpen size={11} />{set.questionCount ?? '?'} preguntas</span>
-            <span className="flex items-center gap-1"><Users size={11} />{set.attempts ?? 0} intentos</span>
+            <span className="flex items-center gap-1"><BookOpen size={11} />{set.questionCount ?? '?'} {t`preguntas`}</span>
+            <span className="flex items-center gap-1"><Users size={11} />{set.attempts ?? 0} {t`intentos`}</span>
           </div>
         </div>
       </CardBody>
@@ -85,7 +87,7 @@ const ExamSetCard = memo(function ExamSetCard({ set, needle }) {
   );
 });
 
-function DomainChip({ domain, active, onClick }) {
+function DomainChip({ domain, active, onClick, label }) {
   return (
     <button
       onClick={onClick}
@@ -96,12 +98,13 @@ function DomainChip({ domain, active, onClick }) {
       }`}
     >
       <span aria-hidden>{domain.icon}</span>
-      {domain.label}
+      {label ?? domain.label}
     </button>
   );
 }
 
 export function ExploreExamsPage() {
+  const { t } = useLingui();
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [sets, setSets] = useState([]);
@@ -239,11 +242,11 @@ export function ExploreExamsPage() {
   };
 
   const pageTitle = activeDomain
-    ? `Exámenes de ${getDomain(activeDomain).label} — CertZen`
-    : 'Explorar exámenes de certificación — CertZen';
+    ? t`Exámenes de ${getDomain(activeDomain).label} — CertZen`
+    : t`Explorar exámenes de certificación — CertZen`;
   const pageDescription = activeDomain
-    ? `Simulacros gratuitos de ${getDomain(activeDomain).label}. Preguntas basadas en exam guides públicos. Estudia y evalúate en línea.`
-    : 'Plataforma colaborativa de simuladores de examen: IT, Cloud, Salud, Inglés, Appian y más. Exploración gratis, regístrate para practicar.';
+    ? t`Simulacros gratuitos de ${getDomain(activeDomain).label}. Preguntas basadas en exam guides públicos. Estudia y evalúate en línea.`
+    : t`Plataforma colaborativa de simuladores de examen: IT, Cloud, Salud, Inglés, Appian y más. Exploración gratis, regístrate para practicar.`;
 
   return (
     <AppShell>
@@ -261,15 +264,15 @@ export function ExploreExamsPage() {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-ink">
-                {activeDomain ? `Exámenes de ${getDomain(activeDomain).label}` : 'Explorar exámenes'}
+                {activeDomain ? t`Exámenes de ${getDomain(activeDomain).label}` : t`Explorar exámenes`}
               </h1>
               <p className="text-ink-soft text-sm mt-1">
-                Sets oficiales y de la comunidad. Estudia gratis, regístrate para guardar tu progreso.
+                <Trans>Sets oficiales y de la comunidad. Estudia gratis, regístrate para guardar tu progreso.</Trans>
               </p>
             </div>
             {user && (
               <Button onClick={() => navigate('/create-exam')}>
-                <Plus size={16} />Crear set
+                <Plus size={16} /><Trans>Crear set</Trans>
               </Button>
             )}
           </div>
@@ -279,7 +282,7 @@ export function ExploreExamsPage() {
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
           className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
-          <DomainChip domain={{ label: 'Todos', icon: '📚' }} active={!activeDomain} onClick={() => selectDomain('')} />
+          <DomainChip domain={{ label: 'Todos', icon: '📚' }} label={t`Todos`} active={!activeDomain} onClick={() => selectDomain('')} />
           {DOMAINS.map((d) => (
             <DomainChip key={d.id} domain={d} active={activeDomain === d.id} onClick={() => selectDomain(d.id)} />
           ))}
@@ -298,7 +301,7 @@ export function ExploreExamsPage() {
               id="explore-search-input"
               type="search"
               autoComplete="off"
-              placeholder="Buscar por título, descripción o etiqueta…"
+              placeholder={t`Buscar por título, descripción o etiqueta…`}
               value={search}
               onChange={(e) => {
                 const val = e.target.value;
@@ -312,7 +315,7 @@ export function ExploreExamsPage() {
               onFocus={() => { if (search.trim().length >= 2 && suggestions.length > 0) setShowSuggestions(true); }}
               onKeyDown={handleInputKeyDown}
               className="h-11 w-full rounded-xl border border-surface-border bg-white pl-10 pr-9 text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-              aria-label="Buscar sets de examen"
+              aria-label={t`Buscar sets de examen`}
               aria-controls="explore-results"
               aria-autocomplete="list"
               aria-haspopup="listbox"
@@ -327,7 +330,7 @@ export function ExploreExamsPage() {
                   inputRef.current?.focus();
                 }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-soft hover:text-ink transition-colors"
-                aria-label="Limpiar búsqueda"
+                aria-label={t`Limpiar búsqueda`}
               >
                 <X size={14} />
               </button>
@@ -337,7 +340,7 @@ export function ExploreExamsPage() {
             {showSuggestions && suggestions.length > 0 && (
               <ul
                 role="listbox"
-                aria-label="Sugerencias de búsqueda"
+                aria-label={t`Sugerencias de búsqueda`}
                 className="absolute z-50 mt-1.5 w-full rounded-xl border border-surface-border bg-white shadow-lg overflow-hidden"
               >
                 {suggestions.map((s, i) => (
@@ -366,10 +369,10 @@ export function ExploreExamsPage() {
           </form>
         </motion.div>
 
-        <div id="explore-results" aria-live="polite" aria-busy={isPending} aria-label="Resultados de búsqueda">
+        <div id="explore-results" aria-live="polite" aria-busy={isPending} aria-label={t`Resultados de búsqueda`}>
           {!loading && filtered.length > 0 && (
             <p className="text-xs text-ink-muted mb-3">
-              {filtered.length} set{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
+              {filtered.length === 1 ? t`${filtered.length} set encontrado` : t`${filtered.length} sets encontrados`}
               {isPending && <span className="ml-1 opacity-60">…</span>}
             </p>
           )}
@@ -382,13 +385,13 @@ export function ExploreExamsPage() {
           ) : filtered.length === 0 ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 space-y-3">
               <BookOpen size={40} className="text-ink-muted mx-auto" />
-              <p className="text-ink-soft">{search || activeDomain ? 'No se encontraron resultados.' : 'Aún no hay sets publicados.'}</p>
+              <p className="text-ink-soft">{search || activeDomain ? t`No se encontraron resultados.` : t`Aún no hay sets publicados.`}</p>
               {user ? (
                 <Button onClick={() => navigate('/create-exam')} variant="secondary" size="sm">
-                  <Plus size={14} />Crea el primero
+                  <Plus size={14} /><Trans>Crea el primero</Trans>
                 </Button>
               ) : (
-                <Button onClick={() => navigate('/register')} size="sm">Regístrate gratis</Button>
+                <Button onClick={() => navigate('/register')} size="sm"><Trans>Regístrate gratis</Trans></Button>
               )}
             </motion.div>
           ) : (
@@ -406,11 +409,11 @@ export function ExploreExamsPage() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-brand-500/10 p-6 text-center"
           >
-            <h2 className="text-lg font-semibold text-ink">¿Listo para practicar?</h2>
+            <h2 className="text-lg font-semibold text-ink"><Trans>¿Listo para practicar?</Trans></h2>
             <p className="text-sm text-ink-soft mt-1 mb-4">
-              Regístrate gratis para empezar exámenes, guardar resultados y crear tus propios sets.
+              <Trans>Regístrate gratis para empezar exámenes, guardar resultados y crear tus propios sets.</Trans>
             </p>
-            <Button onClick={() => navigate('/register')}>Crear cuenta gratis</Button>
+            <Button onClick={() => navigate('/register')}><Trans>Crear cuenta gratis</Trans></Button>
           </motion.div>
         )}
       </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { doc, getDoc, collection, getDocs, limit, query } from 'firebase/firestore';
 import {
   ArrowLeft, BookOpen, Clock, Target, User, Play,
@@ -21,6 +22,7 @@ import { FavoriteButton } from '../../social/components/FavoriteButton';
 import { AuthorChip } from '../../social/components/AuthorChip';
 import { SaveToFolderButton } from '../../home/components/SaveToFolderButton';
 import DomainPath from '../components/DomainPath';
+import { SEOHead } from '../../../components/SEOHead';
 
 function MetaStat({ icon: Icon, label, value }) {
   return (
@@ -61,12 +63,12 @@ function ModeCard({
     >
       {soon && (
         <span className="absolute top-3 right-3 text-[10px] font-semibold uppercase tracking-wider bg-ink-muted/10 text-ink-muted rounded-full px-2 py-0.5">
-          Próximamente
+          <Trans>Próximamente</Trans>
         </span>
       )}
       {highlighted && !soon && (
         <span className="absolute top-3 right-3 text-[10px] font-semibold uppercase tracking-wider bg-brand-500 text-white rounded-full px-2 py-0.5 flex items-center gap-1">
-          <Sparkles size={9} />Recomendado
+          <Sparkles size={9} /><Trans>Recomendado</Trans>
         </span>
       )}
       <div className={`w-11 h-11 rounded-xl ${a.bg} ${a.text} flex items-center justify-center mb-3`}>
@@ -77,7 +79,7 @@ function ModeCard({
       <p className="text-sm text-ink-soft flex-1 leading-relaxed">{description}</p>
       {technique && (
         <p className="text-[11px] text-ink-muted mt-3 italic">
-          Técnica: {technique}
+          <Trans>Técnica:</Trans> {technique}
         </p>
       )}
       {meta && (
@@ -103,15 +105,16 @@ function ModeCard({
 }
 
 function QuestionPreview({ q, index, locked }) {
+  const { t } = useLingui();
   const options = q.options ?? {};
   return (
     <Card>
       <CardBody className="p-5 space-y-3">
         <div className="flex items-start justify-between gap-3">
-          <span className="text-xs font-semibold text-ink-muted">Pregunta {index + 1}</span>
+          <span className="text-xs font-semibold text-ink-muted">{t`Pregunta ${index + 1}`}</span>
           {q.difficulty && (
             <Badge variant={q.difficulty === 'hard' ? 'danger' : q.difficulty === 'medium' ? 'warning' : 'success'}>
-              {q.difficulty === 'hard' ? 'Difícil' : q.difficulty === 'medium' ? 'Intermedia' : 'Fácil'}
+              {q.difficulty === 'hard' ? <Trans>Difícil</Trans> : q.difficulty === 'medium' ? <Trans>Intermedia</Trans> : <Trans>Fácil</Trans>}
             </Badge>
           )}
         </div>
@@ -127,7 +130,7 @@ function QuestionPreview({ q, index, locked }) {
         {locked && (
           <div className="flex items-center gap-2 text-xs text-ink-muted pt-2 border-t border-surface-border">
             <Lock size={12} />
-            Regístrate para ver la respuesta y explicación.
+            <Trans>Regístrate para ver la respuesta y explicación.</Trans>
           </div>
         )}
       </CardBody>
@@ -139,6 +142,7 @@ export function ExamSetLandingPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { t } = useLingui();
 
   const [set, setState] = useState(null);
   const [preview, setPreview] = useState([]);
@@ -217,12 +221,12 @@ export function ExamSetLandingPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center px-4 text-center">
-        <Helmet><title>Set no encontrado — CertZen</title><meta name="robots" content="noindex" /></Helmet>
+        <Helmet><title>{t`Set no encontrado — CertZen`}</title><meta name="robots" content="noindex" /></Helmet>
         <BookOpen size={40} className="text-ink-muted mb-3" />
-        <h1 className="text-xl font-semibold text-ink">Set no disponible</h1>
-        <p className="text-sm text-ink-soft mt-1">Este examen no existe o no es público.</p>
+        <h1 className="text-xl font-semibold text-ink"><Trans>Set no disponible</Trans></h1>
+        <p className="text-sm text-ink-soft mt-1"><Trans>Este examen no existe o no es público.</Trans></p>
         <Link to="/explore" className="mt-5">
-          <Button variant="outline" size="sm"><ArrowLeft size={14} />Volver a explorar</Button>
+          <Button variant="outline" size="sm"><ArrowLeft size={14} /><Trans>Volver a explorar</Trans></Button>
         </Link>
       </div>
     );
@@ -276,7 +280,7 @@ export function ExamSetLandingPage() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
         <Link to="/explore" className="text-sm text-ink-soft hover:text-ink inline-flex items-center gap-1.5">
-          <ArrowLeft size={14} /> Exámenes
+          <ArrowLeft size={14} /> <Trans>Exámenes</Trans>
         </Link>
         {/* Hero */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
@@ -323,10 +327,10 @@ export function ExamSetLandingPage() {
           {!user && (
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Button size="lg" onClick={() => navigate('/register')}>
-                <Lock size={16} />Regístrate para practicar
+                <Lock size={16} /><Trans>Regístrate para practicar</Trans>
               </Button>
               <span className="text-xs text-ink-muted">
-                Gratis · guarda tu progreso y ve explicaciones completas
+                <Trans>Gratis · guarda tu progreso y ve explicaciones completas</Trans>
               </span>
             </div>
           )}
@@ -337,10 +341,10 @@ export function ExamSetLandingPage() {
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
           className="grid grid-cols-2 sm:grid-cols-4 gap-3"
         >
-          <MetaStat icon={BookOpen} label="Preguntas" value={set.questionCount ?? preview.length} />
-          <MetaStat icon={Clock}    label="Duración"  value={`${set.timeMinutes ?? 30} min`} />
-          <MetaStat icon={Target}   label="Aprobar"   value={`${set.passPercent ?? 70}%`} />
-          <MetaStat icon={User}     label="Intentos"  value={set.attempts ?? 0} />
+          <MetaStat icon={BookOpen} label={t`Preguntas`} value={set.questionCount ?? preview.length} />
+          <MetaStat icon={Clock}    label={t`Duración`}  value={`${set.timeMinutes ?? 30} min`} />
+          <MetaStat icon={Target}   label={t`Aprobar`}   value={`${set.passPercent ?? 70}%`} />
+          <MetaStat icon={User}     label={t`Intentos`}  value={set.attempts ?? 0} />
         </motion.section>
 
         {/* Ruta de Dominio — domain-level mastery map */}
@@ -353,10 +357,10 @@ export function ExamSetLandingPage() {
             <div>
               <h2 className="text-xl font-bold text-ink flex items-center gap-2">
                 <Layers size={20} className="text-brand-600" />
-                Ruta de Dominio
+                <Trans>Ruta de Dominio</Trans>
               </h2>
               <p className="text-sm text-ink-soft mt-1">
-                Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada.
+                <Trans>Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada.</Trans>
               </p>
             </div>
             <DomainPath
@@ -376,109 +380,109 @@ export function ExamSetLandingPage() {
           <div>
             <h2 className="text-xl font-bold text-ink flex items-center gap-2">
               <GraduationCap size={20} className="text-brand-600" />
-              Elige tu modo de estudio
+              <Trans>Elige tu modo de estudio</Trans>
             </h2>
             <p className="text-sm text-ink-soft mt-1">
-              Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje.
+              <Trans>Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje.</Trans>
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <ModeCard
               icon={GraduationCap}
-              title="Estudio Guiado"
-              subtitle="Aprende sin presión"
-              description="Responde, confirma y ve la explicación al instante. Sin tiempo, revisa cuantas veces quieras."
-              technique="Retrieval practice + feedback inmediato"
+              title={t`Estudio Guiado`}
+              subtitle={t`Aprende sin presión`}
+              description={t`Responde, confirma y ve la explicación al instante. Sin tiempo, revisa cuantas veces quieras.`}
+              technique={t`Retrieval practice + feedback inmediato`}
               meta={[
-                { icon: BookOpen, label: `${set.questionCount ?? preview.length} preguntas` },
-                { icon: TimerReset, label: 'Sin tiempo' },
+                { icon: BookOpen, label: `${set.questionCount ?? preview.length} ${t`preguntas`}` },
+                { icon: TimerReset, label: t`Sin tiempo` },
               ]}
               accent="emerald"
               highlighted
-              ctaLabel={user ? 'Empezar' : 'Regístrate'}
+              ctaLabel={user ? t`Empezar` : t`Regístrate`}
               onClick={() => launchMode({ mode: 'study' })}
             />
 
             <ModeCard
               icon={Zap}
-              title="Práctica Rápida"
-              subtitle="10 preguntas · sesión corta"
-              description="Sesión exprés ideal para 5–10 minutos: aleatoria, con explicación inmediata. Perfecta para el día a día."
-              technique="Espaciado + sesiones breves (micro-learning)"
+              title={t`Práctica Rápida`}
+              subtitle={t`10 preguntas · sesión corta`}
+              description={t`Sesión exprés ideal para 5–10 minutos: aleatoria, con explicación inmediata. Perfecta para el día a día.`}
+              technique={t`Espaciado + sesiones breves (micro-learning)`}
               meta={[
-                { icon: BookOpen, label: '10 preguntas' },
-                { icon: Clock, label: '~5 min' },
+                { icon: BookOpen, label: t`10 preguntas` },
+                { icon: Clock, label: t`~5 min` },
               ]}
               accent="amber"
-              ctaLabel={user ? 'Practicar' : 'Regístrate'}
+              ctaLabel={user ? t`Practicar` : t`Regístrate`}
               onClick={() => launchMode({ mode: 'study', count: '10' })}
             />
 
             <ModeCard
               icon={Target}
-              title="Modo Examen"
-              subtitle="Simulacro cronometrado"
-              description={`Condiciones reales: ${set.timeMinutes ?? 30} min · ${set.passPercent ?? 70}% para aprobar · sin pistas. Evalúa tu preparación real.`}
-              technique="Testing effect + feedback diferido"
+              title={t`Modo Examen`}
+              subtitle={t`Simulacro cronometrado`}
+              description={t`Condiciones reales: ${set.timeMinutes ?? 30} min · ${set.passPercent ?? 70}% para aprobar · sin pistas. Evalúa tu preparación real.`}
+              technique={t`Testing effect + feedback diferido`}
               meta={[
                 { icon: Clock, label: `${set.timeMinutes ?? 30} min` },
-                { icon: Target, label: `${set.passPercent ?? 70}% aprobar` },
+                { icon: Target, label: `${set.passPercent ?? 70}% ${t`aprobar`}` },
               ]}
               accent="rose"
-              ctaLabel={user ? 'Empezar examen' : 'Regístrate'}
+              ctaLabel={user ? t`Empezar examen` : t`Regístrate`}
               onClick={() => launchMode({ mode: 'exam' })}
             />
 
             <ModeCard
               icon={TrendingDown}
-              title="Zona Débil"
-              subtitle="Ataca tus errores"
-              description="Te enfoca en las preguntas que fallaste. Aprendizaje dirigido a tus lagunas reales."
-              technique="Práctica focalizada (targeted practice)"
+              title={t`Zona Débil`}
+              subtitle={t`Ataca tus errores`}
+              description={t`Te enfoca en las preguntas que fallaste. Aprendizaje dirigido a tus lagunas reales.`}
+              technique={t`Práctica focalizada (targeted practice)`}
               meta={[
                 user && stats.weak > 0
-                  ? { icon: BookOpen, label: `${stats.weak} pregunta${stats.weak !== 1 ? 's' : ''} por repasar` }
-                  : { icon: Sparkles, label: 'Responde preguntas primero' },
+                  ? { icon: BookOpen, label: `${stats.weak} ${stats.weak !== 1 ? t`preguntas por repasar` : t`pregunta por repasar`}` }
+                  : { icon: Sparkles, label: t`Responde preguntas primero` },
               ]}
               accent="violet"
               disabled={!user || stats.weak === 0}
-              ctaLabel={!user ? 'Regístrate' : stats.weak === 0 ? 'Sin errores aún' : 'Empezar'}
+              ctaLabel={!user ? t`Regístrate` : stats.weak === 0 ? t`Sin errores aún` : t`Empezar`}
               onClick={() => launchMode({ mode: 'weak' })}
             />
 
             <ModeCard
               icon={Brain}
-              title="Repaso Inteligente"
-              subtitle="Repetición espaciada"
-              description="Algoritmo Leitner que programa cuándo repasar cada pregunta para consolidar memoria a largo plazo al mínimo esfuerzo."
-              technique="Spaced repetition (Leitner 5 cajas)"
+              title={t`Repaso Inteligente`}
+              subtitle={t`Repetición espaciada`}
+              description={t`Algoritmo Leitner que programa cuándo repasar cada pregunta para consolidar memoria a largo plazo al mínimo esfuerzo.`}
+              technique={t`Spaced repetition (Leitner 5 cajas)`}
               meta={[
                 user && stats.due > 0
-                  ? { icon: Brain, label: `${stats.due} pregunta${stats.due !== 1 ? 's' : ''} por repasar hoy` }
+                  ? { icon: Brain, label: `${stats.due} ${stats.due !== 1 ? t`preguntas por repasar hoy` : t`pregunta por repasar hoy`}` }
                   : user && stats.seen > 0
-                    ? { icon: Sparkles, label: 'Todo al día 🎉' }
-                    : { icon: Sparkles, label: 'Responde preguntas primero' },
-                user && stats.mastered > 0 ? { icon: CheckCircle2, label: `${stats.mastered} dominada${stats.mastered !== 1 ? 's' : ''}` } : null,
+                    ? { icon: Sparkles, label: t`Todo al día 🎉` }
+                    : { icon: Sparkles, label: t`Responde preguntas primero` },
+                user && stats.mastered > 0 ? { icon: CheckCircle2, label: `${stats.mastered} ${stats.mastered !== 1 ? t`dominadas` : t`dominada`}` } : null,
               ].filter(Boolean)}
               accent="brand"
               disabled={!user || stats.due === 0}
-              ctaLabel={!user ? 'Regístrate' : stats.due === 0 ? (stats.seen > 0 ? 'Nada por repasar' : 'Sin historial') : 'Repasar ahora'}
+              ctaLabel={!user ? t`Regístrate` : stats.due === 0 ? (stats.seen > 0 ? t`Nada por repasar` : t`Sin historial`) : t`Repasar ahora`}
               onClick={() => launchMode({ mode: 'srs' })}
             />
 
             <ModeCard
               icon={Dice5}
-              title="Apuesta tu Confianza"
-              subtitle="Apuesta ×1, ×2 o ×3"
-              description="Antes de revelar, apuesta qué tan seguro estás. Aciertas con ×3 y ganas; fallas con ×3 y pierdes. Descubre dónde crees saber sin saber."
-              technique="Calibración metacognitiva (Brainscape CBR · Dunning-Kruger)"
+              title={t`Apuesta tu Confianza`}
+              subtitle={t`Apuesta ×1, ×2 o ×3`}
+              description={t`Antes de revelar, apuesta qué tan seguro estás. Aciertas con ×3 y ganas; fallas con ×3 y pierdes. Descubre dónde crees saber sin saber.`}
+              technique={t`Calibración metacognitiva (Brainscape CBR · Dunning-Kruger)`}
               meta={[
-                { icon: BookOpen, label: `${Math.min(20, set.questionCount ?? 20)} preguntas` },
-                { icon: Sparkles, label: 'Nuevo ✨' },
+                { icon: BookOpen, label: `${Math.min(20, set.questionCount ?? 20)} ${t`preguntas`}` },
+                { icon: Sparkles, label: t`Nuevo ✨` },
               ]}
               accent="rose"
-              ctaLabel={user ? 'Apostar' : 'Regístrate'}
+              ctaLabel={user ? t`Apostar` : t`Regístrate`}
               onClick={() => launchMode({ mode: 'wager', count: String(Math.min(20, set.questionCount ?? 20)) })}
             />
           </div>
@@ -494,7 +498,7 @@ export function ExamSetLandingPage() {
               <div className="flex items-start gap-2 text-xs text-ink-soft">
                 <CheckCircle2 size={14} className="text-success-500 mt-0.5 shrink-0" />
                 <p>
-                  <span className="font-semibold text-ink">Fuente:</span> {set.source}
+                  <span className="font-semibold text-ink"><Trans>Fuente:</Trans></span> {set.source}
                 </p>
               </div>
             )}
@@ -520,8 +524,8 @@ export function ExamSetLandingPage() {
             className="space-y-4"
           >
             <div>
-              <h2 className="text-xl font-bold text-ink">Vista previa</h2>
-              <p className="text-sm text-ink-soft mt-1">Primeras {preview.length} preguntas del set.</p>
+              <h2 className="text-xl font-bold text-ink"><Trans>Vista previa</Trans></h2>
+              <p className="text-sm text-ink-soft mt-1">{t`Primeras ${preview.length} preguntas del set.`}</p>
             </div>
             <div className="grid grid-cols-1 gap-3">
               {preview.map((q, i) => (
@@ -537,12 +541,12 @@ export function ExamSetLandingPage() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-brand-500/10 p-8 text-center"
           >
-            <h2 className="text-xl font-semibold text-ink">Regístrate para empezar</h2>
+            <h2 className="text-xl font-semibold text-ink"><Trans>Regístrate para empezar</Trans></h2>
             <p className="text-sm text-ink-soft mt-2 mb-5 max-w-xl mx-auto">
-              El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas.
+              <Trans>El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas.</Trans>
             </p>
             <Button size="lg" onClick={() => navigate('/register')}>
-              Crear cuenta gratis
+              <Trans>Crear cuenta gratis</Trans>
             </Button>
           </motion.section>
         )}

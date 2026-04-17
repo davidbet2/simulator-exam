@@ -1,4 +1,5 @@
 import { ShieldCheck, User } from 'lucide-react';
+import { Trans } from '@lingui/react/macro';
 
 /**
  * AuthorChip — compact author display for cards and landing pages.
@@ -17,7 +18,7 @@ export function AuthorChip({ official, ownerEmail, ownerDisplayName, size = 'sm'
     return (
       <span className={`inline-flex items-center gap-1 font-medium text-brand-700 ${textSize}`}>
         <ShieldCheck size={iconSize} className="fill-brand-500 stroke-white" strokeWidth={2.5} />
-        CertZen Oficial
+        <Trans>CertZen Oficial</Trans>
       </span>
     );
   }

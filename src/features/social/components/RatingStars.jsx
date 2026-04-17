@@ -3,6 +3,7 @@ import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { useRating } from '../hooks/useRating';
+import { Trans, useLingui, Plural } from '@lingui/react/macro';
 
 /**
  * RatingStars — 5-star interactive rating with optimistic UI.
@@ -27,6 +28,7 @@ export function RatingStars({
 }) {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { t } = useLingui();
   const isOwnSet = user && ownerUid && user.uid === ownerUid;
   const disabled = readOnly || isOwnSet;
 
@@ -48,7 +50,7 @@ export function RatingStars({
     try {
       await submit(n);
     } catch (err) {
-      setErrorMsg(err.message ?? 'No se pudo calificar');
+      setErrorMsg(err.message ?? t`No se pudo calificar`);
     }
   };
 
@@ -60,8 +62,8 @@ export function RatingStars({
         role={disabled ? 'img' : 'radiogroup'}
         aria-label={
           disabled
-            ? `Calificación promedio: ${averageValue.toFixed(1)} de 5, ${count} ${count === 1 ? 'voto' : 'votos'}`
-            : 'Calificar este set'
+            ? t`Calificación promedio: ${averageValue.toFixed(1)} de 5, ${count} ${count === 1 ? 'voto' : 'votos'}`
+            : t`Calificar este set`
         }
       >
         {[1, 2, 3, 4, 5].map((n) => {
@@ -79,7 +81,7 @@ export function RatingStars({
                 ${disabled ? 'cursor-default' : 'cursor-pointer hover:scale-110'}
                 disabled:opacity-100
               `}
-              aria-label={`${n} ${n === 1 ? 'estrella' : 'estrellas'}`}
+              aria-label={t`${n} ${n === 1 ? 'estrella' : 'estrellas'}`}
             >
               <Star
                 size={size}
@@ -100,12 +102,12 @@ export function RatingStars({
         <span className="text-xs text-ink-soft">
           {count > 0
             ? `${averageValue.toFixed(1)} (${count})`
-            : <span className="italic">sin votos</span>}
+            : <span className="italic"><Trans>sin votos</Trans></span>}
         </span>
       )}
 
       {isOwnSet && (
-        <span className="text-[10px] text-ink-soft italic">No puedes calificar tu propio set</span>
+        <span className="text-[10px] text-ink-soft italic"><Trans>No puedes calificar tu propio set</Trans></span>
       )}
       {errorMsg && (
         <span className="text-[10px] text-rose-500">{errorMsg}</span>

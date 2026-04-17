@@ -32,6 +32,8 @@ const MicrosoftIcon = () => (
 import { useAuthStore } from '../../../core/store/useAuthStore'
 import Button from '../../../components/ui/Button'
 import Input from '../../../components/ui/Input'
+import { Trans, useLingui } from '@lingui/react/macro'
+import { SEOHead } from '../../../components/SEOHead'
 
 const schema = z.object({
   email:    z.string().email('Correo electrónico inválido'),
@@ -40,6 +42,7 @@ const schema = z.object({
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const { t } = useLingui()
   const { login, loginWithGoogle, loginWithGithub, loginWithMicrosoft, user, isLoading, error, clearError } = useAuthStore()
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -55,6 +58,7 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
+      <SEOHead title={t`Iniciar sesión`} description={t`Accede a CertZen para continuar tu preparación.`} path="/login" noindex />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -68,11 +72,11 @@ export function LoginPage() {
               CertZen
             </span>
           </div>
-          <p className="text-ink-soft text-sm">Domina tu certificación</p>
+          <p className="text-ink-soft text-sm"><Trans>Domina tu certificación</Trans></p>
         </div>
 
         <div className="rounded-2xl border border-surface-border bg-surface-soft p-6 space-y-5">
-          <h1 className="text-xl font-semibold text-ink">Iniciar sesión</h1>
+          <h1 className="text-xl font-semibold text-ink"><Trans>Iniciar sesión</Trans></h1>
 
           {error && (
             <div className="rounded-lg bg-danger-500/10 border border-danger-500/30 px-4 py-3 text-sm text-red-400" role="alert">
@@ -82,7 +86,7 @@ export function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
             <Input
-              label="Correo electrónico"
+              label={t`Correo electrónico`}
               type="email"
               autoComplete="email"
               placeholder="tu@email.com"
@@ -90,7 +94,7 @@ export function LoginPage() {
               {...register('email')}
             />
             <Input
-              label="Contraseña"
+              label={t`Contraseña`}
               type="password"
               autoComplete="current-password"
               placeholder="••••••••"
@@ -100,7 +104,7 @@ export function LoginPage() {
 
             <Button type="submit" className="w-full" disabled={isLoading}>
               <LogIn size={16} />
-              {isLoading ? 'Ingresando…' : 'Ingresar'}
+              {isLoading ? t`Ingresando…` : t`Ingresar`}
             </Button>
           </form>
 
@@ -109,7 +113,7 @@ export function LoginPage() {
               <div className="w-full border-t border-surface-border" />
             </div>
             <div className="relative flex justify-center text-xs text-ink-soft">
-              <span className="bg-surface-soft px-2">o continúa con</span>
+              <span className="bg-surface-soft px-2"><Trans>o continúa con</Trans></span>
             </div>
           </div>
 
@@ -119,7 +123,7 @@ export function LoginPage() {
               className="w-full"
               onClick={loginWithGoogle}
               disabled={isLoading}
-              aria-label="Ingresar con Google"
+              aria-label={t`Ingresar con Google`}
             >
               <GoogleIcon />
               <span className="hidden sm:inline">Google</span>
@@ -129,7 +133,7 @@ export function LoginPage() {
               className="w-full"
               onClick={loginWithGithub}
               disabled={isLoading}
-              aria-label="Ingresar con GitHub"
+              aria-label={t`Ingresar con GitHub`}
             >
               <GitHubIcon />
               <span className="hidden sm:inline">GitHub</span>
@@ -139,7 +143,7 @@ export function LoginPage() {
               className="w-full"
               onClick={loginWithMicrosoft}
               disabled={isLoading}
-              aria-label="Ingresar con Microsoft"
+              aria-label={t`Ingresar con Microsoft`}
             >
               <MicrosoftIcon />
               <span className="hidden sm:inline">Microsoft</span>
@@ -147,9 +151,9 @@ export function LoginPage() {
           </div>
 
           <p className="text-center text-sm text-ink-soft">
-            ¿No tienes cuenta?{' '}
+            <Trans>¿No tienes cuenta?</Trans>{' '}
             <Link to="/register" className="text-brand-600 hover:text-brand-700 font-medium">
-              Regístrate gratis
+              <Trans>Regístrate gratis</Trans>
             </Link>
           </p>
         </div>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
 import {
   collection, query, where, orderBy, limit, getDocs, doc, getDoc,
 } from 'firebase/firestore';
@@ -12,7 +11,9 @@ import {
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { useTranslation } from '../../../core/i18n';
+import { Trans, useLingui, Plural } from '@lingui/react/macro';
 import { AppShell } from '../../../components/layout/AppShell';
+import { SEOHead } from '../../../components/SEOHead';
 import { ZenDolphin } from '../../../components/mascot/ZenDolphin';
 import Button from '../../../components/ui/Button';
 import { getDomain, DOMAINS } from '../../../core/constants/domains';
@@ -57,7 +58,7 @@ function SetCard({ set, size = 'md', index = 0 }) {
             </span>
             {set.official && (
               <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${palette.chip}`}>
-                Oficial
+                <Trans>Oficial</Trans>
               </span>
             )}
           </div>
@@ -120,6 +121,7 @@ function SectionHeader({ title, icon: Icon, accent = 'text-brand-500', cta }) {
 export function HomePage() {
   const { user, displayName } = useAuthStore();
   const { t } = useTranslation();
+  const { t: tMacro } = useLingui();
   const navigate = useNavigate();
 
   const [favorites, setFavorites] = useState([]);
@@ -224,9 +226,11 @@ export function HomePage() {
 
   return (
     <AppShell>
-      <Helmet>
-        <title>Inicio — CertZen</title>
-      </Helmet>
+      <SEOHead
+        title={tMacro`Inicio`}
+        description={tMacro`Retoma tu progreso o descubre nuevos exámenes. Tu próxima certificación está a un intento de distancia.`}
+        path="/home"
+      />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-10">
         {/* Hero banner */}
@@ -245,38 +249,38 @@ export function HomePage() {
                 {greeting}
               </p>
               <h1 className="text-3xl sm:text-4xl font-bold text-ink leading-tight">
-                Hola,{' '}
+                <Trans>Hola,</Trans>{' '}
                 <span className="bg-gradient-to-r from-brand-500 via-violet-500 to-amber-500 bg-clip-text text-transparent">
-                  {displayName ?? 'estudiante'}
+                  {displayName ?? tMacro`estudiante`}
                 </span>
               </h1>
               <p className="text-ink-soft mt-2 text-sm sm:text-base max-w-lg">
-                Retoma tu progreso o descubre nuevos exámenes. Tu próxima certificación está a un intento de distancia.
+                <Trans>Retoma tu progreso o descubre nuevos exámenes. Tu próxima certificación está a un intento de distancia.</Trans>
               </p>
 
               {user && (
                 <div className="flex flex-wrap gap-2 mt-5">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white/70 dark:bg-surface-raised/70 backdrop-blur px-3 py-1.5 text-xs font-semibold text-ink border border-surface-border">
                     <Flame size={13} className="text-rose-500" />
-                    {stats.streak} día{stats.streak === 1 ? '' : 's'} seguidos
+                    <Plural value={stats.streak} one="# día seguido" other="# días seguidos" />
                   </span>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white/70 dark:bg-surface-raised/70 backdrop-blur px-3 py-1.5 text-xs font-semibold text-ink border border-surface-border">
                     <Target size={13} className="text-emerald-500" />
-                    {stats.avgScore}% promedio
+                    <Trans>{stats.avgScore}% promedio</Trans>
                   </span>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white/70 dark:bg-surface-raised/70 backdrop-blur px-3 py-1.5 text-xs font-semibold text-ink border border-surface-border">
                     <BookOpen size={13} className="text-brand-500" />
-                    {stats.attempts} intentos
+                    <Trans>{stats.attempts} intentos</Trans>
                   </span>
                 </div>
               )}
 
               <div className="flex flex-wrap gap-2 mt-5">
                 <Button onClick={() => navigate('/explore')}>
-                  <Compass size={14} /> Explorar exámenes
+                  <Compass size={14} /> <Trans>Explorar exámenes</Trans>
                 </Button>
                 <Button variant="secondary" onClick={() => navigate('/create-exam')}>
-                  <Plus size={14} /> Crear set
+                  <Plus size={14} /> <Trans>Crear set</Trans>
                 </Button>
               </div>
             </div>
@@ -289,7 +293,7 @@ export function HomePage() {
 
         {/* Categories */}
         <section>
-          <SectionHeader title="Explora por categoría" icon={Compass} accent="text-violet-500" />
+          <SectionHeader title={tMacro`Explora por categoría`} icon={Compass} accent="text-violet-500" />
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-3">
             {DOMAINS.map((d, i) => <CategoryPill key={d.id} domain={d} index={i} />)}
           </div>
@@ -311,7 +315,7 @@ export function HomePage() {
                   accent="text-brand-500"
                   cta={
                     <Link to="/dashboard" className="text-xs font-semibold text-brand-600 hover:underline">
-                      Ver todo →
+                      <Trans>Ver todo →</Trans>
                     </Link>
                   }
                 />
@@ -337,15 +341,15 @@ export function HomePage() {
                 accent="text-emerald-500"
                 cta={
                   <Link to="/explore" className="text-xs font-semibold text-brand-600 hover:underline">
-                    Explorar todo →
+                    <Trans>Explorar todo →</Trans>
                   </Link>
                 }
               />
               {recommended.length === 0 ? (
                 <div className="rounded-3xl border border-surface-border bg-gradient-to-br from-brand-500/5 to-violet-500/5 p-10 text-center">
                   <BookOpen size={40} className="text-ink-muted mx-auto mb-3" />
-                  <p className="text-sm text-ink-soft mb-4">No hay recomendaciones por ahora.</p>
-                  <Button onClick={() => navigate('/explore')}>Explorar exámenes</Button>
+                  <p className="text-sm text-ink-soft mb-4"><Trans>No hay recomendaciones por ahora.</Trans></p>
+                  <Button onClick={() => navigate('/explore')}><Trans>Explorar exámenes</Trans></Button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -359,16 +363,16 @@ export function HomePage() {
             {user && recent.length === 0 && favorites.length === 0 && (
               <section className="relative overflow-hidden rounded-3xl border border-surface-border bg-gradient-to-br from-brand-500/10 via-violet-400/10 to-sky-400/10 p-8 text-center">
                 <Sparkles size={40} className="text-brand-500 mx-auto mb-3" />
-                <h3 className="text-xl font-bold text-ink">Empieza a estudiar</h3>
+                <h3 className="text-xl font-bold text-ink"><Trans>Empieza a estudiar</Trans></h3>
                 <p className="text-sm text-ink-soft mt-1 max-w-md mx-auto">
-                  Marca sets como favoritos o empieza un examen para ver tu progreso aquí.
+                  <Trans>Marca sets como favoritos o empieza un examen para ver tu progreso aquí.</Trans>
                 </p>
                 <div className="flex items-center justify-center gap-2 mt-4">
                   <Button onClick={() => navigate('/explore')}>
-                    <BookOpen size={14} />Explorar
+                    <BookOpen size={14} /><Trans>Explorar</Trans>
                   </Button>
                   <Button variant="secondary" onClick={() => navigate('/create-exam')}>
-                    <Plus size={14} />Crear set
+                    <Plus size={14} /><Trans>Crear set</Trans>
                   </Button>
                 </div>
               </section>

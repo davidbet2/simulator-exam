@@ -1,5 +1,6 @@
 ﻿import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { Trans, useLingui } from '@lingui/react/macro'
 import { Plus, Trash2, ArrowLeft, Clock, Target, Pencil, FileJson, FileSpreadsheet, FileText } from 'lucide-react'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../../../core/firebase/firebase'
@@ -8,11 +9,11 @@ import { AppShell } from '../../../components/layout/AppShell'
 import { QuestionForm } from '../../admin/components/QuestionForm'
 import { parseXLSX, extractPDFText, parseTextToQuestions } from '../utils/importParsers'
 
-const TYPE_LABELS = {
-  multiple: 'Opción múltiple',
-  ordering: 'Ordenamiento',
-  matching: 'Emparejamiento',
-}
+const buildTypeLabels = (t) => ({
+  multiple: t`Opción múltiple`,
+  ordering: t`Ordenamiento`,
+  matching: t`Emparejamiento`,
+})
 
 const JSON_EXAMPLE = `[
   {
@@ -47,15 +48,15 @@ const JSON_EXAMPLE = `[
   }
 ]`
 
-function parseJsonQuestions(text) {
+function parseJsonQuestions(text, t) {
   let parsed
   try {
     parsed = JSON.parse(text)
   } catch {
-    return { questions: [], error: 'JSON inválido. Verifica la sintaxis.' }
+    return { questions: [], error: t`JSON inválido. Verifica la sintaxis.` }
   }
   if (!Array.isArray(parsed)) {
-    return { questions: [], error: 'El JSON debe ser un array [ ... ].' }
+    return { questions: [], error: t`El JSON debe ser un array [ ... ].` }
   }
   const questions = []
   const invalid = []
@@ -74,11 +75,13 @@ function parseJsonQuestions(text) {
       questions.push({ type: 'multiple', question: q.question.trim(), options: q.options, answer: q.answer, explanation: q.explanation ?? '' })
     }
   })
-  const error = invalid.length ? `Preguntas ignoradas (formato inválido): #${invalid.join(', #')}` : null
+  const error = invalid.length ? t`Preguntas ignoradas (formato inválido): #${invalid.join(', #')}` : null
   return { questions, error }
 }
 
 function QuestionRow({ q, index, onEdit, onDelete }) {
+  const { t } = useLingui()
+  const TYPE_LABELS = buildTypeLabels(t)
   const preview = q.question.length > 90 ? q.question.slice(0, 90) + '…' : q.question
   return (
     <div className="flex items-start gap-3 py-3 px-4 border border-surface-border rounded-lg bg-surface-card hover:border-brand-400/40 transition-colors">
@@ -104,6 +107,8 @@ function QuestionRow({ q, index, onEdit, onDelete }) {
 }
 
 export function CreateExamPage() {
+  const { t } = useLingui()
+  const TYPE_LABELS = buildTypeLabels(t)
   const { user } = useAuthStore()
   const navigate = useNavigate()
 
@@ -144,9 +149,9 @@ export function CreateExamPage() {
       <AppShell>
         <div className="flex items-center justify-center p-4 py-20">
           <div className="text-center space-y-4">
-            <p className="text-ink-muted">Debes iniciar sesión para crear sets de examen.</p>
+            <p className="text-ink-muted"><Trans>Debes iniciar sesión para crear sets de examen.</Trans></p>
             <Link to="/login" className="inline-block px-5 py-2 bg-brand-500 text-white rounded font-semibold text-sm">
-              Iniciar sesión
+              <Trans>Iniciar sesión</Trans>
             </Link>
           </div>
         </div>
@@ -175,10 +180,11 @@ export function CreateExamPage() {
 
   function handleJsonImport() {
     setJsonError(null); setJsonSuccess(null)
-    const { questions: imported, error } = parseJsonQuestions(jsonText)
+    const { questions: imported, error } = parseJsonQuestions(jsonText, t)
     if (imported.length === 0 && error) { setJsonError(error); return }
     setQuestions((qs) => [...qs, ...imported])
-    setJsonSuccess(`${imported.length} pregunta${imported.length !== 1 ? 's' : ''} importada${imported.length !== 1 ? 's' : ''}.${error ? ' ' + error : ''}`)
+    const countMsg = imported.length === 1 ? t`1 pregunta importada.` : t`${imported.length} preguntas importadas.`
+    setJsonSuccess(`${countMsg}${error ? ' ' + error : ''}`)
     setJsonText('')
   }
 
@@ -189,13 +195,13 @@ export function CreateExamPage() {
     try {
       const { questions: imported, error } = await parseXLSX(file)
       if (imported.length === 0) {
-        setXlsxStatus({ type: 'error', msg: error ?? 'No se encontraron preguntas válidas en el archivo.' })
+        setXlsxStatus({ type: 'error', msg: error ?? t`No se encontraron preguntas válidas en el archivo.` })
       } else {
         setQuestions((qs) => [...qs, ...imported])
         setXlsxStatus({ type: 'success', count: imported.length, msg: error ?? null })
       }
     } catch (_err) {
-      setXlsxStatus({ type: 'error', msg: 'Error al leer el archivo Excel.' })
+      setXlsxStatus({ type: 'error', msg: t`Error al leer el archivo Excel.` })
     }
     e.target.value = ''
   }
@@ -213,10 +219,10 @@ export function CreateExamPage() {
         setPdfRawText('')
       } else {
         setPdfRawText(rawText)
-        setPdfStatus({ type: 'partial', msg: 'No se detectaron preguntas automáticamente. Revisa el texto extraído abajo.' })
+        setPdfStatus({ type: 'partial', msg: t`No se detectaron preguntas automáticamente. Revisa el texto extraído abajo.` })
       }
     } catch (_err) {
-      setPdfStatus({ type: 'error', msg: 'Error al leer el PDF.' })
+      setPdfStatus({ type: 'error', msg: t`Error al leer el PDF.` })
     }
     setPdfLoading(false)
     e.target.value = ''
@@ -224,10 +230,10 @@ export function CreateExamPage() {
 
   function validate() {
     const e = {}
-    if (!title.trim() || title.trim().length < 3) e.title = 'El título debe tener al menos 3 caracteres.'
-    if (questions.length < 1) e.questions = 'Añade al menos 1 pregunta.'
-    if (Number(timeMinutes) < 1 || Number(timeMinutes) > 300) e.timeMinutes = 'Entre 1 y 300 minutos.'
-    if (Number(passPercent) < 1 || Number(passPercent) > 100) e.passPercent = 'Entre 1 y 100%.'
+    if (!title.trim() || title.trim().length < 3) e.title = t`El título debe tener al menos 3 caracteres.`
+    if (questions.length < 1) e.questions = t`Añade al menos 1 pregunta.`
+    if (Number(timeMinutes) < 1 || Number(timeMinutes) > 300) e.timeMinutes = t`Entre 1 y 300 minutos.`
+    if (Number(passPercent) < 1 || Number(passPercent) > 100) e.passPercent = t`Entre 1 y 100%.`
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -237,7 +243,7 @@ export function CreateExamPage() {
     if (!validate()) return
     setSaving(true); setFormError(null)
     try {
-      const tagsArr = tags.split(',').map((t) => t.trim()).filter(Boolean)
+      const tagsArr = tags.split(',').map((tag) => tag.trim()).filter(Boolean)
       const setRef = await addDoc(collection(db, 'examSets'), {
         title:         title.trim(),
         description:   description.trim(),
@@ -261,7 +267,7 @@ export function CreateExamPage() {
 
       navigate('/explore')
     } catch (_err) {
-      setFormError('Error al guardar. Inténtalo de nuevo.')
+      setFormError(t`Error al guardar. Inténtalo de nuevo.`)
       setSaving(false)
     }
   }
@@ -270,9 +276,9 @@ export function CreateExamPage() {
     <AppShell>
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-ink">Crear set de examen</h1>
+          <h1 className="text-2xl font-bold text-ink"><Trans>Crear set de examen</Trans></h1>
           <Link to="/explore" className="text-sm text-ink-muted hover:text-ink flex items-center gap-1">
-            <ArrowLeft size={14} /> Explorar
+            <ArrowLeft size={14} /> <Trans>Explorar</Trans>
           </Link>
         </div>
 
@@ -280,52 +286,52 @@ export function CreateExamPage() {
 
           {/* Información del set */}
           <section className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-4 shadow-card">
-            <h2 className="font-semibold text-ink">Información del set</h2>
+            <h2 className="font-semibold text-ink"><Trans>Información del set</Trans></h2>
 
             <div>
-              <label className="block text-xs font-semibold text-ink-soft mb-1">Título *</label>
+              <label className="block text-xs font-semibold text-ink-soft mb-1"><Trans>Título *</Trans></label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => { setTitle(e.target.value); setErrors((p) => ({ ...p, title: undefined })) }}
-                placeholder="Ej: Examen de Práctica"
+                placeholder={t`Ej: Examen de Práctica`}
                 className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
               />
               {errors.title && <p className="text-danger-500 text-xs mt-1">{errors.title}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-ink-soft mb-1">Descripción (opcional)</label>
+              <label className="block text-xs font-semibold text-ink-soft mb-1"><Trans>Descripción (opcional)</Trans></label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={2}
-                placeholder="Describe el contenido de este set…"
+                placeholder={t`Describe el contenido de este set…`}
                 className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 resize-none bg-white"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-ink-soft mb-1">Categorías / Etiquetas (opcional)</label>
+              <label className="block text-xs font-semibold text-ink-soft mb-1"><Trans>Categorías / Etiquetas (opcional)</Trans></label>
               <input
                 type="text"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
-                placeholder="Ej: Procesos, Interfaces, Registros, Seguridad"
+                placeholder={t`Ej: Procesos, Interfaces, Registros, Seguridad`}
                 className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
               />
-              <p className="text-xs text-ink-faint mt-1">Separa las categorías con comas para clasificar el contenido del examen.</p>
+              <p className="text-xs text-ink-faint mt-1"><Trans>Separa las categorías con comas para clasificar el contenido del examen.</Trans></p>
             </div>
           </section>
 
           {/* Configuración del examen */}
           <section className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-4 shadow-card">
-            <h2 className="font-semibold text-ink">Configuración del examen</h2>
+            <h2 className="font-semibold text-ink"><Trans>Configuración del examen</Trans></h2>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="flex items-center gap-1 text-xs font-semibold text-ink-soft mb-1">
-                  <Clock size={12} /> Tiempo límite (minutos)
+                  <Clock size={12} /> <Trans>Tiempo límite (minutos)</Trans>
                 </label>
                 <input
                   type="number"
@@ -336,12 +342,12 @@ export function CreateExamPage() {
                   className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
                 />
                 {errors.timeMinutes && <p className="text-danger-500 text-xs mt-1">{errors.timeMinutes}</p>}
-                <p className="text-xs text-ink-faint mt-1">Ej: 60 min para 50 preguntas</p>
+                <p className="text-xs text-ink-faint mt-1"><Trans>Ej: 60 min para 50 preguntas</Trans></p>
               </div>
 
               <div>
                 <label className="flex items-center gap-1 text-xs font-semibold text-ink-soft mb-1">
-                  <Target size={12} /> Puntaje mínimo para aprobar (%)
+                  <Target size={12} /> <Trans>Puntaje mínimo para aprobar (%)</Trans>
                 </label>
                 <input
                   type="number"
@@ -352,7 +358,7 @@ export function CreateExamPage() {
                   className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
                 />
                 {errors.passPercent && <p className="text-danger-500 text-xs mt-1">{errors.passPercent}</p>}
-                <p className="text-xs text-ink-faint mt-1">Examen oficial: 73%</p>
+                <p className="text-xs text-ink-faint mt-1"><Trans>Examen oficial: 73%</Trans></p>
               </div>
             </div>
           </section>
@@ -366,7 +372,7 @@ export function CreateExamPage() {
             >
               <div className="flex items-center gap-2">
                 <Plus size={15} className="text-brand-500" />
-                <span className="font-semibold text-ink text-sm">Importar preguntas</span>
+                <span className="font-semibold text-ink text-sm"><Trans>Importar preguntas</Trans></span>
                 <span className="text-xs text-ink-faint font-normal">JSON · Excel · PDF</span>
               </div>
               <span className="text-ink-faint text-xs">{showImport ? '▲' : '▼'}</span>
@@ -400,11 +406,11 @@ export function CreateExamPage() {
                 {importTab === 'json' && (
                   <div className="p-5 space-y-3">
                     <p className="text-xs text-ink-muted">
-                      Pega un array JSON. Tipos soportados: <strong>multiple</strong>, <strong>ordering</strong>, <strong>matching</strong>.
+                      <Trans>Pega un array JSON. Tipos soportados:</Trans> <strong>multiple</strong>, <strong>ordering</strong>, <strong>matching</strong>.
                     </p>
                     <details className="group">
                       <summary className="text-xs font-semibold text-brand-600 cursor-pointer list-none flex items-center gap-1">
-                        <span className="group-open:hidden">▶</span><span className="hidden group-open:inline">▼</span> Ver formato de ejemplo
+                        <span className="group-open:hidden">▶</span><span className="hidden group-open:inline">▼</span> <Trans>Ver formato de ejemplo</Trans>
                       </summary>
                       <pre className="mt-2 text-xs text-ink-muted bg-surface-soft rounded-lg p-3 overflow-x-auto whitespace-pre-wrap border border-surface-border">{JSON_EXAMPLE}</pre>
                     </details>
@@ -412,7 +418,7 @@ export function CreateExamPage() {
                       value={jsonText}
                       onChange={(e) => { setJsonText(e.target.value); setJsonError(null); setJsonSuccess(null) }}
                       rows={7}
-                      placeholder="Pega aquí el JSON..."
+                      placeholder={t`Pega aquí el JSON...`}
                       className="w-full border border-surface-border rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:border-brand-500 resize-y bg-white"
                     />
                     {jsonError && <p className="text-danger-500 text-xs">{jsonError}</p>}
@@ -420,11 +426,11 @@ export function CreateExamPage() {
                     <div className="flex items-center gap-3">
                       <button type="button" onClick={() => { setJsonText(JSON_EXAMPLE); setJsonError(null); setJsonSuccess(null) }}
                         className="text-xs text-ink-faint hover:text-brand-500 underline">
-                        Cargar ejemplo
+                        <Trans>Cargar ejemplo</Trans>
                       </button>
                       <button type="button" onClick={handleJsonImport} disabled={!jsonText.trim()}
                         className="ml-auto px-4 py-1.5 bg-brand-500 hover:bg-brand-600 disabled:bg-surface-muted disabled:text-ink-faint text-white text-xs font-semibold rounded-lg transition-colors">
-                        Importar
+                        <Trans>Importar</Trans>
                       </button>
                     </div>
                   </div>
@@ -434,11 +440,11 @@ export function CreateExamPage() {
                 {importTab === 'xlsx' && (
                   <div className="p-5 space-y-3">
                     <p className="text-xs text-ink-muted">
-                      Sube un archivo <strong>.xlsx</strong>. La primera fila debe ser el encabezado con estas columnas:
+                      <Trans>Sube un archivo</Trans> <strong>.xlsx</strong>. <Trans>La primera fila debe ser el encabezado con estas columnas:</Trans>
                     </p>
                     <details className="group">
                       <summary className="text-xs font-semibold text-brand-600 cursor-pointer list-none flex items-center gap-1">
-                        <span className="group-open:hidden">▶</span><span className="hidden group-open:inline">▼</span> Ver columnas requeridas
+                        <span className="group-open:hidden">▶</span><span className="hidden group-open:inline">▼</span> <Trans>Ver columnas requeridas</Trans>
                       </summary>
                       <div className="mt-2 text-xs bg-surface-soft border border-surface-border rounded-lg p-3 space-y-2">
                         <p className="font-semibold text-ink-soft">Para preguntas de opción múltiple (<code>type=multiple</code>):</p>
@@ -459,7 +465,7 @@ export function CreateExamPage() {
                     )}
                     <button type="button" onClick={() => xlsxRef.current?.click()}
                       className="flex items-center gap-2 px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg transition-colors">
-                      <FileSpreadsheet size={13} /> Seleccionar archivo .xlsx
+                      <FileSpreadsheet size={13} /> <Trans>Seleccionar archivo .xlsx</Trans>
                     </button>
                   </div>
                 )}
@@ -470,9 +476,9 @@ export function CreateExamPage() {
                     <p className="text-xs text-gray-500">
                       Sube un PDF con preguntas numeradas. Se extraen automáticamente preguntas con opciones <code>A/B/C/D</code> y respuesta correcta (letra al final o <code>Answer: B</code> / <code>Respuesta: A</code>). También reconoce tarjetas donde la letra minúscula (<code>a. Texto</code>) indica directamente la respuesta correcta; en ese caso deberás completar los distractores manualmente.
                     </p>
-                    <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-3 py-2">
-                      ⚠ PDFs escaneados (imágenes) no soportados — el texto debe ser copiable desde el PDF.
-                    </p>
+                      <p className="text-warning-600 text-xs">
+                        ⚠ <Trans>PDFs escaneados (imágenes) no soportados — el texto debe ser copiable desde el PDF.</Trans>
+                      </p>
                     <input ref={pdfRef} type="file" accept=".pdf" className="hidden" onChange={handlePdfImport} />
                     {pdfStatus?.type === 'error' && <p className="text-danger-500 text-xs">{pdfStatus.msg}</p>}
                     {pdfStatus?.type === 'success' && (
@@ -483,11 +489,11 @@ export function CreateExamPage() {
                     {pdfStatus?.type === 'partial' && <p className="text-warning-600 text-xs">{pdfStatus.msg}</p>}
                     <button type="button" onClick={() => pdfRef.current?.click()} disabled={pdfLoading}
                       className="flex items-center gap-2 px-4 py-2 bg-brand-500 hover:bg-brand-600 disabled:bg-surface-muted disabled:text-ink-faint text-white text-xs font-semibold rounded-lg transition-colors">
-                      <FileText size={13} /> {pdfLoading ? 'Procesando PDF…' : 'Seleccionar archivo PDF'}
+                      <FileText size={13} /> {pdfLoading ? t`Procesando PDF…` : t`Seleccionar archivo PDF`}
                     </button>
                     {pdfRawText && (
                       <div className="space-y-2">
-                        <p className="text-xs font-semibold text-ink-soft">Texto extraído del PDF (cópialo al tab JSON si lo necesitas):</p>
+                        <p className="text-xs font-semibold text-ink-soft"><Trans>Texto extraído del PDF (cópialo al tab JSON si lo necesitas):</Trans></p>
                         <textarea readOnly value={pdfRawText} rows={8}
                           className="w-full border border-surface-border rounded-lg px-3 py-2 text-xs font-mono bg-surface-soft resize-y" />
                       </div>
@@ -502,14 +508,14 @@ export function CreateExamPage() {
           <section className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-ink">
-                Preguntas <span className="text-ink-faint font-normal">({questions.length})</span>
+                <Trans>Preguntas</Trans> <span className="text-ink-faint font-normal">({questions.length})</span>
               </h2>
               <button
                 type="button"
                 onClick={() => { setEditIndex(null); setShowForm(true) }}
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-lg transition-colors"
               >
-                <Plus size={14} /> Nueva pregunta
+                <Plus size={14} /> <Trans>Nueva pregunta</Trans>
               </button>
             </div>
 
@@ -517,8 +523,8 @@ export function CreateExamPage() {
 
             {questions.length === 0 ? (
               <div className="border-2 border-dashed border-surface-border rounded-xl py-12 text-center bg-surface-card">
-                <p className="text-ink-faint text-sm">Aún no hay preguntas.</p>
-                <p className="text-ink-faint text-xs mt-1">Usa "Nueva pregunta" o importa desde JSON, Excel o PDF.</p>
+                <p className="text-ink-faint text-sm"><Trans>Aún no hay preguntas.</Trans></p>
+                <p className="text-ink-faint text-xs mt-1"><Trans>Usa “Nueva pregunta” o importa desde JSON, Excel o PDF.</Trans></p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -542,7 +548,7 @@ export function CreateExamPage() {
             disabled={saving}
             className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-surface-muted disabled:text-ink-muted text-white font-bold rounded-xl text-sm transition-colors shadow-brand"
           >
-            {saving ? 'Guardando…' : 'Publicar set'}
+            {saving ? t`Guardando…` : t`Publicar set`}
           </button>
         </form>
       </div>
