@@ -360,10 +360,8 @@ exports.createDodoCheckout = onCall(
     const session = await client.checkoutSessions.create({
       product_cart: [{ product_id: productId, quantity: 1 }],
       customer: {
-        create_new_customer: {
-          email: request.auth.token.email,
-          name:  request.auth.token.name ?? request.auth.token.email.split('@')[0],
-        },
+        email: request.auth.token.email,
+        name:  request.auth.token.name ?? request.auth.token.email.split('@')[0],
       },
       payment_link: true,
     })
