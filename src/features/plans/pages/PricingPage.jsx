@@ -1,12 +1,18 @@
-﻿import { Link } from 'react-router-dom'
+﻿import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Check, Zap, Star, Building2 } from 'lucide-react'
+import { Check, Zap, Star, Building2, Loader2 } from 'lucide-react'
 import { Trans, useLingui } from '@lingui/react/macro'
+import { createCheckoutSession } from '@invertase/firestore-stripe-payments'
+import { getFunctions, httpsCallable } from 'firebase/functions'
+import { getApp } from 'firebase/app'
 import { Card, CardBody, CardHeader } from '../../../components/ui/Card'
 import { Badge } from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
 import { AppShell } from '../../../components/layout/AppShell'
 import { SEOHead } from '../../../components/SEOHead'
+import { useAuthStore } from '../../../core/store/useAuthStore'
+import { payments } from '../../../core/stripe/stripePayments'
 
 const FREE_FEATURES = [
   '3 exámenes por mes',
@@ -60,6 +66,10 @@ function PlanCard({ title, price, period, badge, features, cta, onClick, highlig
 
 export function PricingPage() {
   const { t } = useLingui()
+  const { isPro } = useAuthStore()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
   const FREE_FEATURES_I18N = [
     t`3 exámenes por mes`,
     t`Acceso a certificaciones oficiales`,
@@ -74,11 +84,46 @@ export function PricingPage() {
     t`Acceso anticipado a nuevas certs`,
     t`Sin anuncios`,
   ]
-  // Stripe checkout would redirect to a Stripe payment link / session
-  const handleUpgrade = () => {
-    // TODO: integrate Firebase Extension "Run Payments with Stripe"
-    // For now, open a placeholder
-    window.open('https://buy.stripe.com/placeholder', '_blank', 'noopener,noreferrer')
+
+  const handleUpgrade = async () => {
+    const priceId = import.meta.env.VITE_STRIPE_PRO_PRICE_ID
+    if (!priceId) {
+      window.open('https://buy.stripe.com/placeholder', '_blank', 'noopener,noreferrer')
+      return
+    }
+    try {
+      setLoading(true)
+      setError(null)
+      const session = await createCheckoutSession(payments, {
+        price: priceId,
+        success_url: `${window.location.origin}/pricing?success=true`,
+        cancel_url: `${window.location.origin}/pricing`,
+      })
+      window.location.assign(session.url)
+    } catch (err) {
+      console.error('Checkout error', err)
+      setError(t`No se pudo iniciar el pago. Intenta de nuevo.`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleManageSubscription = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const functions = getFunctions(getApp())
+      const portalLinkFn = httpsCallable(functions, 'ext-firestore-stripe-payments-createPortalLink')
+      const { data } = await portalLinkFn({
+        returnUrl: `${window.location.origin}/pricing`,
+      })
+      window.location.assign(data.url)
+    } catch (err) {
+      console.error('Portal error', err)
+      setError(t`No se pudo abrir el portal de suscripción.`)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -102,6 +147,12 @@ export function PricingPage() {
           </p>
         </motion.div>
 
+        {error && (
+          <p className="text-center text-sm text-error-600 bg-error-50 rounded-lg py-2 px-4 max-w-sm mx-auto">
+            {error}
+          </p>
+        )}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto"
@@ -111,20 +162,32 @@ export function PricingPage() {
             price="$0"
             badge={t`Gratis`}
             features={FREE_FEATURES_I18N}
-            cta={t`Tu plan actual`}
+            cta={isPro ? t`Plan básico` : t`Tu plan actual`}
             onClick={() => {}}
           />
           <PlanCard
             title={t`Pro`}
-            price="$15"
+            price="$9.99"
             period={t`mes`}
             badge={<><Star size={10} /> <Trans>Recomendado</Trans></>}
             features={PRO_FEATURES_I18N}
-            cta={t`Actualizar a Pro →`}
-            onClick={handleUpgrade}
+            cta={
+              loading
+                ? <span className="flex items-center justify-center gap-2"><Loader2 size={14} className="animate-spin" /><Trans>Procesando...</Trans></span>
+                : isPro
+                ? t`Administrar suscripción`
+                : t`Actualizar a Pro →`
+            }
+            onClick={isPro ? handleManageSubscription : handleUpgrade}
             highlighted
           />
         </motion.div>
+
+        {isPro && (
+          <p className="text-center text-sm text-success-600">
+            <Trans>✓ Eres usuario Pro — gracias por tu apoyo.</Trans>
+          </p>
+        )}
       </div>
     </AppShell>
   )

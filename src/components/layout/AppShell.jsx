@@ -196,6 +196,7 @@ function UserMenu() {
   const { t } = useTranslation();
   const { t: tMacro } = useLingui();
   const [open, setOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -228,8 +229,13 @@ function UserMenu() {
         aria-label={tMacro`Menú de usuario`}
         aria-expanded={open}
       >
-        {user.photoURL ? (
-          <img src={user.photoURL} alt="" className="h-10 w-10 rounded-full object-cover" />
+        {user.photoURL && !imgError ? (
+          <img
+            src={user.photoURL}
+            alt=""
+            className="h-10 w-10 rounded-full object-cover"
+            onError={() => setImgError(true)}
+          />
         ) : (
           initials
         )}

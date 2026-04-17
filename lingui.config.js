@@ -1,7 +1,7 @@
 /** @type {import('@lingui/conf').LinguiConfig} */
 export default {
-  locales: ['es', 'en', 'fr', 'pt', 'de', 'it', 'zh', 'ja'],
-  sourceLocale: 'es',
+  locales: ['en', 'es', 'fr', 'pt', 'de', 'it', 'zh', 'ja'],
+  sourceLocale: 'en',
   fallbackLocales: { default: 'en' },
   catalogs: [
     {

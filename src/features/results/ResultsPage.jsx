@@ -7,6 +7,8 @@ import { db } from '../../core/firebase/firebase';
 import { useAuthStore } from '../../core/store/useAuthStore';
 import { Trans, useLingui, Plural } from '@lingui/react/macro';
 import { SEOHead } from '../../components/SEOHead';
+import { ShareButton } from '../../components/ui/ShareButton';
+import { AdBanner } from '../ads/components/AdBanner';
 
 /** Modal that shows every question the user got wrong or skipped */
 function WrongAnswersModal({ wrongItems, onClose }) {
@@ -341,8 +343,23 @@ export function ResultsPage() {
           />
         </div>
 
+        <AdBanner
+          keywords="certification|developer|appian"
+          placementId="results-bottom"
+          className="mt-2"
+        />
+
         {/* Actions */}
         <div className="flex flex-col gap-3">
+          <ShareButton
+            url={state.certId && state.certId !== 'demo' ? `https://certzen.app/exam-sets/${state.certId}` : 'https://certzen.app'}
+            title={certLabel}
+            text={passed
+              ? `¡Saqué ${percentage}% en ${certLabel}! 🎯 Practica gratis en CertZen`
+              : `Obtuve ${percentage}% en ${certLabel}. ¡Lo intentaré de nuevo! 💪 Practica en CertZen`
+            }
+            variant="button"
+          />
           <button
             onClick={() => navigate('/')}
             className="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl transition-all active:scale-95 w-full"

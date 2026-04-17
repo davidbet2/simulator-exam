@@ -21,6 +21,7 @@ import { RatingStars } from '../../social/components/RatingStars';
 import { FavoriteButton } from '../../social/components/FavoriteButton';
 import { AuthorChip } from '../../social/components/AuthorChip';
 import { SaveToFolderButton } from '../../home/components/SaveToFolderButton';
+import { ShareButton } from '../../../components/ui/ShareButton';
 import DomainPath from '../components/DomainPath';
 import { SEOHead } from '../../../components/SEOHead';
 
@@ -321,6 +322,11 @@ export function ExamSetLandingPage() {
               variant="inline"
             />
             <SaveToFolderButton slug={slug} />
+            <ShareButton
+              url={canonicalUrl}
+              title={set.title}
+              text={`${set.title} — Simulador gratis en CertZen`}
+            />
           </div>
 
           {/* Anon prompt */}

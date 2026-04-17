@@ -5,9 +5,19 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db, googleProvider, githubProvider, microsoftProvider } from '../firebase/firebase';
+import { auth, db, googleProvider } from '../firebase/firebase';
+
+// After the user clicks the verification link, Firebase redirects them to
+// this URL (the app's verify-email page). Must be whitelisted in Firebase
+// Console → Authentication → Settings → Authorized domains.
+const ACTION_CODE_SETTINGS = {
+  url: `${window.location.origin}/verify-email`,
+  handleCodeInApp: false,
+};
 
 async function fetchUserProfile(firebaseUser) {
   const [adminDoc, userDoc] = await Promise.all([
@@ -37,6 +47,11 @@ export const useAuthStore = create((set) => ({
 
   /** Call once in App.jsx — listens to auth state changes */
   init: () => {
+    // Set Firebase email language to match stored locale (es by default).
+    // This controls the language of verification/reset emails sent by Firebase.
+    const storedLocale = localStorage.getItem('certzen-locale') ?? 'es';
+    auth.languageCode = storedLocale;
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         const state = await fetchUserProfile(firebaseUser);
@@ -80,61 +95,35 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  loginWithGithub: async () => {
-    set({ isLoading: true, error: null });
-    try {
-      const result = await signInWithPopup(auth, githubProvider);
-      const userRef = doc(db, 'users', result.user.uid);
-      const existing = await getDoc(userRef);
-      if (!existing.exists()) {
-        await setDoc(userRef, {
-          uid:         result.user.uid,
-          email:       result.user.email,
-          displayName: result.user.displayName ?? (result.user.email ? result.user.email.split('@')[0] : 'user'),
-          plan:        'free',
-          createdAt:   serverTimestamp(),
-        });
-      }
-    } catch (err) {
-      set({ error: mapAuthError(err.code), isLoading: false });
-    }
-  },
-
-  loginWithMicrosoft: async () => {
-    set({ isLoading: true, error: null });
-    try {
-      const result = await signInWithPopup(auth, microsoftProvider);
-      const userRef = doc(db, 'users', result.user.uid);
-      const existing = await getDoc(userRef);
-      if (!existing.exists()) {
-        await setDoc(userRef, {
-          uid:         result.user.uid,
-          email:       result.user.email,
-          displayName: result.user.displayName ?? (result.user.email ? result.user.email.split('@')[0] : 'user'),
-          plan:        'free',
-          createdAt:   serverTimestamp(),
-        });
-      }
-    } catch (err) {
-      set({ error: mapAuthError(err.code), isLoading: false });
-    }
-  },
-
   register: async (email, password, displayName) => {
     set({ isLoading: true, error: null });
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(db, 'users', result.user.uid), {
-        uid:         result.user.uid,
-        email,
-        displayName: displayName ?? email.split('@')[0],
-        plan:        'free',
-        createdAt:   serverTimestamp(),
-      });
+      await Promise.all([
+        setDoc(doc(db, 'users', result.user.uid), {
+          uid:         result.user.uid,
+          email,
+          displayName: displayName ?? email.split('@')[0],
+          plan:        'free',
+          createdAt:   serverTimestamp(),
+        }),
+        sendEmailVerification(result.user, ACTION_CODE_SETTINGS),
+      ]);
       // onAuthStateChanged handles the state update
     } catch (err) {
       set({ error: mapAuthError(err.code), isLoading: false });
     }
+  },
+
+  resendVerification: async () => {
+    if (auth.currentUser) {
+      await sendEmailVerification(auth.currentUser, ACTION_CODE_SETTINGS);
+    }
+  },
+
+  resetPassword: async (email) => {
+    // Uses the same continueUrl so after reset the user lands back on the app.
+    await sendPasswordResetEmail(auth, email, ACTION_CODE_SETTINGS);
   },
 
   logout: async () => {

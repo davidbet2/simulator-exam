@@ -11,6 +11,7 @@ import { Badge } from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { SEOHead } from '../../../components/SEOHead'
+import { AdBanner } from '../../ads/components/AdBanner'
 
 function StatCard({ icon: Icon, label, value, color }) {
   return (
@@ -102,6 +103,11 @@ export function DashboardPage() {
           <StatCard icon={Trophy}   label={t`Aprobados`}        value={passed} color="bg-success-500" />
           <StatCard icon={Target}   label={t`Promedio`}         value={`${avgScore}%`} color="bg-warning-500" />
         </motion.div>
+
+        <AdBanner
+          keywords="certification|developer|appian|cloud"
+          placementId="dashboard-main"
+        />
 
         {/* Actions */}
         <motion.div

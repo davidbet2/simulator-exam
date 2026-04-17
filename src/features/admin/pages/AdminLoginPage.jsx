@@ -1,25 +1,20 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 
-// Optional obscurity gate: if VITE_ADMIN_ACCESS_KEY is set at build time,
-// the login page is only reachable via /admin/login?k=<key>. Otherwise the
-// gate is a no-op (keeps local dev ergonomic).
-const ADMIN_ACCESS_KEY = import.meta.env.VITE_ADMIN_ACCESS_KEY ?? '';
+// Admin login is protected server-side via Firestore rules (admins collection).
+// No client-side key gate — it was extractable from the bundle anyway.
 
 export function AdminLoginPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const login = useAuthStore((s) => s.login);
-  const register = useAuthStore((s) => s.register);
   const user = useAuthStore((s) => s.user);
   const isAdmin = useAuthStore((s) => s.isAdmin);
   const isLoading = useAuthStore((s) => s.isLoading);
   const error = useAuthStore((s) => s.error);
   const clearError = useAuthStore((s) => s.clearError);
 
-  const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -27,11 +22,6 @@ export function AdminLoginPage() {
   useEffect(() => {
     if (isAdmin) navigate('/admin', { replace: true });
   }, [isAdmin, navigate]);
-
-  // Silently redirect away if the obscurity key is required but not matched.
-  if (ADMIN_ACCESS_KEY && searchParams.get('k') !== ADMIN_ACCESS_KEY) {
-    return <Navigate to="/" replace />;
-  }
 
   // Authenticated non-admin users should not see this page.
   if (user && !isAdmin && !isLoading) {
@@ -41,11 +31,7 @@ export function AdminLoginPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     clearError();
-    if (mode === 'login') {
-      await login(email, password);
-    } else {
-      await register(email, password);
-    }
+    await login(email, password);
   }
 
   return (
@@ -102,34 +88,9 @@ export function AdminLoginPage() {
             disabled={isLoading}
             className="w-full bg-appian-blue hover:bg-appian-blue-dark disabled:bg-gray-300 text-white font-bold py-2.5 rounded transition-colors text-sm"
           >
-            {isLoading ? 'Cargando...' : mode === 'login' ? 'Iniciar sesión' : 'Registrarme'}
+          {isLoading ? 'Cargando...' : 'Iniciar sesión'}
           </button>
         </form>
-
-        {/* Mode switch */}
-        <div className="text-center mt-4">
-          {mode === 'login' ? (
-            <p className="text-xs text-appian-muted">
-              ¿Tienes una invitación de admin?{' '}
-              <button
-                onClick={() => { setMode('register'); clearError(); }}
-                className="text-appian-blue font-semibold hover:underline"
-              >
-                Regístrate
-              </button>
-            </p>
-          ) : (
-            <p className="text-xs text-appian-muted">
-              ¿Ya tienes cuenta?{' '}
-              <button
-                onClick={() => { setMode('login'); clearError(); }}
-                className="text-appian-blue font-semibold hover:underline"
-              >
-                Inicia sesión
-              </button>
-            </p>
-          )}
-        </div>
 
         <div className="text-center mt-6">
           <a href="/" className="text-xs text-gray-400 hover:text-appian-muted underline">

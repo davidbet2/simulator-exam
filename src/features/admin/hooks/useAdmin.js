@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  getCountFromServer,
   serverTimestamp,
   setDoc,
   writeBatch,
@@ -453,45 +454,58 @@ export function useAdmin() {
   );
 
   // ── Dashboard KPIs ──────────────────────────────────────────────
+  // Uses getCountFromServer for collection-level counts to avoid reading
+  // all documents (cost-efficient with Blaze plan, scales with user growth).
   const fetchDashboardKPIs = useCallback(async () => {
     const now = Date.now();
     const D1  = now - 24 * 60 * 60 * 1000;
     const D7  = now - 7  * 24 * 60 * 60 * 1000;
     const D30 = now - 30 * 24 * 60 * 60 * 1000;
-    const toMillis = (v) => {
-      if (!v) return 0;
-      if (typeof v.toMillis === 'function') return v.toMillis();
-      if (v.seconds) return v.seconds * 1000;
-      return 0;
-    };
+    const ts  = (d) => new Date(now - d);
     try {
-      const [usersSnap, attemptsSnap, setsSnap, questionsSnap] = await Promise.all([
-        getDocs(collection(db, 'users')),
-        getDocs(collection(db, 'attempts')),
-        getDocs(collection(db, 'examSets')),
-        getDocs(collection(db, 'questions')),
+      const [
+        totalUsersSnap,
+        proUsersSnap,
+        newUsers7dSnap,
+        newUsers30dSnap,
+        bannedUsersSnap,
+        totalAttemptsSnap,
+        attempts24hSnap,
+        attempts7dSnap,
+        publishedSetsSnap,
+        totalSetsSnap,
+        questionsSnap,
+      ] = await Promise.all([
+        getCountFromServer(collection(db, 'users')),
+        getCountFromServer(query(collection(db, 'users'), where('plan', '==', 'pro'))),
+        getCountFromServer(query(collection(db, 'users'), where('createdAt', '>=', ts(D7)))),
+        getCountFromServer(query(collection(db, 'users'), where('createdAt', '>=', ts(D30)))),
+        getCountFromServer(query(collection(db, 'users'), where('banned', '==', true))),
+        getCountFromServer(collection(db, 'attempts')),
+        getCountFromServer(query(collection(db, 'attempts'), where('createdAt', '>=', ts(D1)))),
+        getCountFromServer(query(collection(db, 'attempts'), where('createdAt', '>=', ts(D7)))),
+        getCountFromServer(query(collection(db, 'examSets'), where('published', '==', true), where('deleted', '==', false))),
+        getCountFromServer(query(collection(db, 'examSets'), where('deleted', '==', false))),
+        getCountFromServer(collection(db, 'questions')),
       ]);
-      const users    = usersSnap.docs.map((d) => d.data());
-      const attempts = attemptsSnap.docs.map((d) => d.data());
-      const sets     = setsSnap.docs.map((d) => d.data());
 
-      const totalUsers    = users.length;
-      const proUsers      = users.filter((u) => u.plan === 'pro').length;
-      const newUsers7d    = users.filter((u) => toMillis(u.createdAt) >= D7).length;
-      const newUsers30d   = users.filter((u) => toMillis(u.createdAt) >= D30).length;
-      const bannedUsers   = users.filter((u) => u.banned === true).length;
-      const attempts24h   = attempts.filter((a) => toMillis(a.createdAt) >= D1).length;
-      const attempts7d    = attempts.filter((a) => toMillis(a.createdAt) >= D7).length;
-      const totalAttempts = attempts.length;
-      const publishedSets = sets.filter((s) => s.published && !s.deleted).length;
-      const totalSets     = sets.filter((s) => !s.deleted).length;
+      const totalUsers    = totalUsersSnap.data().count;
+      const proUsers      = proUsersSnap.data().count;
       const conversionPct = totalUsers > 0 ? Math.round((proUsers / totalUsers) * 100) : 0;
 
       return {
-        totalUsers, proUsers, newUsers7d, newUsers30d, bannedUsers, conversionPct,
-        attempts24h, attempts7d, totalAttempts,
-        publishedSets, totalSets,
-        totalQuestions: questionsSnap.size,
+        totalUsers,
+        proUsers,
+        newUsers7d:    newUsers7dSnap.data().count,
+        newUsers30d:   newUsers30dSnap.data().count,
+        bannedUsers:   bannedUsersSnap.data().count,
+        conversionPct,
+        totalAttempts: totalAttemptsSnap.data().count,
+        attempts24h:   attempts24hSnap.data().count,
+        attempts7d:    attempts7dSnap.data().count,
+        publishedSets: publishedSetsSnap.data().count,
+        totalSets:     totalSetsSnap.data().count,
+        totalQuestions: questionsSnap.data().count,
       };
     } catch (e) {
       console.error('KPI fetch error:', e.message);
