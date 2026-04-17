@@ -54,7 +54,7 @@ exports.verifyTurnstile = onCall(
   }
 )
 
-
+/**
  * Bridge function: syncs subscription status from the Invertase Stripe Extension
  * to the app's users/{uid}.plan field so that useAuthStore/useUserPlan work unchanged.
  *
