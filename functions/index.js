@@ -363,7 +363,7 @@ exports.createDodoCheckout = onCall(
         email: request.auth.token.email,
         name:  request.auth.token.name ?? request.auth.token.email.split('@')[0],
       },
-      return_url: 'https://certzen.app/pricing?payment=success',
+      return_url: 'https://certzen.app/payment-success',
     })
 
     const checkoutUrl = session.checkout_url
@@ -493,5 +493,65 @@ exports.dodoWebhook = onRequest(
     } catch (err) {
       console.error('dodoWebhook: error processing event', event.type, err)
     }
+  }
+)
+
+
+/**
+ * Manual sync fallback: queries Dodo API for the user's active subscription
+ * and updates Firestore. Called from PaymentSuccessPage if the webhook
+ * hasn't arrived yet (eventual consistency).
+ */
+exports.syncDodoSubscription = onCall(
+  { secrets: [DODO_API_KEY] },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Login required')
+    }
+
+    const email = request.auth.token.email
+    if (!email) {
+      throw new HttpsError('invalid-argument', 'No email on auth token')
+    }
+
+    const DodoPayments = require('dodopayments').default
+    const client = new DodoPayments({
+      bearerToken: DODO_API_KEY.value(),
+      environment: 'test_mode',
+    })
+
+    // List subscriptions for this email � most recent active first
+    let subs
+    try {
+      subs = await client.subscriptions.list({ customer_email: email, status: 'active' })
+    } catch (err) {
+      console.error('syncDodoSubscription: list failed', err.message)
+      throw new HttpsError('internal', 'Failed to query Dodo subscriptions')
+    }
+
+    const items = subs?.items ?? subs?.data ?? []
+    if (items.length === 0) {
+      return { synced: false, reason: 'no_active_subscription' }
+    }
+
+    const sub = items[0]
+    const db  = getFirestore()
+    const users = await db.collection('users').where('email', '==', email).limit(1).get()
+    if (users.empty) {
+      throw new HttpsError('not-found', 'User not found in Firestore')
+    }
+
+    await users.docs[0].ref.update({
+      plan:                  'pro',
+      isPro:                 true,
+      dodoSubscriptionId:    sub.subscription_id ?? sub.id ?? null,
+      dodoCustomerId:        sub.customer?.customer_id ?? null,
+      subscriptionStatus:    sub.status ?? 'active',
+      subscriptionRenewsAt:  sub.next_billing_date ?? null,
+      subscriptionStartedAt: sub.previous_billing_date ?? sub.created_at ?? null,
+      updatedAt:             new Date(),
+    })
+
+    return { synced: true, subscriptionId: sub.subscription_id ?? sub.id }
   }
 )
