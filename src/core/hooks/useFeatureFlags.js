@@ -17,8 +17,33 @@ export const DEFAULT_FLAGS = {
 };
 
 /**
+ * Fetches featureFlags/global via the Firestore REST API, bypassing App Check.
+ * Used as fallback when onSnapshot fails (e.g. App Check 403 in incognito).
+ */
+async function fetchFlagsViaRest(projectId) {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/featureFlags/global`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.fields) return null;
+    // Parse Firestore REST response format: { fieldName: { booleanValue: true } }
+    const parsed = {};
+    for (const [key, val] of Object.entries(data.fields)) {
+      if ('booleanValue' in val) parsed[key] = val.booleanValue;
+      else if ('stringValue' in val) parsed[key] = val.stringValue;
+      else if ('integerValue' in val) parsed[key] = Number(val.integerValue);
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Live hook — subscribes to `featureFlags/global` and keeps the local state
  * in sync with Firestore changes. If the doc is missing, returns DEFAULT_FLAGS.
+ * Falls back to Firestore REST API when App Check blocks the SDK read (e.g. incognito).
  *
  * Usage:
  *   const { flags, loading } = useFeatureFlags();
@@ -40,9 +65,12 @@ export function useFeatureFlags() {
         }
         setLoading(false);
       },
-      () => {
-        // On error (e.g. offline), fall back to defaults.
-        setFlags(DEFAULT_FLAGS);
+      async () => {
+        // SDK read failed (App Check 403, offline, etc.).
+        // Try REST API which doesn't require App Check for public collections.
+        const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID;
+        const restFlags = await fetchFlagsViaRest(projectId);
+        setFlags(restFlags ? { ...DEFAULT_FLAGS, ...restFlags } : DEFAULT_FLAGS);
         setLoading(false);
       },
     );
