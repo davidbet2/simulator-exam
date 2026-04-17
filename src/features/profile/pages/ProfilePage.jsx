@@ -402,10 +402,10 @@ export function ProfilePage() {
               </div>
             </div>
             <Badge variant={isPro ? 'pro' : 'default'}>
-              {subscriptionStatus === 'past_due' ? t`Pago pendiente`
-               : subscriptionStatus === 'on_hold'  ? t`En espera`
-               : subscriptionStatus === 'cancelled' ? t`Cancelada`
-               : isPro ? t`Activo` : t`Free`}
+              {subscriptionStatus === 'past_due' ? 'Pago pendiente'
+               : subscriptionStatus === 'on_hold'  ? 'En espera'
+               : subscriptionStatus === 'cancelled' ? 'Cancelada'
+               : isPro ? 'Activo' : 'Free'}
             </Badge>
           </div>
 
@@ -428,7 +428,7 @@ export function ProfilePage() {
                 <div className="flex items-start gap-2 p-3 rounded-xl bg-surface-muted/40 border border-surface-border">
                   <Clock size={13} className="text-ink-muted mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-[10px] uppercase tracking-wide text-ink-muted">{t`Inicio`}</p>
+                    <p className="text-[10px] uppercase tracking-wide text-ink-muted">Inicio</p>
                     <p className="text-xs font-medium text-ink">{formatDate(subscriptionStartedAt)}</p>
                   </div>
                 </div>
@@ -437,7 +437,7 @@ export function ProfilePage() {
                 <div className="flex items-start gap-2 p-3 rounded-xl bg-surface-muted/40 border border-surface-border">
                   <RefreshCw size={13} className="text-ink-muted mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-[10px] uppercase tracking-wide text-ink-muted">{t`Próxima renovación`}</p>
+                    <p className="text-[10px] uppercase tracking-wide text-ink-muted">Próxima renovación</p>
                     <p className="text-xs font-medium text-ink">{formatDate(subscriptionRenewsAt)}</p>
                   </div>
                 </div>
@@ -450,7 +450,7 @@ export function ProfilePage() {
             <div className="flex items-start gap-2 p-3 rounded-xl bg-warning-500/5 border border-warning-500/20">
               <AlertTriangle size={13} className="text-warning-500 mt-0.5 shrink-0" />
               <p className="text-xs text-ink-soft">
-                {t`Hubo un problema con tu último pago. Tu acceso Pro sigue activo por ahora, pero actualiza tu método de pago para evitar interrupciones.`}
+                Hubo un problema con tu último pago. Tu acceso Pro sigue activo por ahora, pero actualiza tu método de pago para evitar interrupciones.
               </p>
             </div>
           )}
@@ -484,21 +484,21 @@ export function ProfilePage() {
                     <div className="mt-3 rounded-xl border border-surface-border overflow-hidden">
                       {paymentsLoading ? (
                         <div className="flex items-center justify-center gap-2 py-6 text-ink-muted text-xs">
-                          <RefreshCw size={13} className="animate-spin" /> {t`Cargando...`}
+                          <RefreshCw size={13} className="animate-spin" /> Cargando...
                         </div>
                       ) : paymentsError ? (
                         <div className="flex items-center gap-2 px-4 py-3 text-xs text-danger-400">
                           <AlertTriangle size={13} /> {paymentsError}
                         </div>
                       ) : payments.length === 0 ? (
-                        <p className="px-4 py-3 text-xs text-ink-muted">{t`No hay pagos registrados.`}</p>
+                        <p className="px-4 py-3 text-xs text-ink-muted">No hay pagos registrados.</p>
                       ) : (
                         <table className="w-full text-xs">
                           <thead>
                             <tr className="border-b border-surface-border bg-surface-muted/30">
-                              <th className="text-left px-4 py-2 font-medium text-ink-muted">{t`Fecha`}</th>
-                              <th className="text-left px-4 py-2 font-medium text-ink-muted">{t`Monto`}</th>
-                              <th className="text-left px-4 py-2 font-medium text-ink-muted">{t`Estado`}</th>
+                              <th className="text-left px-4 py-2 font-medium text-ink-muted">Fecha</th>
+                              <th className="text-left px-4 py-2 font-medium text-ink-muted">Monto</th>
+                              <th className="text-left px-4 py-2 font-medium text-ink-muted">Estado</th>
                               <th className="px-4 py-2" />
                             </tr>
                           </thead>
@@ -515,8 +515,8 @@ export function ProfilePage() {
                                     : p.status === 'failed'   ? 'bg-danger-500/10 text-danger-500'
                                     : 'bg-surface-muted text-ink-muted'
                                   }`}>
-                                    {p.status === 'succeeded' ? t`Exitoso`
-                                     : p.status === 'failed'   ? t`Fallido`
+                                    {p.status === 'succeeded' ? 'Exitoso'
+                                     : p.status === 'failed'   ? 'Fallido'
                                      : p.status}
                                   </span>
                                 </td>
@@ -524,7 +524,7 @@ export function ProfilePage() {
                                   {p.receipt_url && (
                                     <a href={p.receipt_url} target="_blank" rel="noopener noreferrer"
                                        className="inline-flex items-center gap-1 text-brand-400 hover:text-brand-300 transition-colors">
-                                      <ExternalLink size={11} /> {t`Recibo`}
+                                      <ExternalLink size={11} /> Recibo
                                     </a>
                                   )}
                                 </td>
@@ -549,14 +549,14 @@ export function ProfilePage() {
                   onClick={() => setConfirmCancel(true)}
                   className="text-xs text-ink-muted hover:text-danger-400 transition-colors flex items-center gap-1.5"
                 >
-                  <X size={12} /> {t`Cancelar renovación automática`}
+                  <X size={12} /> Cancelar renovación automática
                 </button>
               ) : (
                 <div className="space-y-3">
                   <p className="text-xs text-ink-soft">
-                    {t`¿Estás seguro? Tu plan Pro se mantendrá activo hasta`}{' '}
-                    <strong>{formatDate(subscriptionRenewsAt)}</strong>{', '}
-                    {t`pero no se renovará.`}
+                    ¿Estás seguro? Tu plan Pro se mantendrá activo hasta{' '}
+                    <strong>{formatDate(subscriptionRenewsAt)}</strong>,{' '}
+                    pero no se renovará.
                   </p>
                   {cancelError && (
                     <p className="text-xs text-danger-400">{cancelError}</p>
@@ -568,14 +568,14 @@ export function ProfilePage() {
                       onClick={handleCancelRenewal}
                       className="px-3 py-1.5 rounded-lg bg-danger-500/10 text-danger-500 text-xs font-medium hover:bg-danger-500/20 transition-colors disabled:opacity-50"
                     >
-                      {cancelling ? t`Cancelando...` : t`Sí, cancelar`}
+                      {cancelling ? 'Cancelando...' : 'Sí, cancelar'}
                     </button>
                     <button
                       type="button"
                       onClick={() => { setConfirmCancel(false); setCancelError(null); }}
                       className="px-3 py-1.5 rounded-lg border border-surface-border text-ink-soft text-xs hover:text-ink transition-colors"
                     >
-                      {t`Mantener plan`}
+                      Mantener plan
                     </button>
                   </div>
                 </div>
@@ -588,7 +588,7 @@ export function ProfilePage() {
             <div className="flex items-start gap-2 p-3 rounded-xl bg-success-500/5 border border-success-500/20">
               <Check size={13} className="text-success-500 mt-0.5 shrink-0" />
               <p className="text-xs text-ink-soft">
-                {t`Renovación cancelada. Tu acceso Pro continúa hasta`}{' '}
+                Renovación cancelada. Tu acceso Pro continúa hasta{' '}
                 <strong>{formatDate(subscriptionRenewsAt)}</strong>.
               </p>
             </div>
