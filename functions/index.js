@@ -376,7 +376,7 @@ exports.createDodoCheckout = onCall(
  * Receives Dodo Payments webhooks, verifies the signature, and updates
  * the user's plan in Firestore.
  * Register this URL in Dodo Dashboard → Webhooks:
- *   https://us-central1-simulatorexam-dec4b.cloudfunctions.net/dodoWebhook
+ *   https://certzen.app/api/dodo/webhook
  */
 exports.dodoWebhook = onRequest(
   { secrets: [DODO_API_KEY, DODO_WEBHOOK_KEY] },
