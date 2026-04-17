@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
   onAuthStateChanged,
   sendEmailVerification,
@@ -52,6 +53,25 @@ export const useAuthStore = create((set) => ({
     const storedLocale = localStorage.getItem('certzen-locale') ?? 'es';
     auth.languageCode = storedLocale;
 
+    // Handle Google redirect callback — fires when returning from signInWithRedirect.
+    getRedirectResult(auth).then(async (result) => {
+      if (result?.user) {
+        const userRef = doc(db, 'users', result.user.uid);
+        const existing = await getDoc(userRef);
+        if (!existing.exists()) {
+          await setDoc(userRef, {
+            uid:         result.user.uid,
+            email:       result.user.email,
+            displayName: result.user.displayName ?? result.user.email.split('@')[0],
+            plan:        'free',
+            createdAt:   serverTimestamp(),
+          });
+        }
+      }
+    }).catch((err) => {
+      set({ error: mapAuthError(err.code), isLoading: false });
+    });
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         const state = await fetchUserProfile(firebaseUser);
@@ -76,20 +96,9 @@ export const useAuthStore = create((set) => ({
   loginWithGoogle: async () => {
     set({ isLoading: true, error: null });
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      // Create user profile if first time
-      const userRef = doc(db, 'users', result.user.uid);
-      const existing = await getDoc(userRef);
-      if (!existing.exists()) {
-        await setDoc(userRef, {
-          uid:         result.user.uid,
-          email:       result.user.email,
-          displayName: result.user.displayName ?? result.user.email.split('@')[0],
-          plan:        'free',
-          createdAt:   serverTimestamp(),
-        });
-      }
-      // onAuthStateChanged handles the state update
+      // signInWithRedirect avoids popup blockers and App Check throttle issues in PWAs.
+      // The result is handled in init() via getRedirectResult after the page reloads.
+      await signInWithRedirect(auth, googleProvider);
     } catch (err) {
       set({ error: mapAuthError(err.code), isLoading: false });
     }
