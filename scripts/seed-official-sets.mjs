@@ -60,8 +60,12 @@ if (missing.length) {
   process.exit(1);
 }
 
-const ADMIN_EMAIL    = process.env.SEED_ADMIN_EMAIL    ?? process.env.SETUP_ADMIN_EMAIL    ?? 'david.betancur@pragma.com.co';
-const ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD ?? process.env.SETUP_ADMIN_PASSWORD ?? 'Appian123!';
+const ADMIN_EMAIL    = process.env.SEED_ADMIN_EMAIL    ?? process.env.SETUP_ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD ?? process.env.SETUP_ADMIN_PASSWORD;
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+  console.error('❌ Missing SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD env vars.');
+  process.exit(1);
+}
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);

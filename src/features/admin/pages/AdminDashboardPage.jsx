@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Users, Crown, Activity, Library, FileQuestion, GraduationCap,
-  TrendingUp, AlertTriangle, ShieldCheck, ScrollText, Flag, ArrowUpRight,
+  Users, Crown, Activity, Library,
+  TrendingUp, AlertTriangle, ScrollText, Flag, ArrowUpRight,
 } from 'lucide-react';
 import { AdminShell } from '../components/AdminShell';
 import { useAdmin } from '../hooks/useAdmin';
@@ -93,7 +93,6 @@ export function AdminDashboardPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
             <Kpi icon={Library}       label="Sets publicados"   value={kpis.publishedSets}  sub={`${kpis.totalSets} totales`} tone="violet"  to="/admin/exam-sets" />
-            <Kpi icon={FileQuestion}  label="Preguntas en banco" value={kpis.totalQuestions} tone="brand"   to="/admin/questions" />
             <Kpi icon={TrendingUp}    label="Intentos totales"   value={kpis.totalAttempts}  tone="emerald" to="/admin/attempts" />
             <Kpi icon={Users}         label="Nuevos (30 días)"   value={kpis.newUsers30d}    tone="brand" />
           </div>
@@ -105,9 +104,6 @@ export function AdminDashboardPage() {
             <QuickLink to="/admin/users"          icon={Users}         label="Usuarios"         desc="Buscar, banear, cambiar plan" />
             <QuickLink to="/admin/exam-sets"      icon={Library}       label="Sets comunidad"   desc="Moderar contenido publicado" />
             <QuickLink to="/admin/attempts"       icon={Activity}      label="Intentos"         desc="Auditar intentos de examen" />
-            <QuickLink to="/admin/questions"      icon={FileQuestion}  label="Banco oficial"    desc="Editar preguntas oficiales" />
-            <QuickLink to="/admin/certifications" icon={GraduationCap} label="Certificaciones"  desc="Activar y configurar certs" />
-            <QuickLink to="/admin/admins"         icon={ShieldCheck}   label="Administradores"  desc="Otorgar o revocar acceso" />
             <QuickLink to="/admin/flags"          icon={Flag}          label="Feature flags"    desc="Activar/desactivar features" />
             <QuickLink to="/admin/audit-log"      icon={ScrollText}    label="Audit log"        desc="Historial de acciones admin" />
           </div>

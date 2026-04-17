@@ -8,6 +8,7 @@ import {
   Shield, Target,
 } from 'lucide-react';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { msg } from '@lingui/core/macro';
 import { useAuthStore } from '../../core/store/useAuthStore';
 import { useUserPlan } from '../plans/hooks/useUserPlan';
 import { PageSEO } from '../../components/seo/PageSEO';
@@ -17,39 +18,42 @@ import Button from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 
 // â”€â”€â”€ Features list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const buildFeatures = (t) => [
+// ─── Features list ───────────────────────────────────────────────────────────
+// Strings are defined with the `msg` macro so the extractor picks them up;
+// they're resolved to the active locale at render time via t(descriptor).
+const FEATURES = [
   {
     icon: Target,
-    title: t`Simulación Real`,
-    description: t`Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar.`,
+    title: msg`Simulación Real`,
+    description: msg`Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar.`,
     color: 'bg-brand-50 text-brand-600',
   },
   {
     icon: BookOpen,
-    title: t`Banco Oficial`,
-    description: t`Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad.`,
+    title: msg`Banco Oficial`,
+    description: msg`Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad.`,
     color: 'bg-sky-50 text-sky-600',
   },
   {
     icon: BarChart2,
-    title: t`Progreso Inteligente`,
-    description: t`Registra cada intento, identifica tus debilidades y construye confianza antes del día del examen.`,
+    title: msg`Progreso Inteligente`,
+    description: msg`Registra cada intento, identifica tus debilidades y construye confianza antes del día del examen.`,
     color: 'bg-amber-50 text-amber-600',
   },
 ];
 
-// â”€â”€â”€ Social proof numbers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const buildStats = (t) => [
-  { value: '3',    label: t`Modos de práctica`, emoji: '🎯' },
-  { value: 'Multi', label: t`Certificaciones`,   emoji: '🏅' },
-  { value: 'Pro',  label: t`Sin límites`,         emoji: '🚀' },
+// ─── Social proof numbers ────────────────────────────────────────────────────
+const STATS = [
+  { value: '3',    label: msg`Modos de práctica`, emoji: '🎯' },
+  { value: 'Multi', label: msg`Certificaciones`,  emoji: '🏅' },
+  { value: 'Pro',  label: msg`Sin límites`,        emoji: '🚀' },
 ];
 
-// â”€â”€â”€ Trust items â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const buildTrust = (t) => [
-  t`Acceso inmediato`,
-  t`Progreso guardado`,
-  t`Plan gratuito disponible`,
+// ─── Trust items ─────────────────────────────────────────────────────────────
+const TRUST = [
+  msg`Acceso inmediato`,
+  msg`Progreso guardado`,
+  msg`Plan gratuito disponible`,
 ];
 
 // â”€â”€â”€ Animation variants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -72,13 +76,13 @@ function FloatingShape({ className, delay = 0, duration = 7 }) {
 
 // â”€â”€â”€ Exam launch card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ─── Practice modes ──────────────────────────────────────────────────────────
-const buildModes = (t) => [
+const MODES = [
   {
     id: 'exam',
     emoji: '🎯',
-    title: t`Modo Examen`,
-    description: t`Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen.`,
-    tag: t`Más usado`,
+    title: msg`Modo Examen`,
+    description: msg`Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen.`,
+    tag: msg`Más usado`,
     tagColor: 'bg-brand-100 text-brand-700 border-brand-200',
     border: 'border-brand-200',
     bg: 'bg-brand-50',
@@ -89,9 +93,9 @@ const buildModes = (t) => [
   {
     id: 'study',
     emoji: '📖',
-    title: t`Modo Estudio`,
-    description: t`Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta.`,
-    tag: t`Para aprender`,
+    title: msg`Modo Estudio`,
+    description: msg`Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta.`,
+    tag: msg`Para aprender`,
     tagColor: 'bg-sky-100 text-sky-700 border-sky-200',
     border: 'border-sky-200',
     bg: 'bg-sky-50',
@@ -102,9 +106,9 @@ const buildModes = (t) => [
   {
     id: 'flashcards',
     emoji: '🃏',
-    title: t`Flashcards`,
-    description: t`Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar.`,
-    tag: t`Próximamente`,
+    title: msg`Flashcards`,
+    description: msg`Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar.`,
+    tag: msg`Próximamente`,
     tagColor: 'bg-amber-100 text-amber-700 border-amber-200',
     border: 'border-amber-200',
     bg: 'bg-amber-50',
@@ -115,9 +119,9 @@ const buildModes = (t) => [
   {
     id: 'quick',
     emoji: '⚡',
-    title: t`Repaso Rápido`,
-    description: t`10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos.`,
-    tag: t`Próximamente`,
+    title: msg`Repaso Rápido`,
+    description: msg`10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos.`,
+    tag: msg`Próximamente`,
     tagColor: 'bg-violet-100 text-violet-700 border-violet-200',
     border: 'border-violet-200',
     bg: 'bg-violet-50',
@@ -129,6 +133,7 @@ const buildModes = (t) => [
 
 // ─── Mode card ────────────────────────────────────────────────────────────────
 function ModeCard({ mode, onLaunch }) {
+  const { t } = useLingui();
   return (
     <motion.div
       variants={fadeUp}
@@ -145,14 +150,14 @@ function ModeCard({ mode, onLaunch }) {
           {mode.emoji}
         </div>
         <span className={`text-[11px] font-black border px-2.5 py-0.5 rounded-full ${mode.tagColor}`}>
-          {mode.tag}
+          {t(mode.tag)}
         </span>
       </div>
       <h3 className="font-display font-black text-ink text-lg leading-snug mb-2">
-        {mode.title}
+        {t(mode.title)}
       </h3>
       <p className="text-ink-soft text-sm leading-relaxed font-semibold flex-1 mb-5">
-        {mode.description}
+        {t(mode.description)}
       </p>
       {mode.available ? (
         <div className={`flex items-center justify-center gap-2 rounded-2xl
@@ -177,11 +182,6 @@ export function WelcomePage() {
   const { remaining, isPro, isLoading: planLoading } = useUserPlan();
   const [_showGate, _setShowGate]   = useState(false);
   const [mascotMood, setMascotMood] = useState('default');
-
-  const FEATURES = buildFeatures(t);
-  const STATS = buildStats(t);
-  const TRUST = buildTrust(t);
-  const MODES = buildModes(t);
 
   function launchMode(modeId) {
     navigate(`/exam?cert=demo&mode=${modeId}`);
@@ -364,12 +364,15 @@ export function WelcomePage() {
                     transition={{ duration: 0.5, delay: 0.32 }}
                     className="flex flex-wrap gap-x-5 gap-y-2"
                   >
-                    {TRUST.map((item) => (
-                      <li key={item} className="flex items-center gap-1.5 text-xs text-ink-soft font-bold">
-                        <CheckCircle2 size={13} className="text-brand-500 shrink-0" />
-                        {item}
-                      </li>
-                    ))}
+                    {TRUST.map((item) => {
+                      const label = t(item);
+                      return (
+                        <li key={label} className="flex items-center gap-1.5 text-xs text-ink-soft font-bold">
+                          <CheckCircle2 size={13} className="text-brand-500 shrink-0" />
+                          {label}
+                        </li>
+                      );
+                    })}
                   </motion.ul>
                 </div>
 
@@ -391,16 +394,19 @@ export function WelcomePage() {
 
                   <div className="grid grid-cols-3 gap-0 bg-white rounded-3xl border border-surface-border
                                   shadow-card w-full max-w-sm overflow-hidden">
-                    {STATS.map(({ value, label, emoji }, i) => (
-                      <div
-                        key={label}
-                        className={`p-5 text-center ${i < STATS.length - 1 ? 'border-r border-surface-border' : ''}`}
-                      >
-                        <div className="text-xl mb-1">{emoji}</div>
-                        <div className="font-black text-ink text-xl leading-none">{value}</div>
-                        <div className="text-ink-soft text-xs mt-1 font-bold leading-tight">{label}</div>
-                      </div>
-                    ))}
+                    {STATS.map(({ value, label, emoji }, i) => {
+                      const labelText = t(label);
+                      return (
+                        <div
+                          key={labelText}
+                          className={`p-5 text-center ${i < STATS.length - 1 ? 'border-r border-surface-border' : ''}`}
+                        >
+                          <div className="text-xl mb-1">{emoji}</div>
+                          <div className="font-black text-ink text-xl leading-none">{value}</div>
+                          <div className="text-ink-soft text-xs mt-1 font-bold leading-tight">{labelText}</div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </motion.div>
 
@@ -442,9 +448,12 @@ export function WelcomePage() {
               viewport={{ once: true, amount: 0.15 }}
               className="grid grid-cols-1 md:grid-cols-3 gap-6"
             >
-              {FEATURES.map(({ icon: Icon, title, description, color }) => (
+              {FEATURES.map(({ icon: Icon, title, description, color }) => {
+                const titleText = t(title);
+                const descriptionText = t(description);
+                return (
                 <motion.div
-                  key={title}
+                  key={titleText}
                   variants={fadeUp}
                   whileHover={{ y: -6, scale: 1.01 }}
                   transition={{ type: 'spring', stiffness: 350, damping: 26 }}
@@ -454,10 +463,11 @@ export function WelcomePage() {
                   <div className={`w-12 h-12 rounded-2xl ${color} flex items-center justify-center mb-5`}>
                     <Icon size={22} />
                   </div>
-                  <h3 className="font-display font-black text-ink text-xl leading-snug mb-3">{title}</h3>
-                  <p className="text-ink-soft text-sm leading-relaxed font-semibold">{description}</p>
+                  <h3 className="font-display font-black text-ink text-xl leading-snug mb-3">{titleText}</h3>
+                  <p className="text-ink-soft text-sm leading-relaxed font-semibold">{descriptionText}</p>
                 </motion.div>
-              ))}
+                );
+              })}
             </motion.div>
           </section>
 
@@ -512,7 +522,6 @@ export function WelcomePage() {
                 <Link to="/explore" className="flex items-center gap-1.5 hover:text-ink transition-colors font-bold">
                   <BookOpen size={12} /> <Trans>Explorar sets de la comunidad</Trans>
                 </Link>
-                <a href="/admin/login" className="hover:text-ink-soft transition-colors"><Trans>Administrador</Trans></a>
               </div>
             </div>
           </section>

@@ -26,10 +26,7 @@ const TermsPage          = lazy(() => import('../../features/public/pages/TermsP
 const ContactPage        = lazy(() => import('../../features/public/pages/ContactPage').then(m => ({ default: m.ContactPage })));
 const AdminLoginPage     = lazy(() => import('../../features/admin/pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
 const AdminDashboardPage = lazy(() => import('../../features/admin/pages/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })));
-const AdminQuestionsPage = lazy(() => import('../../features/admin/pages/AdminQuestionsPage').then(m => ({ default: m.AdminQuestionsPage })));
 const AdminUsersPage          = lazy(() => import('../../features/admin/pages/AdminUsersPage').then(m => ({ default: m.AdminUsersPage })));
-const AdminAdminsPage         = lazy(() => import('../../features/admin/pages/AdminAdminsPage').then(m => ({ default: m.AdminAdminsPage })));
-const AdminCertificationsPage = lazy(() => import('../../features/admin/pages/AdminCertificationsPage').then(m => ({ default: m.AdminCertificationsPage })));
 const AdminExamSetsPage       = lazy(() => import('../../features/admin/pages/AdminExamSetsPage').then(m => ({ default: m.AdminExamSetsPage })));
 const AdminAttemptsPage       = lazy(() => import('../../features/admin/pages/AdminAttemptsPage').then(m => ({ default: m.AdminAttemptsPage })));
 const AdminFlagsPage          = lazy(() => import('../../features/admin/pages/AdminFlagsPage').then(m => ({ default: m.AdminFlagsPage })));
@@ -73,6 +70,8 @@ export function AppRouter() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        {/* /exam is public: demo mode runs client-side with hardcoded questions.
+            Community/official sets enforce auth at the landing page (ExamSetLandingPage.launchMode). */}
         <Route path="/exam" element={<ExamPage />} />
         <Route path="/results" element={<ResultsPage />} />
 
@@ -98,26 +97,10 @@ export function AppRouter() {
           }
         />
         <Route
-          path="/admin/questions"
-          element={
-            <ProtectedRoute>
-              <AdminQuestionsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/admin/users"
           element={
             <ProtectedRoute>
               <AdminUsersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/admins"
-          element={
-            <ProtectedRoute>
-              <AdminAdminsPage />
             </ProtectedRoute>
           }
         />
@@ -138,14 +121,6 @@ export function AppRouter() {
           }
         />
         <Route
-          path="/admin/certifications"
-          element={
-            <ProtectedRoute>
-              <AdminCertificationsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/admin/flags"
           element={
             <ProtectedRoute>
@@ -161,8 +136,11 @@ export function AppRouter() {
             </ProtectedRoute>
           }
         />
-        {/* Legacy redirect */}
-        <Route path="/admin/settings" element={<Navigate to="/admin/certifications" replace />} />
+        {/* Legacy redirects — removed admin pages redirect to dashboard */}
+        <Route path="/admin/questions" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/admins" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/certifications" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/settings" element={<Navigate to="/admin" replace />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

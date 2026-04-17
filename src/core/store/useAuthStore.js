@@ -156,16 +156,21 @@ export const useAuthStore = create((set) => ({
 }));
 
 function mapAuthError(code) {
+  // Collapse credential-related codes to a single generic message to prevent
+  // account enumeration (OWASP A07 — Authentication Failures).
+  const genericCredential = 'Correo o contraseña incorrectos.';
   const map = {
-    'auth/user-not-found': 'Usuario no encontrado.',
-    'auth/wrong-password': 'Contraseña incorrecta.',
-    'auth/invalid-credential': 'Correo o contraseña incorrectos.',
-    'auth/invalid-email': 'Correo electrónico inválido.',
+    'auth/user-not-found':  genericCredential,
+    'auth/wrong-password':  genericCredential,
+    'auth/invalid-credential': genericCredential,
+    'auth/invalid-login-credentials': genericCredential,
+    'auth/invalid-email':   genericCredential,
     'auth/email-already-in-use': 'Este correo ya está registrado.',
-    'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
+    'auth/weak-password':   'La contraseña debe tener al menos 6 caracteres.',
     'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde.',
     'auth/popup-closed-by-user': 'Cerraste la ventana antes de completar el inicio de sesión.',
     'auth/account-exists-with-different-credential': 'Ya existe una cuenta con ese correo usando otro proveedor.',
+    'auth/network-request-failed': 'Error de red. Verifica tu conexión.',
   };
-  return map[code] || `Error de autenticación (${code}).`;
+  return map[code] || 'Error de autenticación. Intenta nuevamente.';
 }

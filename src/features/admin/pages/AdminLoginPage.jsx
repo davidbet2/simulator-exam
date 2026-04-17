@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useAuthStore } from '../../../core/store/useAuthStore';
+
+// Optional obscurity gate: if VITE_ADMIN_ACCESS_KEY is set at build time,
+// the login page is only reachable via /admin/login?k=<key>. Otherwise the
+// gate is a no-op (keeps local dev ergonomic).
+const ADMIN_ACCESS_KEY = import.meta.env.VITE_ADMIN_ACCESS_KEY ?? '';
 
 export function AdminLoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const login = useAuthStore((s) => s.login);
   const register = useAuthStore((s) => s.register);
+  const user = useAuthStore((s) => s.user);
   const isAdmin = useAuthStore((s) => s.isAdmin);
   const isLoading = useAuthStore((s) => s.isLoading);
   const error = useAuthStore((s) => s.error);
@@ -20,6 +28,16 @@ export function AdminLoginPage() {
     if (isAdmin) navigate('/admin', { replace: true });
   }, [isAdmin, navigate]);
 
+  // Silently redirect away if the obscurity key is required but not matched.
+  if (ADMIN_ACCESS_KEY && searchParams.get('k') !== ADMIN_ACCESS_KEY) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Authenticated non-admin users should not see this page.
+  if (user && !isAdmin && !isLoading) {
+    return <Navigate to="/" replace />;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     clearError();
@@ -32,6 +50,10 @@ export function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-appian-bg flex items-center justify-center px-4">
+      <Helmet>
+        <title>Admin</title>
+        <meta name="robots" content="noindex, nofollow, noarchive" />
+      </Helmet>
       <div className="bg-white w-full max-w-sm rounded-lg shadow-md px-8 py-10">
         {/* Logo */}
         <div className="text-center mb-8">

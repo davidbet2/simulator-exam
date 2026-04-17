@@ -3,10 +3,11 @@
  *
  * Usage:
  *   1. Copy .env.example → .env and fill Firebase values
- *   2. npm run seed
+ *   2. Set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD env vars (never commit)
+ *   3. npm run seed
  *
  * What it does:
- *   - Creates admin user: david.betancur@pragma.com.co / Appian123!
+ *   - Creates (or signs in as) the admin user defined by env vars
  *   - Adds that email to the `admins` collection
  *   - Seeds all Senior Developer questions from preguntas.json
  */
@@ -59,9 +60,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ─── Admin credentials ───────────────────────────────────────────────────────
-const ADMIN_EMAIL = 'david.betancur@pragma.com.co';
-const ADMIN_PASSWORD = 'Appian123!';
+// ─── Admin credentials (from env — never hardcode) ──────────────────────────
+const ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL ?? process.env.SETUP_ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD ?? process.env.SETUP_ADMIN_PASSWORD;
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+  console.error('❌ Missing SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD env vars.');
+  console.error('   Set them in your shell (or .env, but never commit) before running the seed.');
+  process.exit(1);
+}
 
 // ─── Load questions ───────────────────────────────────────────────────────────
 const preguntasPath = join(__dirname, '..', '..', 'preguntas.json');

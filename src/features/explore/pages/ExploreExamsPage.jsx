@@ -124,10 +124,12 @@ export function ExploreExamsPage() {
   const isPending = deferredSearch !== search || deferredDomain !== activeDomain;
 
   useEffect(() => {
+    // NOTE: Firestore rules allow anonymous list only when limit <= 100.
+    // Do not raise this without also updating firestore.rules.
     const q = query(
       collection(db, 'examSets'),
       where('published', '==', true),
-      limit(200),
+      limit(100),
     );
     getDocs(q)
       .then((snap) => {

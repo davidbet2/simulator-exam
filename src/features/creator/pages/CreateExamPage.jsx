@@ -192,12 +192,25 @@ export function CreateExamPage() {
     const file = e.target.files?.[0]
     if (!file) return
     setXlsxStatus(null)
+    if (file.size > 2 * 1024 * 1024) {
+      setXlsxStatus({ type: 'error', msg: t`El archivo supera 2 MB.` })
+      e.target.value = ''
+      return
+    }
+    if (!/\.xlsx$/i.test(file.name)) {
+      setXlsxStatus({ type: 'error', msg: t`Formato inválido. Solo se permite .xlsx.` })
+      e.target.value = ''
+      return
+    }
     try {
       const { questions: imported, error } = await parseXLSX(file)
       if (imported.length === 0) {
         setXlsxStatus({ type: 'error', msg: error ?? t`No se encontraron preguntas válidas en el archivo.` })
       } else {
-        setQuestions((qs) => [...qs, ...imported])
+        setQuestions((qs) => {
+          const merged = [...qs, ...imported]
+          return merged.length > 500 ? merged.slice(0, 500) : merged
+        })
         setXlsxStatus({ type: 'success', count: imported.length, msg: error ?? null })
       }
     } catch (_err) {
@@ -209,12 +222,26 @@ export function CreateExamPage() {
   async function handlePdfImport(e) {
     const file = e.target.files?.[0]
     if (!file) return
-    setPdfStatus(null); setPdfRawText(''); setPdfLoading(true)
+    setPdfStatus(null); setPdfRawText('')
+    if (file.size > 10 * 1024 * 1024) {
+      setPdfStatus({ type: 'error', msg: t`El archivo supera 10 MB.` })
+      e.target.value = ''
+      return
+    }
+    if (!/\.pdf$/i.test(file.name)) {
+      setPdfStatus({ type: 'error', msg: t`Formato inválido. Solo se permite .pdf.` })
+      e.target.value = ''
+      return
+    }
+    setPdfLoading(true)
     try {
       const rawText = await extractPDFText(file)
       const { questions: imported } = parseTextToQuestions(rawText)
       if (imported.length > 0) {
-        setQuestions((qs) => [...qs, ...imported])
+        setQuestions((qs) => {
+          const merged = [...qs, ...imported]
+          return merged.length > 500 ? merged.slice(0, 500) : merged
+        })
         setPdfStatus({ type: 'success', count: imported.length })
         setPdfRawText('')
       } else {
@@ -231,7 +258,9 @@ export function CreateExamPage() {
   function validate() {
     const e = {}
     if (!title.trim() || title.trim().length < 3) e.title = t`El título debe tener al menos 3 caracteres.`
+    if (title.trim().length > 200) e.title = t`El título no puede superar 200 caracteres.`
     if (questions.length < 1) e.questions = t`Añade al menos 1 pregunta.`
+    if (questions.length > 500) e.questions = t`Máximo 500 preguntas por examen.`
     if (Number(timeMinutes) < 1 || Number(timeMinutes) > 300) e.timeMinutes = t`Entre 1 y 300 minutos.`
     if (Number(passPercent) < 1 || Number(passPercent) > 100) e.passPercent = t`Entre 1 y 100%.`
     setErrors(e)

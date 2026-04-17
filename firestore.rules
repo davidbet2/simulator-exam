@@ -40,14 +40,17 @@ service cloud.firestore {
       allow read, list: if request.auth != null
         && (request.auth.uid == uid
             || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
-      allow create: if request.auth != null && request.auth.uid == uid;
+      // On create, owners cannot seed themselves into any privileged tier.
+      allow create: if request.auth != null && request.auth.uid == uid
+        && (!('plan' in request.resource.data) || request.resource.data.plan == 'free')
+        && !request.resource.data.keys().hasAny(['isPro','role','verifiedAuthor','reputationScore','banned']);
       allow update: if request.auth != null && (
         // Admins can update any user (plan, banned, notes, etc.)
         exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
-        // Owners can only update non-plan fields
+        // Owners cannot change any privileged field.
         || (request.auth.uid == uid
-            && (!request.resource.data.keys().hasAny(['plan'])
-                || request.resource.data.plan == resource.data.plan))
+            && !request.resource.data.diff(resource.data).affectedKeys()
+                  .hasAny(['plan','isPro','role','verifiedAuthor','reputationScore','banned']))
       );
     }
 
@@ -92,7 +95,13 @@ service cloud.firestore {
           && exists(/databases/$(database)/documents/admins/$(request.auth.token.email)))
         || (request.query.limit <= 100);
       allow create: if request.auth != null
-        && request.resource.data.ownerUid == request.auth.uid;
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.questionCount is int
+        && request.resource.data.questionCount >= 1
+        && request.resource.data.questionCount <= 500
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 200
+        && (!('official' in request.resource.data) || request.resource.data.official == false);
       // Update: owner/admin for full write. Authenticated non-owners may
       // only touch aggregate counter fields (rating/favorites) — enabling
       // client-side denormalization when a user rates or favorites a set.

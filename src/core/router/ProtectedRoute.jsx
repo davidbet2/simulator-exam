@@ -3,7 +3,8 @@ import { useAuthStore } from '../store/useAuthStore';
 
 /**
  * requireUser=true  → requires any authenticated user (redirect to /login)
- * requireUser=false → requires admin role (redirect to /admin/login) [default]
+ * requireUser=false → requires admin role. Non-admins are silently sent to `/`
+ *                     so the admin area is not discoverable by enumeration.
  */
 export function ProtectedRoute({ children, requireUser = false }) {
   const { isAdmin, user, isLoading } = useAuthStore();
@@ -20,5 +21,7 @@ export function ProtectedRoute({ children, requireUser = false }) {
     return user ? children : <Navigate to="/login" replace />;
   }
 
-  return isAdmin ? children : <Navigate to="/admin/login" replace />;
+  // Admin gate: never reveal the admin login route to non-admins.
+  // Unauthenticated users → home. Authenticated non-admin users → home.
+  return isAdmin ? children : <Navigate to="/" replace />;
 }

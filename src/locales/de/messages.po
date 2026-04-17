@@ -261,6 +261,10 @@ msgstr ""
 msgid "10 preguntas · sesión corta"
 msgstr ""
 
+#: src/features/welcome/WelcomePage.jsx:123
+msgid "10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos."
+msgstr ""
+
 #: src/features/public/pages/ContactPage.jsx:119
 msgid "2 días hábiles"
 msgstr ""
@@ -308,6 +312,10 @@ msgstr ""
 msgid "Acceso ilimitado a exámenes y funciones premium."
 msgstr "Unbegrenzter Zugang zu Prüfungen und Premium-Funktionen."
 
+#: src/features/welcome/WelcomePage.jsx:54
+msgid "Acceso inmediato"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:378
 msgid "Acceso rápido"
 msgstr ""
@@ -350,10 +358,6 @@ msgstr "Auf Pro upgraden"
 msgid "Actualizar a Pro →"
 msgstr "Auf Pro upgraden →"
 
-#: src/features/welcome/WelcomePage.jsx:515
-msgid "Administrador"
-msgstr ""
-
 #: src/features/home/pages/FolderPage.jsx:154
 msgid "Agregar sets"
 msgstr "Sets hinzufügen"
@@ -371,7 +375,7 @@ msgstr ""
 msgid "Algoritmo Leitner que programa cuándo repasar cada pregunta para consolidar memoria a largo plazo al mínimo esfuerzo."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:234
+#: src/features/creator/pages/CreateExamPage.jsx:262
 msgid "Añade al menos 1 pregunta."
 msgstr "Füge mindestens 1 Frage hinzu."
 
@@ -454,7 +458,7 @@ msgstr ""
 msgid "Aún no has tomado ningún examen."
 msgstr "Du hast noch keine Prüfung abgelegt."
 
-#: src/features/creator/pages/CreateExamPage.jsx:526
+#: src/features/creator/pages/CreateExamPage.jsx:555
 msgid "Aún no hay preguntas."
 msgstr "Noch keine Fragen."
 
@@ -473,6 +477,10 @@ msgstr "Auto"
 #: src/features/profile/pages/SettingsPage.jsx:244
 msgid "Auto sigue el tema del sistema"
 msgstr "Auto folgt dem Systemthema"
+
+#: src/features/welcome/WelcomePage.jsx:33
+msgid "Banco Oficial"
+msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:316
 msgid "Borrar cuenta"
@@ -534,7 +542,7 @@ msgstr "Fragen werden geladen..."
 msgid "Cargando…"
 msgstr "Lädt…"
 
-#: src/features/creator/pages/CreateExamPage.jsx:429
+#: src/features/creator/pages/CreateExamPage.jsx:458
 msgid "Cargar ejemplo"
 msgstr "Beispiel laden"
 
@@ -550,7 +558,7 @@ msgstr "Ordner nicht gefunden."
 msgid "Carpetas"
 msgstr "Ordner"
 
-#: src/features/creator/pages/CreateExamPage.jsx:315
+#: src/features/creator/pages/CreateExamPage.jsx:344
 msgid "Categorías / Etiquetas (opcional)"
 msgstr "Kategorien / Etiketten (optional)"
 
@@ -561,6 +569,10 @@ msgstr "Schließen"
 #: src/features/profile/pages/ProfilePage.jsx:525
 msgid "Cerrar sesión"
 msgstr "Abmelden"
+
+#: src/features/welcome/WelcomePage.jsx:48
+msgid "Certificaciones"
+msgstr ""
 
 #: src/features/public/pages/AboutPage.jsx:83
 msgid "CertZen es un simulador inteligente de certificaciones profesionales. Aprende cómo funciona, qué certificaciones cubre y por qué miles de profesionales confían en nosotros."
@@ -615,7 +627,7 @@ msgstr ""
 msgid "confianza"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:329
+#: src/features/creator/pages/CreateExamPage.jsx:358
 msgid "Configuración del examen"
 msgstr "Prüfungskonfiguration"
 
@@ -664,7 +676,7 @@ msgstr "E-Mail"
 msgid "Crea el primero"
 msgstr ""
 
-#: src/features/welcome/WelcomePage.jsx:552
+#: src/features/welcome/WelcomePage.jsx:561
 msgid "Crea tu cuenta en segundos y practica con simuladores reales. Plan gratuito para siempre. Actualiza cuando lo necesites."
 msgstr ""
 
@@ -689,7 +701,7 @@ msgstr "Konto erstellen"
 #: src/features/explore/pages/ExamSetLandingPage.jsx:549
 #: src/features/explore/pages/ExploreExamsPage.jsx:416
 #: src/features/public/pages/AboutPage.jsx:221
-#: src/features/welcome/WelcomePage.jsx:561
+#: src/features/welcome/WelcomePage.jsx:570
 msgid "Crear cuenta gratis"
 msgstr "Kostenloses Konto erstellen"
 
@@ -705,13 +717,17 @@ msgstr "Prüfung erstellen"
 msgid "Crear set"
 msgstr "Set erstellen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:279
+#: src/features/creator/pages/CreateExamPage.jsx:308
 msgid "Crear set de examen"
 msgstr "Prüfungsset erstellen"
 
 #: src/features/exam/pages/ExamPage.jsx:16
 msgid "Creo"
 msgstr "Ich glaube"
+
+#: src/features/welcome/WelcomePage.jsx:84
+msgid "Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen."
+msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:293
 msgid "Cuenta y privacidad"
@@ -731,7 +747,7 @@ msgstr ""
 msgid "Debes iniciar sesión para crear sets de examen."
 msgstr "Du musst dich anmelden, um Prüfungssets zu erstellen."
 
-#: src/features/creator/pages/CreateExamPage.jsx:309
+#: src/features/creator/pages/CreateExamPage.jsx:338
 msgid "Describe el contenido de este set…"
 msgstr "Beschreibe den Inhalt dieses Sets…"
 
@@ -739,7 +755,7 @@ msgstr "Beschreibe den Inhalt dieses Sets…"
 msgid "Describe tu consulta con el mayor detalle posible…"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:304
+#: src/features/creator/pages/CreateExamPage.jsx:333
 msgid "Descripción (opcional)"
 msgstr "Beschreibung (optional)"
 
@@ -777,17 +793,25 @@ msgstr "Dauer"
 msgid "Editar"
 msgstr "Bearbeiten"
 
-#: src/features/creator/pages/CreateExamPage.jsx:345
+#: src/features/creator/pages/CreateExamPage.jsx:374
 msgid "Ej: 60 min para 50 preguntas"
 msgstr "Bsp.: 60 Min. für 50 Fragen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:297
+#: src/features/creator/pages/CreateExamPage.jsx:326
 msgid "Ej: Examen de Práctica"
 msgstr "Bsp.: Übungsprüfung"
 
-#: src/features/creator/pages/CreateExamPage.jsx:320
+#: src/features/creator/pages/CreateExamPage.jsx:349
 msgid "Ej: Procesos, Interfaces, Registros, Seguridad"
 msgstr "Bsp.: Prozesse, Schnittstellen, Datensätze, Sicherheit"
+
+#: src/features/creator/pages/CreateExamPage.jsx:227
+msgid "El archivo supera 10 MB."
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:196
+msgid "El archivo supera 2 MB."
+msgstr ""
 
 #: src/features/public/pages/ContactPage.jsx:45
 msgid "El correo es obligatorio."
@@ -817,9 +841,13 @@ msgstr ""
 msgid "El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:233
+#: src/features/creator/pages/CreateExamPage.jsx:260
 msgid "El título debe tener al menos 3 caracteres."
 msgstr "Titel muss mindestens 3 Zeichen lang sein."
+
+#: src/features/creator/pages/CreateExamPage.jsx:261
+msgid "El título no puede superar 200 caracteres."
+msgstr ""
 
 #: src/features/exam/components/QuestionCard.jsx:192
 msgid "Elementos disponibles"
@@ -829,7 +857,7 @@ msgstr "Verfügbare Elemente"
 msgid "Elige el plan que te lleva a la certificación"
 msgstr ""
 
-#: src/features/welcome/WelcomePage.jsx:489
+#: src/features/welcome/WelcomePage.jsx:499
 msgid "Elige tu"
 msgstr ""
 
@@ -875,7 +903,7 @@ msgstr "Kostenlos starten"
 msgid "Empieza a estudiar"
 msgstr "Fang an zu lernen"
 
-#: src/features/welcome/WelcomePage.jsx:549
+#: src/features/welcome/WelcomePage.jsx:558
 msgid "Empieza gratis hoy"
 msgstr ""
 
@@ -884,11 +912,11 @@ msgstr ""
 msgid "Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:236
+#: src/features/creator/pages/CreateExamPage.jsx:265
 msgid "Entre 1 y 100%."
 msgstr "Zwischen 1 und 100 %."
 
-#: src/features/creator/pages/CreateExamPage.jsx:235
+#: src/features/creator/pages/CreateExamPage.jsx:264
 msgid "Entre 1 y 300 minutos."
 msgstr "Zwischen 1 und 300 Minuten."
 
@@ -916,15 +944,15 @@ msgstr ""
 msgid "Error al guardar"
 msgstr "Fehler beim Speichern"
 
-#: src/features/creator/pages/CreateExamPage.jsx:270
+#: src/features/creator/pages/CreateExamPage.jsx:299
 msgid "Error al guardar. Inténtalo de nuevo."
 msgstr "Fehler beim Speichern. Bitte erneut versuchen."
 
-#: src/features/creator/pages/CreateExamPage.jsx:204
+#: src/features/creator/pages/CreateExamPage.jsx:217
 msgid "Error al leer el archivo Excel."
 msgstr "Fehler beim Lesen der Excel-Datei."
 
-#: src/features/creator/pages/CreateExamPage.jsx:225
+#: src/features/creator/pages/CreateExamPage.jsx:252
 msgid "Error al leer el PDF."
 msgstr "Fehler beim Lesen der PDF."
 
@@ -960,7 +988,7 @@ msgstr "Geführtes Lernen"
 msgid "Examen"
 msgstr "Prüfung"
 
-#: src/features/creator/pages/CreateExamPage.jsx:361
+#: src/features/creator/pages/CreateExamPage.jsx:390
 msgid "Examen oficial: 73%"
 msgstr "Offizielle Prüfung: 73 %"
 
@@ -997,7 +1025,7 @@ msgstr "Menü erweitern"
 msgid "Explora por categoría"
 msgstr "Nach Kategorie entdecken"
 
-#: src/features/creator/pages/CreateExamPage.jsx:281
+#: src/features/creator/pages/CreateExamPage.jsx:310
 #: src/features/home/pages/HomePage.jsx:372
 msgid "Explorar"
 msgstr "Entdecken"
@@ -1017,7 +1045,7 @@ msgstr ""
 msgid "Explorar sets"
 msgstr "Sets entdecken"
 
-#: src/features/welcome/WelcomePage.jsx:513
+#: src/features/welcome/WelcomePage.jsx:523
 msgid "Explorar sets de la comunidad"
 msgstr ""
 
@@ -1045,6 +1073,22 @@ msgstr "Sitzung beenden und Ergebnisse anzeigen"
 msgid "Finalizar y ver resultados ✓"
 msgstr "Beenden und Ergebnisse anzeigen ✓"
 
+#: src/features/welcome/WelcomePage.jsx:109
+msgid "Flashcards"
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:232
+msgid "Formato inválido. Solo se permite .pdf."
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:201
+msgid "Formato inválido. Solo se permite .xlsx."
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:28
+msgid "Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar."
+msgstr ""
+
 #: src/features/public/pages/ContactPage.jsx:212
 msgid "Formulario de contacto"
 msgstr ""
@@ -1055,7 +1099,7 @@ msgstr ""
 msgid "Free"
 msgstr "Free"
 
-#: src/features/welcome/WelcomePage.jsx:546
+#: src/features/welcome/WelcomePage.jsx:555
 msgid "Freemium · Plan gratuito disponible"
 msgstr ""
 
@@ -1075,7 +1119,7 @@ msgstr ""
 msgid "Guardado"
 msgstr "Gespeichert"
 
-#: src/features/creator/pages/CreateExamPage.jsx:551
+#: src/features/creator/pages/CreateExamPage.jsx:580
 msgid "Guardando…"
 msgstr "Speichern…"
 
@@ -1135,11 +1179,11 @@ msgstr ""
 msgid "Idioma"
 msgstr "Sprache"
 
-#: src/features/creator/pages/CreateExamPage.jsx:433
+#: src/features/creator/pages/CreateExamPage.jsx:462
 msgid "Importar"
 msgstr "Importieren"
 
-#: src/features/creator/pages/CreateExamPage.jsx:375
+#: src/features/creator/pages/CreateExamPage.jsx:404
 msgid "Importar preguntas"
 msgstr "Fragen importieren"
 
@@ -1151,7 +1195,7 @@ msgstr "Falsch"
 msgid "Información de contacto"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:289
+#: src/features/creator/pages/CreateExamPage.jsx:318
 msgid "Información del set"
 msgstr "Set-Informationen"
 
@@ -1216,7 +1260,7 @@ msgstr "Die Kontolöschung wird vorübergehend vom Support bearbeitet."
 msgid "La interfaz se traduce al idioma seleccionado"
 msgstr "Die Oberfläche wird in die ausgewählte Sprache übersetzt"
 
-#: src/features/creator/pages/CreateExamPage.jsx:443
+#: src/features/creator/pages/CreateExamPage.jsx:472
 msgid "La primera fila debe ser el encabezado con estas columnas:"
 msgstr "Die erste Zeile muss die Kopfzeile mit diesen Spalten sein:"
 
@@ -1238,10 +1282,18 @@ msgstr "Markiere Sets als Favoriten oder starte eine Prüfung, um deinen Fortsch
 msgid "Marcar con duda"
 msgstr "Als unsicher markieren"
 
+#: src/features/welcome/WelcomePage.jsx:85
+msgid "Más usado"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:82
 #: src/features/profile/pages/SettingsPage.jsx:129
 msgid "Máximo 40 caracteres."
 msgstr "Maximal 40 Zeichen."
+
+#: src/features/creator/pages/CreateExamPage.jsx:263
+msgid "Máximo 500 preguntas por examen."
+msgstr ""
 
 #: src/features/profile/pages/ProfilePage.jsx:198
 msgid "Mejor nota"
@@ -1284,7 +1336,7 @@ msgstr "Mindestens 6 Zeichen"
 msgid "Modo"
 msgstr "Modus"
 
-#: src/features/welcome/WelcomePage.jsx:490
+#: src/features/welcome/WelcomePage.jsx:500
 msgid "modo de práctica"
 msgstr ""
 
@@ -1292,8 +1344,17 @@ msgstr ""
 msgid "Modo estudio"
 msgstr ""
 
+#: src/features/welcome/WelcomePage.jsx:96
+msgid "Modo Estudio"
+msgstr ""
+
 #: src/features/explore/pages/ExamSetLandingPage.jsx:424
+#: src/features/welcome/WelcomePage.jsx:83
 msgid "Modo Examen"
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:47
+msgid "Modos de práctica"
 msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:470
@@ -1322,11 +1383,11 @@ msgstr "Derzeit keine Empfehlungen."
 msgid "No puedes calificar tu propio set"
 msgstr "Du kannst dein eigenes Set nicht bewerten"
 
-#: src/features/creator/pages/CreateExamPage.jsx:222
+#: src/features/creator/pages/CreateExamPage.jsx:249
 msgid "No se detectaron preguntas automáticamente. Revisa el texto extraído abajo."
 msgstr "Fragen wurden nicht automatisch erkannt. Überprüfe den extrahierten Text unten."
 
-#: src/features/creator/pages/CreateExamPage.jsx:198
+#: src/features/creator/pages/CreateExamPage.jsx:208
 msgid "No se encontraron preguntas válidas en el archivo."
 msgstr "Keine gültigen Fragen in der Datei gefunden."
 
@@ -1372,7 +1433,7 @@ msgstr "CertZen-Neuigkeiten"
 msgid "Nueva carpeta"
 msgstr "Neuer Ordner"
 
-#: src/features/creator/pages/CreateExamPage.jsx:518
+#: src/features/creator/pages/CreateExamPage.jsx:547
 msgid "Nueva pregunta"
 msgstr "Neue Frage"
 
@@ -1412,19 +1473,23 @@ msgstr "Festgelegte Reihenfolge"
 msgid "Oscuro"
 msgstr "Dunkel"
 
-#: src/features/welcome/WelcomePage.jsx:430
+#: src/features/welcome/WelcomePage.jsx:98
+msgid "Para aprender"
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:436
 msgid "para aprobar"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:480
+#: src/features/creator/pages/CreateExamPage.jsx:509
 msgid "PDFs escaneados (imágenes) no soportados — el texto debe ser copiable desde el PDF."
 msgstr "Gescannte PDFs (Bilder) werden nicht unterstützt — Text muss aus dem PDF kopierbar sein."
 
-#: src/features/creator/pages/CreateExamPage.jsx:421
+#: src/features/creator/pages/CreateExamPage.jsx:450
 msgid "Pega aquí el JSON..."
 msgstr "JSON hier einfügen..."
 
-#: src/features/creator/pages/CreateExamPage.jsx:409
+#: src/features/creator/pages/CreateExamPage.jsx:438
 msgid "Pega un array JSON. Tipos soportados:"
 msgstr "Füge ein JSON-Array ein. Unterstützte Typen:"
 
@@ -1434,6 +1499,10 @@ msgstr "Profil"
 
 #: src/features/profile/pages/ProfilePage.jsx:339
 msgid "Plan Gratuito"
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:56
+msgid "Plan gratuito disponible"
 msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:170
@@ -1513,10 +1582,14 @@ msgstr ""
 msgid "preguntas"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:511
+#: src/features/creator/pages/CreateExamPage.jsx:540
 #: src/features/explore/pages/ExamSetLandingPage.jsx:344
 msgid "Preguntas"
 msgstr "Fragen"
+
+#: src/features/welcome/WelcomePage.jsx:34
+msgid "Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad."
+msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:445
 msgid "preguntas por repasar"
@@ -1555,13 +1628,21 @@ msgstr ""
 msgid "Pro"
 msgstr "Pro"
 
-#: src/features/welcome/WelcomePage.jsx:161
+#: src/features/welcome/WelcomePage.jsx:166
 msgid "Probar demo"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:492
+#: src/features/creator/pages/CreateExamPage.jsx:521
 msgid "Procesando PDF…"
 msgstr "PDF wird verarbeitet…"
+
+#: src/features/welcome/WelcomePage.jsx:55
+msgid "Progreso guardado"
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:39
+msgid "Progreso Inteligente"
+msgstr ""
 
 #: src/features/dashboard/pages/DashboardPage.jsx:103
 #: src/features/profile/pages/ProfilePage.jsx:197
@@ -1573,19 +1654,21 @@ msgid "Promociones"
 msgstr "Aktionen"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:66
-#: src/features/welcome/WelcomePage.jsx:166
+#: src/features/welcome/WelcomePage.jsx:111
+#: src/features/welcome/WelcomePage.jsx:124
+#: src/features/welcome/WelcomePage.jsx:171
 msgid "Próximamente"
 msgstr "Demnächst"
 
-#: src/features/welcome/WelcomePage.jsx:493
+#: src/features/welcome/WelcomePage.jsx:503
 msgid "Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:551
+#: src/features/creator/pages/CreateExamPage.jsx:580
 msgid "Publicar set"
 msgstr "Set veröffentlichen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:350
+#: src/features/creator/pages/CreateExamPage.jsx:379
 msgid "Puntaje mínimo para aprobar (%)"
 msgstr "Mindestpunktzahl zum Bestehen (%)"
 
@@ -1614,6 +1697,10 @@ msgstr "Erinnerungen, Routinen und Abzeichen"
 
 #: src/features/public/pages/ContactPage.jsx:161
 msgid "Recursos útiles"
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:40
+msgid "Registra cada intento, identifica tus debilidades y construye confianza antes del día del examen."
 msgstr ""
 
 #: src/features/auth/pages/RegisterPage.jsx:159
@@ -1676,6 +1763,10 @@ msgstr "Prüfung wiederholen"
 msgid "Rendimiento por certificación"
 msgstr ""
 
+#: src/features/welcome/WelcomePage.jsx:110
+msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar."
+msgstr ""
+
 #: src/features/explore/pages/ExamSetLandingPage.jsx:470
 msgid "Repasar ahora"
 msgstr ""
@@ -1687,6 +1778,10 @@ msgstr "Wiederholung"
 #: src/features/explore/pages/ExamSetLandingPage.jsx:456
 msgid "Repaso Inteligente"
 msgstr "Intelligente Wiederholung"
+
+#: src/features/welcome/WelcomePage.jsx:122
+msgid "Repaso Rápido"
+msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:457
 msgid "Repetición espaciada"
@@ -1789,15 +1884,15 @@ msgstr ""
 msgid "Seleccionar"
 msgstr "Auswählen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:468
+#: src/features/creator/pages/CreateExamPage.jsx:497
 msgid "Seleccionar archivo .xlsx"
 msgstr ".xlsx-Datei auswählen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:492
+#: src/features/creator/pages/CreateExamPage.jsx:521
 msgid "Seleccionar archivo PDF"
 msgstr "PDF-Datei auswählen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:323
+#: src/features/creator/pages/CreateExamPage.jsx:352
 msgid "Separa las categorías con comas para clasificar el contenido del examen."
 msgstr "Trenne Kategorien durch Kommas, um den Prüfungsinhalt zu klassifizieren."
 
@@ -1824,6 +1919,10 @@ msgstr "Wenn du die Prüfung verlässt, geht dein gesamter Fortschritt verloren.
 #: src/features/exam/pages/ExamPage.jsx:474
 msgid "Siguiente →"
 msgstr "Weiter →"
+
+#: src/features/welcome/WelcomePage.jsx:27
+msgid "Simulación Real"
+msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:425
 msgid "Simulacro cronometrado"
@@ -1854,7 +1953,11 @@ msgstr "Werbefrei"
 msgid "Sin confirmar"
 msgstr "Unbestätigt"
 
-#: src/features/welcome/WelcomePage.jsx:433
+#: src/features/welcome/WelcomePage.jsx:97
+msgid "Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta."
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:439
 msgid "Sin distracciones. Solo las herramientas que te acercan a tu certificación."
 msgstr ""
 
@@ -1864,6 +1967,10 @@ msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:470
 msgid "Sin historial"
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:49
+msgid "Sin límites"
 msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:118
@@ -1900,7 +2007,7 @@ msgstr ""
 msgid "Spaced repetition (Leitner 5 cajas)"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:443
+#: src/features/creator/pages/CreateExamPage.jsx:472
 msgid "Sube un archivo"
 msgstr "Lade eine Datei hoch"
 
@@ -1941,7 +2048,7 @@ msgstr ""
 msgid "Testing effect + feedback diferido"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:496
+#: src/features/creator/pages/CreateExamPage.jsx:525
 msgid "Texto extraído del PDF (cópialo al tab JSON si lo necesitas):"
 msgstr "Aus PDF extrahierter Text (kopiere ihn in den JSON-Tab, wenn nötig):"
 
@@ -1949,11 +2056,11 @@ msgstr "Aus PDF extrahierter Text (kopiere ihn in den JSON-Tab, wenn nötig):"
 msgid "Tiempo de respuesta"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:334
+#: src/features/creator/pages/CreateExamPage.jsx:363
 msgid "Tiempo límite (minutos)"
 msgstr "Zeitlimit (Minuten)"
 
-#: src/features/creator/pages/CreateExamPage.jsx:292
+#: src/features/creator/pages/CreateExamPage.jsx:321
 msgid "Título *"
 msgstr "Titel *"
 
@@ -1961,7 +2068,7 @@ msgstr "Titel *"
 msgid "Todo al día 🎉"
 msgstr ""
 
-#: src/features/welcome/WelcomePage.jsx:429
+#: src/features/welcome/WelcomePage.jsx:435
 msgid "Todo lo que necesitas"
 msgstr ""
 
@@ -2015,15 +2122,15 @@ msgstr "Bestehensgrenze"
 msgid "Únete de forma gratuita. Sin tarjeta de crédito requerida."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:527
+#: src/features/creator/pages/CreateExamPage.jsx:556
 msgid "Usa “Nueva pregunta” o importa desde JSON, Excel o PDF."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:447
+#: src/features/creator/pages/CreateExamPage.jsx:476
 msgid "Ver columnas requeridas"
 msgstr "Erforderliche Spalten anzeigen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:413
+#: src/features/creator/pages/CreateExamPage.jsx:442
 msgid "Ver formato de ejemplo"
 msgstr "Beispielformat anzeigen"
 
@@ -2077,7 +2184,7 @@ msgstr ""
 msgid "Volver al inicio"
 msgstr "Zurück zur Startseite"
 
-#: src/features/welcome/WelcomePage.jsx:571
+#: src/features/welcome/WelcomePage.jsx:580
 msgid "Ya tengo cuenta"
 msgstr "Ich habe bereits ein Konto"
 
