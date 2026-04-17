@@ -61,8 +61,8 @@ function MaintenanceGate({ children }) {
   const { isAdmin } = useAuthStore();
   const { pathname } = useLocation();
 
-  // While flags are loading render normally to avoid flash
-  if (loading) return children;
+  // While flags are loading show a neutral spinner — never flash the app content
+  if (loading) return <PageLoader />;
 
   // Admin paths always bypass maintenance
   if (pathname.startsWith('/admin')) return children;
