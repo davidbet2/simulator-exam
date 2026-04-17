@@ -2,6 +2,8 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 import { useAuthStore } from '../store/useAuthStore';
+import { useFeatureFlags } from '../hooks/useFeatureFlags';
+import { MaintenancePage } from '../../features/public/pages/MaintenancePage';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
@@ -50,6 +52,26 @@ function ScrollToTop() {
   return null;
 }
 
+/**
+ * Blocks all non-admin routes when maintenanceMode flag is active.
+ * Admins (isAdmin=true) always bypass so the panel stays accessible.
+ */
+function MaintenanceGate({ children }) {
+  const { flags, loading } = useFeatureFlags();
+  const { isAdmin } = useAuthStore();
+  const { pathname } = useLocation();
+
+  // While flags are loading render normally to avoid flash
+  if (loading) return children;
+
+  // Admin paths always bypass maintenance
+  if (pathname.startsWith('/admin')) return children;
+
+  if (flags.maintenanceMode && !isAdmin) return <MaintenancePage />;
+
+  return children;
+}
+
 /** If logged in and on `/`, redirect to `/home` (Quizlet-style authenticated landing). */
 function RootRoute() {
   const { user, isLoading } = useAuthStore();
@@ -63,6 +85,7 @@ export function AppRouter() {
     <BrowserRouter>
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
+      <MaintenanceGate>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<RootRoute />} />
@@ -149,6 +172,7 @@ export function AppRouter() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </MaintenanceGate>
       </Suspense>
     </BrowserRouter>
   );

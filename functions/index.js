@@ -204,3 +204,106 @@ exports.sendWelcomeEmail = onDocumentCreated(
     }
   }
 )
+
+// ─────────────────────────────────────────────────────────────────────────────
+// sendContactEmail — forwards a contact form submission to the admin inbox.
+// Called from ContactPage via Firebase callable (not mailto:).
+// Secrets:
+//   RESEND_API_KEY   — already configured (re-used from sendWelcomeEmail)
+//   CONTACT_EMAIL    — admin destination address (never committed)
+//                      Set with: echo "you@example.com" | firebase functions:secrets:set CONTACT_EMAIL
+// ─────────────────────────────────────────────────────────────────────────────
+const CONTACT_EMAIL = defineSecret('CONTACT_EMAIL')
+
+const ALLOWED_SUBJECTS = new Set(['support', 'billing', 'content', 'other'])
+const SUBJECT_LABELS = {
+  support: 'Soporte técnico',
+  billing: 'Cuenta y facturación',
+  content: 'Reporte de contenido',
+  other:   'Otro',
+}
+
+exports.sendContactEmail = onCall(
+  {
+    cors: true,
+    secrets: [RESEND_SECRET, CONTACT_EMAIL],
+  },
+  async (request) => {
+    const { name, email, subject, message } = request.data ?? {}
+
+    // ── Server-side validation (OWASP A03 — Injection prevention) ──────────
+    if (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 120) {
+      throw new HttpsError('invalid-argument', 'Invalid name')
+    }
+    if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || email.length > 200) {
+      throw new HttpsError('invalid-argument', 'Invalid email')
+    }
+    if (!ALLOWED_SUBJECTS.has(subject)) {
+      throw new HttpsError('invalid-argument', 'Invalid subject')
+    }
+    if (typeof message !== 'string' || message.trim().length < 20 || message.trim().length > 5000) {
+      throw new HttpsError('invalid-argument', 'Invalid message length')
+    }
+
+    const cleanName    = name.trim()
+    const cleanEmail   = email.trim()
+    const cleanMessage = message.trim()
+    const subjectLabel = SUBJECT_LABELS[subject]
+
+    const apiKey       = RESEND_SECRET.value()
+    const toEmail      = CONTACT_EMAIL.value()
+
+    if (!apiKey || !toEmail) {
+      console.warn('sendContactEmail: RESEND_API_KEY or CONTACT_EMAIL not configured')
+      throw new HttpsError('internal', 'Email service not configured')
+    }
+
+    const { Resend } = require('resend')
+    const resend = new Resend(apiKey)
+
+    const { error } = await resend.emails.send({
+      from:    'CertZen <soporte@certzen.app>',
+      to:      toEmail,
+      replyTo: cleanEmail,
+      subject: `[CertZen Soporte] ${subjectLabel}`,
+      html: `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head><meta charset="UTF-8" /><title>Contacto CertZen</title></head>
+        <body style="margin:0;padding:32px;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+          <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e2e8f0;padding:32px;">
+            <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;">Mensaje de contacto — CertZen</p>
+            <h2 style="margin:0 0 24px;font-size:18px;font-weight:700;color:#0f172a;">${subjectLabel}</h2>
+            <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+              <tr>
+                <td style="padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;width:100px">De</td>
+                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#0f172a;">${cleanName}</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;">Email</td>
+                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#6366f1;"><a href="mailto:${cleanEmail}" style="color:#6366f1;">${cleanEmail}</a></td>
+              </tr>
+              <tr>
+                <td style="padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;">Asunto</td>
+                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#0f172a;">${subjectLabel}</td>
+              </tr>
+            </table>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:24px;">
+              <p style="margin:0;font-size:13px;color:#334155;line-height:1.7;white-space:pre-wrap;">${cleanMessage}</p>
+            </div>
+            <p style="margin:0;font-size:11px;color:#94a3b8;">Responde directamente a este email — el Reply-To apunta a ${cleanEmail}</p>
+          </div>
+        </body>
+        </html>
+      `,
+    })
+
+    if (error) {
+      console.error('sendContactEmail: Resend error', error)
+      throw new HttpsError('internal', 'Failed to send email')
+    }
+
+    console.log(`sendContactEmail: forwarded from ${cleanEmail} → ${toEmail}`)
+    return { ok: true }
+  }
+)

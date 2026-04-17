@@ -1,6 +1,7 @@
 ﻿import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { PageSEO } from '../../../components/seo/PageSEO';
 import { Footer } from '../../../components/layout/Footer';
 
@@ -37,6 +38,8 @@ export function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   function validate() {
     const e = {};
@@ -58,7 +61,7 @@ export function ContactPage() {
     setErrors(prev => ({ ...prev, [name]: undefined }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const validation = validate();
     if (Object.keys(validation).length > 0) {
@@ -74,13 +77,18 @@ export function ContactPage() {
       return;
     }
 
-    const subjectLabel = SUBJECTS.find(s => s.value === form.subject)?.label ?? form.subject;
-    const body = encodeURIComponent(
-      `Nombre: ${form.name}\nAsunto: ${subjectLabel}\n\n${form.message}`
-    );
-    const recipient = 'support@certzen.app';
-    window.open(`mailto:${recipient}?subject=${encodeURIComponent(`[CertZen] ${subjectLabel}`)}&body=${body}`);
-    setSent(true);
+    setSending(true);
+    setSubmitError(null);
+    try {
+      const fn = httpsCallable(getFunctions(), 'sendContactEmail');
+      await fn({ ...form });
+      setSent(true);
+    } catch (err) {
+      console.error('sendContactEmail:', err);
+      setSubmitError(t`No se pudo enviar el mensaje. Intenta de nuevo o escríbenos directamente a support@certzen.app.`);
+    } finally {
+      setSending(false);
+    }
   }
 
   const inputClass =
@@ -191,11 +199,7 @@ export function ContactPage() {
                 <span className="text-4xl" aria-hidden="true">✅</span>
                 <h2 className="font-display font-bold text-ink text-xl"><Trans>¡Mensaje enviado!</Trans></h2>
                 <p className="text-ink-soft text-sm">
-                  <Trans>Se abrió tu cliente de correo con el mensaje preparado. Si no se abrió,</Trans>{' '}
-                  <a href="mailto:support@certzen.app" className="text-brand-600 underline">
-                    <Trans>envíens un correo directamente</Trans>
-                  </a>
-                  .
+                  <Trans>Recibimos tu mensaje y te responderemos en máximo 2 días hábiles.</Trans>
                 </p>
                 <button
                   type="button"
@@ -276,10 +280,15 @@ export function ContactPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition-colors focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                  disabled={sending}
+                  className="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm transition-colors focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                 >
-                  <Trans>Enviar mensaje</Trans>
+                  {sending ? <Trans>Enviando…</Trans> : <Trans>Enviar mensaje</Trans>}
                 </button>
+
+                {submitError && (
+                  <p role="alert" className="text-xs text-danger-500 text-center">{submitError}</p>
+                )}
 
                 <p className="text-xs text-slate-600 text-center">
                   <Trans>Al enviar aceptas nuestra</Trans>{' '}
