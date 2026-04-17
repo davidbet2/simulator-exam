@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, Library, Search, Plus, FolderPlus, Folder,
-  Settings, Trophy, LogOut, Sun, Moon, Monitor, Menu, X,
+  Settings, User, Trophy, LogOut, Sun, Moon, Monitor, Menu, X,
   PanelLeftClose, PanelLeftOpen, MessageCircle, ArrowRight,
 } from 'lucide-react';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
@@ -256,7 +256,7 @@ function UserMenu() {
               className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-ink hover:bg-surface-muted/60 transition-colors"
               role="menuitem"
             >
-              <Trophy size={16} className="text-ink-soft" />{t('nav.achievements')}
+              <User size={16} className="text-ink-soft" />{t('nav.profile')}
             </Link>
             <Link
               to="/settings"

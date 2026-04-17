@@ -1,11 +1,14 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { getApp } from 'firebase/app';
 import {
   Trophy, Star, Zap, Target, ArrowLeft, BookOpen,
   ChevronDown, ChevronUp, Plus, Search, Shield,
   Pencil, Check, X, Mail, Calendar, User, CreditCard,
+  Receipt, AlertTriangle, RefreshCw, ExternalLink, Clock,
 } from 'lucide-react';
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
@@ -13,6 +16,17 @@ import { Badge } from '../../../components/ui/Badge';
 import { AppShell } from '../../../components/layout/AppShell';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { SEOHead } from '../../../components/SEOHead';
+
+// ── Date formatter ─────────────────────────────────────────────────────────
+function formatDate(val) {
+  if (!val) return '—';
+  try {
+    const d = typeof val === 'string' ? new Date(val) : val.toDate ? val.toDate() : new Date(val);
+    return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+  } catch {
+    return '—';
+  }
+}
 
 // ── Avatar initials ───────────────────────────────────────────────────────────
 function AvatarLetters({ name, size = 'lg' }) {
@@ -59,10 +73,53 @@ function Achievement({ icon, label, unlocked }) {
 export function ProfilePage() {
   const { t } = useLingui();
   const navigate = useNavigate();
-  const { user, displayName, logout, isPro, isAdmin, updateDisplayName } = useAuthStore();
+  const { user, displayName, logout, isPro, isAdmin, updateDisplayName, subscriptionStatus, subscriptionRenewsAt, subscriptionStartedAt, dodoSubscriptionId } = useAuthStore();
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAllHistory, setShowAllHistory] = useState(false);
+
+  // ── Billing state ─────────────────────────────────────────────────────────
+  const [payments, setPayments] = useState([]);
+  const [paymentsLoading, setPaymentsLoading] = useState(false);
+  const [paymentsError, setPaymentsError] = useState(null);
+  const [showPayments, setShowPayments] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState(null);
+  const [cancelSuccess, setCancelSuccess] = useState(false);
+  const [confirmCancel, setConfirmCancel] = useState(false);
+
+  const loadPayments = useCallback(async () => {
+    if (paymentsLoading) return;
+    setPaymentsLoading(true);
+    setPaymentsError(null);
+    try {
+      const fns = getFunctions(getApp());
+      const fn  = httpsCallable(fns, 'getDodoPayments');
+      const res = await fn({});
+      setPayments(res.data?.payments ?? []);
+    } catch (err) {
+      setPaymentsError(err.message || 'Error al cargar historial');
+    } finally {
+      setPaymentsLoading(false);
+    }
+  }, [paymentsLoading]);
+
+  async function handleCancelRenewal() {
+    if (!dodoSubscriptionId) return;
+    setCancelling(true);
+    setCancelError(null);
+    try {
+      const fns = getFunctions(getApp());
+      const fn  = httpsCallable(fns, 'cancelDodoSubscription');
+      await fn({ subscriptionId: dodoSubscriptionId });
+      setCancelSuccess(true);
+      setConfirmCancel(false);
+    } catch (err) {
+      setCancelError(err.message || 'No se pudo cancelar la renovación');
+    } finally {
+      setCancelling(false);
+    }
+  }
 
   // ── Editable display name ──────────────────────────────────────────────────
   const [editingName, setEditingName] = useState(false);
@@ -327,6 +384,7 @@ export function ProfilePage() {
             <CreditCard size={15} className="text-ink-muted" /> <Trans>Suscripción y facturación</Trans>
           </h2>
 
+          {/* Plan header */}
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
@@ -343,10 +401,15 @@ export function ProfilePage() {
                 </p>
               </div>
             </div>
-            <Badge variant={isPro ? 'pro' : 'default'}>{isPro ? t`Activo` : t`Free`}</Badge>
+            <Badge variant={isPro ? 'pro' : 'default'}>
+              {subscriptionStatus === 'past_due' ? t`Pago pendiente`
+               : subscriptionStatus === 'on_hold'  ? t`En espera`
+               : subscriptionStatus === 'cancelled' ? t`Cancelada`
+               : isPro ? t`Activo` : t`Free`}
+            </Badge>
           </div>
 
-          {/* Features del plan actual */}
+          {/* Features del plan */}
           <div className="rounded-xl border border-surface-border bg-surface-soft/50 p-4 space-y-2">
             {(isPro
               ? [t`Exámenes ilimitados`, t`Historial completo`, t`Análisis por dominio`, t`Crea y comparte sets`, t`Acceso anticipado a nuevas certs`]
@@ -358,6 +421,180 @@ export function ProfilePage() {
             ))}
           </div>
 
+          {/* Subscription dates (only for Pro) */}
+          {isPro && (subscriptionStartedAt || subscriptionRenewsAt) && (
+            <div className="grid grid-cols-2 gap-3">
+              {subscriptionStartedAt && (
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-surface-muted/40 border border-surface-border">
+                  <Clock size={13} className="text-ink-muted mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wide text-ink-muted">{t`Inicio`}</p>
+                    <p className="text-xs font-medium text-ink">{formatDate(subscriptionStartedAt)}</p>
+                  </div>
+                </div>
+              )}
+              {subscriptionRenewsAt && (
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-surface-muted/40 border border-surface-border">
+                  <RefreshCw size={13} className="text-ink-muted mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wide text-ink-muted">{t`Próxima renovación`}</p>
+                    <p className="text-xs font-medium text-ink">{formatDate(subscriptionRenewsAt)}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Past-due / on-hold warning */}
+          {(subscriptionStatus === 'past_due' || subscriptionStatus === 'on_hold') && (
+            <div className="flex items-start gap-2 p-3 rounded-xl bg-warning-500/5 border border-warning-500/20">
+              <AlertTriangle size={13} className="text-warning-500 mt-0.5 shrink-0" />
+              <p className="text-xs text-ink-soft">
+                {t`Hubo un problema con tu último pago. Tu acceso Pro sigue activo por ahora, pero actualiza tu método de pago para evitar interrupciones.`}
+              </p>
+            </div>
+          )}
+
+          {/* Payment history toggle */}
+          {isPro && (
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  const next = !showPayments;
+                  setShowPayments(next);
+                  if (next && payments.length === 0) loadPayments();
+                }}
+                className="flex items-center gap-2 text-xs text-ink-soft hover:text-ink transition-colors"
+              >
+                <Receipt size={13} />
+                <Trans>Historial de pagos</Trans>
+                {showPayments ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+              </button>
+
+              <AnimatePresence>
+                {showPayments && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-3 rounded-xl border border-surface-border overflow-hidden">
+                      {paymentsLoading ? (
+                        <div className="flex items-center justify-center gap-2 py-6 text-ink-muted text-xs">
+                          <RefreshCw size={13} className="animate-spin" /> {t`Cargando...`}
+                        </div>
+                      ) : paymentsError ? (
+                        <div className="flex items-center gap-2 px-4 py-3 text-xs text-danger-400">
+                          <AlertTriangle size={13} /> {paymentsError}
+                        </div>
+                      ) : payments.length === 0 ? (
+                        <p className="px-4 py-3 text-xs text-ink-muted">{t`No hay pagos registrados.`}</p>
+                      ) : (
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="border-b border-surface-border bg-surface-muted/30">
+                              <th className="text-left px-4 py-2 font-medium text-ink-muted">{t`Fecha`}</th>
+                              <th className="text-left px-4 py-2 font-medium text-ink-muted">{t`Monto`}</th>
+                              <th className="text-left px-4 py-2 font-medium text-ink-muted">{t`Estado`}</th>
+                              <th className="px-4 py-2" />
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {payments.map((p) => (
+                              <tr key={p.payment_id} className="border-b border-surface-border/50 last:border-0 hover:bg-surface-muted/20 transition-colors">
+                                <td className="px-4 py-2.5 text-ink-soft">{formatDate(p.created_at)}</td>
+                                <td className="px-4 py-2.5 text-ink font-medium">
+                                  {p.currency?.toUpperCase()} {((p.total_amount ?? 0) / 100).toFixed(2)}
+                                </td>
+                                <td className="px-4 py-2.5">
+                                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                                    p.status === 'succeeded' ? 'bg-success-500/10 text-success-600'
+                                    : p.status === 'failed'   ? 'bg-danger-500/10 text-danger-500'
+                                    : 'bg-surface-muted text-ink-muted'
+                                  }`}>
+                                    {p.status === 'succeeded' ? t`Exitoso`
+                                     : p.status === 'failed'   ? t`Fallido`
+                                     : p.status}
+                                  </span>
+                                </td>
+                                <td className="px-4 py-2.5">
+                                  {p.receipt_url && (
+                                    <a href={p.receipt_url} target="_blank" rel="noopener noreferrer"
+                                       className="inline-flex items-center gap-1 text-brand-400 hover:text-brand-300 transition-colors">
+                                      <ExternalLink size={11} /> {t`Recibo`}
+                                    </a>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Cancel renewal (only for active Pro with a subscription ID) */}
+          {isPro && dodoSubscriptionId && !cancelSuccess && subscriptionStatus !== 'cancelled' && (
+            <div className="border-t border-surface-border/60 pt-4">
+              {!confirmCancel ? (
+                <button
+                  type="button"
+                  onClick={() => setConfirmCancel(true)}
+                  className="text-xs text-ink-muted hover:text-danger-400 transition-colors flex items-center gap-1.5"
+                >
+                  <X size={12} /> {t`Cancelar renovación automática`}
+                </button>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-xs text-ink-soft">
+                    {t`¿Estás seguro? Tu plan Pro se mantendrá activo hasta`}{' '}
+                    <strong>{formatDate(subscriptionRenewsAt)}</strong>{', '}
+                    {t`pero no se renovará.`}
+                  </p>
+                  {cancelError && (
+                    <p className="text-xs text-danger-400">{cancelError}</p>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={cancelling}
+                      onClick={handleCancelRenewal}
+                      className="px-3 py-1.5 rounded-lg bg-danger-500/10 text-danger-500 text-xs font-medium hover:bg-danger-500/20 transition-colors disabled:opacity-50"
+                    >
+                      {cancelling ? t`Cancelando...` : t`Sí, cancelar`}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setConfirmCancel(false); setCancelError(null); }}
+                      className="px-3 py-1.5 rounded-lg border border-surface-border text-ink-soft text-xs hover:text-ink transition-colors"
+                    >
+                      {t`Mantener plan`}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Cancellation confirmed */}
+          {cancelSuccess && (
+            <div className="flex items-start gap-2 p-3 rounded-xl bg-success-500/5 border border-success-500/20">
+              <Check size={13} className="text-success-500 mt-0.5 shrink-0" />
+              <p className="text-xs text-ink-soft">
+                {t`Renovación cancelada. Tu acceso Pro continúa hasta`}{' '}
+                <strong>{formatDate(subscriptionRenewsAt)}</strong>.
+              </p>
+            </div>
+          )}
+
+          {/* Upgrade CTA for free users */}
           {!isPro && (
             <Link
               to="/pricing"
@@ -405,7 +642,7 @@ export function ProfilePage() {
           transition={{ delay: 0.2 }}
           className="glass rounded-2xl border border-surface-border p-5"
         >
-          <h2 className="font-display font-bold text-ink text-sm mb-4"><Trans>Logros</Trans></h2>
+          <h2 className="font-display font-bold text-ink text-sm mb-4 flex items-center gap-2"><Trophy size={15} className="text-amber-400" /> <Trans>Logros</Trans></h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {achievements.map((a) => (
               <Achievement key={a.label} {...a} />

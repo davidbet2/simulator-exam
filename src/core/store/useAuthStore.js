@@ -8,7 +8,7 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../firebase/firebase';
 
 // After the user clicks the verification link, Firebase redirects them to
@@ -33,6 +33,8 @@ async function fetchUserProfile(firebaseUser) {
     displayName:         profile.displayName ?? firebaseUser.displayName ?? firebaseUser.email.split('@')[0],
     subscriptionStatus:  profile.subscriptionStatus ?? null,
     subscriptionRenewsAt: profile.subscriptionRenewsAt ?? null,
+    subscriptionStartedAt: profile.subscriptionStartedAt ?? null,
+    dodoSubscriptionId:  profile.dodoSubscriptionId ?? null,
     isLoading:           false,
     error:               null,
   };
@@ -54,15 +56,39 @@ export const useAuthStore = create((set) => ({
     const storedLocale = localStorage.getItem('certzen-locale') ?? 'es';
     auth.languageCode = storedLocale;
 
+    let unsubscribeProfile = null;
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      // Tear down any previous profile listener
+      if (unsubscribeProfile) {
+        unsubscribeProfile();
+        unsubscribeProfile = null;
+      }
       if (firebaseUser) {
+        // Initial fetch (admin check + first profile snapshot)
         const state = await fetchUserProfile(firebaseUser);
         set(state);
+        // Live profile updates — webhook/sync mutations propagate instantly
+        unsubscribeProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (snap) => {
+          if (!snap.exists()) return;
+          const profile = snap.data();
+          set({
+            isPro:                profile.plan === 'pro',
+            plan:                 profile.plan ?? 'free',
+            displayName:          profile.displayName ?? firebaseUser.displayName ?? firebaseUser.email.split('@')[0],
+            subscriptionStatus:   profile.subscriptionStatus ?? null,
+            subscriptionRenewsAt: profile.subscriptionRenewsAt ?? null,
+            subscriptionStartedAt: profile.subscriptionStartedAt ?? null,
+            dodoSubscriptionId:   profile.dodoSubscriptionId ?? null,
+          });
+        });
       } else {
         set({ user: null, isAdmin: false, isPro: false, plan: 'free', displayName: null, isLoading: false });
       }
     });
-    return unsubscribe;
+    return () => {
+      if (unsubscribeProfile) unsubscribeProfile();
+      unsubscribe();
+    };
   },
 
   login: async (email, password) => {
@@ -130,6 +156,17 @@ export const useAuthStore = create((set) => ({
 
   logout: async () => {
     await signOut(auth);
+  },
+
+  /**
+   * Re-fetch the current user's Firestore profile and update the store.
+   * Use after any server-side mutation (e.g. webhook/sync that upgrades plan)
+   * so the UI reflects the new state without forcing a page reload.
+   */
+  refreshProfile: async () => {
+    if (!auth.currentUser) return;
+    const state = await fetchUserProfile(auth.currentUser);
+    set(state);
   },
 
   /** Update display name in Firestore + Firebase Auth + local store */

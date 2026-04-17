@@ -555,3 +555,96 @@ exports.syncDodoSubscription = onCall(
     return { synced: true, subscriptionId: sub.subscription_id ?? sub.id }
   }
 )
+
+/**
+ * Cancels the auto-renewal of a Dodo subscription (not immediate — user
+ * keeps access until the current billing period ends).
+ * The Dodo API sets status to 'cancelled' after the last renewal date.
+ */
+exports.cancelDodoSubscription = onCall(
+  { secrets: [DODO_API_KEY] },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Login required')
+    }
+
+    const { subscriptionId } = request.data ?? {}
+    if (!subscriptionId || typeof subscriptionId !== 'string') {
+      throw new HttpsError('invalid-argument', 'Missing subscriptionId')
+    }
+
+    // Verify ownership: the stored dodoSubscriptionId in Firestore must match
+    const db = getFirestore()
+    const users = await db.collection('users').where('email', '==', request.auth.token.email).limit(1).get()
+    if (users.empty) {
+      throw new HttpsError('not-found', 'User not found')
+    }
+    const profile = users.docs[0].data()
+    if (profile.dodoSubscriptionId !== subscriptionId) {
+      throw new HttpsError('permission-denied', 'Subscription does not belong to this account')
+    }
+
+    const DodoPayments = require('dodopayments').default
+    const client = new DodoPayments({
+      bearerToken: DODO_API_KEY.value(),
+      environment: 'test_mode',
+    })
+
+    try {
+      await client.subscriptions.update(subscriptionId, { status: 'cancelled' })
+    } catch (err) {
+      console.error('cancelDodoSubscription: failed', err.message)
+      throw new HttpsError('internal', 'Could not cancel subscription via Dodo API')
+    }
+
+    // Reflect cancellation intent in Firestore immediately (webhook will confirm)
+    await users.docs[0].ref.update({
+      subscriptionStatus: 'cancelled',
+      updatedAt:          new Date(),
+    })
+
+    return { cancelled: true }
+  }
+)
+
+/**
+ * Returns the payment history for the authenticated user from Dodo Payments.
+ */
+exports.getDodoPayments = onCall(
+  { secrets: [DODO_API_KEY] },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Login required')
+    }
+
+    const email = request.auth.token.email
+    if (!email) {
+      throw new HttpsError('invalid-argument', 'No email on auth token')
+    }
+
+    const DodoPayments = require('dodopayments').default
+    const client = new DodoPayments({
+      bearerToken: DODO_API_KEY.value(),
+      environment: 'test_mode',
+    })
+
+    try {
+      const result = await client.payments.list({ customer_email: email })
+      const items = result?.items ?? result?.data ?? []
+      // Return only the fields the UI needs — avoids leaking raw Dodo objects
+      const payments = items.slice(0, 24).map((p) => ({
+        payment_id:   p.payment_id ?? p.id,
+        created_at:   p.created_at,
+        total_amount: p.total_amount,
+        currency:     p.currency,
+        status:       p.status,
+        receipt_url:  p.receipt_url ?? null,
+      }))
+      return { payments }
+    } catch (err) {
+      console.error('getDodoPayments: failed', err.message)
+      throw new HttpsError('internal', 'Could not retrieve payment history')
+    }
+  }
+)
+
