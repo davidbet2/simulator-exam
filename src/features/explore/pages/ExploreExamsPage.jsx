@@ -6,7 +6,7 @@ import { Search, BookOpen, Users, Plus, X, Loader2 } from 'lucide-react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useExploreQuery } from '../hooks/useExploreQuery';
 import { useAuthStore } from '../../../core/store/useAuthStore';
-import { DOMAINS, getDomain } from '../../../core/constants/domains';
+import { getDomain } from '../../../core/constants/domains';
 import { AppShell } from '../../../components/layout/AppShell';
 import { Card, CardBody } from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
@@ -86,22 +86,6 @@ const ExamSetCard = memo(function ExamSetCard({ set, needle }) {
     </Card>
   );
 });
-
-function DomainChip({ domain, active, onClick, label }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`h-9 px-3.5 rounded-full text-xs font-medium border transition-all whitespace-nowrap flex items-center gap-1.5 ${
-        active
-          ? 'bg-brand-500 border-brand-500 text-white'
-          : 'bg-white border-surface-border text-ink-soft hover:border-brand-500/50 hover:text-ink'
-      }`}
-    >
-      <span aria-hidden>{domain.icon}</span>
-      {label ?? domain.label}
-    </button>
-  );
-}
 
 export function ExploreExamsPage() {
   const { t } = useLingui();
@@ -188,15 +172,6 @@ export function ExploreExamsPage() {
     }
   }
 
-  const selectDomain = (id) => {
-    if (id === activeDomain || id === '') {
-      searchParams.delete('domain');
-    } else {
-      searchParams.set('domain', id);
-    }
-    setSearchParams(searchParams, { replace: true });
-  };
-
   const pageTitle = activeDomain
     ? t`Exámenes de ${getDomain(activeDomain).label} — CertZen`
     : t`Explorar exámenes de certificación — CertZen`;
@@ -241,17 +216,7 @@ export function ExploreExamsPage() {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-          className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0"
-        >
-          <DomainChip domain={{ label: 'Todos', icon: '📚' }} label={t`Todos`} active={!activeDomain} onClick={() => selectDomain('')} />
-          {DOMAINS.map((d) => (
-            <DomainChip key={d.id} domain={d} active={activeDomain === d.id} onClick={() => selectDomain(d.id)} />
-          ))}
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
           <form
             role="search"
             onSubmit={(e) => { e.preventDefault(); setShowSuggestions(false); }}

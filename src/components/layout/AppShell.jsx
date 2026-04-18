@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, Library, Search, Plus, FolderPlus, Folder,
   Settings, User, Trophy, LogOut, Sun, Moon, Monitor, Menu, X,
-  PanelLeftClose, PanelLeftOpen, MessageCircle, ArrowRight,
+  PanelLeftClose, PanelLeftOpen, MessageCircle, ArrowRight, BookMarked,
 } from 'lucide-react';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import { db } from '../../core/firebase/firebase';
@@ -129,10 +129,11 @@ function Sidebar({ onClose, collapsed = false, onToggleCollapse }) {
         </button>
       )}
 
-      <SidebarLink to="/home"        icon={Home}    label={t('nav.home')}    onClick={onClose} collapsed={collapsed} />
-      <SidebarLink to="/dashboard"   icon={Library} label={t('nav.library')} onClick={onClose} collapsed={collapsed} />
-      <SidebarLink to="/explore"     icon={Search}  label={t('nav.explore')} onClick={onClose} collapsed={collapsed} />
-      <SidebarLink to="/create-exam" icon={Plus}    label={t('nav.create')}  onClick={onClose} collapsed={collapsed} />
+      <SidebarLink to="/home"        icon={Home}        label={t('nav.home')}    onClick={onClose} collapsed={collapsed} />
+      <SidebarLink to="/dashboard"   icon={Library}     label={t('nav.library')} onClick={onClose} collapsed={collapsed} />
+      <SidebarLink to="/explore"     icon={Search}      label={t('nav.explore')} onClick={onClose} collapsed={collapsed} />
+      <SidebarLink to="/my-sets"     icon={BookMarked}  label={t('nav.mySets')}  onClick={onClose} collapsed={collapsed} />
+      <SidebarLink to="/create-exam" icon={Plus}        label={t('nav.create')}  onClick={onClose} collapsed={collapsed} />
 
       {!collapsed && (
         <>

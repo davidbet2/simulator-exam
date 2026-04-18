@@ -88,15 +88,18 @@ service cloud.firestore {
         || (request.auth != null
             && (resource.data.ownerUid == request.auth.uid
                 || exists(/databases/$(database)/documents/admins/$(request.auth.token.email))));
-      // Listing: admins may list freely. For everyone else, the rule is
-      // evaluated per-document; clients MUST filter by published==true (and
-      // bound the limit), otherwise any non-published doc trips the rule and
-      // the entire query is rejected. This prevents enumeration of drafts.
+      // Listing: admins may list freely. Owners can list their own sets (for MySets page).
+      // For everyone else, the rule is evaluated per-document; clients MUST filter by
+      // published==true (and bound the limit), otherwise any non-published doc trips the
+      // rule and the entire query is rejected. This prevents enumeration of drafts.
       // NOTE: request.query.filters does NOT exist in Firestore Rules — only
       // limit/offset/orderBy are exposed. Use resource.data instead.
       allow list: if
         (request.auth != null
           && exists(/databases/$(database)/documents/admins/$(request.auth.token.email)))
+        || (request.auth != null
+            && request.query.limit <= 50
+            && resource.data.ownerUid == request.auth.uid)
         || (request.query.limit <= 100
             && resource.data.published == true);
       allow create: if request.auth != null

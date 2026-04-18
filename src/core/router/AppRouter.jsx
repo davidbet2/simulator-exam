@@ -23,6 +23,8 @@ const PaymentSuccessPage = lazy(() => import('../../features/plans/pages/Payment
 const ExploreExamsPage   = lazy(() => import('../../features/explore/pages/ExploreExamsPage').then(m => ({ default: m.ExploreExamsPage })));
 const ExamSetLandingPage = lazy(() => import('../../features/explore/pages/ExamSetLandingPage').then(m => ({ default: m.ExamSetLandingPage })));
 const CreateExamPage     = lazy(() => import('../../features/creator/pages/CreateExamPage').then(m => ({ default: m.CreateExamPage })));
+const MySetsPage         = lazy(() => import('../../features/creator/pages/MySetsPage').then(m => ({ default: m.MySetsPage })));
+const EditExamPage       = lazy(() => import('../../features/creator/pages/EditExamPage').then(m => ({ default: m.EditExamPage })));
 const ProfilePage        = lazy(() => import('../../features/profile/pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
 const AboutPage          = lazy(() => import('../../features/public/pages/AboutPage').then(m => ({ default: m.AboutPage })));
 const PrivacyPage        = lazy(() => import('../../features/public/pages/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
@@ -118,6 +120,8 @@ export function AppRouter() {
         <Route path="/explore" element={<ExploreExamsPage />} />
         <Route path="/exam-sets/:slug" element={<ExamSetLandingPage />} />
         <Route path="/create-exam" element={<ProtectedRoute requireUser><CreateExamPage /></ProtectedRoute>} />
+        <Route path="/my-sets" element={<ProtectedRoute requireUser><MySetsPage /></ProtectedRoute>} />
+        <Route path="/edit-exam/:id" element={<ProtectedRoute requireUser><EditExamPage /></ProtectedRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
