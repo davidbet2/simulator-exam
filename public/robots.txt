@@ -7,5 +7,9 @@ Disallow: /results
 Disallow: /dashboard
 Disallow: /profile
 Disallow: /settings
+Disallow: /home
+Disallow: /payment-success
+Disallow: /create-exam
+Disallow: /folders/
 
 Sitemap: https://certzen.app/sitemap.xml

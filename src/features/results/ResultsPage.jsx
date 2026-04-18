@@ -8,6 +8,7 @@ import { useAuthStore } from '../../core/store/useAuthStore';
 import { Trans, useLingui, Plural } from '@lingui/react/macro';
 import { SEOHead } from '../../components/SEOHead';
 import { ShareButton } from '../../components/ui/ShareButton';
+import { analytics } from '../../core/analytics/events';
 import { AdBanner } from '../ads/components/AdBanner';
 
 /** Modal that shows every question the user got wrong or skipped */
@@ -146,6 +147,14 @@ export function ResultsPage() {
       mode:        state.mode ?? 'exam',
       createdAt:   serverTimestamp(),
     }).catch((err) => { console.error('[Results] attempt save failed:', err); });
+    const pct = state.total > 0 ? Math.round((state.score / state.total) * 100) : 0;
+    analytics.examComplete({
+      certId: state.certId ?? 'unknown',
+      mode:   state.mode   ?? 'exam',
+      score:  state.score,
+      total:  state.total,
+      passed: pct >= (state.passPercent ?? 72),
+    });
   }, [state, user]);
 
   if (!state) return null;

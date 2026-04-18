@@ -93,7 +93,7 @@ export function AdBanner({
         </p>
         <ins
           className="adsbygoogle"
-          style={{ display: 'block', minHeight: '90px' }}
+          style={{ display: 'block', minHeight: '250px' }}
           data-ad-client={adsenseId}
           data-ad-slot={adSlot}
           data-ad-format="auto"

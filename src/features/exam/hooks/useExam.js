@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firesto
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { recordAnswer, recordAnswersBatch, fetchQuestionIdsForMode } from '../utils/questionStats';
+import { analytics } from '../../../core/analytics/events';
 
 // Modes that behave like study (reveal feedback, no timer): 'study', 'weak', 'srs', 'wager'.
 const isStudyLikeMode = (m) => m === 'study' || m === 'weak' || m === 'srs' || m === 'wager';
@@ -302,6 +303,11 @@ export function useExam(certification, mode = 'exam', countOverride = null, doma
       setCurrent(0);
       setTimeLeft(totalSecs);
       setStatus('running');
+      analytics.examStart({
+        certId:        certification.id,
+        mode,
+        questionCount: dqs.length,
+      });
       sessionStorage.setItem(
         sessionKey(certification.id, mode, domainFilter),
         JSON.stringify({ displayQuestions: dqs, answers: {}, flags: initialFlags, revealed: initialRevealed, confidence: {}, current: 0, startTimestamp: startTs, totalSeconds: totalSecs })

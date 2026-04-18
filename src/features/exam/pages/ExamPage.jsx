@@ -8,6 +8,7 @@ import { useExam } from '../hooks/useExam';
 import { QuestionCard } from '../components/QuestionCard';
 import { TimerBox } from '../components/TimerBox';
 import { X, FlagOff } from 'lucide-react';
+import { SEOHead } from '../../../components/SEOHead';
 
 /** Wager mode — 3-button confidence multiplier selector (×1 Dudo / ×2 Creo / ×3 Seguro). */
 function ConfidencePicker({ value, onPick, disabled }) {
@@ -344,6 +345,7 @@ export function ExamPage() {
 
   return (
     <div className="min-h-screen flex items-start justify-center py-6 px-4">
+      <SEOHead title={t`Examen`} description={t`Sesión de práctica de examen de certificación.`} path="/exam" noindex />
       <div className="w-full max-w-3xl rounded-2xl overflow-hidden shadow-card bg-surface-soft border border-surface-border">
 
         {/* Header — Game HUD */}

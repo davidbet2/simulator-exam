@@ -280,6 +280,12 @@ export function ExamSetLandingPage() {
         <meta property="og:description" content={description} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="article" />
+        <meta property="og:image" content="https://certzen.app/og-image.png" />
+        <meta property="og:locale" content="es_CO" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${set.title} — CertZen`} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content="https://certzen.app/og-image.png" />
         {set.tags?.length > 0 && (
           <meta name="keywords" content={set.tags.join(', ')} />
         )}

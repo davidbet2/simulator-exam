@@ -256,9 +256,16 @@ export function ExploreExamsPage() {
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
+        <meta name="robots" content="index, follow" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://certzen.app/og-image.png" />
+        <meta property="og:locale" content="es_CO" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content="https://certzen.app/og-image.png" />
         <link rel="canonical" href={`https://certzen.app/explore${activeDomain ? `?domain=${activeDomain}` : ''}`} />
       </Helmet>
 

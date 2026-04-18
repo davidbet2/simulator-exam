@@ -116,6 +116,17 @@ service cloud.firestore {
         || (
           request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly(['ratingSum','ratingCount','ratingAvg','wilsonScore','favoritesCount','updatedAt'])
+          && request.resource.data.ratingSum is number
+          && request.resource.data.ratingCount is int
+          && request.resource.data.ratingCount >= 0
+          && request.resource.data.ratingAvg is number
+          && request.resource.data.ratingAvg >= 0
+          && request.resource.data.ratingAvg <= 5
+          && request.resource.data.wilsonScore is number
+          && request.resource.data.wilsonScore >= 0
+          && request.resource.data.wilsonScore <= 1
+          && request.resource.data.favoritesCount is int
+          && request.resource.data.favoritesCount >= 0
         )
       );
       allow delete: if request.auth != null

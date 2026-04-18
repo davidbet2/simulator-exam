@@ -6,7 +6,8 @@ import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { ShieldCheck, LogIn, AlertTriangle, Timer } from 'lucide-react';
 import { Turnstile } from '@marsidev/react-turnstile';
-const VERIFY_TURNSTILE_URL = `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net/verifyTurnstile`;
+const VERIFY_TURNSTILE_URL = import.meta.env.VITE_TURNSTILE_VERIFY_URL
+  ?? `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net/verifyTurnstile`;
 import { Helmet } from 'react-helmet-async';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import Button from '../../../components/ui/Button';
@@ -91,11 +92,14 @@ export function AdminLoginPage() {
           body: JSON.stringify({ token: captchaToken }),
         });
         if (!resp.ok) {
-          console.warn('Turnstile verification failed (non-blocking):', resp.status);
+          useAuthStore.setState({ error: 'Verifica que eres humano e inténtalo de nuevo.', isLoading: false });
+          resetTurnstile();
+          return;
         }
-      } catch (err) {
-        // Turnstile is a secondary layer — Firebase Auth + Firestore rules are the real gate.
-        console.warn('Turnstile verification failed (non-blocking):', err?.message);
+      } catch (_err) {
+        useAuthStore.setState({ error: 'Error al verificar el captcha. Verifica tu conexión.', isLoading: false });
+        resetTurnstile();
+        return;
       }
     }
 

@@ -9,6 +9,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../firebase/firebase';
+import { analytics } from '../analytics/events';
 
 async function fetchUserProfile(firebaseUser) {
   const [adminDoc, userDoc] = await Promise.all([
@@ -91,6 +92,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      analytics.login({ method: 'email' });
       // onAuthStateChanged handles the state update
     } catch (err) {
       set({ error: mapAuthError(err.code), isLoading: false });
@@ -113,6 +115,7 @@ export const useAuthStore = create((set) => ({
             plan:        'free',
             createdAt:   serverTimestamp(),
           });
+          analytics.signUp({ method: 'google' });
         } catch (profileErr) {
           // Auth succeeded but profile write failed — log and surface to UI.
           // The user is authenticated; they can retry on next load via fetchUserProfile.
@@ -120,6 +123,8 @@ export const useAuthStore = create((set) => ({
           set({ error: 'No se pudo crear tu perfil. Inténtalo de nuevo.', isLoading: false });
           return;
         }
+      } else {
+        analytics.login({ method: 'google' });
       }
       // onAuthStateChanged handles the state update
     } catch (err) {
@@ -145,6 +150,7 @@ export const useAuthStore = create((set) => ({
       });
       // Email verification intentionally skipped — app uses Google Sign-In;
       // Firebase Auth identity is guaranteed by Google OAuth.
+      analytics.signUp({ method: 'email' });
       // onAuthStateChanged handles the state update
     } catch (err) {
       console.error('[auth] register error — code:', err.code, '| msg:', err.message);

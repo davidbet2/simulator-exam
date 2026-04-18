@@ -336,10 +336,10 @@ export function useAdmin() {
 
   const fetchUserAttemptCount = useCallback(async (uid) => {
     try {
-      const snap = await getDocs(
+      const snap = await getCountFromServer(
         query(collection(db, 'attempts'), where('uid', '==', uid)),
       );
-      return snap.size;
+      return snap.data().count;
     } catch {
       return 0;
     }

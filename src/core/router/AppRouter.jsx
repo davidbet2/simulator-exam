@@ -4,6 +4,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { useAuthStore } from '../store/useAuthStore';
 import { useFeatureFlags } from '../hooks/useFeatureFlags';
 import { MaintenancePage } from '../../features/public/pages/MaintenancePage';
+import { analytics } from '../analytics/events';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
@@ -45,11 +46,12 @@ function PageLoader() {  return (
   );
 }
 
-/** Scrolls to top whenever the route changes */
+/** Scrolls to top and fires GA4 page_view whenever the route changes */
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
+    analytics.pageView({ path: pathname });
   }, [pathname]);
   return null;
 }
