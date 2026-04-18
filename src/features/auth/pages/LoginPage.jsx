@@ -6,8 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { LogIn } from 'lucide-react'
 import { Turnstile } from '@marsidev/react-turnstile'
-import { getFunctions, httpsCallable } from 'firebase/functions'
-import { getApp } from 'firebase/app'
+const VERIFY_TURNSTILE_URL = `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net/verifyTurnstile`
 
 const GoogleIcon = () => (
   <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,10 +48,14 @@ export function LoginPage() {
   const onSubmit = async ({ email, password, captchaToken }) => {
     if (TURNSTILE_KEY && captchaToken) {
       try {
-        const verifyTurnstile = httpsCallable(getFunctions(getApp()), 'verifyTurnstile')
-        await verifyTurnstile({ token: captchaToken })
+        const resp = await fetch(VERIFY_TURNSTILE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: captchaToken }),
+        })
+        if (!resp.ok) return
       } catch {
-        return // CF throws HttpsError on failure — useAuthStore.error won't be set; form stays put
+        return
       }
     }
     await login(email, password)

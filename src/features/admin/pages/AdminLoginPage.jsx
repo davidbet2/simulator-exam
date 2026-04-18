@@ -6,8 +6,7 @@ import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { ShieldCheck, LogIn, AlertTriangle, Timer } from 'lucide-react';
 import { Turnstile } from '@marsidev/react-turnstile';
-import { getFunctions, httpsCallable } from 'firebase/functions';
-import { getApp } from 'firebase/app';
+const VERIFY_TURNSTILE_URL = `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net/verifyTurnstile`;
 import { Helmet } from 'react-helmet-async';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import Button from '../../../components/ui/Button';
@@ -86,11 +85,16 @@ export function AdminLoginPage() {
 
     if (TURNSTILE_KEY && captchaToken) {
       try {
-        const verifyTurnstile = httpsCallable(getFunctions(getApp()), 'verifyTurnstile');
-        await verifyTurnstile({ token: captchaToken });
+        const resp = await fetch(VERIFY_TURNSTILE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: captchaToken }),
+        });
+        if (!resp.ok) {
+          console.warn('Turnstile verification failed (non-blocking):', resp.status);
+        }
       } catch (err) {
         // Turnstile is a secondary layer — Firebase Auth + Firestore rules are the real gate.
-        // Log the failure but don't block login so admins aren't locked out by infra issues.
         console.warn('Turnstile verification failed (non-blocking):', err?.message);
       }
     }

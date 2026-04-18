@@ -20,53 +20,78 @@ const DODO_WEBHOOK_KEY = defineSecret('DODO_WEBHOOK_KEY')
 /**
  * Verifies a Cloudflare Turnstile token server-side.
  * Called from LoginPage/RegisterPage BEFORE Firebase Auth login/register.
- * Returns { valid: true } or throws HttpsError('permission-denied').
+ * Using onRequest (not onCall) so that we can set CORS headers manually for
+ * the OPTIONS preflight — onCall+secrets blocks OPTIONS at the Cloud Run level.
  */
-exports.verifyTurnstile = onCall(
-  {
-    secrets: [TURNSTILE_SECRET],
-    cors: [
-      'https://certzen.app',
-      'https://www.certzen.app',
-      /^https:\/\/.*\.web\.app$/,
-      /^https:\/\/.*\.firebaseapp\.com$/,
-      /^http:\/\/localhost:\d+$/,
-    ],
-  },
-  async (request) => {
-    const { token } = request.data
+const ALLOWED_ORIGINS_TURNSTILE = [
+  'https://certzen.app',
+  'https://www.certzen.app',
+  'https://simulatorexam-dec4b.web.app',
+  'https://simulatorexam-dec4b.firebaseapp.com',
+]
+
+function setCorsHeaders(req, res) {
+  const origin = req.headers.origin
+  if (origin && (ALLOWED_ORIGINS_TURNSTILE.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin))) {
+    res.set('Access-Control-Allow-Origin', origin)
+  }
+  res.set('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.set('Access-Control-Allow-Headers', 'Content-Type')
+  res.set('Access-Control-Max-Age', '3600')
+}
+
+exports.verifyTurnstile = onRequest(
+  { secrets: [TURNSTILE_SECRET] },
+  async (req, res) => {
+    setCorsHeaders(req, res)
+
+    if (req.method === 'OPTIONS') {
+      res.status(204).send('')
+      return
+    }
+
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'Method not allowed' })
+      return
+    }
+
+    const { token } = req.body
     if (!token || typeof token !== 'string') {
-      throw new HttpsError('invalid-argument', 'Missing captcha token')
+      res.status(400).json({ error: 'Missing captcha token' })
+      return
     }
 
     const secret = TURNSTILE_SECRET.value()
     // Skip verification in emulator/dev if no secret is configured
     if (!secret) {
       console.warn('verifyTurnstile: TURNSTILE_SECRET_KEY not set — skipping verification')
-      return { valid: true }
+      res.json({ valid: true })
+      return
     }
 
-    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         secret,
         response: token,
-        remoteip: request.rawRequest?.ip,
+        remoteip: req.ip,
       }),
     })
 
-    if (!res.ok) {
-      throw new HttpsError('internal', 'Failed to reach Turnstile verification endpoint')
+    if (!verifyRes.ok) {
+      res.status(500).json({ error: 'Failed to reach Turnstile verification endpoint' })
+      return
     }
 
-    const outcome = await res.json()
+    const outcome = await verifyRes.json()
     if (!outcome.success) {
       console.warn('verifyTurnstile: captcha failed', outcome['error-codes'])
-      throw new HttpsError('permission-denied', 'Captcha verification failed')
+      res.status(403).json({ error: 'Captcha verification failed' })
+      return
     }
 
-    return { valid: true }
+    res.json({ valid: true })
   }
 )
 
