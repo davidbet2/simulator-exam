@@ -194,6 +194,46 @@ export function WelcomePage() {
         title={t`Simuladores de Certificación Profesional`}
         description={t`Prepárate para tus certificaciones con simuladores reales, banco de preguntas oficial y seguimiento de progreso. Gratis para empezar.`}
         canonical="/"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'Organization',
+              '@id': 'https://certzen.app/#organization',
+              name: 'CertZen',
+              url: 'https://certzen.app',
+              logo: 'https://certzen.app/favicon.svg',
+              description: 'Simulador de exámenes de certificación profesional. Appian, AWS, Azure y más.',
+              sameAs: [],
+            },
+            {
+              '@type': 'WebSite',
+              '@id': 'https://certzen.app/#website',
+              url: 'https://certzen.app',
+              name: 'CertZen',
+              description: 'Simulador inteligente de exámenes de certificación profesional.',
+              publisher: { '@id': 'https://certzen.app/#organization' },
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://certzen.app/explore?q={search_term_string}',
+                'query-input': 'required name=search_term_string',
+              },
+            },
+            {
+              '@type': 'SoftwareApplication',
+              name: 'CertZen',
+              applicationCategory: 'EducationApplication',
+              operatingSystem: 'Web',
+              url: 'https://certzen.app',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+                description: 'Plan gratuito. Plan Pro disponible.',
+              },
+            },
+          ],
+        }}
       />
 
       <div className="min-h-screen bg-surface-soft">
