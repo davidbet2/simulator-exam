@@ -4,6 +4,7 @@ import {
   GoogleAuthProvider,
   browserLocalPersistence,
   indexedDBLocalPersistence,
+  browserPopupRedirectResolver,
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
@@ -27,8 +28,20 @@ const persistence = import.meta.env.MODE === 'test'
   ? [browserLocalPersistence]
   : [indexedDBLocalPersistence, browserLocalPersistence];
 
-export const auth = initializeAuth(app, { persistence });
+export const auth = initializeAuth(app, {
+  persistence,
+  // REQUIRED for signInWithPopup to work when using initializeAuth
+  // (instead of getAuth). Without this, signInWithPopup throws auth/argument-error
+  // because _isPopupRedirectSupported() returns false.
+  popupRedirectResolver: browserPopupRedirectResolver,
+});
 export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
-// Always show the account picker so users can choose or register with a different account
-googleProvider.setCustomParameters({ prompt: 'select_account' });
+// Always show the account picker so users can choose or register with a different account.
+// Wrapped in try/catch defensively — some SDK versions throw if called at module load
+// before auth is fully ready.
+try {
+  googleProvider.setCustomParameters({ prompt: 'select_account' });
+} catch (e) {
+  console.warn('[firebase] setCustomParameters failed:', e?.code, e?.message);
+}

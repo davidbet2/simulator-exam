@@ -42,9 +42,12 @@ export function LoginPage() {
   })
 
   useEffect(() => {
+    clearError()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     if (user) navigate('/', { replace: true })
-    return () => clearError()
-  }, [user, navigate, clearError])
+  }, [user, navigate])
 
   const onSubmit = async ({ email, password, captchaToken }) => {
     if (TURNSTILE_KEY && captchaToken) {
@@ -54,8 +57,12 @@ export function LoginPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: captchaToken }),
         })
-        if (!resp.ok) return
+        if (!resp.ok) {
+          useAuthStore.setState({ error: 'Verifica que eres humano e inténtalo de nuevo.', isLoading: false })
+          return
+        }
       } catch {
+        useAuthStore.setState({ error: 'Error al verificar el captcha. Verifica tu conexión.', isLoading: false })
         return
       }
     }
@@ -153,8 +160,9 @@ export function LoginPage() {
           <Button
             variant="outline"
             className="w-full flex items-center justify-center gap-2"
+            type="button"
             onClick={loginWithGoogle}
-            disabled={isLoading || !turnstileReady}
+            disabled={isLoading}
             aria-label={t`Ingresar con Google`}
           >
             <GoogleIcon />

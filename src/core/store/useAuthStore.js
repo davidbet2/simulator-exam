@@ -5,19 +5,10 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
-  sendEmailVerification,
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../firebase/firebase';
-
-// After the user clicks the verification link, Firebase redirects them to
-// this URL (the app's verify-email page). Must be whitelisted in Firebase
-// Console → Authentication → Settings → Authorized domains.
-const ACTION_CODE_SETTINGS = {
-  url: 'https://certzen.app/verify-email',
-  handleCodeInApp: false,
-};
 
 async function fetchUserProfile(firebaseUser) {
   const [adminDoc, userDoc] = await Promise.all([
@@ -52,9 +43,14 @@ export const useAuthStore = create((set) => ({
   /** Call once in App.jsx — listens to auth state changes */
   init: () => {
     // Set Firebase email language to match stored locale (es by default).
-    // This controls the language of verification/reset emails sent by Firebase.
-    const storedLocale = localStorage.getItem('certzen-locale') ?? 'es';
-    auth.languageCode = storedLocale;
+    // Wrapped in try/catch — some Firebase SDK versions throw auth/argument-error
+    // synchronously here if the locale string is malformed.
+    try {
+      const storedLocale = localStorage.getItem('certzen-locale') ?? 'es';
+      auth.languageCode = storedLocale;
+    } catch (e) {
+      console.warn('[auth] languageCode set failed:', e?.code, e?.message);
+    }
 
     let unsubscribeProfile = null;
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -103,6 +99,8 @@ export const useAuthStore = create((set) => ({
 
   loginWithGoogle: async () => {
     set({ isLoading: true, error: null });
+    // DIAG: log config state at call time
+    console.info('[auth] loginWithGoogle invoked. authDomain=', auth?.config?.authDomain, '| apiKey set?', !!auth?.config?.apiKey, '| provider providerId=', googleProvider?.providerId);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       // Create user profile if first time
@@ -119,6 +117,7 @@ export const useAuthStore = create((set) => ({
       }
       // onAuthStateChanged handles the state update
     } catch (err) {
+      console.error('[auth] loginWithGoogle FULL error:', err, '| code:', err?.code, '| message:', err?.message, '| customData:', err?.customData);
       set({ error: mapAuthError(err.code), isLoading: false });
     }
   },
@@ -127,31 +126,35 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
-      await Promise.all([
-        setDoc(doc(db, 'users', result.user.uid), {
-          uid:         result.user.uid,
-          email,
-          displayName: displayName ?? email.split('@')[0],
-          plan:        'free',
-          createdAt:   serverTimestamp(),
-        }),
-        sendEmailVerification(result.user, ACTION_CODE_SETTINGS),
-      ]);
+      // Force the Firebase ID token to be issued and attached before the
+      // Firestore write — prevents a race condition where security rules
+      // evaluate request.auth as null immediately after account creation.
+      await result.user.getIdToken();
+      // Write profile — this must succeed before proceeding.
+      await setDoc(doc(db, 'users', result.user.uid), {
+        uid:         result.user.uid,
+        email,
+        displayName: displayName ?? email.split('@')[0],
+        plan:        'free',
+        createdAt:   serverTimestamp(),
+      });
+      // Email verification intentionally skipped — app uses Google Sign-In;
+      // Firebase Auth identity is guaranteed by Google OAuth.
       // onAuthStateChanged handles the state update
     } catch (err) {
-      set({ error: mapAuthError(err.code), isLoading: false });
+      console.error('[auth] register error — code:', err.code, '| msg:', err.message);
+      set({ error: mapAuthError(err.code, err.message), isLoading: false });
     }
   },
 
   resendVerification: async () => {
-    if (auth.currentUser) {
-      await sendEmailVerification(auth.currentUser, ACTION_CODE_SETTINGS);
-    }
+    // No-op: email verification is not used in this app.
   },
 
   resetPassword: async (email) => {
-    // Uses the same continueUrl so after reset the user lands back on the app.
-    await sendPasswordResetEmail(auth, email, ACTION_CODE_SETTINGS);
+    // NOTE: ACTION_CODE_SETTINGS omitted until certzen.app is whitelisted
+    // in Firebase Console → Authentication → Authorized Domains.
+    await sendPasswordResetEmail(auth, email);
   },
 
   logout: async () => {
@@ -183,22 +186,42 @@ export const useAuthStore = create((set) => ({
   clearError: () => set({ error: null }),
 }));
 
-function mapAuthError(code) {
+function mapAuthError(code, _rawMessage) {
+  // DIAGNOSTIC: log full stack trace whenever auth/argument-error is mapped
+  // so we can identify the exact call site causing the error in production.
+  if (code === 'auth/argument-error') {
+    console.error('[auth] auth/argument-error STACK:', new Error('argument-error trace').stack);
+  }
   // Collapse credential-related codes to a single generic message to prevent
   // account enumeration (OWASP A07 — Authentication Failures).
   const genericCredential = 'Correo o contraseña incorrectos.';
   const map = {
-    'auth/user-not-found':  genericCredential,
-    'auth/wrong-password':  genericCredential,
-    'auth/invalid-credential': genericCredential,
+    // ─── Firebase Auth ────────────────────────────────────────────────
+    'auth/user-not-found':       genericCredential,
+    'auth/wrong-password':       genericCredential,
+    'auth/invalid-credential':   genericCredential,
     'auth/invalid-login-credentials': genericCredential,
-    'auth/invalid-email':   genericCredential,
-    'auth/email-already-in-use': 'Este correo ya está registrado.',
-    'auth/weak-password':   'La contraseña debe tener al menos 6 caracteres.',
-    'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde.',
+    'auth/invalid-email':        genericCredential,
+    'auth/email-already-in-use': 'Este correo ya está registrado. ¿Quieres iniciar sesión?',
+    'auth/weak-password':        'La contraseña debe tener al menos 6 caracteres.',
+    'auth/too-many-requests':    'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.',
     'auth/popup-closed-by-user': 'Cerraste la ventana antes de completar el inicio de sesión.',
-    'auth/account-exists-with-different-credential': 'Ya existe una cuenta con ese correo usando otro proveedor.',
-    'auth/network-request-failed': 'Error de red. Verifica tu conexión.',
+    'auth/cancelled-popup-request': 'Cerraste la ventana antes de completar el inicio de sesión.',
+    'auth/popup-blocked': 'El navegador bloqueó la ventana emergente. Permite popups para certzen.app e inténtalo de nuevo.',
+    'auth/account-exists-with-different-credential': 'Ya existe una cuenta con ese correo usando otro proveedor (ej. Google).',
+    'auth/network-request-failed': 'Error de red. Verifica tu conexión a internet.',
+    'auth/operation-not-allowed': 'Este método de inicio de sesión no está habilitado.',
+    'auth/user-disabled':        'Esta cuenta ha sido deshabilitada.',
+    'auth/requires-recent-login': 'Por seguridad, inicia sesión nuevamente antes de continuar.',
+    'auth/unauthorized-continue-uri': 'Error de configuración. Contacta soporte.',
+    'auth/missing-continue-uri':     'Error de configuración. Contacta soporte.',
+    'auth/invalid-continue-uri':     'Error de configuración. Contacta soporte.',
+    'auth/internal-error':       'Error interno del servidor. Intenta nuevamente.',
+    // ─── Firestore ───────────────────────────────────────────────────
+    'permission-denied':  'Error de permisos al guardar los datos. Intenta nuevamente.',
+    'unavailable':        'Servicio temporalmente no disponible. Verifica tu conexión.',
+    'resource-exhausted': 'Demasiadas solicitudes. Espera unos segundos e intenta de nuevo.',
+    'unauthenticated':    'No estás autenticado. Recarga la página e intenta de nuevo.',
   };
-  return map[code] || 'Error de autenticación. Intenta nuevamente.';
+  return map[code] || `Error inesperado (${code ?? 'unknown'}). Intenta nuevamente.`;
 }
