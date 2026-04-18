@@ -19,7 +19,6 @@ import { Helmet } from 'react-helmet-async';
 import { useLangStore, SUPPORTED_LANGS } from '../core/i18n';
 
 const SITE_URL = 'https://certzen.app';
-const DEFAULT_LOCALE = 'es';
 
 // Map our locale ids to BCP-47 tags for hreflang / og:locale.
 const HREFLANG_MAP = {
@@ -45,20 +44,19 @@ const OG_LOCALE_MAP = {
 };
 
 /**
- * Build a localized URL for a given path + locale.
- * Default locale (es) uses bare path; others prefix /{locale}.
+ * All languages share the same URL — no locale prefix in the path.
+ * hreflang alternates all point to the same canonical URL.
  */
-function localizedUrl(path, locale) {
+function canonicalUrl(path) {
   const clean = path.startsWith('/') ? path : `/${path}`;
-  if (locale === DEFAULT_LOCALE) return `${SITE_URL}${clean}`;
-  return `${SITE_URL}/${locale}${clean}`;
+  return `${SITE_URL}${clean}`;
 }
 
 export function SEOHead({ title, description, path = '/', image, noindex = false }) {
   const { lang } = useLangStore();
   const fullTitle = title ? `${title} — CertZen` : 'CertZen';
-  const canonical = localizedUrl(path, lang);
-  const htmlLang = HREFLANG_MAP[lang] ?? 'es';
+  const canonical = canonicalUrl(path);
+  const htmlLang = HREFLANG_MAP[lang] ?? 'en';
 
   return (
     <Helmet>
@@ -68,17 +66,17 @@ export function SEOHead({ title, description, path = '/', image, noindex = false
       {noindex && <meta name="robots" content="noindex, nofollow" />}
       <link rel="canonical" href={canonical} />
 
-      {/* hreflang alternates for every supported locale */}
+      {/* hreflang alternates — all locales share the same URL (language switched client-side) */}
       {SUPPORTED_LANGS.map((l) => (
         <link
           key={l.id}
           rel="alternate"
           hrefLang={HREFLANG_MAP[l.id]}
-          href={localizedUrl(path, l.id)}
+          href={canonical}
         />
       ))}
-      {/* x-default points to the source (Spanish) version */}
-      <link rel="alternate" hrefLang="x-default" href={localizedUrl(path, DEFAULT_LOCALE)} />
+      {/* x-default points to the canonical URL */}
+      <link rel="alternate" hrefLang="x-default" href={canonical} />
 
       {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
