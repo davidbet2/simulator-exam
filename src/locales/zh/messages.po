@@ -467,7 +467,7 @@ msgstr ""
 msgid "Aún no has tomado ningún examen."
 msgstr "您还没有参加过考试。"
 
-#: src/features/creator/pages/CreateExamPage.jsx:555
+#: src/features/creator/pages/CreateExamPage.jsx:573
 msgid "Aún no hay preguntas."
 msgstr "暂无问题。"
 
@@ -555,7 +555,7 @@ msgstr "正在加载问题…"
 msgid "Cargando…"
 msgstr "加载中…"
 
-#: src/features/creator/pages/CreateExamPage.jsx:458
+#: src/features/creator/pages/CreateExamPage.jsx:457
 msgid "Cargar ejemplo"
 msgstr "加载示例"
 
@@ -946,6 +946,10 @@ msgstr ""
 #~ msgid "Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado."
 #~ msgstr ""
 
+#: src/features/creator/pages/CreateExamPage.jsx:543
+msgid "En el plan Free puedes añadir preguntas una a una. Actualiza a Pro para importar desde JSON, Excel o PDF e importar cientos de preguntas en segundos."
+msgstr ""
+
 #: src/features/public/pages/AboutPage.jsx:44
 msgid "En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante."
 msgstr ""
@@ -1166,7 +1170,7 @@ msgstr ""
 msgid "Guardado"
 msgstr "已保存"
 
-#: src/features/creator/pages/CreateExamPage.jsx:580
+#: src/features/creator/pages/CreateExamPage.jsx:598
 msgid "Guardando…"
 msgstr "保存中…"
 
@@ -1226,11 +1230,15 @@ msgstr ""
 msgid "Idioma"
 msgstr "语言"
 
-#: src/features/creator/pages/CreateExamPage.jsx:462
+#: src/features/creator/pages/CreateExamPage.jsx:541
+msgid "Importación masiva — plan Pro"
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:461
 msgid "Importar"
 msgstr "导入"
 
-#: src/features/creator/pages/CreateExamPage.jsx:404
+#: src/features/creator/pages/CreateExamPage.jsx:403
 msgid "Importar preguntas"
 msgstr "导入问题"
 
@@ -1307,7 +1315,7 @@ msgstr "账户删除目前由客服处理。"
 msgid "La interfaz se traduce al idioma seleccionado"
 msgstr "界面将翻译为所选语言"
 
-#: src/features/creator/pages/CreateExamPage.jsx:472
+#: src/features/creator/pages/CreateExamPage.jsx:471
 msgid "La primera fila debe ser el encabezado con estas columnas:"
 msgstr "第一行必须是带有以下列的标题："
 
@@ -1492,7 +1500,7 @@ msgstr "CertZen 新闻"
 msgid "Nueva carpeta"
 msgstr "新建文件夹"
 
-#: src/features/creator/pages/CreateExamPage.jsx:547
+#: src/features/creator/pages/CreateExamPage.jsx:565
 msgid "Nueva pregunta"
 msgstr "新问题"
 
@@ -1545,15 +1553,15 @@ msgstr ""
 msgid "Patrocinado"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:509
+#: src/features/creator/pages/CreateExamPage.jsx:508
 msgid "PDFs escaneados (imágenes) no soportados — el texto debe ser copiable desde el PDF."
 msgstr "不支持扫描的PDF（图像）— 文本必须可从PDF复制。"
 
-#: src/features/creator/pages/CreateExamPage.jsx:450
+#: src/features/creator/pages/CreateExamPage.jsx:449
 msgid "Pega aquí el JSON..."
 msgstr "在此粘贴JSON..."
 
-#: src/features/creator/pages/CreateExamPage.jsx:438
+#: src/features/creator/pages/CreateExamPage.jsx:437
 msgid "Pega un array JSON. Tipos soportados:"
 msgstr "粘贴JSON数组。支持的类型："
 
@@ -1650,7 +1658,7 @@ msgstr ""
 msgid "preguntas"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:540
+#: src/features/creator/pages/CreateExamPage.jsx:558
 #: src/features/explore/pages/ExamSetLandingPage.jsx:357
 msgid "Preguntas"
 msgstr "题目"
@@ -1708,7 +1716,7 @@ msgstr ""
 msgid "Probar demo"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:521
+#: src/features/creator/pages/CreateExamPage.jsx:520
 msgid "Procesando PDF…"
 msgstr "正在处理PDF…"
 
@@ -1744,7 +1752,7 @@ msgstr "即将推出"
 msgid "Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:580
+#: src/features/creator/pages/CreateExamPage.jsx:598
 msgid "Publicar set"
 msgstr "发布考试集"
 
@@ -1978,11 +1986,11 @@ msgstr ""
 msgid "Seleccionar"
 msgstr "选择"
 
-#: src/features/creator/pages/CreateExamPage.jsx:497
+#: src/features/creator/pages/CreateExamPage.jsx:496
 msgid "Seleccionar archivo .xlsx"
 msgstr "选择.xlsx文件"
 
-#: src/features/creator/pages/CreateExamPage.jsx:521
+#: src/features/creator/pages/CreateExamPage.jsx:520
 msgid "Seleccionar archivo PDF"
 msgstr "选择PDF文件"
 
@@ -2105,7 +2113,7 @@ msgstr ""
 msgid "Spaced repetition (Leitner 5 cajas)"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:472
+#: src/features/creator/pages/CreateExamPage.jsx:471
 msgid "Sube un archivo"
 msgstr "上传文件"
 
@@ -2146,7 +2154,7 @@ msgstr ""
 msgid "Testing effect + feedback diferido"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:525
+#: src/features/creator/pages/CreateExamPage.jsx:524
 msgid "Texto extraído del PDF (cópialo al tab JSON si lo necesitas):"
 msgstr "从PDF提取的文本（如需要请复制到JSON选项卡）："
 
@@ -2220,15 +2228,23 @@ msgstr "通过分数线"
 msgid "Únete de forma gratuita. Sin tarjeta de crédito requerida."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:556
-msgid "Usa “Nueva pregunta” o importa desde JSON, Excel o PDF."
+#: src/features/creator/pages/CreateExamPage.jsx:574
+msgid "Usa \"Nueva pregunta\" o importa desde JSON, Excel o PDF."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:476
+#: src/features/creator/pages/CreateExamPage.jsx:556
+#~ msgid "Usa “Nueva pregunta” o importa desde JSON, Excel o PDF."
+#~ msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:574
+msgid "Usa el botón \"Nueva pregunta\" para añadir preguntas."
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:475
 msgid "Ver columnas requeridas"
 msgstr "查看所需列"
 
-#: src/features/creator/pages/CreateExamPage.jsx:442
+#: src/features/creator/pages/CreateExamPage.jsx:441
 msgid "Ver formato de ejemplo"
 msgstr "查看示例格式"
 
@@ -2236,6 +2252,10 @@ msgstr "查看示例格式"
 #: src/features/profile/pages/ProfilePage.jsx:794
 msgid "Ver menos"
 msgstr "显示更少"
+
+#: src/features/creator/pages/CreateExamPage.jsx:547
+msgid "Ver plan Pro →"
+msgstr ""
 
 #: src/features/profile/pages/ProfilePage.jsx:650
 msgid "Ver planes y precios"

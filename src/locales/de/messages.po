@@ -467,7 +467,7 @@ msgstr ""
 msgid "Aún no has tomado ningún examen."
 msgstr "Du hast noch keine Prüfung abgelegt."
 
-#: src/features/creator/pages/CreateExamPage.jsx:555
+#: src/features/creator/pages/CreateExamPage.jsx:573
 msgid "Aún no hay preguntas."
 msgstr "Noch keine Fragen."
 
@@ -555,7 +555,7 @@ msgstr "Fragen werden geladen..."
 msgid "Cargando…"
 msgstr "Lädt…"
 
-#: src/features/creator/pages/CreateExamPage.jsx:458
+#: src/features/creator/pages/CreateExamPage.jsx:457
 msgid "Cargar ejemplo"
 msgstr "Beispiel laden"
 
@@ -946,6 +946,10 @@ msgstr ""
 #~ msgid "Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado."
 #~ msgstr ""
 
+#: src/features/creator/pages/CreateExamPage.jsx:543
+msgid "En el plan Free puedes añadir preguntas una a una. Actualiza a Pro para importar desde JSON, Excel o PDF e importar cientos de preguntas en segundos."
+msgstr ""
+
 #: src/features/public/pages/AboutPage.jsx:44
 msgid "En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante."
 msgstr ""
@@ -1166,7 +1170,7 @@ msgstr ""
 msgid "Guardado"
 msgstr "Gespeichert"
 
-#: src/features/creator/pages/CreateExamPage.jsx:580
+#: src/features/creator/pages/CreateExamPage.jsx:598
 msgid "Guardando…"
 msgstr "Speichern…"
 
@@ -1226,11 +1230,15 @@ msgstr ""
 msgid "Idioma"
 msgstr "Sprache"
 
-#: src/features/creator/pages/CreateExamPage.jsx:462
+#: src/features/creator/pages/CreateExamPage.jsx:541
+msgid "Importación masiva — plan Pro"
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:461
 msgid "Importar"
 msgstr "Importieren"
 
-#: src/features/creator/pages/CreateExamPage.jsx:404
+#: src/features/creator/pages/CreateExamPage.jsx:403
 msgid "Importar preguntas"
 msgstr "Fragen importieren"
 
@@ -1307,7 +1315,7 @@ msgstr "Die Kontolöschung wird vorübergehend vom Support bearbeitet."
 msgid "La interfaz se traduce al idioma seleccionado"
 msgstr "Die Oberfläche wird in die ausgewählte Sprache übersetzt"
 
-#: src/features/creator/pages/CreateExamPage.jsx:472
+#: src/features/creator/pages/CreateExamPage.jsx:471
 msgid "La primera fila debe ser el encabezado con estas columnas:"
 msgstr "Die erste Zeile muss die Kopfzeile mit diesen Spalten sein:"
 
@@ -1492,7 +1500,7 @@ msgstr "CertZen-Neuigkeiten"
 msgid "Nueva carpeta"
 msgstr "Neuer Ordner"
 
-#: src/features/creator/pages/CreateExamPage.jsx:547
+#: src/features/creator/pages/CreateExamPage.jsx:565
 msgid "Nueva pregunta"
 msgstr "Neue Frage"
 
@@ -1545,15 +1553,15 @@ msgstr ""
 msgid "Patrocinado"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:509
+#: src/features/creator/pages/CreateExamPage.jsx:508
 msgid "PDFs escaneados (imágenes) no soportados — el texto debe ser copiable desde el PDF."
 msgstr "Gescannte PDFs (Bilder) werden nicht unterstützt — Text muss aus dem PDF kopierbar sein."
 
-#: src/features/creator/pages/CreateExamPage.jsx:450
+#: src/features/creator/pages/CreateExamPage.jsx:449
 msgid "Pega aquí el JSON..."
 msgstr "JSON hier einfügen..."
 
-#: src/features/creator/pages/CreateExamPage.jsx:438
+#: src/features/creator/pages/CreateExamPage.jsx:437
 msgid "Pega un array JSON. Tipos soportados:"
 msgstr "Füge ein JSON-Array ein. Unterstützte Typen:"
 
@@ -1650,7 +1658,7 @@ msgstr ""
 msgid "preguntas"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:540
+#: src/features/creator/pages/CreateExamPage.jsx:558
 #: src/features/explore/pages/ExamSetLandingPage.jsx:357
 msgid "Preguntas"
 msgstr "Fragen"
@@ -1708,7 +1716,7 @@ msgstr ""
 msgid "Probar demo"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:521
+#: src/features/creator/pages/CreateExamPage.jsx:520
 msgid "Procesando PDF…"
 msgstr "PDF wird verarbeitet…"
 
@@ -1744,7 +1752,7 @@ msgstr "Demnächst"
 msgid "Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:580
+#: src/features/creator/pages/CreateExamPage.jsx:598
 msgid "Publicar set"
 msgstr "Set veröffentlichen"
 
@@ -1978,11 +1986,11 @@ msgstr ""
 msgid "Seleccionar"
 msgstr "Auswählen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:497
+#: src/features/creator/pages/CreateExamPage.jsx:496
 msgid "Seleccionar archivo .xlsx"
 msgstr ".xlsx-Datei auswählen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:521
+#: src/features/creator/pages/CreateExamPage.jsx:520
 msgid "Seleccionar archivo PDF"
 msgstr "PDF-Datei auswählen"
 
@@ -2105,7 +2113,7 @@ msgstr ""
 msgid "Spaced repetition (Leitner 5 cajas)"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:472
+#: src/features/creator/pages/CreateExamPage.jsx:471
 msgid "Sube un archivo"
 msgstr "Lade eine Datei hoch"
 
@@ -2146,7 +2154,7 @@ msgstr ""
 msgid "Testing effect + feedback diferido"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:525
+#: src/features/creator/pages/CreateExamPage.jsx:524
 msgid "Texto extraído del PDF (cópialo al tab JSON si lo necesitas):"
 msgstr "Aus PDF extrahierter Text (kopiere ihn in den JSON-Tab, wenn nötig):"
 
@@ -2220,15 +2228,23 @@ msgstr "Bestehensgrenze"
 msgid "Únete de forma gratuita. Sin tarjeta de crédito requerida."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:556
-msgid "Usa “Nueva pregunta” o importa desde JSON, Excel o PDF."
+#: src/features/creator/pages/CreateExamPage.jsx:574
+msgid "Usa \"Nueva pregunta\" o importa desde JSON, Excel o PDF."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:476
+#: src/features/creator/pages/CreateExamPage.jsx:556
+#~ msgid "Usa “Nueva pregunta” o importa desde JSON, Excel o PDF."
+#~ msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:574
+msgid "Usa el botón \"Nueva pregunta\" para añadir preguntas."
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:475
 msgid "Ver columnas requeridas"
 msgstr "Erforderliche Spalten anzeigen"
 
-#: src/features/creator/pages/CreateExamPage.jsx:442
+#: src/features/creator/pages/CreateExamPage.jsx:441
 msgid "Ver formato de ejemplo"
 msgstr "Beispielformat anzeigen"
 
@@ -2236,6 +2252,10 @@ msgstr "Beispielformat anzeigen"
 #: src/features/profile/pages/ProfilePage.jsx:794
 msgid "Ver menos"
 msgstr "Weniger anzeigen"
+
+#: src/features/creator/pages/CreateExamPage.jsx:547
+msgid "Ver plan Pro →"
+msgstr ""
 
 #: src/features/profile/pages/ProfilePage.jsx:650
 msgid "Ver planes y precios"

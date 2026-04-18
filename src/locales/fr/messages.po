@@ -467,7 +467,7 @@ msgstr "Attaquez vos erreurs"
 msgid "Aún no has tomado ningún examen."
 msgstr "Vous n'avez encore passé aucun examen."
 
-#: src/features/creator/pages/CreateExamPage.jsx:555
+#: src/features/creator/pages/CreateExamPage.jsx:573
 msgid "Aún no hay preguntas."
 msgstr "Aucune question pour l'instant."
 
@@ -555,7 +555,7 @@ msgstr "Chargement des questions..."
 msgid "Cargando…"
 msgstr "Chargement…"
 
-#: src/features/creator/pages/CreateExamPage.jsx:458
+#: src/features/creator/pages/CreateExamPage.jsx:457
 msgid "Cargar ejemplo"
 msgstr "Charger l'exemple"
 
@@ -946,6 +946,10 @@ msgstr "Commencez gratuitement aujourd'hui"
 #~ msgid "Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado."
 #~ msgstr "Commencez gratuitement. Passez à Pro quand vous avez besoin de plus de tentatives ou d'analyses avancées."
 
+#: src/features/creator/pages/CreateExamPage.jsx:543
+msgid "En el plan Free puedes añadir preguntas una a una. Actualiza a Pro para importar desde JSON, Excel o PDF e importar cientos de preguntas en segundos."
+msgstr ""
+
 #: src/features/public/pages/AboutPage.jsx:44
 msgid "En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante."
 msgstr ""
@@ -1166,7 +1170,7 @@ msgstr "Gratuit · sauvegardez votre progression et voyez les explications compl
 msgid "Guardado"
 msgstr "Enregistré"
 
-#: src/features/creator/pages/CreateExamPage.jsx:580
+#: src/features/creator/pages/CreateExamPage.jsx:598
 msgid "Guardando…"
 msgstr "Enregistrement…"
 
@@ -1226,11 +1230,15 @@ msgstr ""
 msgid "Idioma"
 msgstr "Langue"
 
-#: src/features/creator/pages/CreateExamPage.jsx:462
+#: src/features/creator/pages/CreateExamPage.jsx:541
+msgid "Importación masiva — plan Pro"
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:461
 msgid "Importar"
 msgstr "Importer"
 
-#: src/features/creator/pages/CreateExamPage.jsx:404
+#: src/features/creator/pages/CreateExamPage.jsx:403
 msgid "Importar preguntas"
 msgstr "Importer des questions"
 
@@ -1307,7 +1315,7 @@ msgstr "La suppression de compte est temporairement gérée par le support."
 msgid "La interfaz se traduce al idioma seleccionado"
 msgstr "L'interface est traduite dans la langue sélectionnée"
 
-#: src/features/creator/pages/CreateExamPage.jsx:472
+#: src/features/creator/pages/CreateExamPage.jsx:471
 msgid "La primera fila debe ser el encabezado con estas columnas:"
 msgstr "La première ligne doit être l'en-tête avec ces colonnes :"
 
@@ -1492,7 +1500,7 @@ msgstr "Actualités CertZen"
 msgid "Nueva carpeta"
 msgstr "Nouveau dossier"
 
-#: src/features/creator/pages/CreateExamPage.jsx:547
+#: src/features/creator/pages/CreateExamPage.jsx:565
 msgid "Nueva pregunta"
 msgstr "Nouvelle question"
 
@@ -1545,15 +1553,15 @@ msgstr ""
 msgid "Patrocinado"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:509
+#: src/features/creator/pages/CreateExamPage.jsx:508
 msgid "PDFs escaneados (imágenes) no soportados — el texto debe ser copiable desde el PDF."
 msgstr "PDFs scannés (images) non pris en charge — le texte doit être copiable depuis le PDF."
 
-#: src/features/creator/pages/CreateExamPage.jsx:450
+#: src/features/creator/pages/CreateExamPage.jsx:449
 msgid "Pega aquí el JSON..."
 msgstr "Collez le JSON ici..."
 
-#: src/features/creator/pages/CreateExamPage.jsx:438
+#: src/features/creator/pages/CreateExamPage.jsx:437
 msgid "Pega un array JSON. Tipos soportados:"
 msgstr "Collez un tableau JSON. Types supportés :"
 
@@ -1650,7 +1658,7 @@ msgstr ""
 msgid "preguntas"
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:540
+#: src/features/creator/pages/CreateExamPage.jsx:558
 #: src/features/explore/pages/ExamSetLandingPage.jsx:357
 msgid "Preguntas"
 msgstr "Questions"
@@ -1708,7 +1716,7 @@ msgstr "Confidentialité et légal"
 msgid "Probar demo"
 msgstr "Essayer la démo"
 
-#: src/features/creator/pages/CreateExamPage.jsx:521
+#: src/features/creator/pages/CreateExamPage.jsx:520
 msgid "Procesando PDF…"
 msgstr "Traitement du PDF…"
 
@@ -1744,7 +1752,7 @@ msgstr "Bientôt"
 msgid "Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos."
 msgstr "Essayez chaque mode avec des questions d'exemple. Inscrivez-vous pour accéder aux examens complets."
 
-#: src/features/creator/pages/CreateExamPage.jsx:580
+#: src/features/creator/pages/CreateExamPage.jsx:598
 msgid "Publicar set"
 msgstr "Publier le set"
 
@@ -1978,11 +1986,11 @@ msgstr "Sélectionnez un objet…"
 msgid "Seleccionar"
 msgstr "Sélectionner"
 
-#: src/features/creator/pages/CreateExamPage.jsx:497
+#: src/features/creator/pages/CreateExamPage.jsx:496
 msgid "Seleccionar archivo .xlsx"
 msgstr "Sélectionner un fichier .xlsx"
 
-#: src/features/creator/pages/CreateExamPage.jsx:521
+#: src/features/creator/pages/CreateExamPage.jsx:520
 msgid "Seleccionar archivo PDF"
 msgstr "Sélectionner un fichier PDF"
 
@@ -2105,7 +2113,7 @@ msgstr "Support général"
 msgid "Spaced repetition (Leitner 5 cajas)"
 msgstr "Répétition espacée (Leitner 5 boîtes)"
 
-#: src/features/creator/pages/CreateExamPage.jsx:472
+#: src/features/creator/pages/CreateExamPage.jsx:471
 msgid "Sube un archivo"
 msgstr "Téléchargez un fichier"
 
@@ -2146,7 +2154,7 @@ msgstr "Conditions d'utilisation →"
 msgid "Testing effect + feedback diferido"
 msgstr "Effet de test + retour différé"
 
-#: src/features/creator/pages/CreateExamPage.jsx:525
+#: src/features/creator/pages/CreateExamPage.jsx:524
 msgid "Texto extraído del PDF (cópialo al tab JSON si lo necesitas):"
 msgstr "Texte extrait du PDF (copiez-le dans l'onglet JSON si nécessaire) :"
 
@@ -2220,15 +2228,23 @@ msgstr "Seuil de réussite"
 msgid "Únete de forma gratuita. Sin tarjeta de crédito requerida."
 msgstr "Rejoignez-nous gratuitement. Pas de carte de crédit requise."
 
-#: src/features/creator/pages/CreateExamPage.jsx:556
-msgid "Usa “Nueva pregunta” o importa desde JSON, Excel o PDF."
+#: src/features/creator/pages/CreateExamPage.jsx:574
+msgid "Usa \"Nueva pregunta\" o importa desde JSON, Excel o PDF."
 msgstr ""
 
-#: src/features/creator/pages/CreateExamPage.jsx:476
+#: src/features/creator/pages/CreateExamPage.jsx:556
+#~ msgid "Usa “Nueva pregunta” o importa desde JSON, Excel o PDF."
+#~ msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:574
+msgid "Usa el botón \"Nueva pregunta\" para añadir preguntas."
+msgstr ""
+
+#: src/features/creator/pages/CreateExamPage.jsx:475
 msgid "Ver columnas requeridas"
 msgstr "Voir les colonnes requises"
 
-#: src/features/creator/pages/CreateExamPage.jsx:442
+#: src/features/creator/pages/CreateExamPage.jsx:441
 msgid "Ver formato de ejemplo"
 msgstr "Voir le format d'exemple"
 
@@ -2236,6 +2252,10 @@ msgstr "Voir le format d'exemple"
 #: src/features/profile/pages/ProfilePage.jsx:794
 msgid "Ver menos"
 msgstr "Voir moins"
+
+#: src/features/creator/pages/CreateExamPage.jsx:547
+msgid "Ver plan Pro →"
+msgstr ""
 
 #: src/features/profile/pages/ProfilePage.jsx:650
 msgid "Ver planes y precios"
