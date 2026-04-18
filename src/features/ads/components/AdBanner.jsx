@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans } from '@lingui/react/macro';
 import { useUserPlan } from '../../plans/hooks/useUserPlan';
@@ -33,6 +33,9 @@ export function AdBanner({
   const adsenseId = import.meta.env.VITE_GOOGLE_ADSENSE_ID;
   const publisherId = import.meta.env.VITE_ETHICAL_ADS_PUBLISHER;
   const pushedRef = useRef(false);
+  const insRef = useRef(null);
+  // null = waiting, true = filled, false = unfilled
+  const [adFilled, setAdFilled] = useState(null);
 
   // ── Google AdSense loader ──────────────────────────────────────────────────
   useEffect(() => {
@@ -59,6 +62,25 @@ export function AdBanner({
     }
   }, [isLoading, isPro, adsenseId]);
 
+  // ── Detect AdSense filled / unfilled via MutationObserver ────────────────
+  useEffect(() => {
+    if (!adsenseId || !adSlot || isPro) return;
+    const el = insRef.current;
+    if (!el) return;
+
+    const check = () => {
+      const status = el.getAttribute('data-ad-status');
+      if (status === 'filled') setAdFilled(true);
+      else if (status === 'unfilled') setAdFilled(false);
+    };
+
+    const observer = new MutationObserver(check);
+    observer.observe(el, { attributes: true, attributeFilter: ['data-ad-status'] });
+    // Also check after a timeout in case the attribute was set before observer attached
+    const timer = setTimeout(check, 3000);
+    return () => { observer.disconnect(); clearTimeout(timer); };
+  }, [adsenseId, adSlot, isPro]);
+
   // ── EthicalAds loader ─────────────────────────────────────────────────────
   useEffect(() => {
     if (isLoading || isPro || adsenseId || !publisherId) return;
@@ -82,25 +104,31 @@ export function AdBanner({
   // Without adSlot, the script is still loaded (enables Auto Ads from the
   // AdSense dashboard) but we fall through to the visible sponsor placeholder.
   if (adsenseId && adSlot) {
-    return (
-      <aside
-        aria-label="Publicidad"
-        className={`rounded-xl overflow-hidden ${className}`}
-        {...(placementId && { id: placementId })}
-      >
-        <p className="text-[9px] uppercase tracking-widest text-ink-muted/50 text-right pr-1 mb-0.5 select-none">
-          Publicidad
-        </p>
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block', minHeight: '250px' }}
-          data-ad-client={adsenseId}
-          data-ad-slot={adSlot}
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </aside>
-    );
+    // Show placeholder if AdSense explicitly said unfilled (e.g. during account review)
+    if (adFilled === false) {
+      // fall through to sponsor placeholder below
+    } else {
+      return (
+        <aside
+          aria-label="Publicidad"
+          className={`rounded-xl overflow-hidden ${className}`}
+          {...(placementId && { id: placementId })}
+        >
+          <p className="text-[9px] uppercase tracking-widest text-ink-muted/50 text-right pr-1 mb-0.5 select-none">
+            Publicidad
+          </p>
+          <ins
+            ref={insRef}
+            className="adsbygoogle"
+            style={{ display: 'block', minHeight: '250px' }}
+            data-ad-client={adsenseId}
+            data-ad-slot={adSlot}
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+        </aside>
+      );
+    }
   }
 
   // ── EthicalAds placement ───────────────────────────────────────────────────
