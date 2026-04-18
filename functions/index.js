@@ -388,20 +388,33 @@ exports.createDodoCheckout = onCall(
       throw new HttpsError('invalid-argument', 'Missing productId')
     }
 
-    const session = await client.checkoutSessions.create({
-      product_cart: [{ product_id: productId, quantity: 1 }],
-      customer: {
-        email: request.auth.token.email,
-        name:  request.auth.token.name ?? request.auth.token.email.split('@')[0],
-      },
-      return_url: 'https://certzen.app/payment-success',
-    })
+    let session
+    try {
+      session = await client.checkoutSessions.create({
+        product_cart: [{ product_id: productId, quantity: 1 }],
+        customer: {
+          email: request.auth.token.email,
+          name:  request.auth.token.name ?? request.auth.token.email.split('@')[0],
+          create_new_customer: false,
+        },
+        return_url: 'https://certzen.app/payment-success',
+      })
+    } catch (err) {
+      console.error('createDodoCheckout: Dodo API error', {
+        message: err.message,
+        status:  err.status,
+        body:    err.error ?? err.body ?? null,
+      })
+      throw new HttpsError('internal', `Dodo API error: ${err.message}`)
+    }
 
     const checkoutUrl = session.checkout_url
     if (!checkoutUrl) {
+      console.error('createDodoCheckout: no checkout_url in response', JSON.stringify(session))
       throw new HttpsError('internal', 'No checkout URL returned from Dodo')
     }
 
+    console.log('createDodoCheckout: success', checkoutUrl.substring(0, 60))
     return { checkoutUrl }
   }
 )
