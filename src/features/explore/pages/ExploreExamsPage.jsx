@@ -1,11 +1,10 @@
-﻿import { useState, useEffect, useMemo, useDeferredValue, memo, useRef } from 'react';
+﻿import { useState, useEffect, useMemo, memo, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { collection, query, where, limit, getDocs } from 'firebase/firestore';
-import { Search, BookOpen, Users, Plus, X } from 'lucide-react';
+import { Search, BookOpen, Users, Plus, X, Loader2 } from 'lucide-react';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { db } from '../../../core/firebase/firebase';
+import { useExploreQuery } from '../hooks/useExploreQuery';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { DOMAINS, getDomain } from '../../../core/constants/domains';
 import { AppShell } from '../../../components/layout/AppShell';
@@ -108,8 +107,6 @@ export function ExploreExamsPage() {
   const { t } = useLingui();
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const [sets, setSets] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDomain = searchParams.get('domain') ?? '';
   const [search, setSearch] = useState(() => searchParams.get('q') ?? '');
@@ -118,56 +115,12 @@ export function ExploreExamsPage() {
   const searchBoxRef = useRef(null);
   const inputRef = useRef(null);
 
-  // useDeferredValue lets the input stay responsive while results render in the background.
-  // React.memo on ExamSetCard ensures only changed cards re-render.
-  const deferredSearch = useDeferredValue(search);
-  const deferredDomain = useDeferredValue(activeDomain);
-  const isPending = deferredSearch !== search || deferredDomain !== activeDomain;
+  // Server-side cursor pagination + debounced search (scales to 10 k+ sets).
+  const { sets, loading, loadingMore, hasMore, loadMore, isSearchMode } = useExploreQuery({
+    domain: activeDomain,
+    searchTerm: search,
+  });
 
-  useEffect(() => {
-    // NOTE: Firestore rules allow anonymous list only when limit <= 100.
-    // Do not raise this without also updating firestore.rules.
-    const q = query(
-      collection(db, 'examSets'),
-      where('published', '==', true),
-      limit(100),
-    );
-    getDocs(q)
-      .then((snap) => {
-        const docs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        // Sort client-side: official first, then by rating avg desc (weighted by count),
-        // then favorites, then attempts, then title.
-        docs.sort((a, b) => {
-          if (a.official !== b.official) return b.official ? 1 : -1;
-          // Bayesian-style: avg weighted by count (sets with no ratings fall to 0)
-          const aRating = (a.ratingCount ?? 0) > 0 ? ((a.ratingSum ?? 0) / a.ratingCount) * Math.log2(a.ratingCount + 1) : 0;
-          const bRating = (b.ratingCount ?? 0) > 0 ? ((b.ratingSum ?? 0) / b.ratingCount) * Math.log2(b.ratingCount + 1) : 0;
-          if (bRating !== aRating) return bRating - aRating;
-          if ((b.favoritesCount ?? 0) !== (a.favoritesCount ?? 0)) return (b.favoritesCount ?? 0) - (a.favoritesCount ?? 0);
-          if ((b.attempts ?? 0) !== (a.attempts ?? 0)) return (b.attempts ?? 0) - (a.attempts ?? 0);
-          return (a.title ?? '').localeCompare(b.title ?? '');
-        });
-        setSets(docs);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('[Explore] query failed:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  const filtered = useMemo(() => {
-    return sets.filter((s) => {
-      if (deferredDomain && s.domain !== deferredDomain) return false;
-      if (!deferredSearch) return true;
-      const needle = deferredSearch.toLowerCase();
-      return (
-        s.title?.toLowerCase().includes(needle) ||
-        s.description?.toLowerCase().includes(needle) ||
-        s.tags?.some?.((t) => t.toLowerCase().includes(needle))
-      );
-    });
-  }, [sets, deferredSearch, deferredDomain]);
 
   // Build suggestion candidates from titles + tags of loaded sets
   const suggestions = useMemo(() => {
@@ -379,11 +332,14 @@ export function ExploreExamsPage() {
           </form>
         </motion.div>
 
-        <div id="explore-results" aria-live="polite" aria-busy={isPending} aria-label={t`Resultados de búsqueda`}>
-          {!loading && filtered.length > 0 && (
+        <div id="explore-results" aria-live="polite" aria-busy={loading} aria-label={t`Resultados de búsqueda`}>
+          {!loading && sets.length > 0 && (
             <p className="text-xs text-ink-muted mb-3">
-              {filtered.length === 1 ? t`${filtered.length} set encontrado` : t`${filtered.length} sets encontrados`}
-              {isPending && <span className="ml-1 opacity-60">…</span>}
+              {isSearchMode
+                ? (sets.length === 1 ? t`${sets.length} resultado` : t`${sets.length} resultados`)
+                : (sets.length === 1 ? t`${sets.length} set encontrado` : t`${sets.length} sets encontrados`)
+              }
+              {loadingMore && <span className="ml-1 opacity-60">…</span>}
             </p>
           )}
           {loading ? (
@@ -392,7 +348,7 @@ export function ExploreExamsPage() {
                 <div key={i} className="h-40 rounded-2xl bg-surface-soft animate-pulse" />
               ))}
             </div>
-          ) : filtered.length === 0 ? (
+          ) : sets.length === 0 ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 space-y-3">
               <BookOpen size={40} className="text-ink-muted mx-auto" />
               <p className="text-ink-soft">{search || activeDomain ? t`No se encontraron resultados.` : t`Aún no hay sets publicados.`}</p>
@@ -407,14 +363,26 @@ export function ExploreExamsPage() {
           ) : (
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}
-              className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity duration-150 ${isPending ? 'opacity-60' : 'opacity-100'}`}
+              className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity duration-150 ${loading ? 'opacity-60' : 'opacity-100'}`}
             >
-              {filtered.map((set) => <ExamSetCard key={set.id} set={set} needle={deferredSearch} />)}
+              {sets.map((set) => <ExamSetCard key={set.id} set={set} needle={search} />)}
             </motion.div>
+          )}
+
+          {/* Cursor-based load more — hidden in search mode */}
+          {hasMore && (
+            <div className="flex justify-center mt-8">
+              <Button onClick={loadMore} disabled={loadingMore} variant="secondary">
+                {loadingMore
+                  ? <><Loader2 size={14} className="animate-spin mr-1.5" /><Trans>Cargando…</Trans></>
+                  : <Trans>Cargar más sets</Trans>
+                }
+              </Button>
+            </div>
           )}
         </div>
 
-        {!user && !loading && filtered.length > 0 && (
+        {!user && !loading && sets.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-brand-500/10 p-6 text-center"

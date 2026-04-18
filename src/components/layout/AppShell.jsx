@@ -376,7 +376,7 @@ function TopBar({ onToggleSidebar, authed }) {
   function ensureCatalog() {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
-    getDocs(query(collection(db, 'examSets'), where('published', '==', true), limit(200)))
+    getDocs(query(collection(db, 'examSets'), where('published', '==', true), limit(30)))
       .then((snap) => setCatalog(snap.docs.map((d) => ({ id: d.id, title: d.data().title, domain: d.data().domain, tags: d.data().tags }))))
       .catch((err) => console.error('[TopBar] catalog fetch failed:', err));
   }
