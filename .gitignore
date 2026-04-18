@@ -5,7 +5,14 @@
 .env.local
 .env.development
 .env.*.local
+.env.test
 *.secret
+
+# =============================================================================
+# PLAYWRIGHT — Output local generado
+# =============================================================================
+playwright-report/
+test-results/
 
 # =============================================================================
 # CLAUDE CODE — Configuración local (overrides privados)
