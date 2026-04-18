@@ -62,10 +62,16 @@ export function DashboardPage() {
       orderBy('createdAt', 'desc'),
       limit(20)
     )
-    getDocs(q).then((snap) => {
-      setAttempts(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-      setLoading(false)
-    })
+    getDocs(q)
+      .then((snap) => { setAttempts(snap.docs.map((d) => ({ id: d.id, ...d.data() }))) })
+      .catch((err) => {
+        if (err.code === 'failed-precondition') {
+          console.info('[Dashboard] index still building, will resolve automatically')
+        } else {
+          console.error('[Dashboard] load failed:', err)
+        }
+      })
+      .finally(() => setLoading(false))
   }, [user, navigate])
 
   const total     = attempts.length

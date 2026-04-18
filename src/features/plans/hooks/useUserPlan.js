@@ -33,8 +33,13 @@ export function useUserPlan() {
       const snap = await getCountFromServer(q)
       setUsedThisMonth(snap.data().count)
     } catch (err) {
-      console.error('[useUserPlan] quota fetch failed:', err)
-      // On error leave usedThisMonth at current value (don't reset to 0)
+      if (err.code === 'failed-precondition') {
+        // Index still building — default to FREE_LIMIT to avoid granting free access
+        console.info('[useUserPlan] index still building, defaulting to limit')
+        setUsedThisMonth(FREE_LIMIT)
+      } else {
+        console.error('[useUserPlan] quota fetch failed:', err)
+      }
     } finally {
       setIsLoading(false)
     }

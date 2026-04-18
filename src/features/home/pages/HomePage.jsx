@@ -215,7 +215,11 @@ export function HomePage() {
         setRecommended(recDocs);
         setLoading(false);
       } catch (err) {
-        console.error('[HomePage] load failed', err);
+        if (err.code === 'failed-precondition') {
+          console.info('[HomePage] index still building, will resolve automatically')
+        } else {
+          console.error('[HomePage] load failed', err);
+        }
         if (!cancelled) setLoading(false);
       }
     })();

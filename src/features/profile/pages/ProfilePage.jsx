@@ -180,7 +180,13 @@ export function ProfilePage() {
     );
     getDocs(q)
       .then((snap) => setAttempts(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
-      .catch((err) => { console.error('[Profile] attempts fetch failed:', err); })
+      .catch((err) => {
+        if (err.code === 'failed-precondition') {
+          console.info('[Profile] index still building, will resolve automatically')
+        } else {
+          console.error('[Profile] attempts fetch failed:', err)
+        }
+      })
       .finally(() => setLoading(false));
   }, [user, navigate]);
 
