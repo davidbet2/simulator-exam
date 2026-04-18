@@ -22,51 +22,7 @@ const SITE_JSON_LD = {
   url: 'https://certzen.app',
 };
 
-const buildFeatures = (t) => [
-  {
-    icon: BookOpen,
-    title: t`Banco de preguntas`,
-    body: t`Preguntas similares a los exámenes oficiales de certificación, organizadas por dominio y nivel de dificultad. Actualizadas constantemente.`,
-    color: 'bg-brand-500/20 text-brand-600',
-  },
-  {
-    icon: Target,
-    title: t`Modo Examen & Modo Estudio`,
-    body: t`En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante.`,
-    color: 'bg-success-500/20 text-success-400',
-  },
-  {
-    icon: Zap,
-    title: t`Progreso en tiempo real`,
-    body: t`Dashboard con historial de intentos, puntuación promedio, tasa de aprobación y logros desbloqueables. Sabe exactamente dónde mejorar.`,
-    color: 'bg-amber-500/20 text-amber-400',
-  },
-  {
-    icon: Shield,
-    title: t`Privacidad primero`,
-    body: t`Sin publicidad con el plan pro. Tu historial de práctica es tuyo.`,
-    color: 'bg-purple-500/20 text-purple-400',
-  },
-  {
-    icon: Users,
-    title: t`Comunidad y UGC`,
-    body: t`Explora sets de preguntas creados por la comunidad. Comparte tus propios simulacros con otros profesionales.`,
-    color: 'bg-cyan-500/20 text-cyan-400',
-  },
-  {
-    icon: Award,
-    title: t`Freemium sin trampa`,
-    body: t`3 exámenes gratis al mes para siempre. El plan gratuito incluye acceso completo al simulador. Pro desbloquea exámenes ilimitados e historial completo.`,
-    color: 'bg-pink-500/20 text-pink-400',
-  },
-];
 
-const buildSteps = (t) => [
-  { num: '01', title: t`Crea tu cuenta gratis`,    body: t`Regístrate en 30 segundos con email. Plan freemium disponible.` },
-  { num: '02', title: t`Elige tu certificación`,   body: t`Selecciona el examen de certificación que quieres practicar.` },
-  { num: '03', title: t`Practica con propósito`,   body: t`Modo examen para simular el día real. Modo estudio para aprender de cada error.` },
-  { num: '04', title: t`Aprueba con confianza`,    body: t`Revisa tu historial, identifica debilidades y presenta el examen oficial listo.` },
-];
 
 function fade(i) {
   return { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { delay: i * 0.08, duration: 0.45 } };
@@ -74,8 +30,52 @@ function fade(i) {
 
 export function AboutPage() {
   const { t } = useLingui();
-  const FEATURES = buildFeatures(t);
-  const STEPS = buildSteps(t);
+
+  const FEATURES = [
+    {
+      icon: BookOpen,
+      title: t`Banco de preguntas`,
+      body: t`Preguntas similares a los exámenes oficiales de certificación, organizadas por dominio y nivel de dificultad. Actualizadas constantemente.`,
+      color: 'bg-brand-500/20 text-brand-600',
+    },
+    {
+      icon: Target,
+      title: t`Modo Examen & Modo Estudio`,
+      body: t`En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante.`,
+      color: 'bg-success-500/20 text-success-400',
+    },
+    {
+      icon: Zap,
+      title: t`Progreso en tiempo real`,
+      body: t`Dashboard con historial de intentos, puntuación promedio, tasa de aprobación y logros desbloqueables. Sabe exactamente dónde mejorar.`,
+      color: 'bg-amber-500/20 text-amber-400',
+    },
+    {
+      icon: Shield,
+      title: t`Privacidad primero`,
+      body: t`Sin publicidad con el plan pro. Tu historial de práctica es tuyo.`,
+      color: 'bg-purple-500/20 text-purple-400',
+    },
+    {
+      icon: Users,
+      title: t`Comunidad y UGC`,
+      body: t`Explora sets de preguntas creados por la comunidad. Comparte tus propios simulacros con otros profesionales.`,
+      color: 'bg-cyan-500/20 text-cyan-400',
+    },
+    {
+      icon: Award,
+      title: t`Freemium sin trampa`,
+      body: t`3 exámenes gratis al mes para siempre. El plan gratuito incluye acceso completo al simulador. Pro desbloquea exámenes ilimitados e historial completo.`,
+      color: 'bg-pink-500/20 text-pink-400',
+    },
+  ];
+
+  const STEPS = [
+    { num: '01', title: t`Crea tu cuenta gratis`,   body: t`Regístrate en 30 segundos con email. Plan freemium disponible.` },
+    { num: '02', title: t`Elige tu certificación`,  body: t`Selecciona el examen de certificación que quieres practicar.` },
+    { num: '03', title: t`Practica con propósito`,  body: t`Modo examen para simular el día real. Modo estudio para aprender de cada error.` },
+    { num: '04', title: t`Aprueba con confianza`,   body: t`Revisa tu historial, identifica debilidades y presenta el examen oficial listo.` },
+  ];
   return (
     <>
       <PageSEO

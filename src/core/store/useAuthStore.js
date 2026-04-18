@@ -15,7 +15,7 @@ import { auth, db, googleProvider } from '../firebase/firebase';
 // this URL (the app's verify-email page). Must be whitelisted in Firebase
 // Console → Authentication → Settings → Authorized domains.
 const ACTION_CODE_SETTINGS = {
-  url: `${window.location.origin}/verify-email`,
+  url: 'https://certzen.app/verify-email',
   handleCodeInApp: false,
 };
 
