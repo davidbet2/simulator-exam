@@ -1,7 +1,7 @@
 ﻿import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Plus, Trash2, ArrowLeft, Clock, Target, Pencil, FileJson, FileSpreadsheet, FileText } from 'lucide-react'
+import { Plus, Trash2, ArrowLeft, Clock, Target, Pencil, FileJson, FileSpreadsheet, FileText, Lock } from 'lucide-react'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../../../core/firebase/firebase'
 import { useAuthStore } from '../../../core/store/useAuthStore'
@@ -109,7 +109,7 @@ function QuestionRow({ q, index, onEdit, onDelete }) {
 export function CreateExamPage() {
   const { t } = useLingui()
   const TYPE_LABELS = buildTypeLabels(t)
-  const { user } = useAuthStore()
+  const { user, isPro } = useAuthStore()
   const navigate = useNavigate()
 
   // ── set metadata ──────────────────────────────────────────────────────────
@@ -392,8 +392,7 @@ export function CreateExamPage() {
             </div>
           </section>
 
-          {/* ── Importar preguntas ─────────────────────────────── */}
-          <section className="bg-surface-card border border-surface-border rounded-xl overflow-hidden shadow-card">
+          {/* ── Importar preguntas ─────────────────────────────── */}          {isPro ? (          <section className="bg-surface-card border border-surface-border rounded-xl overflow-hidden shadow-card">
             <button
               type="button"
               onClick={() => setShowImport((v) => !v)}
@@ -532,6 +531,25 @@ export function CreateExamPage() {
               </div>
             )}
           </section>
+          ) : (
+          <section className="bg-surface-card border border-surface-border rounded-xl p-5 shadow-card">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center shrink-0 mt-0.5">
+                <Lock size={15} className="text-brand-500" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-ink"><Trans>Importación masiva — plan Pro</Trans></p>
+                <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+                  <Trans>En el plan Free puedes añadir preguntas una a una. Actualiza a Pro para importar desde JSON, Excel o PDF e importar cientos de preguntas en segundos.</Trans>
+                </p>
+                <Link to="/pricing"
+                  className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg transition-colors">
+                  <Trans>Ver plan Pro →</Trans>
+                </Link>
+              </div>
+            </div>
+          </section>
+          )}
 
           {/* Preguntas */}
           <section className="space-y-3">
@@ -553,7 +571,7 @@ export function CreateExamPage() {
             {questions.length === 0 ? (
               <div className="border-2 border-dashed border-surface-border rounded-xl py-12 text-center bg-surface-card">
                 <p className="text-ink-faint text-sm"><Trans>Aún no hay preguntas.</Trans></p>
-                <p className="text-ink-faint text-xs mt-1"><Trans>Usa “Nueva pregunta” o importa desde JSON, Excel o PDF.</Trans></p>
+                <p className="text-ink-faint text-xs mt-1">{isPro ? <Trans>Usa "Nueva pregunta" o importa desde JSON, Excel o PDF.</Trans> : <Trans>Usa el botón "Nueva pregunta" para añadir preguntas.</Trans>}</p>
               </div>
             ) : (
               <div className="space-y-2">
