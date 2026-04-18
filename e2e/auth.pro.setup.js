@@ -59,6 +59,5 @@ setup('authenticate-pro-user', async ({ page, request }) => {
 
   await page.goto('/');
   await injectFirebaseAuth(page, authPayload);
-  await page.reload({ waitUntil: 'load' });
-  await page.context().storageState({ path: authFile, indexedDB: true });
+  await page.context().storageState({ path: authFile });
 });

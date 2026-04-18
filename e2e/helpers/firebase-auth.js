@@ -83,24 +83,10 @@ export async function injectFirebaseAuth(page, authPayload) {
 
   await page.evaluate(
     ([key, value]) => {
-      return new Promise((resolve, reject) => {
-        const openReq = indexedDB.open('firebaseLocalStorageDb', 1);
-        openReq.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains('firebaseLocalStorage')) {
-            db.createObjectStore('firebaseLocalStorage', { keyPath: 'fbase_key' });
-          }
-        };
-        openReq.onsuccess = () => {
-          const db = openReq.result;
-          const tx = db.transaction('firebaseLocalStorage', 'readwrite');
-          const store = tx.objectStore('firebaseLocalStorage');
-          store.put({ fbase_key: key, value });
-          tx.oncomplete = resolve;
-          tx.onerror = (e) => reject(e.target.error);
-        };
-        openReq.onerror = (e) => reject(e.target.error);
-      });
+      // Firebase's browserLocalPersistence stores the auth user in localStorage
+      // using the same key format as IndexedDB. Playwright's storageState captures
+      // localStorage (but not IndexedDB), so this ensures auth persists across tests.
+      localStorage.setItem(key, JSON.stringify(value));
     },
     [`firebase:authUser:${apiKey}:[DEFAULT]`, authUser]
   );

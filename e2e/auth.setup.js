@@ -2,14 +2,20 @@
  * Free-user authentication setup.
  *
  * Uses the Firebase Auth REST API directly — bypasses the browser login form
- * and Turnstile entirely. Persists the resulting IndexedDB state so all
- * specs in the `authenticated-free` project start already logged in.
+ * and Turnstile entirely. Persists the resulting localStorage state so all
+ * specs in the `free-user` project start already logged in.
  *
- * Required env vars:
- *   E2E_FREE_EMAIL      (free-plan account, email/password)
- *   E2E_FREE_PASSWORD
+ * Auth persistence strategy:
+ *   - In test mode (`vite --mode test`), firebase.js uses `browserLocalPersistence`
+ *     instead of the default IndexedDB, so Playwright's storageState can capture it.
+ *   - injectFirebaseAuth writes the token directly to localStorage.
+ *   - storageState is captured immediately (no reload needed).
  *
- * Falls back gracefully when vars are absent.
+ * Required env vars (add to .env — do NOT commit):
+ *   E2E_FREE_EMAIL      free-plan account email (e.g. davidbet2@hotmail.com)
+ *   E2E_FREE_PASSWORD   password for that account
+ *
+ * Falls back gracefully when vars are absent (setup skipped, tests will fail auth checks).
  */
 import { test as setup } from '@playwright/test';
 import path from 'node:path';
@@ -33,14 +39,12 @@ setup('authenticate-free-user', async ({ page, request }) => {
   // Step 1: sign in via REST API (no browser UI, no Turnstile)
   const authPayload = await restSignIn(request, email, password);
 
-  // Step 2: open the app and inject the auth state into IndexedDB
+  // Step 2: open the app and inject the auth state into localStorage
   await page.goto('/');
   await injectFirebaseAuth(page, authPayload);
 
-  // Step 3: reload so the Firebase SDK picks up the injected state
-  // Use 'load' instead of 'networkidle' — Firestore/RTL listeners keep network busy indefinitely
-  await page.reload({ waitUntil: 'load' });
-
-  // Step 4: persist IndexedDB (Firebase Auth token lives there)
-  await page.context().storageState({ path: authFile, indexedDB: true });
+  // Step 3: capture storage state immediately after injection — no reload needed.
+  // With browserLocalPersistence (used in MODE=test), Firebase reads directly from
+  // localStorage on init, so Playwright's storageState captures the token correctly.
+  await page.context().storageState({ path: authFile });
 });

@@ -1,5 +1,10 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import {
+  initializeAuth,
+  GoogleAuthProvider,
+  browserLocalPersistence,
+  indexedDBLocalPersistence,
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -16,6 +21,14 @@ const app = initializeApp(firebaseConfig);
 // Client-side initialization is disabled to prevent SDK throttle errors
 // that block auth and Firestore calls after a failed token fetch.
 
-export const auth = getAuth(app);
+// In test mode (Playwright e2e), use localStorage so Playwright's storageState
+// captures the auth token. In production, prefer IndexedDB with localStorage fallback.
+const persistence = import.meta.env.MODE === 'test'
+  ? [browserLocalPersistence]
+  : [indexedDBLocalPersistence, browserLocalPersistence];
+
+export const auth = initializeAuth(app, { persistence });
 export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
+// Always show the account picker so users can choose or register with a different account
+googleProvider.setCustomParameters({ prompt: 'select_account' });
