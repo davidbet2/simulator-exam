@@ -82,7 +82,7 @@ export function PricingPage() {
       // 2. Initialize Dodo SDK then open overlay
       const { DodoPayments } = await import('dodopayments-checkout')
       DodoPayments.Initialize({
-        mode: 'test',
+        mode: import.meta.env.PROD ? 'live' : 'test',
         displayType: 'overlay',
         onEvent: (event) => {
           if (event?.event_type === 'checkout.closed') setLoading(false)

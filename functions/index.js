@@ -380,7 +380,7 @@ exports.createDodoCheckout = onCall(
     const DodoPayments = require('dodopayments').default
     const client = new DodoPayments({
       bearerToken: DODO_API_KEY.value(),
-      environment: 'test_mode',
+      environment: 'live_mode',
     })
 
     const { productId } = request.data
@@ -431,7 +431,7 @@ exports.dodoWebhook = onRequest(
     const client = new DodoPayments({
       bearerToken:  DODO_API_KEY.value(),
       webhookKey:   DODO_WEBHOOK_KEY.value(),
-      environment:  'test_mode',
+      environment:  'live_mode',
     })
 
     const rawBody   = req.rawBody?.toString() ?? ''
@@ -560,7 +560,7 @@ exports.syncDodoSubscription = onCall(
     const DodoPayments = require('dodopayments').default
     const client = new DodoPayments({
       bearerToken: DODO_API_KEY.value(),
-      environment: 'test_mode',
+      environment: 'live_mode',
     })
 
     // List subscriptions for this email � most recent active first
@@ -630,7 +630,7 @@ exports.cancelDodoSubscription = onCall(
     const DodoPayments = require('dodopayments').default
     const client = new DodoPayments({
       bearerToken: DODO_API_KEY.value(),
-      environment: 'test_mode',
+      environment: 'live_mode',
     })
 
     try {
@@ -668,7 +668,7 @@ exports.getDodoPayments = onCall(
     const DodoPayments = require('dodopayments').default
     const client = new DodoPayments({
       bearerToken: DODO_API_KEY.value(),
-      environment: 'test_mode',
+      environment: 'live_mode',
     })
 
     try {
@@ -721,7 +721,7 @@ exports.reactivateDodoSubscription = onCall(
     const DodoPayments = require('dodopayments').default
     const client = new DodoPayments({
       bearerToken: DODO_API_KEY.value(),
-      environment: 'test_mode',
+      environment: 'live_mode',
     })
 
     try {
