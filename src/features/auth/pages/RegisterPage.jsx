@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -40,6 +40,7 @@ export function RegisterPage() {
   const navigate = useNavigate()
   const { t } = useLingui()
   const { register: registerUser, loginWithGoogle, user, isLoading, error, clearError } = useAuthStore()
+  const [turnstileReady, setTurnstileReady] = useState(!TURNSTILE_KEY)
 
   const { register, handleSubmit, control, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -137,9 +138,9 @@ export function RegisterPage() {
                   render={({ field }) => (
                     <Turnstile
                       siteKey={TURNSTILE_KEY}
-                      onSuccess={(token) => field.onChange(token)}
-                      onExpire={() => field.onChange('')}
-                      onError={() => field.onChange('')}
+                      onSuccess={(token) => { field.onChange(token); setTurnstileReady(true) }}
+                      onExpire={() => { field.onChange(''); setTurnstileReady(false) }}
+                      onError={() => { field.onChange(''); setTurnstileReady(false) }}
                       options={{ theme: 'auto', size: 'normal', language: 'auto' }}
                     />
                   )}
@@ -150,7 +151,7 @@ export function RegisterPage() {
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading || !turnstileReady}>
               <UserPlus size={16} />
               {isLoading ? t`Creando cuenta…` : t`Crear cuenta`}
             </Button>
@@ -169,7 +170,7 @@ export function RegisterPage() {
             variant="outline"
             className="w-full flex items-center justify-center gap-2"
             onClick={loginWithGoogle}
-            disabled={isLoading}
+            disabled={isLoading || !turnstileReady}
             aria-label={t`Registrarse con Google`}
           >
             <GoogleIcon />
