@@ -105,13 +105,21 @@ export const useAuthStore = create((set) => ({
       const userRef = doc(db, 'users', result.user.uid);
       const existing = await getDoc(userRef);
       if (!existing.exists()) {
-        await setDoc(userRef, {
-          uid:         result.user.uid,
-          email:       result.user.email,
-          displayName: result.user.displayName ?? result.user.email.split('@')[0],
-          plan:        'free',
-          createdAt:   serverTimestamp(),
-        });
+        try {
+          await setDoc(userRef, {
+            uid:         result.user.uid,
+            email:       result.user.email,
+            displayName: result.user.displayName ?? result.user.email.split('@')[0],
+            plan:        'free',
+            createdAt:   serverTimestamp(),
+          });
+        } catch (profileErr) {
+          // Auth succeeded but profile write failed — log and surface to UI.
+          // The user is authenticated; they can retry on next load via fetchUserProfile.
+          console.error('[auth] Google profile creation failed:', profileErr);
+          set({ error: 'No se pudo crear tu perfil. Inténtalo de nuevo.', isLoading: false });
+          return;
+        }
       }
       // onAuthStateChanged handles the state update
     } catch (err) {

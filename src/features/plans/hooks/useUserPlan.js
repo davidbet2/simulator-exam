@@ -29,12 +29,17 @@ export function useUserPlan() {
       where('uid',       '==', user.uid),
       where('createdAt', '>=', Timestamp.fromDate(start))
     )
-    const snap = await getCountFromServer(q)
-    setUsedThisMonth(snap.data().count)
-    setIsLoading(false)
+    try {
+      const snap = await getCountFromServer(q)
+      setUsedThisMonth(snap.data().count)
+    } catch (err) {
+      console.error('[useUserPlan] quota fetch failed:', err)
+      // On error leave usedThisMonth at current value (don't reset to 0)
+    } finally {
+      setIsLoading(false)
+    }
   }, [user, isPro])
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { refresh() }, [refresh])
 
   const remaining    = isPro ? Infinity : Math.max(0, FREE_LIMIT - usedThisMonth)

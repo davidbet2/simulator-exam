@@ -180,7 +180,7 @@ export function ProfilePage() {
     );
     getDocs(q)
       .then((snap) => setAttempts(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
-      .catch(() => {})
+      .catch((err) => { console.error('[Profile] attempts fetch failed:', err); })
       .finally(() => setLoading(false));
   }, [user, navigate]);
 

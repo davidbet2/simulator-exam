@@ -82,7 +82,7 @@ function Sidebar({ onClose, collapsed = false, onToggleCollapse }) {
       setFolderName('');
       setCreatingFolder(false);
     } catch (err) {
-      console.error(err);
+      console.error('[AppShell] createFolder failed:', err);
     }
   };
 

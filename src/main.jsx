@@ -18,7 +18,10 @@ if ('serviceWorker' in navigator) {
 
 // Recover from stale SW chunk errors after a new deploy.
 // When a dynamic import fails (old hash no longer on server), reload once.
+// Guard: sessionStorage flag prevents an infinite reload loop if the error persists.
 window.addEventListener('vite:preloadError', () => {
+  if (sessionStorage.getItem('preloadErrorReloaded')) return
+  sessionStorage.setItem('preloadErrorReloaded', '1')
   window.location.reload()
 })
 

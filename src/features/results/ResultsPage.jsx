@@ -145,7 +145,7 @@ export function ResultsPage() {
       passPercent: state.passPercent,
       mode:        state.mode ?? 'exam',
       createdAt:   serverTimestamp(),
-    }).catch(() => {});
+    }).catch((err) => { console.error('[Results] attempt save failed:', err); });
   }, [state, user]);
 
   if (!state) return null;
