@@ -36,6 +36,10 @@ export default defineConfig({
         // PNGs excluidos del precache — dolphin assets son grandes y cambian frecuentemente
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         globIgnores: ['**/dolphin_full_system/**'],
+        // Never let the SW intercept Firebase Auth popup/redirect handler routes.
+        // Without this, /__/auth/handler gets served from the SW cache (index.html)
+        // instead of the Firebase Hosting auth endpoint, breaking Google sign-in popups.
+        navigateFallbackDenylist: [/^\/__\//],
         runtimeCaching: [
           {
             // NetworkFirst: siempre intenta red primero → garantiza assets frescos en cada deploy

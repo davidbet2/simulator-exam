@@ -99,8 +99,6 @@ export const useAuthStore = create((set) => ({
 
   loginWithGoogle: async () => {
     set({ isLoading: true, error: null });
-    // DIAG: log config state at call time
-    console.info('[auth] loginWithGoogle invoked. authDomain=', auth?.config?.authDomain, '| apiKey set?', !!auth?.config?.apiKey, '| provider providerId=', googleProvider?.providerId);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       // Create user profile if first time
@@ -117,7 +115,6 @@ export const useAuthStore = create((set) => ({
       }
       // onAuthStateChanged handles the state update
     } catch (err) {
-      console.error('[auth] loginWithGoogle FULL error:', err, '| code:', err?.code, '| message:', err?.message, '| customData:', err?.customData);
       set({ error: mapAuthError(err.code), isLoading: false });
     }
   },
@@ -187,11 +184,6 @@ export const useAuthStore = create((set) => ({
 }));
 
 function mapAuthError(code, _rawMessage) {
-  // DIAGNOSTIC: log full stack trace whenever auth/argument-error is mapped
-  // so we can identify the exact call site causing the error in production.
-  if (code === 'auth/argument-error') {
-    console.error('[auth] auth/argument-error STACK:', new Error('argument-error trace').stack);
-  }
   // Collapse credential-related codes to a single generic message to prevent
   // account enumeration (OWASP A07 — Authentication Failures).
   const genericCredential = 'Correo o contraseña incorrectos.';
