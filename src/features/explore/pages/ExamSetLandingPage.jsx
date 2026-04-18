@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
+import { useUserPlan } from '../../plans/hooks/useUserPlan';
 import { getDomain } from '../../../core/constants/domains';
 import { fetchStatsSummary, fetchDomainMastery } from '../../exam/utils/questionStats';
 import { AppShell } from '../../../components/layout/AppShell';
@@ -24,6 +25,7 @@ import { SaveToFolderButton } from '../../home/components/SaveToFolderButton';
 import { ShareButton } from '../../../components/ui/ShareButton';
 import DomainPath from '../components/DomainPath';
 import { SEOHead } from '../../../components/SEOHead';
+import { AdBanner } from '../../ads/components/AdBanner';
 
 function MetaStat({ icon: Icon, label, value }) {
   return (
@@ -143,6 +145,7 @@ export function ExamSetLandingPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { canTakeExam, isPro } = useUserPlan();
   const { t } = useLingui();
 
   const [set, setState] = useState(null);
@@ -259,6 +262,10 @@ export function ExamSetLandingPage() {
 
   const launchMode = (params) => {
     if (!user) { navigate('/register'); return; }
+    if (params.mode === 'exam' && !isPro && !canTakeExam) {
+      navigate('/pricing');
+      return;
+    }
     const qs = new URLSearchParams({ setId: slug, ...params }).toString();
     navigate(`/exam?${qs}`);
   };
@@ -493,6 +500,13 @@ export function ExamSetLandingPage() {
             />
           </div>
         </motion.section>
+
+        <AdBanner
+          keywords={`certification|${set.domain ?? 'developer'}|appian`}
+          placementId="exam-set-landing"
+          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
+          className="rounded-xl"
+        />
 
         {/* Source & tags */}
         {(set.source || set.tags?.length > 0) && (

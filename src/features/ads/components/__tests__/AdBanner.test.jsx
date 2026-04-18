@@ -8,7 +8,7 @@
  *
  * useUserPlan is fully mocked; no Firestore needed.
  */
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -39,9 +39,12 @@ import { SponsorBanner } from '../SponsorBanner';
 // ── AdBanner tests ────────────────────────────────────────────────────────────
 
 describe('AdBanner — free-user gate', () => {
-  it('renders sponsored placeholder for free user (no EthicalAds publisher configured)', () => {
+  // Stub out AdSense so these tests exercise the EthicalAds/placeholder path
+  beforeEach(() => { vi.stubEnv('VITE_GOOGLE_ADSENSE_ID', ''); });
+  afterEach(() => { vi.unstubAllEnvs(); });
+
+  it('renders sponsored placeholder for free user (no AdSense, no EthicalAds configured)', () => {
     mockPlanState = { isPro: false, isLoading: false };
-    // VITE_ETHICAL_ADS_PUBLISHER not set → renders sponsor placeholder
     render(
       <MemoryRouter>
         <AdBanner keywords="certification" placementId="test" />

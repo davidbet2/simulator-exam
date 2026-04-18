@@ -346,6 +346,7 @@ export function ResultsPage() {
         <AdBanner
           keywords="certification|developer|appian"
           placementId="results-bottom"
+          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
           className="mt-2"
         />
 

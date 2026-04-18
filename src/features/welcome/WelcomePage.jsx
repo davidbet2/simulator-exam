@@ -16,6 +16,7 @@ import { Footer } from '../../components/layout/Footer';
 import { ZenDolphin } from '../../components/mascot/ZenDolphin';
 import Button from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
+import { AdBanner } from '../ads/components/AdBanner';
 
 // â”€â”€â”€ Features list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ─── Features list ───────────────────────────────────────────────────────────
@@ -516,6 +517,13 @@ export function WelcomePage() {
                   <ModeCard key={mode.id} mode={mode} onLaunch={launchMode} />
                 ))}
               </motion.div>
+
+              <AdBanner
+                keywords="certification|exam|developer|appian"
+                placementId="welcome-modes"
+                adSlot={import.meta.env.VITE_ADSENSE_SLOT}
+                className="mt-6 rounded-xl"
+              />
 
               <div className="flex items-center justify-between text-xs text-ink-soft mt-10 pt-8
                               border-t border-surface-border">

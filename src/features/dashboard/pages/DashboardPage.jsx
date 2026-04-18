@@ -107,6 +107,7 @@ export function DashboardPage() {
         <AdBanner
           keywords="certification|developer|appian|cloud"
           placementId="dashboard-main"
+          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
         />
 
         {/* Actions */}
