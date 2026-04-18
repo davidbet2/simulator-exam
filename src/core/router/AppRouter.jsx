@@ -36,6 +36,7 @@ const AdminFlagsPage          = lazy(() => import('../../features/admin/pages/Ad
 const AdminAuditLogPage       = lazy(() => import('../../features/admin/pages/AdminAuditLogPage').then(m => ({ default: m.AdminAuditLogPage })));
 const VerifyEmailPage         = lazy(() => import('../../features/auth/pages/VerifyEmailPage').then(m => ({ default: m.VerifyEmailPage })));
 const ForgotPasswordPage      = lazy(() => import('../../features/auth/pages/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })));
+const AuthActionPage          = lazy(() => import('../../features/auth/pages/AuthActionPage').then(m => ({ default: m.AuthActionPage })));
 
 function PageLoader() {  return (
     <div className="min-h-screen bg-surface flex items-center justify-center" aria-busy="true" aria-label="Cargando página">
@@ -98,6 +99,7 @@ export function AppRouter() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/auth/action" element={<AuthActionPage />} />
         {/* /exam is public: demo mode runs client-side with hardcoded questions.
             Community/official sets enforce auth at the landing page (ExamSetLandingPage.launchMode). */}
         <Route path="/exam" element={<ExamPage />} />
