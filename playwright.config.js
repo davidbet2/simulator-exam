@@ -1,34 +1,46 @@
 /**
  * Playwright config — Simulator-Exam.
  *
- * SAFETY:
- *  - Default baseURL points to the local Vite dev server (http://localhost:5173).
- *  - Override with PLAYWRIGHT_BASE_URL only when targeting a STAGING project.
- *  - NEVER point this at the production Firebase project.
+ * Projects:
+ *   setup-free     — authenticates davidbet2@hotmail.com (free plan)
+ *   setup-pro      — authenticates kathe9029@gmail.com (pro plan, see auth.pro.setup.js)
+ *   anonymous      — public pages, no auth, runs immediately
+ *   free-user      — authenticated specs (depends on setup-free)
+ *   pro-user       — authenticated specs (depends on setup-pro)
  *
- * Auth strategy: a one-time `setup` project authenticates with a test account
- * and persists IndexedDB (where Firebase Auth stores its token) via
- * `storageState({ indexedDB: true })`. Other projects reuse that state.
+ * Auth strategy: Firebase REST API login → IndexedDB injection (bypasses Turnstile).
  *
  * Run:
- *   npm run e2e            # headless
- *   npm run e2e:headed     # visible browser
- *   npm run e2e:ui         # Playwright UI
+ *   npm run e2e                                  # headless, all projects
+ *   npm run e2e:headed                           # visible browser
+ *   npm run e2e:ui                               # Playwright UI
+ *   npx playwright test --project=anonymous      # only public tests
+ *   npx playwright test --project=free-user      # only free-user tests
  *
- * Required env (do NOT commit values):
- *   E2E_USER_EMAIL
- *   E2E_USER_PASSWORD
- *   PLAYWRIGHT_BASE_URL    (optional, defaults to http://localhost:5173)
+ * Required env vars (do NOT commit values):
+ *   E2E_FREE_EMAIL      / E2E_FREE_PASSWORD      — davidbet2@hotmail.com
+ *   E2E_PRO_USER_EMAIL  / E2E_PRO_USER_PASSWORD  — pro account with email/password linked
+ *   OR E2E_PRO_FIREBASE_TOKEN + E2E_PRO_FIREBASE_UID + E2E_PRO_FIREBASE_EMAIL
+ *   VITE_FIREBASE_API_KEY  (already in .env — used by REST login helper)
+ *   PLAYWRIGHT_BASE_URL    (optional, defaults to http://localhost:5174)
+ *
+ * NOTE: The test server runs on port 5174 (not 5173) to avoid colliding with
+ * the dev server. Never reuse an existing dev server — it may lack --mode test.
  */
 import { defineConfig, devices } from '@playwright/test';
+import { config as loadDotenv } from 'dotenv';
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5173';
+// Explicitly load .env so VITE_* vars are available to Node.js test helpers
+// (Playwright's auto-dotenv runs after module evaluation — this ensures it's ready)
+loadDotenv({ path: '.env', override: false });
+
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5174';
 
 export default defineConfig({
   testDir: './e2e',
   timeout: 60_000,
   expect: { timeout: 10_000 },
-  fullyParallel: false, // payment + auth flows are stateful — keep serial
+  fullyParallel: false, // auth state is shared — keep serial
   retries: process.env.CI ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
@@ -37,23 +49,58 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
+
   projects: [
-    { name: 'setup', testMatch: /.*\.setup\.js/ },
+    // ── Setup projects (run once, produce .auth/*.json) ──────────────────────
     {
-      name: 'chromium',
+      name: 'setup-free',
+      testMatch: /auth\.setup\.js/,
+    },
+    {
+      name: 'setup-pro',
+      testMatch: /auth\.pro\.setup\.js/,
+    },
+
+    // ── Anonymous (no auth, no setup dependency) ─────────────────────────────
+    {
+      name: 'anonymous',
+      testMatch: /public\.spec\.js|exploit\.spec\.js|smoke\.spec\.js/,
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'e2e/.auth/user.json',
+        storageState: { cookies: [], origins: [] },
       },
-      dependencies: ['setup'],
+    },
+
+    // ── Free user ─────────────────────────────────────────────────────────────
+    {
+      name: 'free-user',
+      testMatch: /free-user\.spec\.js/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'e2e/.auth/free-user.json',
+      },
+      dependencies: ['setup-free'],
+    },
+
+    // ── Pro user ──────────────────────────────────────────────────────────────
+    {
+      name: 'pro-user',
+      testMatch: /pro-user\.spec\.js/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'e2e/.auth/pro-user.json',
+      },
+      dependencies: ['setup-pro'],
     },
   ],
+
+  // Start local Vite dev server in test mode (disables Turnstile via .env.test)
   webServer: process.env.PLAYWRIGHT_NO_SERVER
     ? undefined
     : {
-        command: 'npm run dev',
+        command: 'npx vite --mode test --port 5174',
         url: baseURL,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false, // never reuse dev server — it may lack --mode test
         timeout: 120_000,
       },
 });

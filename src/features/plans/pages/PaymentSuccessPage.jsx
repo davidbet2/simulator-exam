@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CheckCircle2, Loader2, AlertCircle, Sparkles, Calendar, CreditCard, ArrowRight, ShieldAlert } from 'lucide-react'
@@ -30,15 +30,11 @@ export function PaymentSuccessPage() {
   const { user, isPro, subscriptionStatus, subscriptionRenewsAt, refreshProfile } = useAuthStore()
   const [status, setStatus] = useState(isPro ? 'verified' : 'verifying')
   const [errorMsg, setErrorMsg] = useState(null)
-  const ranRef = useRef(false)
 
   useEffect(() => {
     // If user is already Pro from store hydration, no sync needed
     // (initial useState already set status to 'verified')
     if (isPro) return
-    // Avoid double-run in React StrictMode
-    if (ranRef.current) return
-    ranRef.current = true
 
     let cancelled = false
     const verify = async () => {
