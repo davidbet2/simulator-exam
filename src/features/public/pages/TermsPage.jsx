@@ -2,7 +2,7 @@
 import { PageSEO } from '../../../components/seo/PageSEO';
 import { Footer } from '../../../components/layout/Footer';
 
-const LAST_UPDATED = '13 de abril de 2026';
+const LAST_UPDATED = '18 de abril de 2026';
 
 function Section({ id, title, children }) {
   return (
@@ -91,13 +91,15 @@ export function TermsPage() {
               y un <strong className="text-ink-soft">plan Pro</strong> de pago con acceso ilimitado.
             </p>
             <p>
-              Los pagos son procesados por <strong className="text-ink-soft">Stripe</strong> de forma segura.
+              Los pagos son procesados por <strong className="text-ink-soft">Dodo Payments</strong> de forma segura.
               CertZen no almacena datos de tarjetas de crédito. Los precios pueden cambiar con
               30 días de aviso previo a suscriptores activos.
             </p>
             <p>
-              Los reembolsos se evalúan caso por caso dentro de los <strong className="text-ink-soft">7 días</strong>
-              {' '}siguientes al cargo. Contáctanos en <a href="mailto:support@certzen.app" className="text-brand-600 hover:text-brand-700 underline">support@certzen.app</a>.
+              <strong className="text-ink-soft">Todos los pagos son definitivos y no se realizan reembolsos</strong>,
+              salvo donde la ley aplicable lo exija expresamente. Al completar un pago aceptas esta política.
+              Para consultas sobre tu suscripción contáctanos en{' '}
+              <a href="mailto:support@certzen.app" className="text-brand-600 hover:text-brand-700 underline">support@certzen.app</a>.
             </p>
           </Section>
 
@@ -145,8 +147,7 @@ export function TermsPage() {
           <Section id="termination" title="9. Terminación">
             <p>
               Podemos suspender o terminar tu acceso si violas estos términos, con o sin previo aviso.
-              Ante una terminación por nuestra parte sin causa justificada, reembolsaremos la parte
-              proporcional de cualquier suscripción vigente.
+              La cancelación de tu cuenta no da derecho a reembolso alguno de los cargos ya realizados.
             </p>
           </Section>
 

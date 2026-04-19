@@ -73,7 +73,7 @@ export function PrivacyPage() {
               <li>Preferencias de uso almacenadas localmente en tu navegador (<code className="bg-surface-muted px-1 rounded text-xs">sessionStorage</code>)</li>
             </ul>
             <p className="mt-2">
-              <strong className="text-ink-soft">No recopilamos:</strong> datos de pago directamente (procesados por Stripe con su propia política), ubicación precisa, ni identificadores biométricos.
+              <strong className="text-ink-soft">No recopilamos:</strong> datos de pago directamente (procesados por Dodo Payments con su propia política), ubicación precisa, ni identificadores biométricos.
             </p>
           </Section>
 
