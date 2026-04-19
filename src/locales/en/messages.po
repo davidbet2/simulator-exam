@@ -2257,10 +2257,6 @@ msgstr ""
 msgid "Todo lo que necesitas para aprobar"
 msgstr "Everything you need to pass"
 
-#: src/features/explore/pages/ExploreExamsPage.jsx:288
-#~ msgid "Todos"
-#~ msgstr "All"
-
 #: src/features/dashboard/pages/DashboardPage.jsx:126
 #: src/features/profile/pages/ProfilePage.jsx:674
 msgid "Tomar examen"

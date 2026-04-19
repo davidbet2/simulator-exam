@@ -84,6 +84,11 @@ Invoca estas habilidades mencionando su trigger natural en conversación:
 | `gsd`               | `/gsd-*` commands                      | Spec-driven development: plan→execute→verify  |
 | `ensure-tools`      | "¿tienes X instalado?" / "instala Y"    | Verifica e instala herramientas faltantes     |
 | `lottie-animation-scripter` | "crea animación de X" / "guión lottie" / "anima estas imágenes" | Diseña guión de escenas profesional + prompts de imagen + JSON Lottie multi-frame |
+| `cloudflare`        | "cloudflare" / "CDN" / "cache" / "WAF" / "DNS"            | Cache rules SPA, WAF, DDoS, Web Analytics, Speed Observatory |
+| `google-analytics`  | "GA4" / "analytics" / "eventos" / "conversiones"          | GA4 SPA tracking, Consent Mode v2, eventos de negocio, BigQuery |
+| `google-search-console` | "SEO" / "sitemap" / "indexación" / "Core Web Vitals"  | Indexing strategy, sitemap generator, JSON-LD, GSC monitoring |
+| `firebase`          | "firestore rules" / "índice" / "failed-precondition" / "deploy" | Security rules, indexes, Auth flow, costs, CLI deploy |
+| `google-adsense`    | "AdSense" / "ads" / "RPM" / "AdBanner" / "adsbygoogle"   | Placement strategy, CSP, StrictMode guard, policy compliance |
 
 ## Subagentes Personalizados
 
@@ -97,6 +102,11 @@ Disponibles directamente o vía @-mention:
 | `debugger`          | Debug sistemático: root cause → fix → verify  | —         |
 | `security-auditor`  | Auditoría OWASP Top 10 completa               | project   |
 | `performance-analyst` | Profiling, N+1, O(n²), memory leaks         | —         |
+| `cloudflare-expert`   | CDN, Cache Rules, WAF, Web Analytics, DNS — SpeedObservatory | project |
+| `google-analytics-expert` | GA4 measurement, eventos de negocio, Consent Mode v2, BigQuery | project |
+| `search-console-expert`   | SEO indexing, sitemap, structured data, Core Web Vitals  | project |
+| `firebase-expert`         | Auth, Firestore indexes/rules, Hosting, CLI, costs      | project |
+| `adsense-expert`          | Monetización AdSense, placement RPM, CSP, policy         | project |
 
 ---
 

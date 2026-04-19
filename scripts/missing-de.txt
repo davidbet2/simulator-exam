@@ -1,0 +1,237 @@
+﻿¡Mensaje enviado!
+¿Listo para aprobar tu certificación?
+¿Listo para practicar?
+¿Olvidaste tu contraseña?
+¿Tienes alguna pregunta o problema con CertZen? Escríbenos y te respondemos lo antes posible.
+¿Tienes dudas, encontraste un bug o necesitas ayuda? Escríbenos y te respondemos en máximo
+{0} pregunta{1} importada{2}.
+{0} preguntas importadas.
+{0} preguntas importadas. Algunas pueden estar incompletas — revísalas.
+{0} resultado
+{0} resultados
+{0} set encontrado
+{0} sets encontrados
+{0}/{1} correctas
+{0}% prom · {1}/{2} aprobados
+{inProgressCount} en progreso
+{masteredCount, plural, one {# dominado} other {# dominados}}
+{n} {0}
+{passed} aprobado
+{passed} aprobados
+{totalExams} examen
+{totalExams} exámenes
+{untouchedCount} sin empezar
+← Volver al inicio
+~5 min
+≤ 2 días hábiles
+🔑 Email y contraseña
+🔵 Google
+10 exámenes
+10 preguntas
+10 preguntas · sesión corta
+10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos.
+2 días hábiles
+3 exámenes gratis al mes para siempre. El plan gratuito incluye acceso completo al simulador. Pro desbloquea exámenes ilimitados e historial completo.
+3 exámenes por mes
+3 exámenes/mes · Funciones básicas
+5 exámenes
+80%+ promedio
+Accede a CertZen para continuar tu preparación.
+Acceso a certificaciones oficiales
+Acceso anticipado a nuevas certs
+Acceso completo · Sin restricciones
+Acceso inmediato
+Acceso rápido
+Actualiza a Pro para importar desde JSON, Excel o PDF e importar cientos de preguntas en segundos.
+Al enviar aceptas nuestra
+Algoritmo Leitner que programa cuándo repasar cada pregunta para consolidar memoria a largo plazo al mínimo esfuerzo.
+Análisis por dominio
+Antes de revelar, apuesta qué tan seguro estás. Aciertas con ×3 y ganas; fallas con ×3 y pierdes. Descubre dónde crees saber sin saber.
+Apostar
+Aprende sin presión
+aprobar
+Aprueba con confianza
+Apuesta ×1, ×2 o ×3
+Ataca tus errores
+Banco de preguntas
+Banco Oficial
+Buscar por título, descripción o etiqueta…
+Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje.
+Calibración metacognitiva (Brainscape CBR · Dunning-Kruger)
+Calificación promedio: {0} de 5, {count} {1}
+Canales de soporte
+Certificaciones
+CertZen es un simulador inteligente de certificaciones profesionales. Aprende cómo funciona, qué certificaciones cubre y por qué miles de profesionales confían en nosotros.
+CertZen Pro
+CertZen replica las condiciones exactas del examen: preguntas aleatorias, cronómetro real y feedback inmediato. Más del 85% de los usuarios que practican 5+ exámenes aprueban en su primer intento.
+Cómo funciona CertZen →
+Comunidad y UGC
+Condiciones reales: {0} min · {1}% para aprobar · sin pistas. Evalúa tu preparación real.
+confianza
+Crea el primero
+Crea tu cuenta en segundos y practica con simuladores reales. Plan gratuito para siempre. Actualiza cuando lo necesites.
+Crea tu cuenta gratis
+Crea y comparte sets
+Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen.
+Dashboard con historial de intentos, puntuación promedio, tasa de aprobación y logros desbloqueables. Sabe exactamente dónde mejorar.
+Datos de cuenta
+Describe tu consulta con el mayor detalle posible…
+Diseñado por profesionales certificados, para profesionales que quieren serlo.
+dominada
+dominadas
+El archivo supera 10 MB.
+El archivo supera 2 MB.
+El correo es obligatorio.
+el día real
+El formato del correo no es válido.
+El mensaje debe tener al menos 20 caracteres.
+El mensaje es obligatorio.
+El nombre es obligatorio.
+El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas.
+El título no puede superar 200 caracteres.
+Elige tu
+Elige tu certificación
+Elige un asunto.
+Elimina los anuncios con <0>CertZen Pro</0>
+Empezar ahora
+Empezar examen
+Empieza gratis hoy
+En el plan Free puedes añadir preguntas una a una. Actualiza a Pro para importar desde JSON, Excel o PDF e importar cientos de preguntas en segundos.
+En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante.
+Enviando…
+Enviar otro mensaje
+Error al leer el archivo.
+Error al procesar el PDF.
+Espaciado + sesiones breves (micro-learning)
+Este examen no existe o no es público.
+Exámenes de {0}
+Exámenes de {0} — CertZen
+Explora sets de preguntas creados por la comunidad. Comparte tus propios simulacros con otros profesionales.
+Explorar exámenes de certificación — CertZen
+Explorar sets de la comunidad
+Flashcards
+Formato inválido. Solo se permite .pdf.
+Formato inválido. Solo se permite .xlsx.
+Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar.
+Formulario de contacto
+Freemium · Plan gratuito disponible
+Freemium sin trampa
+Fuente:
+Gratis · guarda tu progreso y ve explicaciones completas
+Historial completo
+Hola, {displayName} 👋
+Importación masiva — plan Pro
+Información de contacto
+Más usado
+Máximo 500 preguntas por examen.
+Método de acceso
+Mi perfil
+Miembro desde
+modo de práctica
+Modo Estudio
+Modo Examen
+Modo Examen & Modo Estudio
+Modo examen para simular el día real. Modo estudio para aprender de cada error.
+Modos de práctica
+Nada por repasar
+No se detectaron preguntas en el PDF. Copia el texto extraído y usa el tab JSON.
+No se encontraron preguntas válidas.
+No se pudo enviar el mensaje. Intenta de nuevo o escríbenos directamente a support@certzen.app.
+No se pudo guardar. Inténtalo de nuevo.
+Nota perfecta
+Nuevo ✨
+Para aprender
+para aprobar
+Patrocinado
+Plan Gratuito
+Plan gratuito disponible
+Plataforma colaborativa de simuladores de examen: IT, Cloud, Salud, Inglés, Appian y más. Exploración gratis, regístrate para practicar.
+Plataforma de certificación profesional
+política de privacidad
+Política de privacidad →
+Practica como si fuera
+Practica con propósito
+Práctica focalizada (targeted practice)
+Practicar
+Practicar {label}: {mastered} de {total} dominadas, {percent}%
+pregunta por repasar
+pregunta por repasar hoy
+Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad.
+preguntas por repasar
+preguntas por repasar hoy
+Preguntas similares a los exámenes oficiales de certificación, organizadas por dominio y nivel de dificultad. Actualizadas constantemente.
+Prepárate para tus certificaciones con simuladores reales, banco de preguntas oficial y seguimiento de progreso. Gratis para empezar.
+Primer aprobado
+Primer examen
+Primeras {0} preguntas del set.
+Privacidad primero
+Privacidad y legal
+Probar demo
+Progreso en tiempo real
+Progreso guardado
+Progreso Inteligente
+Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos.
+Recibimos tu mensaje y te responderemos en máximo 2 días hábiles.
+Recursos útiles
+Registra cada intento, identifica tus debilidades y construye confianza antes del día del examen.
+Regístrate en 30 segundos con email. Plan freemium disponible.
+Regístrate en CertZen para acceder a simuladores ilimitados.
+Regístrate gratis para empezar exámenes, guardar resultados y crear tus propios sets.
+Regístrate para empezar
+Regístrate para practicar
+Regístrate para ver la respuesta y explicación.
+Rendimiento por certificación
+Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar.
+Repasar ahora
+Repaso Rápido
+Repetición espaciada
+Responde preguntas primero
+Responde, confirma y ve la explicación al instante. Sin tiempo, revisa cuantas veces quieras.
+Resultados básicos
+Resultados de búsqueda
+Resultados de tu examen de práctica.
+Retrieval practice + feedback inmediato
+Revisa tu historial, identifica debilidades y presenta el examen oficial listo.
+Ruta de Dominio
+Selecciona el examen de certificación que quieres practicar.
+Selecciona un asunto…
+Sesión de práctica de examen de certificación.
+Sesión exprés ideal para 5–10 minutos: aleatoria, con explicación inmediata. Perfecta para el día a día.
+Set no disponible
+Set no encontrado — CertZen
+Sets oficiales y de la comunidad. Estudia gratis, regístrate para guardar tu progreso.
+Simulación Real
+Simulacros gratuitos de {0}. Preguntas basadas en exam guides públicos. Estudia y evalúate en línea.
+Simulador de Certificaciones
+Simuladores con el formato similar del examen, banco de preguntas y seguimiento de progreso. Gratis para empezar hoy.
+Simuladores de Certificación Profesional
+Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta.
+Sin distracciones. Solo las herramientas que te acercan a tu certificación.
+Sin errores aún
+Sin historial
+Sin límites
+Sin publicidad con el plan pro. Tu historial de práctica es tuyo.
+Sin tiempo
+Sin verificar
+Soporte general
+Spaced repetition (Leitner 5 cajas)
+Te enfoca en las preguntas que fallaste. Aprendizaje dirigido a tus lagunas reales.
+Técnica:
+Términos de uso →
+Testing effect + feedback diferido
+Tiempo de respuesta
+Todo al día 🎉
+Todo lo que necesitas
+Todo lo que necesitas para aprobar
+Tu historial de exámenes, logros y progreso.
+Tu panel con historial de exámenes y progreso.
+Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada.
+tu@correo.com
+Únete de forma gratuita. Sin tarjeta de crédito requerida.
+Usa el botón \"Nueva pregunta\" para añadir preguntas.
+Ver plan Pro →
+Ver planes y precios
+Ver simuladores
+Ver todos ({0} más)
+Vista previa
+Volver a explorar
