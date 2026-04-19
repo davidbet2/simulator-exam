@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { X } from 'lucide-react';
 import { CERTIFICATIONS } from '../../../core/constants/certifications';
 
 const KEYS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -60,45 +61,49 @@ function MultipleForm({ form, errors, setForm, setErrors, toggleAnswer }) {
   return (
     <>
       <div>
-        <label className="block text-xs font-semibold text-gray-600 mb-2">Opciones</label>
+        <label className="block text-xs font-semibold text-ink-soft mb-2">Opciones</label>
         <div className="space-y-2">
           {form.mcOptions.map((opt, idx) => (
             <div key={idx} className="flex items-center gap-2">
-              <span className="text-xs font-bold text-gray-500 w-4">{KEYS[idx]}</span>
+              <span className="text-xs font-bold text-ink-faint w-4">{KEYS[idx]}</span>
               <input
                 type="text"
                 value={opt}
                 onChange={(e) => updateOption(idx, e.target.value)}
                 placeholder={idx < 3 ? `Opción ${KEYS[idx]} (requerida)` : `Opción ${KEYS[idx]} (opcional)`}
-                className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:border-appian-blue"
+                className="flex-1 border border-surface-border rounded-lg px-3 py-1.5 text-sm text-ink focus:outline-none focus:border-brand-500 bg-white"
               />
               <button type="button" onClick={() => removeOption(idx)} disabled={form.mcOptions.length <= 3}
-                className="text-appian-error hover:text-red-700 disabled:opacity-20 text-sm leading-none px-1">✕</button>
+                className="text-ink-faint hover:text-danger-500 disabled:opacity-20 text-sm leading-none px-1 transition-colors">
+                <X size={14} />
+              </button>
             </div>
           ))}
         </div>
-        {errors.mcOptions && <p className="text-appian-error text-xs mt-1">{errors.mcOptions}</p>}
+        {errors.mcOptions && <p className="text-danger-500 text-xs mt-1">{errors.mcOptions}</p>}
         {form.mcOptions.length < KEYS.length && (
-          <button type="button" onClick={addOption} className="mt-2 text-appian-blue text-xs font-semibold hover:underline">+ Agregar opción</button>
+          <button type="button" onClick={addOption} className="mt-2 text-brand-500 text-xs font-semibold hover:underline">+ Agregar opción</button>
         )}
       </div>
       <div>
-        <label className="block text-xs font-semibold text-gray-600 mb-2">Respuesta(s) correcta(s) *</label>
+        <label className="block text-xs font-semibold text-ink-soft mb-2">Respuesta(s) correcta(s) *</label>
         <div className="flex gap-3 flex-wrap">
           {availableKeys.map((key) => {
             const val = form.mcOptions[KEYS.indexOf(key)];
             if (!val?.trim()) return null;
             return (
-              <label key={key} className={`flex items-center gap-1.5 px-3 py-1.5 rounded border cursor-pointer text-sm ${
-                form.answer.includes(key) ? 'bg-appian-blue-light border-appian-blue text-appian-blue font-semibold' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              <label key={key} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border cursor-pointer text-sm transition-colors ${
+                form.answer.includes(key)
+                  ? 'bg-brand-500/10 border-brand-500 text-brand-600 font-semibold'
+                  : 'border-surface-border text-ink-soft hover:bg-surface-raised'
               }`}>
-                <input type="checkbox" checked={form.answer.includes(key)} onChange={() => toggleAnswer(key)} className="accent-appian-blue" />
+                <input type="checkbox" checked={form.answer.includes(key)} onChange={() => toggleAnswer(key)} className="accent-brand-500" />
                 {key}
               </label>
             );
           })}
         </div>
-        {errors.answer && <p className="text-appian-error text-xs mt-1">{errors.answer}</p>}
+        {errors.answer && <p className="text-danger-500 text-xs mt-1">{errors.answer}</p>}
       </div>
     </>
   );
@@ -114,23 +119,25 @@ function OrderingForm({ form, errors, set }) {
 
   return (
     <div>
-      <label className="block text-xs font-semibold text-gray-600 mb-1">
-        Pasos / elementos <span className="font-normal text-gray-400">(en orden correcto — de arriba hacia abajo)</span>
+      <label className="block text-xs font-semibold text-ink-soft mb-1">
+        Pasos / elementos <span className="font-normal text-ink-faint">(en orden correcto — de arriba hacia abajo)</span>
       </label>
       <div className="space-y-2">
         {form.orderItems.map((item, idx) => (
           <div key={idx} className="flex items-center gap-2">
-            <span className="text-xs font-bold text-gray-400 w-5 text-center">{idx + 1}</span>
+            <span className="text-xs font-bold text-ink-faint w-5 text-center">{idx + 1}</span>
             <input type="text" value={item} onChange={(e) => updateItem(idx, e.target.value)} placeholder={`Paso ${idx + 1}`}
-              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:border-appian-blue" />
-            <button type="button" onClick={() => moveUp(idx)} disabled={idx === 0} className="text-gray-400 hover:text-gray-700 disabled:opacity-20 px-1">▲</button>
-            <button type="button" onClick={() => moveDown(idx)} disabled={idx === form.orderItems.length - 1} className="text-gray-400 hover:text-gray-700 disabled:opacity-20 px-1">▼</button>
-            <button type="button" onClick={() => removeItem(idx)} disabled={form.orderItems.length <= 2} className="text-appian-error hover:text-red-700 disabled:opacity-20 text-sm px-1">✕</button>
+              className="flex-1 border border-surface-border rounded-lg px-3 py-1.5 text-sm text-ink focus:outline-none focus:border-brand-500 bg-white" />
+            <button type="button" onClick={() => moveUp(idx)} disabled={idx === 0} className="text-ink-faint hover:text-ink disabled:opacity-20 px-1 transition-colors">▲</button>
+            <button type="button" onClick={() => moveDown(idx)} disabled={idx === form.orderItems.length - 1} className="text-ink-faint hover:text-ink disabled:opacity-20 px-1 transition-colors">▼</button>
+            <button type="button" onClick={() => removeItem(idx)} disabled={form.orderItems.length <= 2} className="text-ink-faint hover:text-danger-500 disabled:opacity-20 text-sm px-1 transition-colors">
+              <X size={14} />
+            </button>
           </div>
         ))}
       </div>
-      {errors.orderItems && <p className="text-appian-error text-xs mt-1">{errors.orderItems}</p>}
-      <button type="button" onClick={addItem} className="mt-2 text-appian-blue text-xs font-semibold hover:underline">+ Agregar paso</button>
+      {errors.orderItems && <p className="text-danger-500 text-xs mt-1">{errors.orderItems}</p>}
+      <button type="button" onClick={addItem} className="mt-2 text-brand-500 text-xs font-semibold hover:underline">+ Agregar paso</button>
     </div>
   );
 }
@@ -143,24 +150,26 @@ function MatchingForm({ form, errors, set }) {
 
   return (
     <div>
-      <label className="block text-xs font-semibold text-gray-600 mb-1">
-        Pares <span className="font-normal text-gray-400">(Término → Respuesta correcta)</span>
+      <label className="block text-xs font-semibold text-ink-soft mb-1">
+        Pares <span className="font-normal text-ink-faint">(Término → Respuesta correcta)</span>
       </label>
       <div className="space-y-2">
         {form.matchPairs.map((pair, idx) => (
           <div key={idx} className="flex items-center gap-2">
-            <span className="text-xs font-bold text-gray-400 w-5 text-center">{KEYS[idx]}</span>
+            <span className="text-xs font-bold text-ink-faint w-5 text-center">{KEYS[idx]}</span>
             <input type="text" value={pair.term} onChange={(e) => updatePair(idx, 'term', e.target.value)} placeholder="Término"
-              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:border-appian-blue" />
-            <span className="text-gray-400 text-xs">→</span>
+              className="flex-1 border border-surface-border rounded-lg px-3 py-1.5 text-sm text-ink focus:outline-none focus:border-brand-500 bg-white" />
+            <span className="text-ink-faint text-xs">→</span>
             <input type="text" value={pair.matchText} onChange={(e) => updatePair(idx, 'matchText', e.target.value)} placeholder="Respuesta"
-              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:border-appian-blue" />
-            <button type="button" onClick={() => removePair(idx)} disabled={form.matchPairs.length <= 2} className="text-appian-error hover:text-red-700 disabled:opacity-20 text-sm px-1">✕</button>
+              className="flex-1 border border-surface-border rounded-lg px-3 py-1.5 text-sm text-ink focus:outline-none focus:border-brand-500 bg-white" />
+            <button type="button" onClick={() => removePair(idx)} disabled={form.matchPairs.length <= 2} className="text-ink-faint hover:text-danger-500 disabled:opacity-20 text-sm px-1 transition-colors">
+              <X size={14} />
+            </button>
           </div>
         ))}
       </div>
-      {errors.matchPairs && <p className="text-appian-error text-xs mt-1">{errors.matchPairs}</p>}
-      <button type="button" onClick={addPair} className="mt-2 text-appian-blue text-xs font-semibold hover:underline">+ Agregar par</button>
+      {errors.matchPairs && <p className="text-danger-500 text-xs mt-1">{errors.matchPairs}</p>}
+      <button type="button" onClick={addPair} className="mt-2 text-brand-500 text-xs font-semibold hover:underline">+ Agregar par</button>
     </div>
   );
 }
@@ -247,22 +256,26 @@ export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave,
   const typeLabels = { multiple: 'Opción múltiple', ordering: 'Ordenamiento', matching: 'Emparejamiento' };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-start justify-center z-50 px-4 py-8 overflow-y-auto">
-      <div className="bg-white w-full max-w-2xl rounded-lg shadow-xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 className="font-bold text-gray-800">{initial ? 'Editar pregunta' : 'Nueva pregunta'}</h2>
-          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    <div className="fixed inset-0 bg-black/60 flex items-start justify-center z-50 px-4 py-8 overflow-y-auto">
+      <div className="bg-surface-card border border-surface-border w-full max-w-2xl rounded-xl shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border">
+          <h2 className="font-semibold text-ink">{initial ? 'Editar pregunta' : 'Nueva pregunta'}</h2>
+          <button onClick={onCancel} className="p-1.5 text-ink-faint hover:text-ink rounded-lg hover:bg-surface-raised transition-colors">
+            <X size={18} />
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {/* Type */}
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-2">Tipo de pregunta</label>
+            <label className="block text-xs font-semibold text-ink-soft mb-2">Tipo de pregunta</label>
             <div className="flex gap-2">
               {Object.entries(typeLabels).map(([t, label]) => (
                 <button key={t} type="button" onClick={() => changeType(t)}
-                  className={`px-3 py-1.5 rounded text-sm font-semibold border transition-colors ${
-                    form.type === t ? 'bg-appian-blue text-white border-appian-blue' : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                  className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-colors ${
+                    form.type === t
+                      ? 'bg-brand-500 text-white border-brand-500'
+                      : 'border-surface-border text-ink-soft hover:bg-surface-raised'
                   }`}>{label}</button>
               ))}
             </div>
@@ -272,18 +285,18 @@ export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave,
           {!hideMeta && (
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">Certificación</label>
+              <label className="block text-xs font-semibold text-ink-soft mb-1">Certificación</label>
               <select value={form.category} onChange={(e) => handleCategoryChange(e.target.value)}
-                className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-appian-blue">
+                className="w-full border border-surface-border rounded-lg px-3 py-1.5 text-sm text-ink focus:outline-none focus:border-brand-500 bg-white">
                 {[...new Set(certifications.map((c) => c.category))].map((cat) => (
                   <option key={cat} value={cat}>{cat === 'developer' ? 'Desarrollador' : cat === 'analyst' ? 'Analista' : cat}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">Nivel</label>
+              <label className="block text-xs font-semibold text-ink-soft mb-1">Nivel</label>
               <select value={form.level} onChange={(e) => set('level', e.target.value)}
-                className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-appian-blue">
+                className="w-full border border-surface-border rounded-lg px-3 py-1.5 text-sm text-ink focus:outline-none focus:border-brand-500 bg-white">
                 {uniqueLevels.map(({ value, label }) => (
                   <option key={value} value={value}>{label}</option>
                 ))}
@@ -294,11 +307,11 @@ export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave,
 
           {/* Question */}
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Pregunta *</label>
+            <label className="block text-xs font-semibold text-ink-soft mb-1">Pregunta *</label>
             <textarea value={form.question} onChange={(e) => set('question', e.target.value)} rows={3}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-appian-blue resize-y min-h-[72px]"
+              className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand-500 resize-y min-h-[72px] bg-white"
               placeholder="Escribe el enunciado de la pregunta..." />
-            {errors.question && <p className="text-appian-error text-xs mt-1">{errors.question}</p>}
+            {errors.question && <p className="text-danger-500 text-xs mt-1">{errors.question}</p>}
           </div>
 
           {/* Type-specific */}
@@ -308,18 +321,22 @@ export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave,
 
           {/* Explanation */}
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">
-              Justificación <span className="font-normal text-gray-400">(opcional — se muestra en modo estudio)</span>
+            <label className="block text-xs font-semibold text-ink-soft mb-1">
+              Justificación <span className="font-normal text-ink-faint">(opcional — se muestra en modo estudio)</span>
             </label>
             <textarea value={form.explanation} onChange={(e) => set('explanation', e.target.value)} rows={5}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-appian-blue resize-y overflow-y-auto min-h-[80px] max-h-64"
+              className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand-500 resize-y overflow-y-auto min-h-[80px] max-h-64 bg-white"
               placeholder="Explica por qué esta es la respuesta correcta..." />
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
-            <button type="button" onClick={onCancel} className="px-4 py-2 text-sm border border-gray-300 rounded text-gray-600 hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={loading} className="px-5 py-2 text-sm bg-appian-blue hover:bg-appian-blue-dark text-white font-bold rounded disabled:bg-gray-300">
+          <div className="flex justify-end gap-3 pt-2 border-t border-surface-border">
+            <button type="button" onClick={onCancel}
+              className="px-4 py-2 text-sm border border-surface-border rounded-lg text-ink-soft hover:bg-surface-raised transition-colors">
+              Cancelar
+            </button>
+            <button type="submit" disabled={loading}
+              className="px-5 py-2 text-sm bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg disabled:opacity-50 transition-colors">
               {loading ? 'Guardando...' : initial ? 'Guardar cambios' : 'Crear pregunta'}
             </button>
           </div>

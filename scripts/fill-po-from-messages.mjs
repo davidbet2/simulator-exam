@@ -50,10 +50,10 @@ for (const locale of LOCALES) {
   let filled = 0;
   let skipped = 0;
 
-  // Replace ALL msgstr entries (even non-empty) with correct locale translation.
-  // We match msgid "..." followed by any msgstr "..."
+  // Replace ONLY empty msgstr entries with correct locale translation.
+  // Non-empty msgstr are preserved as-is.
   po = po.replace(
-    /^(msgid "((?:[^"\\]|\\.)*)")\s*\n^(msgstr "(?:[^"\\]|\\.)*")$/gm,
+    /^(msgid "((?:[^"\\]|\\.)*)")\s*\n^(msgstr "")$/gm,
     (_, msgidLine, msgidRaw) => {
       // Unescape the msgid to get the lookup key
       const key = msgidRaw.replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\\\/g, '\\');
