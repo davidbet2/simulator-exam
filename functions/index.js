@@ -3,6 +3,7 @@ const { onCall, onRequest, HttpsError } = require('firebase-functions/v2/https')
 const { defineSecret } = require('firebase-functions/params')
 const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
+const { GoogleGenAI } = require('@google/genai')
 
 initializeApp()
 
@@ -16,6 +17,10 @@ const TURNSTILE_SECRET = defineSecret('TURNSTILE_SECRET_KEY')
 //              firebase functions:secrets:set DODO_WEBHOOK_KEY
 const DODO_API_KEY     = defineSecret('DODO_API_KEY')
 const DODO_WEBHOOK_KEY = defineSecret('DODO_WEBHOOK_KEY')
+
+// Gemini AI secret
+// Deploy with: firebase functions:secrets:set GEMINI_API_KEY
+const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY')
 
 /**
  * Verifies a Cloudflare Turnstile token server-side.
@@ -750,6 +755,98 @@ exports.reactivateDodoSubscription = onCall(
     })
 
     return { reactivated: true }
+  }
+)
+
+// ─── AI: Generate explanation for a question ─────────────────────────────────
+// Admin-only callable. Calls Gemini 2.5 Flash to write a 2-3 sentence
+// justification explaining why the correct answer is right.
+// Deploy secret: firebase functions:secrets:set GEMINI_API_KEY
+exports.generateExplanation = onCall(
+  {
+    secrets:        [GEMINI_API_KEY],
+    cors:           ALLOWED_ORIGINS_TURNSTILE,
+    maxInstances:   5,
+    timeoutSeconds: 30,
+  },
+  async (request) => {
+    // ── Auth guard ─────────────────────────────────────────────────────────
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Login required')
+    }
+    const db = getFirestore()
+    const adminDoc = await db.collection('admins').doc(request.auth.uid).get()
+    if (!adminDoc.exists) {
+      throw new HttpsError('permission-denied', 'Admin access required')
+    }
+
+    // ── Input validation ───────────────────────────────────────────────────
+    const { question, options, answer, type } = request.data ?? {}
+    if (!question || typeof question !== 'string' || question.length > 2000) {
+      throw new HttpsError('invalid-argument', 'Invalid "question" field')
+    }
+    if (!options || typeof options !== 'object') {
+      throw new HttpsError('invalid-argument', 'Invalid "options" field')
+    }
+    if (!answer) {
+      throw new HttpsError('invalid-argument', '"answer" field is required')
+    }
+
+    // ── Build prompt ───────────────────────────────────────────────────────
+    const optionsText = Object.entries(options)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, val]) => `${key}) ${val}`)
+      .join('\n')
+
+    const answerKeys    = Array.isArray(answer) ? answer : [answer]
+    const correctLabels = answerKeys.map((k) => `${k}) ${options[k] ?? k}`).join(', ')
+
+    let questionContext = `PREGUNTA:\n${question}\n\nOPCIONES:\n${optionsText}\n\nRESPUESTA CORRECTA: ${correctLabels}`
+    if (type === 'ordering') {
+      questionContext = `PREGUNTA (ordenamiento):\n${question}\n\nORDEN CORRECTO:\n${Array.isArray(answer) ? answer.map((item, i) => `${i + 1}. ${item}`).join('\n') : answer}`
+    }
+    if (type === 'matching') {
+      questionContext = `PREGUNTA (relacionar):\n${question}\n\nRESPUESTA CORRECTA:\n${correctLabels}`
+    }
+
+    const prompt = `Eres un experto certificado en Appian BPM (Business Process Management) y plataforma Low-Code.
+Tu tarea es escribir una justificación pedagógica breve para una pregunta de examen de certificación Appian.
+
+${questionContext}
+
+INSTRUCCIONES:
+- Escribe exactamente 2-3 oraciones en español.
+- Primera oración: explica POR QUÉ la respuesta correcta es correcta, citando el concepto técnico específico de Appian.
+- Segunda oración: explica el error conceptual más común que lleva a elegir una respuesta incorrecta (si aplica).
+- NO uses markdown, asteriscos, bullets ni encabezados.
+- Usa terminología oficial de Appian (Process Model, Record Type, Site, Expression Rule, Integration Object, etc.).
+- Responde SOLO la justificación, sin repetir la pregunta ni las opciones.`
+
+    // ── Call Gemini 2.5 Flash ──────────────────────────────────────────────
+    const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY.value() })
+
+    let explanation
+    try {
+      const response = await ai.models.generateContent({
+        model:    'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          temperature:      0.3,
+          maxOutputTokens:  300,
+        },
+      })
+      explanation = response.text?.trim()
+    } catch (err) {
+      console.error('generateExplanation: Gemini error', err.message)
+      throw new HttpsError('internal', 'AI model error. Please try again.')
+    }
+
+    if (!explanation || explanation.length < 20) {
+      throw new HttpsError('internal', 'Model returned an empty explanation.')
+    }
+
+    console.log('generateExplanation: success', { uid: request.auth.uid, len: explanation.length })
+    return { explanation }
   }
 )
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Sparkles } from 'lucide-react';
 import { CERTIFICATIONS } from '../../../core/constants/certifications';
+import { useGenerateExplanation } from '../hooks/useGenerateExplanation';
 
 const KEYS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -178,6 +179,7 @@ function MatchingForm({ form, errors, set }) {
 export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave, onCancel, loading, hideMeta = false }) {
   const [form, setForm] = useState(initial ? formFromQuestion(initial) : emptyMultiple());
   const [errors, setErrors] = useState({});
+  const { generate: generateAI, loading: aiLoading, error: aiError } = useGenerateExplanation();
 
   function set(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -321,12 +323,35 @@ export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave,
 
           {/* Explanation */}
           <div>
-            <label className="block text-xs font-semibold text-ink-soft mb-1">
-              Justificación <span className="font-normal text-ink-faint">(opcional — se muestra en modo estudio)</span>
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-semibold text-ink-soft">
+                Justificación <span className="font-normal text-ink-faint">(opcional — se muestra en modo estudio)</span>
+              </label>
+              <button
+                type="button"
+                disabled={aiLoading || !form.question.trim() || (form.type === 'multiple' && !form.answer.length)}
+                onClick={async () => {
+                  const opts = form.type === 'multiple'
+                    ? Object.fromEntries(form.mcOptions.map((v, i) => [KEYS[i], v]).filter(([, v]) => v.trim()))
+                    : {};
+                  const { explanation } = await generateAI({
+                    question: form.question,
+                    options:  opts,
+                    answer:   form.answer,
+                    type:     form.type,
+                  });
+                  if (explanation) set('explanation', explanation);
+                }}
+                className="flex items-center gap-1.5 text-xs font-semibold text-brand-400 hover:text-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <Sparkles size={13} />
+                {aiLoading ? 'Generando...' : 'Generar con IA'}
+              </button>
+            </div>
             <textarea value={form.explanation} onChange={(e) => set('explanation', e.target.value)} rows={5}
               className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand-500 resize-y overflow-y-auto min-h-[80px] max-h-64 bg-white"
               placeholder="Explica por qué esta es la respuesta correcta..." />
+            {aiError && <p className="text-danger-500 text-xs mt-1">{aiError}</p>}
           </div>
 
           {/* Buttons */}
