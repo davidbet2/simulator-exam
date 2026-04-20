@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Check, Zap, Star, Loader2 } from 'lucide-react'
 import { getFunctions, httpsCallable } from 'firebase/functions'
@@ -62,6 +63,7 @@ function PlanCard({ title, price, period, badge, features, cta, onClick, highlig
 
 export function PricingPage() {
   const { isPro } = useAuthStore()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -101,15 +103,8 @@ export function PricingPage() {
     }
   }
 
-  const handleManageSubscription = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      // TODO: implementar portal de suscripción Dodo cuando esté disponible
-      window.open('https://app.dodopayments.com/', '_blank', 'noopener,noreferrer')
-    } finally {
-      setLoading(false)
-    }
+  const handleManageSubscription = () => {
+    navigate('/profile')
   }
 
   return (

@@ -33,33 +33,58 @@ export function PaymentSuccessPage() {
 
   useEffect(() => {
     // If user is already Pro from store hydration, no sync needed
-    // (initial useState already set status to 'verified')
     if (isPro) return
 
     let cancelled = false
+    const MAX_ATTEMPTS = 6
+    const RETRY_DELAY_MS = 2500
+
     const verify = async () => {
-      // Small delay to let webhook arrive first if it's going to
+      // Small initial delay to let webhook arrive first
       await new Promise((r) => setTimeout(r, 1500))
       if (cancelled) return
-      try {
-        const fns = getFunctions(getApp())
-        const sync = httpsCallable(fns, 'syncDodoSubscription')
-        const result = await sync({})
+
+      for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
         if (cancelled) return
-        const data = result?.data ?? {}
-        if (data.synced) {
-          // Re-pull profile so UI updates reactively (plan, isPro, renewsAt)
-          await refreshProfile()
-          if (!cancelled) setStatus('verified')
-        } else {
-          // No active subscription found in Dodo → block exploit
-          setStatus('not_found')
+
+        // Check if webhook already updated Firestore (fastest path)
+        await refreshProfile()
+        if (cancelled) return
+        if (useAuthStore.getState().isPro) {
+          setStatus('verified')
+          return
         }
-      } catch (err) {
-        if (cancelled) return
-        setErrorMsg(err?.message || 'Error al verificar el pago')
-        setStatus('error')
+
+        // Try manual sync with Dodo API
+        try {
+          const fns = getFunctions(getApp())
+          const sync = httpsCallable(fns, 'syncDodoSubscription')
+          const result = await sync({})
+          if (cancelled) return
+          const data = result?.data ?? {}
+          if (data.synced) {
+            await refreshProfile()
+            if (!cancelled) setStatus('verified')
+            return
+          }
+        } catch (err) {
+          if (cancelled) return
+          // On final attempt show error
+          if (attempt === MAX_ATTEMPTS - 1) {
+            setErrorMsg(err?.message || 'Error al verificar el pago')
+            setStatus('error')
+            return
+          }
+        }
+
+        // Wait before next retry (skip delay on last attempt)
+        if (attempt < MAX_ATTEMPTS - 1) {
+          await new Promise((r) => setTimeout(r, RETRY_DELAY_MS))
+        }
       }
+
+      // All attempts exhausted without an active subscription
+      if (!cancelled) setStatus('not_found')
     }
     verify()
     return () => { cancelled = true }
