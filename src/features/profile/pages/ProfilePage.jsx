@@ -16,6 +16,7 @@ import { Badge } from '../../../components/ui/Badge';
 import { AppShell } from '../../../components/layout/AppShell';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { SEOHead } from '../../../components/SEOHead';
+import { AdBanner } from '../../ads/components/AdBanner';
 
 // ── Date formatter ─────────────────────────────────────────────────────────
 function formatDate(val) {
@@ -807,6 +808,11 @@ export function ProfilePage() {
         </motion.div>
 
         {/* Sign out */}
+        <AdBanner
+          placementId="profile-bottom"
+          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
+          className="mb-4"
+        />
         <div className="text-center pb-6">
           <button
             onClick={() => { logout(); navigate('/'); }}

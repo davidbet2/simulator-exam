@@ -5,6 +5,7 @@ import { PageSEO } from '../../../components/seo/PageSEO';
 import { Footer } from '../../../components/layout/Footer';
 import Button from '../../../components/ui/Button';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { AdBanner } from '../../ads/components/AdBanner';
 
 const SITE_JSON_LD = {
   '@context': 'https://schema.org',
@@ -224,6 +225,13 @@ export function AboutPage() {
           </motion.div>
         </section>
       </main>
+
+      <div className="max-w-4xl mx-auto px-4 pb-8">
+        <AdBanner
+          placementId="about-bottom"
+          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
+        />
+      </div>
 
       <Footer />
     </>

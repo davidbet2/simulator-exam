@@ -13,6 +13,7 @@ export const DEFAULT_FLAGS = {
   pdfImportEnabled:     true,
   googleLoginEnabled:   true,
   publicExploreEnabled: true,
+  adsEnabled:           true,
   maintenanceMode:      false,
 };
 

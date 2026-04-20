@@ -9,6 +9,7 @@ import { AppShell } from '../../../components/layout/AppShell'
 import { Card, CardBody } from '../../../components/ui/Card'
 import Button from '../../../components/ui/Button'
 import { SEOHead } from '../../../components/SEOHead'
+import { AdBanner } from '../../ads/components/AdBanner'
 
 export function MySetsPage() {
   const { user } = useAuthStore()
@@ -161,6 +162,12 @@ export function MySetsPage() {
             ))}
           </div>
         )}
+
+        <AdBanner
+          placementId="my-sets-bottom"
+          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
+          className="mt-4"
+        />
       </div>
     </AppShell>
   )

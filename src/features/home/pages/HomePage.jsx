@@ -17,6 +17,7 @@ import { SEOHead } from '../../../components/SEOHead';
 import { ZenDolphin } from '../../../components/mascot/ZenDolphin';
 import Button from '../../../components/ui/Button';
 import { getDomain, DOMAINS } from '../../../core/constants/domains';
+import { AdBanner } from '../../ads/components/AdBanner';
 
 function greetingKey() {
   const h = new Date().getHours();
@@ -383,6 +384,12 @@ export function HomePage() {
             )}
           </>
         )}
+
+        <AdBanner
+          placementId="home-bottom"
+          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
+          className="mt-4"
+        />
       </div>
     </AppShell>
   );

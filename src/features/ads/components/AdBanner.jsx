@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans } from '@lingui/react/macro';
 import { useUserPlan } from '../../plans/hooks/useUserPlan';
+import { useFeatureFlags } from '../../../core/hooks/useFeatureFlags';
 
 const ETHICAL_ADS_SCRIPT = 'https://media.ethicalads.io/media/client/ethicalads.min.js';
 const SCRIPT_ID = 'ethical-ads-client';
@@ -30,6 +31,7 @@ export function AdBanner({
   className = '',
 }) {
   const { isPro, isLoading } = useUserPlan();
+  const { flags } = useFeatureFlags();
   const adsenseId = import.meta.env.VITE_GOOGLE_ADSENSE_ID;
   const publisherId = import.meta.env.VITE_ETHICAL_ADS_PUBLISHER;
   const pushedRef = useRef(false);
@@ -96,39 +98,36 @@ export function AdBanner({
     }
   }, [isPro, isLoading, adsenseId, publisherId]);
 
-  // Don't render anything for Pro users or while loading
-  if (isLoading || isPro) return null;
+  // Don't render anything for Pro users, while loading, or when ads are globally disabled
+  if (isLoading || isPro || !flags.adsEnabled) return null;
 
   // ── Google AdSense ad unit ─────────────────────────────────────────────────
   // Only render a manual <ins> placement when a specific adSlot is provided.
   // Without adSlot, the script is still loaded (enables Auto Ads from the
   // AdSense dashboard) but we fall through to the visible sponsor placeholder.
   if (adsenseId && adSlot) {
-    // Show placeholder if AdSense explicitly said unfilled (e.g. during account review)
-    if (adFilled === false) {
-      // fall through to sponsor placeholder below
-    } else {
-      return (
-        <aside
-          aria-label="Publicidad"
-          className={`rounded-xl overflow-hidden ${className}`}
-          {...(placementId && { id: placementId })}
-        >
-          <p className="text-[9px] uppercase tracking-widest text-ink-muted/50 text-right pr-1 mb-0.5 select-none">
-            Publicidad
-          </p>
-          <ins
-            ref={insRef}
-            className="adsbygoogle"
-            style={{ display: 'block', minHeight: '250px' }}
-            data-ad-client={adsenseId}
-            data-ad-slot={adSlot}
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-        </aside>
-      );
-    }
+    // Return nothing if AdSense explicitly said unfilled (no reserved space)
+    if (adFilled === false) return null;
+    return (
+      <aside
+        aria-label="Publicidad"
+        className={`rounded-xl overflow-hidden ${className}`}
+        {...(placementId && { id: placementId })}
+      >
+        <p className="text-[9px] uppercase tracking-widest text-ink-muted/50 text-right pr-1 mb-0.5 select-none">
+          Publicidad
+        </p>
+        <ins
+          ref={insRef}
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client={adsenseId}
+          data-ad-slot={adSlot}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </aside>
+    );
   }
 
   // ── EthicalAds placement ───────────────────────────────────────────────────

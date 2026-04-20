@@ -18,6 +18,7 @@ const FLAG_META = [
   { key: 'publicExploreEnabled', label: 'Explorador público',    desc: 'La sección /explore es accesible para cualquier usuario.' },
   { key: 'xlsxImportEnabled',    label: 'Importar desde XLSX',   desc: 'Los usuarios pueden importar preguntas desde archivos Excel.' },
   { key: 'pdfImportEnabled',     label: 'Importar desde PDF',    desc: 'Los usuarios pueden importar preguntas desde archivos PDF.' },
+  { key: 'adsEnabled',          label: 'Publicidad (AdSense)',   desc: 'Muestra banners de publicidad a usuarios free y visitantes. Desactiva para retirar todos los anuncios.' },
   { key: 'maintenanceMode',      label: 'Modo mantenimiento',    desc: 'Bloquea el acceso a todo excepto el panel admin. ¡Cuidado!', danger: true },
 ];
 
