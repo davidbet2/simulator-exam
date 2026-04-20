@@ -17,7 +17,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 // App Check is set to Monitor mode in Firebase Console — not enforced.
 // Client-side initialization is disabled to prevent SDK throttle errors
 // that block auth and Firestore calls after a failed token fetch.

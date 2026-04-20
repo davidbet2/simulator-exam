@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "lint:critical": "eslint src/ --rule '{\"react/jsx-no-undef\":\"error\"}' --max-warnings 0",
+    "lint:critical": "eslint src/ --max-warnings 0",
     "preview": "vite preview",
     "i18n:extract": "lingui extract",
     "i18n:compile": "lingui compile",
