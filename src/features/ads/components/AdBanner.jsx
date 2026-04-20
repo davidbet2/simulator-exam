@@ -73,13 +73,13 @@ export function AdBanner({
     const check = () => {
       const status = el.getAttribute('data-ad-status');
       if (status === 'filled') setAdFilled(true);
-      else if (status === 'unfilled') setAdFilled(false);
+      else setAdFilled(false); // unfilled or no response → hide
     };
 
     const observer = new MutationObserver(check);
     observer.observe(el, { attributes: true, attributeFilter: ['data-ad-status'] });
-    // Also check after a timeout in case the attribute was set before observer attached
-    const timer = setTimeout(check, 3000);
+    // After 4s with no response from AdSense (e.g. account under review), hide the space
+    const timer = setTimeout(check, 4000);
     return () => { observer.disconnect(); clearTimeout(timer); };
   }, [adsenseId, adSlot, isPro]);
 
@@ -106,17 +106,21 @@ export function AdBanner({
   // Without adSlot, the script is still loaded (enables Auto Ads from the
   // AdSense dashboard) but we fall through to the visible sponsor placeholder.
   if (adsenseId && adSlot) {
-    // Return nothing if AdSense explicitly said unfilled (no reserved space)
+    // Hide if AdSense explicitly said unfilled or timed out without response
     if (adFilled === false) return null;
     return (
+      // While adFilled is null (AdSense initializing), keep ins in DOM but take no visual space
       <aside
         aria-label="Publicidad"
         className={`rounded-xl overflow-hidden ${className}`}
+        style={adFilled === true ? undefined : { height: 0, overflow: 'hidden' }}
         {...(placementId && { id: placementId })}
       >
-        <p className="text-[9px] uppercase tracking-widest text-ink-muted/50 text-right pr-1 mb-0.5 select-none">
-          Publicidad
-        </p>
+        {adFilled === true && (
+          <p className="text-[9px] uppercase tracking-widest text-ink-muted/50 text-right pr-1 mb-0.5 select-none">
+            Publicidad
+          </p>
+        )}
         <ins
           ref={insRef}
           className="adsbygoogle"
