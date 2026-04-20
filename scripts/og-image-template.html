@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0f;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Gradient background mesh */
+    .bg-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 700px 500px at 10% 50%, rgba(139,92,246,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 400px at 85% 20%, rgba(99,102,241,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 400px 350px at 70% 80%, rgba(168,85,247,0.12) 0%, transparent 60%),
+        linear-gradient(135deg, #0a0a0f 0%, #0f0f1a 50%, #0a0a0f 100%);
+    }
+
+    /* Grid pattern overlay */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Content */
+    .container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      padding: 56px 72px;
+    }
+
+    /* Top row: logo + badge */
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      background: linear-gradient(90deg, #a78bfa, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c4b5fd;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Main headline */
+    .headline {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .headline h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 72px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.05;
+      letter-spacing: -2px;
+    }
+
+    .headline h1 .accent {
+      background: linear-gradient(90deg, #a78bfa 0%, #818cf8 50%, #c4b5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .headline p {
+      font-size: 22px;
+      color: #a1a1aa;
+      font-weight: 400;
+      line-height: 1.5;
+      max-width: 680px;
+    }
+
+    /* Category pills */
+    .categories {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #d4d4d8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Bottom row: stats */
+    .stats {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stat-group {
+      display: flex;
+      gap: 48px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -1px;
+    }
+
+    .stat-number .accent { color: #a78bfa; }
+
+    .stat-label {
+      font-size: 13px;
+      color: #71717a;
+      font-weight: 500;
+    }
+
+    .cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      border-radius: 14px;
+      padding: 16px 32px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+      letter-spacing: -0.3px;
+    }
+
+    /* Decorative elements */
+    .deco-ring {
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      border: 1px solid rgba(139, 92, 246, 0.12);
+      z-index: 1;
+    }
+
+    .deco-ring-2 {
+      position: absolute;
+      right: -160px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 660px;
+      height: 660px;
+      border-radius: 50%;
+      border: 1px solid rgba(139, 92, 246, 0.07);
+      z-index: 1;
+    }
+
+    .deco-dot {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.6);
+      filter: blur(1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="bg-grid"></div>
+  <div class="deco-ring"></div>
+  <div class="deco-ring-2"></div>
+
+  <div class="container">
+    <!-- Top -->
+    <div class="top-row">
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text">Cert<span>Zen</span></div>
+      </div>
+      <div class="badge">✦ Gratis para empezar</div>
+    </div>
+
+    <!-- Headline -->
+    <div class="headline">
+      <h1>Simula el examen.<br><span class="accent">Aprueba al primero.</span></h1>
+      <p>Simulador de certificaciones con análisis por dominio, explicaciones IA y UX moderna. IT · Deportes · Salud · Inglés</p>
+      <div class="categories">
+        <div class="pill">💻 IT &amp; Cloud</div>
+        <div class="pill">🏋️ Deportes</div>
+        <div class="pill">🏥 Salud</div>
+        <div class="pill">🌐 Inglés</div>
+        <div class="pill">📊 Negocios</div>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="stats">
+      <div class="stat-group">
+        <div class="stat">
+          <div class="stat-number">200<span class="accent">+</span></div>
+          <div class="stat-label">Preguntas por set</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">5<span class="accent">×</span></div>
+          <div class="stat-label">Categorías</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number"><span class="accent">IA</span></div>
+          <div class="stat-label">Explicaciones</div>
+        </div>
+      </div>
+      <div class="cta">
+        certzen.app →
+      </div>
+    </div>
+  </div>
+</body>
+</html>

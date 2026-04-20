@@ -89,12 +89,17 @@ export function SEOHead({ title, description, path = '/', image, noindex = false
         <meta key={l.id} property="og:locale:alternate" content={OG_LOCALE_MAP[l.id]} />
       ))}
       {image && <meta property="og:image" content={image} />}
+      {image && <meta property="og:image:width" content="1200" />}
+      {image && <meta property="og:image:height" content="630" />}
+      {image && <meta property="og:image:alt" content={fullTitle} />}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@certzen_app" />
       <meta name="twitter:title" content={fullTitle} />
       {description && <meta name="twitter:description" content={description} />}
       {image && <meta name="twitter:image" content={image} />}
+      {image && <meta name="twitter:image:alt" content={fullTitle} />}
     </Helmet>
   );
 }
