@@ -7,7 +7,7 @@
 
 ## Visión General
 
-**Propósito del sistema:** Simulador de exámenes de certificación Appian. Permite a candidatos practicar en condiciones reales (temporizador, navegación entre preguntas, modo estudio vs. examen) con un banco de preguntas administrado vía panel interno.
+**Propósito del sistema:** Simulador de exámenes de certificación multi-plataforma (IT, Deportes, Salud, Inglés y más). Permite a candidatos practicar en condiciones reales (temporizador, navegación entre preguntas, modo estudio vs. examen) con un banco de preguntas administrado vía panel interno. Las categorías de certificación son configurables; Appian es un ejemplo dentro de la categoría IT.
 
 **Principios arquitectónicos que guían este sistema:**
 

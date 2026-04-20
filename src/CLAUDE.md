@@ -1,4 +1,4 @@
-﻿# src/ - Modulo: Codigo Fuente AppianSimulator
+﻿# src/ - Modulo: Codigo Fuente CertZen (Simulator Multi-Plataforma)
 
 SPA React + Firebase. Sin backend propio - toda la logica de servidor es Firebase BaaS.
 

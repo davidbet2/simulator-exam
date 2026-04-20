@@ -144,8 +144,8 @@ sets.docs.forEach(d => {
 ### Fórmula de títulos
 ```
 Exam Set: "{Nombre Certificación} Simulator | {N} Practice Questions {Año}"
-Explore:  "Practice Exams for Appian Certification | SimulatorExam"
-Home:     "SimulatorExam — Prepare for Appian Certification | Free Practice"
+Explore:  "Practice Exams for Professional Certifications | SimulatorExam"
+Home:     "SimulatorExam — Prepare for Any Certification | Free Practice"
 ```
 
 ### Structured Data: Exam Set (JSON-LD)

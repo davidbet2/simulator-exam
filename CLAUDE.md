@@ -13,9 +13,9 @@
 | **Versión**   | `0.0.0`                        |
 | **Stack**     | `React 19 · Vite · Firebase (Auth + Firestore) · Zustand · Tailwind CSS · React Router v7` |
 | **Deploy**    | `Firebase Hosting`              |
-| **Última actualización** | `2026-04-13`         |
+| **Última actualización** | `2026-04-19`         |
 
-**Resumen en una línea:** Simulador de exámenes de certificación Appian (Developer/Analyst) con banco de preguntas en Firestore, autenticación Firebase y panel de administración.
+**Resumen en una línea:** Simulador de exámenes de certificación multi-plataforma (IT, Deportes, Salud, Inglés y más) con banco de preguntas en Firestore, autenticación Firebase y panel de administración. Appian es una de las categorías dentro de IT.
 
 ---
 

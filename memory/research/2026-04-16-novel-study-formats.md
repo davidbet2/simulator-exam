@@ -1,4 +1,4 @@
-# Research: Novel & Engaging Study Formats for Appian Cert Simulator
+# Research: Novel & Engaging Study Formats for CertZen Multi-Platform Simulator
 
 **Date:** 2026-04-16
 **Stack context:** React 19 · Vite · Firestore · Zustand · Tailwind · Framer Motion · Lucide
@@ -14,7 +14,7 @@ Each existing mode already claims one lever: retrieval+feedback (Estudio Guiado)
 **Ranked shortlist (1-line pitches):**
 
 1. **Apuesta tu Confianza** — Bet 1–3 points on every answer; winnings/losses expose miscalibration and accelerate metacognition. *(Confidence-Based Repetition — Cohen 2008/2010; Hacker 2008.)*
-2. **Caso Appian (Testlet)** — 1 realistic scenario → 3–5 linked questions sharing context; trains transfer, not trivia. *(Scenario-cluster items, NBME 2020; Pan & Rickard 2018.)*
+2. **Caso Estudio (Testlet)** — 1 realistic scenario → 3–5 linked questions sharing context; trains transfer, not trivia. *(Scenario-cluster items, NBME 2020; Pan & Rickard 2018.)*
 3. **Ruta de Dominio** — Duolingo-style map of domain nodes; unlock the next only by mastering the previous. *(Scaffolded progression + SDT autonomy/competence — Ryan & Deci 2000; gamification meta-analysis Li et al. 2023, g=0.822.)*
 4. **Supervivencia · 3 Vidas** — Streak run: keep answering right; 3 wrong = run over. Stakes create flow. *(Flow — Csikszentmihalyi 1997; desirable difficulty — Bjork 1994.)*
 5. **Detective: ¿Por qué falla?** — You see the question + the *wrong* answer; job is to pick which distractor trap was used (ambiguity, wrong domain, partial-truth, etc.). *(Elaborative retrieval + generation effect — Slamecka & Graf 1978; Karpicke & Blunt 2011.)*
@@ -22,7 +22,7 @@ Each existing mode already claims one lever: retrieval+feedback (Estudio Guiado)
 7. **Swipe Binario (Pretest)** — Before a topic lesson/review, 10 rapid true-ish/false-ish decisions on assertions; immediate corrective feedback. *(Pretesting effect — Pan & Carpenter 2023; Richland et al. 2009.)*
 8. **Mezcla Tie-Dye (Interleaved Mix)** — Forces 4+ different domains per session with a visible "dominio actual" pill that keeps switching. *(Interleaving — Rohrer & Taylor 2007; Rohrer 2012.)*
 
-**Recommended next 2–3 to build:** **#1 Apuesta tu Confianza**, **#2 Caso Appian (Testlet)**, **#3 Ruta de Dominio** — see §6 for rationale.
+**Recommended next 2–3 to build:** **#1 Apuesta tu Confianza**, **#2 Caso Estudio (Testlet)**, **#3 Ruta de Dominio** — see §6 for rationale.
 
 ---
 
@@ -41,7 +41,7 @@ Each existing mode already claims one lever: retrieval+feedback (Estudio Guiado)
 
 | Platform | Signature mechanic | Lever | Transferable? |
 |---|---|---|---|
-| UWorld (medical/CPA) | Tutor mode + linked vignette testlets | Transfer, scenario reasoning | ✅ → Caso Appian |
+| UWorld (medical/CPA) | Tutor mode + linked vignette testlets | Transfer, scenario reasoning | ✅ → Caso Estudio |
 | Quizlet Learn/Match | Adaptive MCQ + timed pair-matching | Retrieval + speed-flow | ⚠️ Match weak for concepts |
 | Brilliant | Scaffolded 5–8 question concept chains | Generation + elaboration | ⚠️ High authoring cost |
 | Duolingo Path | Unit map with unlockable nodes | Autonomy + competence (SDT) | ✅ → Ruta de Dominio |
@@ -87,9 +87,9 @@ Each existing mode already claims one lever: retrieval+feedback (Estudio Guiado)
 - **Complexity:** **S** — reuses exam engine; +1 UI step, +1 field, +1 chart.
 - **Differentiation:** No existing mode captures metacognition/certainty. Strongest evidence-to-effort ratio.
 
-### 2. Caso Appian (Scenario Testlet)
+### 2. Caso Estudio (Scenario Testlet)
 
-- **Pitch:** One real Appian scenario → 3–5 linked questions sharing the context. Trains transfer.
+- **Pitch:** One real scenario from the target certification → 3–5 linked questions sharing the context. Trains transfer.
 - **Mechanic:**
   - Scenario briefing card (200–350 words, optional diagram).
   - 3–5 MCQ/matching/ordering referencing scenario.
@@ -99,11 +99,11 @@ Each existing mode already claims one lever: retrieval+feedback (Estudio Guiado)
 - **UI:** Full-width scenario header (amber card, `FileText`). Vertical stepper. Debrief narrative "Lo que hiciste bien / lo que perdiste".
 - **Science:** Transfer (Barnett & Ceci 2002); Pan & Rickard 2018 meta; NBME scenario/vignette gold standard for professional cert.
 - **Complexity:** **M** — new model + authoring + component.
-- **Differentiation:** First multi-question coherent unit; matches real Appian work.
+- **Differentiation:** First multi-question coherent unit; matches real professional-cert work across all categories.
 
 ### 3. Ruta de Dominio (Domain Path)
 
-- **Pitch:** Duolingo-style map of Appian domains as unlockable nodes. Progress feels tangible.
+- **Pitch:** Duolingo-style map of certification domains as unlockable nodes. Progress feels tangible.
 - **Mechanic:**
   - Each domain (Records, Process Models, Interfaces, Data Fabric, Security) = node on SVG path.
   - States: locked/available/in-progress/mastered.
@@ -177,7 +177,7 @@ Each existing mode already claims one lever: retrieval+feedback (Estudio Guiado)
 | # | Mode | Lever | Complexity | New data | Score /10 |
 |---|---|---|---|---|---|
 | 1 | Apuesta tu Confianza | Confidence calibration | **S** | `confidence` on answer | **9** |
-| 2 | Caso Appian | Transfer / scenario | **M** | `scenarios` collection | **9** |
+| 2 | Caso Estudio | Transfer / scenario | **M** | `scenarios` collection | **9** |
 | 3 | Ruta de Dominio | Autonomy / progression | **M** | derived | **9** |
 | 4 | Supervivencia 3 Vidas | Flow / difficulty | **S** | `highscores` | 7 |
 | 5 | Detective | Generation / elaborative | **M** | `distractorTag` | 8 |
@@ -195,7 +195,7 @@ Each existing mode already claims one lever: retrieval+feedback (Estudio Guiado)
 - **Time pressure during initial learning** harms encoding (Cepeda 2006). Ráfaga only surfaces box ≥2.
 - **Interleaving too early** hurts acquisition (Carvalho & Goldstone 2014). Gate Tie-Dye.
 - **Matching/ordering in speed modes** break flow → MCQ-only.
-- **Scenario fatigue:** Caso Appian caps at 5 linked questions (NBME 2020).
+- **Scenario fatigue:** Caso Estudio caps at 5 linked questions (NBME 2020).
 
 ---
 
@@ -212,7 +212,7 @@ Each existing mode already claims one lever: retrieval+feedback (Estudio Guiado)
 ### 🥇 #1 Apuesta tu Confianza — Build First
 Highest evidence-to-effort ratio. Small complexity. Claims metacognition lever no current mode touches. "Aha" within first session. Directly produces better Zona Débil seeds via hypercorrection effect.
 
-### 🥈 #2 Caso Appian / Testlet — Build Second
+### 🥈 #2 Caso Estudio / Testlet — Build Second
 Highest content differentiation for a technical/procedural cert. Certifications test workflow reasoning, not trivia — testlets are how NBME/UWorld/SAT evolved. Authoring cost front-loaded; 10 good scenarios cover 80% of exam surface. Reusable engine extension.
 
 ### 🥉 #3 Ruta de Dominio — Build Third
