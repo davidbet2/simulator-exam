@@ -25,7 +25,6 @@ import { SaveToFolderButton } from '../../home/components/SaveToFolderButton';
 import { ShareButton } from '../../../components/ui/ShareButton';
 import DomainPath from '../components/DomainPath';
 import { SEOHead } from '../../../components/SEOHead';
-import { AdBanner } from '../../ads/components/AdBanner';
 
 function MetaStat({ icon: Icon, label, value }) {
   return (
@@ -506,13 +505,6 @@ export function ExamSetLandingPage() {
             />
           </div>
         </motion.section>
-
-        <AdBanner
-          keywords={`certification|${set.domain ?? 'developer'}|appian`}
-          placementId="exam-set-landing"
-          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
-          className="rounded-xl"
-        />
 
         {/* Source & tags */}
         {(set.source || set.tags?.length > 0) && (

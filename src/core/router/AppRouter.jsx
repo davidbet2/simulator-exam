@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { useFeatureFlags } from '../hooks/useFeatureFlags';
 import { MaintenancePage } from '../../features/public/pages/MaintenancePage';
 import { analytics } from '../analytics/events';
+import { StickyAdBar } from '../../features/ads/components/StickyAdBar';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
@@ -184,6 +185,7 @@ export function AppRouter() {
       </Routes>
       </MaintenanceGate>
       </Suspense>
+      <StickyAdBar />
     </BrowserRouter>
   );
 }

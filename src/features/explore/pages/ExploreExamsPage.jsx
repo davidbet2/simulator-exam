@@ -12,7 +12,6 @@ import { Card, CardBody } from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
 import { RatingStars } from '../../social/components/RatingStars';
 import { FavoriteButton } from '../../social/components/FavoriteButton';
-import { AdBanner } from '../../ads/components/AdBanner';
 import { AuthorChip } from '../../social/components/AuthorChip';
 import { SaveToFolderButton } from '../../home/components/SaveToFolderButton';
 
@@ -359,13 +358,6 @@ export function ExploreExamsPage() {
             <Button onClick={() => navigate('/register')}><Trans>Crear cuenta gratis</Trans></Button>
           </motion.div>
         )}
-
-        <AdBanner
-          keywords="certification|exam|developer|appian"
-          placementId="explore-catalog"
-          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
-          className="mt-2"
-        />
       </div>
     </AppShell>
   );

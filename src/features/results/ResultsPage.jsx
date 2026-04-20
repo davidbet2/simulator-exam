@@ -9,7 +9,6 @@ import { Trans, useLingui, Plural } from '@lingui/react/macro';
 import { SEOHead } from '../../components/SEOHead';
 import { ShareButton } from '../../components/ui/ShareButton';
 import { analytics } from '../../core/analytics/events';
-import { AdBanner } from '../ads/components/AdBanner';
 
 /** Modal that shows every question the user got wrong or skipped */
 function WrongAnswersModal({ wrongItems, onClose }) {
@@ -351,13 +350,6 @@ export function ResultsPage() {
             style={{ width: `${percentage}%` }}
           />
         </div>
-
-        <AdBanner
-          keywords="certification|developer|appian"
-          placementId="results-bottom"
-          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
-          className="mt-2"
-        />
 
         {/* Actions */}
         <div className="flex flex-col gap-3">

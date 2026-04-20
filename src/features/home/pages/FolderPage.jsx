@@ -14,7 +14,6 @@ import { Card, CardBody } from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
 import { getDomain } from '../../../core/constants/domains';
 import { useFolders } from '../hooks/useFolders';
-import { AdBanner } from '../../ads/components/AdBanner';
 
 export function FolderPage() {
   const { folderId } = useParams();
@@ -188,12 +187,6 @@ export function FolderPage() {
             )}
           </>
         )}
-
-        <AdBanner
-          placementId="folder-bottom"
-          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
-          className="mt-4"
-        />
       </div>
     </AppShell>
   );

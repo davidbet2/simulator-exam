@@ -4,7 +4,6 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { PageSEO } from '../../../components/seo/PageSEO';
 import { Footer } from '../../../components/layout/Footer';
-import { AdBanner } from '../../ads/components/AdBanner';
 
 const buildSubjects = (t) => [
   { value: 'support', label: t`Soporte técnico` },
@@ -303,13 +302,6 @@ export function ContactPage() {
           </div>
         </div>
       </main>
-
-      <div className="max-w-4xl mx-auto px-4 pb-8">
-        <AdBanner
-          placementId="contact-bottom"
-          adSlot={import.meta.env.VITE_ADSENSE_SLOT}
-        />
-      </div>
 
       <Footer />
     </>
