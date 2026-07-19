@@ -761,6 +761,8 @@ exports.reactivateDodoSubscription = onCall(
 // ─── AI: Generate explanation for a question ─────────────────────────────────
 // Admin-only callable. Calls Gemini 2.5 Flash to write a 2-3 sentence
 // justification explaining why the correct answer is right.
+// Admin check is keyed by email (admins/{email}), matching firestore.rules,
+// useAuthStore.js and the admin grant/revoke scripts — NOT by uid.
 // Deploy secret: firebase functions:secrets:set GEMINI_API_KEY
 exports.generateExplanation = onCall(
   {
@@ -774,8 +776,11 @@ exports.generateExplanation = onCall(
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Login required')
     }
+    if (!request.auth.token.email) {
+      throw new HttpsError('permission-denied', 'Admin access required')
+    }
     const db = getFirestore()
-    const adminDoc = await db.collection('admins').doc(request.auth.uid).get()
+    const adminDoc = await db.collection('admins').doc(request.auth.token.email).get()
     if (!adminDoc.exists) {
       throw new HttpsError('permission-denied', 'Admin access required')
     }
