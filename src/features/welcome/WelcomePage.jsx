@@ -1,7 +1,6 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
 import {
   BookOpen, BarChart2, ArrowRight,
   LayoutDashboard, User, Zap, Sparkles, CheckCircle2,
@@ -13,11 +12,15 @@ import { useAuthStore } from '../../core/store/useAuthStore';
 import { useUserPlan } from '../plans/hooks/useUserPlan';
 import { PageSEO } from '../../components/seo/PageSEO';
 import { Footer } from '../../components/layout/Footer';
-import { ZenDolphin } from '../../components/mascot/ZenDolphin';
-import Button from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
+import { PageBackground } from '../../components/glass/PageBackground';
+import robotHeroDark from '../../assets/mascot/robot-hero-dark.webp';
+import robotHeroLight from '../../assets/mascot/robot-hero-light.webp';
+import robotCtaDark from '../../assets/mascot/robot-cta-dark.webp';
+import robotCtaLight from '../../assets/mascot/robot-cta-light.webp';
+import { GlassCard } from '../../components/glass/GlassCard';
+import { GlassButton } from '../../components/glass/GlassButton';
+import { GlassBadge } from '../../components/glass/GlassBadge';
 
-// â”€â”€â”€ Features list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ─── Features list ───────────────────────────────────────────────────────────
 // Strings are defined with the `msg` macro so the extractor picks them up;
 // they're resolved to the active locale at render time via t(descriptor).
@@ -26,27 +29,24 @@ const FEATURES = [
     icon: Target,
     title: msg`Simulación Real`,
     description: msg`Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar.`,
-    color: 'bg-brand-50 text-brand-600',
   },
   {
     icon: BookOpen,
     title: msg`Banco Oficial`,
     description: msg`Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad.`,
-    color: 'bg-sky-50 text-sky-600',
   },
   {
     icon: BarChart2,
     title: msg`Progreso Inteligente`,
     description: msg`Registra cada intento, identifica tus debilidades y construye confianza antes del día del examen.`,
-    color: 'bg-amber-50 text-amber-600',
   },
 ];
 
 // ─── Social proof numbers ────────────────────────────────────────────────────
 const STATS = [
-  { value: '3',    label: msg`Modos de práctica`, emoji: '🎯' },
-  { value: 'Multi', label: msg`Certificaciones`,  emoji: '🏅' },
-  { value: 'Pro',  label: msg`Sin límites`,        emoji: '🚀' },
+  { value: '3',     label: msg`Modos de práctica` },
+  { value: 'Multi', label: msg`Certificaciones` },
+  { value: 'Pro',   label: msg`Sin límites` },
 ];
 
 // ─── Trust items ─────────────────────────────────────────────────────────────
@@ -56,25 +56,13 @@ const TRUST = [
   msg`Plan gratuito disponible`,
 ];
 
-// â”€â”€â”€ Animation variants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Animation variants ──────────────────────────────────────────────────────
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.12 } } };
 
-// â”€â”€â”€ Illustrated floating shapes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function FloatingShape({ className, delay = 0, duration = 7 }) {
-  return (
-    <motion.div
-      className={className}
-      animate={{ y: [0, -18, 0], rotate: [0, 4, 0, -4, 0] }}
-      transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
-    />
-  );
-}
-
-// â”€â”€â”€ Exam launch card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ─── Practice modes ──────────────────────────────────────────────────────────
 const MODES = [
   {
@@ -83,11 +71,7 @@ const MODES = [
     title: msg`Modo Examen`,
     description: msg`Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen.`,
     tag: msg`Más usado`,
-    tagColor: 'bg-brand-100 text-brand-700 border-brand-200',
-    border: 'border-brand-200',
-    bg: 'bg-brand-50',
-    iconBg: 'bg-brand-100 text-brand-600',
-    btn: 'bg-brand-500 hover:bg-brand-600',
+    tagTone: 'brand',
     available: true,
   },
   {
@@ -96,11 +80,7 @@ const MODES = [
     title: msg`Modo Estudio`,
     description: msg`Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta.`,
     tag: msg`Para aprender`,
-    tagColor: 'bg-sky-100 text-sky-700 border-sky-200',
-    border: 'border-sky-200',
-    bg: 'bg-sky-50',
-    iconBg: 'bg-sky-100 text-sky-600',
-    btn: 'bg-sky-500 hover:bg-sky-400',
+    tagTone: 'brand',
     available: true,
   },
   {
@@ -109,11 +89,7 @@ const MODES = [
     title: msg`Flashcards`,
     description: msg`Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar.`,
     tag: msg`Próximamente`,
-    tagColor: 'bg-amber-100 text-amber-700 border-amber-200',
-    border: 'border-amber-200',
-    bg: 'bg-amber-50',
-    iconBg: 'bg-amber-100 text-amber-600',
-    btn: '',
+    tagTone: 'neutral',
     available: false,
   },
   {
@@ -122,11 +98,7 @@ const MODES = [
     title: msg`Repaso Rápido`,
     description: msg`10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos.`,
     tag: msg`Próximamente`,
-    tagColor: 'bg-violet-100 text-violet-700 border-violet-200',
-    border: 'border-violet-200',
-    bg: 'bg-violet-50',
-    iconBg: 'bg-violet-100 text-violet-600',
-    btn: '',
+    tagTone: 'neutral',
     available: false,
   },
 ];
@@ -140,37 +112,35 @@ function ModeCard({ mode, onLaunch }) {
       whileHover={mode.available ? { y: -6, scale: 1.01 } : {}}
       whileTap={mode.available ? { scale: 0.98 } : {}}
       transition={{ type: 'spring', stiffness: 340, damping: 24 }}
-      className={`relative flex flex-col rounded-3xl border-2 ${mode.bg} ${mode.border}
-        p-6 shadow-card transition-all duration-300
-        ${mode.available ? 'hover:shadow-card-hover cursor-pointer' : 'opacity-60 cursor-default'}`}
+      className={mode.available ? 'cursor-pointer' : 'cursor-default'}
       onClick={() => mode.available && onLaunch(mode.id)}
     >
-      <div className="flex items-start justify-between mb-5">
-        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl ${mode.iconBg}`}>
-          {mode.emoji}
+      <GlassCard
+        variant={mode.available ? 'default' : 'subtle'}
+        className={`flex h-full flex-col p-6 transition-all duration-300 ${mode.available ? 'hover:border-zen/40' : 'opacity-70'}`}
+      >
+        <div className="mb-5 flex items-start justify-between">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-zen/15 text-xl dark:bg-zen/25">
+            {mode.emoji}
+          </div>
+          <GlassBadge tone={mode.tagTone}>{t(mode.tag)}</GlassBadge>
         </div>
-        <span className={`text-[11px] font-black border px-2.5 py-0.5 rounded-full ${mode.tagColor}`}>
-          {t(mode.tag)}
-        </span>
-      </div>
-      <h3 className="font-display font-black text-ink text-lg leading-snug mb-2">
-        {t(mode.title)}
-      </h3>
-      <p className="text-ink-soft text-sm leading-relaxed font-semibold flex-1 mb-5">
-        {t(mode.description)}
-      </p>
-      {mode.available ? (
-        <div className={`flex items-center justify-center gap-2 rounded-2xl
-                         ${mode.btn} text-white text-sm font-black py-2.5 px-4
-                         transition-colors duration-200`}>
-          <Trans>Probar demo</Trans> <ArrowRight size={13} />
-        </div>
-      ) : (
-        <div className="flex items-center justify-center rounded-2xl
-                        bg-surface-muted text-ink-muted text-sm font-bold py-2.5 px-4 border border-surface-border">
-          <Trans>Próximamente</Trans>
-        </div>
-      )}
+        <h3 className="mb-2 text-lg font-bold leading-snug">
+          {t(mode.title)}
+        </h3>
+        <p className="mb-5 flex-1 text-sm leading-relaxed text-zen-ink/70 dark:text-white/60">
+          {t(mode.description)}
+        </p>
+        {mode.available ? (
+          <div className="flex min-h-11 items-center justify-center gap-2 rounded-zen bg-zen/10 px-4 text-sm font-semibold text-zen transition-colors duration-200 hover:bg-zen/20 dark:bg-zen/20 dark:text-indigo-300 dark:hover:bg-zen/30">
+            <Trans>Probar demo</Trans> <ArrowRight size={13} />
+          </div>
+        ) : (
+          <div className="flex min-h-11 items-center justify-center rounded-zen border border-glass-light-border bg-glass-light-1 px-4 text-sm font-semibold text-zen-ink/40 dark:border-glass-dark-border dark:bg-glass-dark-1 dark:text-white/35">
+            <Trans>Próximamente</Trans>
+          </div>
+        )}
+      </GlassCard>
     </motion.div>
   );
 }
@@ -181,14 +151,13 @@ export function WelcomePage() {
   const { user } = useAuthStore();
   const { remaining, isPro, isLoading: planLoading } = useUserPlan();
   const [_showGate, _setShowGate]   = useState(false);
-  const [mascotMood, setMascotMood] = useState('default');
 
   function launchMode(modeId) {
     navigate(`/exam?cert=demo&mode=${modeId}`);
   }
 
   return (
-    <ParallaxProvider>
+    <>
       <PageSEO
         title={t`Simuladores de Certificación Profesional`}
         description={t`Prepárate para tus certificaciones con simuladores reales, banco de preguntas oficial y seguimiento de progreso. Gratis para empezar.`}
@@ -235,54 +204,49 @@ export function WelcomePage() {
         }}
       />
 
-      <div className="min-h-screen bg-surface-soft">
+      <PageBackground>
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• HEADER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-        <header className="sticky top-0 z-20 border-b border-surface-border bg-white/90 backdrop-blur-xl">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 group" aria-label={t`CertZen inicio`}>
-              <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center shadow-brand">
-                <span className="text-white font-black text-xs leading-none">CZ</span>
+        {/* ══════════════════════ HEADER (glass, spec 02 paso 5) ══════════════════════ */}
+        <header className="sticky top-0 z-20 border-b border-glass-light-border bg-glass-light-1 backdrop-blur-xl dark:border-glass-dark-border dark:bg-glass-dark-1">
+          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 md:h-[4.75rem]">
+            {/* Logo — mark en gradiente indigo→violeta como el diseño */}
+            <Link to="/" className="flex items-center gap-2.5" aria-label={t`CertZen inicio`}>
+              <div className="flex h-[2.125rem] w-[2.125rem] items-center justify-center rounded-zen bg-zen-brand">
+                <Sparkles size={16} className="text-white" />
               </div>
-              <span className="text-xl font-display font-black text-ink tracking-tight">
-                Cert<span className="text-brand-500">Zen</span>
-              </span>
+              <span className="text-xl font-bold tracking-tight">CertZen</span>
             </Link>
 
-            {/* Nav right */}
-            <nav className="flex items-center gap-2 sm:gap-3">
+            {/* Nav right.
+               Mobile (inferido): con ≤3 acciones no se usa hamburger; los botones
+               compactos con icono cumplen touch target y caben en 375px. */}
+            <nav className="flex items-center gap-1 sm:gap-3">
               {user ? (
                 <>
                   {!isPro && !planLoading && (
-                    <Link to="/pricing">
-                      <Badge variant="pro"><Zap size={10} className="mr-1" />Pro</Badge>
-                    </Link>
+                    <GlassButton to="/pricing" variant="ghost" className="px-3">
+                      <Zap size={14} className="text-zen-warning" />
+                      <span className="hidden sm:inline">Pro</span>
+                    </GlassButton>
                   )}
-                  <Link to="/dashboard">
-                    <Button variant="ghost" size="sm">
-                      <LayoutDashboard size={14} />
-                      <span className="hidden sm:inline"><Trans>Dashboard</Trans></span>
-                    </Button>
-                  </Link>
-                  <Link to="/profile">
-                    <Button variant="ghost" size="sm">
-                      <User size={14} />
-                      <span className="hidden sm:inline"><Trans>Perfil</Trans></span>
-                    </Button>
-                  </Link>
+                  <GlassButton to="/dashboard" variant="ghost" className="px-3">
+                    <LayoutDashboard size={14} />
+                    <span className="hidden sm:inline"><Trans>Dashboard</Trans></span>
+                  </GlassButton>
+                  <GlassButton to="/profile" variant="ghost" className="px-3">
+                    <User size={14} />
+                    <span className="hidden sm:inline"><Trans>Perfil</Trans></span>
+                  </GlassButton>
                 </>
               ) : (
                 <>
-                  <Link to="/login">
-                    <Button variant="ghost" size="sm"><Trans>Ingresar</Trans></Button>
-                  </Link>
-                  <Link to="/register">
-                    <Button size="sm">
-                      <Trans>Registro gratis</Trans>
-                      <ArrowRight size={13} />
-                    </Button>
-                  </Link>
+                  <GlassButton to="/login" variant="ghost" className="px-4">
+                    <Trans>Ingresar</Trans>
+                  </GlassButton>
+                  <GlassButton to="/register" className="px-5">
+                    <Trans>Registro gratis</Trans>
+                    <ArrowRight size={13} />
+                  </GlassButton>
                 </>
               )}
             </nav>
@@ -291,73 +255,38 @@ export function WelcomePage() {
 
         <main id="main-content" tabIndex={-1} className="outline-none">
 
-          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• HERO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-          <section className="welcome-hero-bg relative overflow-hidden min-h-[90vh] flex items-center py-20 sm:py-28">
-            {/* Parallax blobs */}
-            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-              <Parallax speed={-8} className="absolute -top-24 -left-24 w-[520px] h-[520px]">
-                <div className="w-full h-full rounded-full"
-                     style={{ background: 'radial-gradient(ellipse, rgba(14,165,233,0.20) 0%, transparent 70%)' }} />
-              </Parallax>
-              <Parallax speed={-5} className="absolute top-[20%] -right-20 w-[380px] h-[380px]">
-                <div className="w-full h-full rounded-full"
-                     style={{ background: 'radial-gradient(ellipse, rgba(56,189,248,0.16) 0%, transparent 70%)' }} />
-              </Parallax>
-              <Parallax speed={-10} className="absolute -bottom-20 left-[25%] w-[350px] h-[350px]">
-                <div className="w-full h-full rounded-full"
-                     style={{ background: 'radial-gradient(ellipse, rgba(251,191,36,0.14) 0%, transparent 70%)' }} />
-              </Parallax>
-
-              {/* Floating illustrated shapes */}
-              <FloatingShape className="absolute top-[15%] left-[8%] w-14 h-14 rounded-3xl bg-brand-200 opacity-60" delay={0} duration={6} />
-              <FloatingShape className="absolute top-[55%] right-[10%] w-10 h-10 rounded-full bg-sky-200/60" delay={1.5} duration={7.5} />
-              <FloatingShape className="absolute bottom-[20%] left-[18%] w-8 h-8 rounded-2xl bg-amber-200/70" delay={0.8} duration={5.5} />
-              <FloatingShape className="absolute top-[35%] right-[22%] w-12 h-12 rounded-full bg-violet-200/40" delay={2} duration={8} />
-              <FloatingShape className="absolute top-[70%] right-[35%] w-6 h-6 rounded-xl bg-brand-300/50" delay={3} duration={6.5} />
-
-              {/* Subtle dot grid */}
-              <div className="absolute inset-0 dot-grid opacity-35" />
-            </div>
-
+          {/* ══════════════════════ HERO ══════════════════════ */}
+          <section className="relative flex min-h-[90vh] items-center overflow-hidden py-20 sm:py-28">
             {/* Hero content */}
-            <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 w-full">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6">
+              <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
 
-                {/* Left â€” text */}
+                {/* Left — text */}
                 <div>
                   <motion.div
                     initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="flex items-center gap-2 mb-6"
+                    className="mb-6 flex items-center gap-2"
                   >
-                    <span className="inline-flex items-center gap-2 rounded-full border border-brand-200
-                                     bg-brand-50 px-4 py-1.5 text-xs font-black text-brand-600 tracking-wider uppercase">
+                    <GlassBadge tone="brand" className="border border-zen/20 bg-glass-light-2 dark:bg-glass-dark-2">
                       <Sparkles size={10} />
                       <Trans>Simulador de Certificaciones</Trans>
-                    </span>
+                    </GlassBadge>
                   </motion.div>
 
                   <motion.h1
                     initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.55, delay: 0.08 }}
-                    className="font-display font-black text-ink leading-[1.05] tracking-tight
-                               text-5xl sm:text-6xl md:text-7xl mb-6"
+                    className="mb-6 text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
                   >
                     Aprueba con{' '}
-                    <span className="relative inline-block">
-                      <span className="text-gradient-brand"><Trans>confianza</Trans></span>
-                      <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none" aria-hidden="true">
-                        <path d="M2 8 C30 2, 60 12, 90 6 C120 0, 150 10, 198 5"
-                              stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.65"/>
-                      </svg>
-                    </span>
-                    .
+                    <span className="text-gradient-zen"><Trans>confianza</Trans></span>.
                   </motion.h1>
 
                   <motion.p
                     initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.16 }}
-                    className="text-ink-soft text-base sm:text-lg leading-relaxed mb-8 max-w-md font-semibold"
+                    className="mb-8 max-w-md text-base leading-relaxed text-zen-ink/70 dark:text-white/70 sm:text-lg"
                   >
                     <Trans>Simuladores con el formato similar del examen, banco de preguntas y seguimiento de progreso. Gratis para empezar hoy.</Trans>
                   </motion.p>
@@ -365,50 +294,34 @@ export function WelcomePage() {
                   <motion.div
                     initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.24 }}
-                    className="flex flex-col sm:flex-row items-start gap-3 mb-10"
+                    className="mb-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-start"
                   >
                     {!user && (
-                      <Link
-                        to="/register"
-                        className="inline-flex items-center gap-2 rounded-2xl bg-brand-500 hover:bg-brand-600
-                                   active:scale-[0.97] text-white font-black text-base px-8 py-3.5
-                                   shadow-brand-lg transition-all duration-200"
-                      >
+                      <GlassButton to="/register" className="w-full px-8 text-base sm:w-auto">
                         <Trans>Empezar gratis</Trans>
                         <ArrowRight size={16} />
-                      </Link>
+                      </GlassButton>
                     )}
-                    <a
-                      href="#simuladores"
-                      className="inline-flex items-center gap-2 rounded-2xl border-2 border-surface-border
-                                 bg-white hover:bg-surface-soft hover:border-surface-border-bright
-                                 text-ink font-bold text-base px-7 py-3.5
-                                 transition-all duration-200 shadow-card"
-                    >
+                    <GlassButton variant="secondary" href="#simuladores" className="w-full px-7 text-base sm:w-auto">
                       <Trans>Ver simuladores</Trans>
-                    </a>
+                    </GlassButton>
                     {user && !isPro && !planLoading && remaining <= 1 && (
-                      <Link
-                        to="/pricing"
-                        className="inline-flex items-center gap-2 rounded-2xl border-2 border-amber-300
-                                   bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold
-                                   text-base px-7 py-3.5 transition-all duration-200"
-                      >
+                      <GlassButton to="/pricing" variant="secondary" className="w-full px-7 text-base !text-zen-warning sm:w-auto">
                         <Zap size={14} /> <Trans>Actualizar a Pro</Trans>
-                      </Link>
+                      </GlassButton>
                     )}
                   </motion.div>
 
                   <motion.ul
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.32 }}
-                    className="flex flex-wrap gap-x-5 gap-y-2"
+                    className="flex flex-col gap-y-2 sm:flex-row sm:flex-wrap sm:gap-x-5"
                   >
                     {TRUST.map((item) => {
                       const label = t(item);
                       return (
-                        <li key={label} className="flex items-center gap-1.5 text-xs text-ink-soft font-bold">
-                          <CheckCircle2 size={13} className="text-brand-500 shrink-0" />
+                        <li key={label} className="flex items-center gap-1.5 text-xs font-semibold text-zen-ink/70 dark:text-white/70">
+                          <CheckCircle2 size={13} className="shrink-0 text-zen dark:text-indigo-300" />
                           {label}
                         </li>
                       );
@@ -416,79 +329,68 @@ export function WelcomePage() {
                   </motion.ul>
                 </div>
 
-                {/* Right â€” mascot + stats */}
+                {/* Right — mascot + stats */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.18 }}
                   className="flex flex-col items-center gap-6"
                 >
+                  {/* Mascota robot del diseño — variantes light/dark (mismo asset que certzen.html) */}
                   <div
-                    className="relative cursor-pointer select-none"
-                    onMouseEnter={() => setMascotMood('happy')}
-                    onMouseLeave={() => setMascotMood('default')}
+                    className="relative h-56 w-56 select-none overflow-hidden rounded-full border border-glass-light-border shadow-zen-glass dark:border-glass-dark-border dark:shadow-zen sm:h-80 sm:w-80"
                     aria-hidden="true"
                   >
-                    <div className="absolute inset-0 rounded-full bg-brand-200 blur-3xl opacity-55 scale-75" />
-                    <ZenDolphin size={220} mood={mascotMood} />
+                    <div className="absolute -inset-6 -z-[1] rounded-full bg-zen-violet/40 blur-3xl" />
+                    <img src={robotHeroLight} alt="" className="h-full w-full object-cover dark:hidden" width="720" height="720" />
+                    <img src={robotHeroDark} alt="" className="hidden h-full w-full object-cover dark:block" width="720" height="720" loading="lazy" />
                   </div>
 
-                  <div className="grid grid-cols-3 gap-0 bg-white rounded-3xl border border-surface-border
-                                  shadow-card w-full max-w-sm overflow-hidden">
-                    {STATS.map(({ value, label, emoji }, i) => {
+                  <GlassCard className="grid w-full max-w-sm grid-cols-3 gap-0 overflow-hidden p-0">
+                    {STATS.map(({ value, label }, i) => {
                       const labelText = t(label);
                       return (
                         <div
                           key={labelText}
-                          className={`p-5 text-center ${i < STATS.length - 1 ? 'border-r border-surface-border' : ''}`}
+                          className={`p-5 text-center ${i < STATS.length - 1 ? 'border-r border-glass-light-border dark:border-glass-dark-border' : ''}`}
                         >
-                          <div className="text-xl mb-1">{emoji}</div>
-                          <div className="font-black text-ink text-xl leading-none">{value}</div>
-                          <div className="text-ink-soft text-xs mt-1 font-bold leading-tight">{labelText}</div>
+                          <div className="text-xl font-extrabold leading-none">{value}</div>
+                          <div className="mt-1 text-xs font-medium leading-tight text-zen-ink/60 dark:text-white/50">{labelText}</div>
                         </div>
                       );
                     })}
-                  </div>
+                  </GlassCard>
                 </motion.div>
 
               </div>
             </div>
-
-            {/* Hero bottom wave */}
-            <div className="absolute bottom-0 left-0 right-0 pointer-events-none" aria-hidden="true">
-              <svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-                <path d="M0,32 C320,64 720,0 1440,32 L1440,64 L0,64 Z" className="fill-[#f8f7f4] dark:fill-[#0b1120]" />
-              </svg>
-            </div>
           </section>
 
-          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• FEATURES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-          <section className="py-20 px-4 sm:px-6 max-w-6xl mx-auto">
-            <Parallax speed={3}>
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.5 }}
-                className="text-center mb-14"
-              >
-                <h2 className="font-display font-black text-3xl sm:text-4xl text-ink mb-3 tracking-tight">
-                  <Trans>Todo lo que necesitas</Trans>{' '}
-                  <span className="text-gradient-brand"><Trans>para aprobar</Trans></span>
-                </h2>
-                <p className="text-ink-soft text-sm sm:text-base max-w-lg mx-auto font-semibold">
-                  <Trans>Sin distracciones. Solo las herramientas que te acercan a tu certificación.</Trans>
-                </p>
-              </motion.div>
-            </Parallax>
+          {/* ══════════════════════ FEATURES ══════════════════════ */}
+          <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5 }}
+              className="mb-14 text-center"
+            >
+              <h2 className="mb-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
+                <Trans>Todo lo que necesitas</Trans>{' '}
+                <span className="text-gradient-zen"><Trans>para aprobar</Trans></span>
+              </h2>
+              <p className="mx-auto max-w-lg text-sm text-zen-ink/70 dark:text-white/60 sm:text-base">
+                <Trans>Sin distracciones. Solo las herramientas que te acercan a tu certificación.</Trans>
+              </p>
+            </motion.div>
 
             <motion.div
               variants={stagger}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.15 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              className="grid grid-cols-1 gap-6 md:grid-cols-3"
             >
-              {FEATURES.map(({ icon: Icon, title, description, color }) => {
+              {FEATURES.map(({ icon: Icon, title, description }) => {
                 const titleText = t(title);
                 const descriptionText = t(description);
                 return (
@@ -497,37 +399,26 @@ export function WelcomePage() {
                   variants={fadeUp}
                   whileHover={{ y: -6, scale: 1.01 }}
                   transition={{ type: 'spring', stiffness: 350, damping: 26 }}
-                  className="rounded-3xl border border-surface-border bg-white p-8
-                              shadow-card hover:shadow-card-hover transition-all duration-300"
                 >
-                  <div className={`w-12 h-12 rounded-2xl ${color} flex items-center justify-center mb-5`}>
-                    <Icon size={22} />
-                  </div>
-                  <h3 className="font-display font-black text-ink text-xl leading-snug mb-3">{titleText}</h3>
-                  <p className="text-ink-soft text-sm leading-relaxed font-semibold">{descriptionText}</p>
+                  <GlassCard className="h-full p-8 transition-all duration-300 hover:border-zen/40">
+                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-zen/30 bg-zen/15 text-zen dark:bg-zen/25 dark:text-indigo-300">
+                      <Icon size={22} />
+                    </div>
+                    <h3 className="mb-3 text-xl font-bold leading-snug">{titleText}</h3>
+                    <p className="text-sm leading-relaxed text-zen-ink/70 dark:text-white/60">{descriptionText}</p>
+                  </GlassCard>
                 </motion.div>
                 );
               })}
             </motion.div>
           </section>
 
-          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• SIMULATORS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+          {/* ══════════════════════ SIMULATORS ══════════════════════ */}
           <section
             id="simuladores"
-            className="py-20 px-4 sm:px-6 scroll-mt-20 relative overflow-hidden bg-white"
+            className="scroll-mt-20 px-4 py-20 sm:px-6"
           >
-            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-              <Parallax speed={-4} className="absolute top-[-80px] right-[-80px] w-[400px] h-[400px]">
-                <div className="w-full h-full rounded-full opacity-50"
-                     style={{ background: 'radial-gradient(ellipse, rgba(56,189,248,0.18) 0%, transparent 70%)' }} />
-              </Parallax>
-              <Parallax speed={-6} className="absolute bottom-[-60px] left-[-60px] w-[350px] h-[350px]">
-                <div className="w-full h-full rounded-full opacity-50"
-                     style={{ background: 'radial-gradient(ellipse, rgba(14,165,233,0.16) 0%, transparent 70%)' }} />
-              </Parallax>
-            </div>
-
-            <div className="max-w-6xl mx-auto relative z-10">
+            <div className="mx-auto max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -535,11 +426,11 @@ export function WelcomePage() {
                 transition={{ duration: 0.5 }}
                 className="mb-10"
               >
-                <h2 className="font-display font-black text-3xl sm:text-4xl text-ink tracking-tight mb-2">
+                <h2 className="mb-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
                   <Trans>Elige tu</Trans>{' '}
-                  <span className="text-gradient-brand"><Trans>modo de práctica</Trans></span>
+                  <span className="text-gradient-zen"><Trans>modo de práctica</Trans></span>
                 </h2>
-                <p className="text-ink-soft text-sm sm:text-base font-semibold">
+                <p className="text-sm text-zen-ink/70 dark:text-white/60 sm:text-base">
                   <Trans>Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos.</Trans>
                 </p>
               </motion.div>
@@ -550,86 +441,67 @@ export function WelcomePage() {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.1 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+                className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
               >
                 {MODES.map((mode) => (
                   <ModeCard key={mode.id} mode={mode} onLaunch={launchMode} />
                 ))}
               </motion.div>
 
-              <div className="flex items-center justify-between text-xs text-ink-soft mt-10 pt-8
-                              border-t border-surface-border">
-                <Link to="/explore" className="flex items-center gap-1.5 hover:text-ink transition-colors font-bold">
+              <div className="mt-10 flex items-center justify-between border-t border-glass-light-border pt-8 text-xs text-zen-ink/70 dark:border-glass-dark-border dark:text-white/60">
+                <Link to="/explore" className="flex items-center gap-1.5 font-semibold transition-colors hover:text-zen-ink dark:hover:text-white">
                   <BookOpen size={12} /> <Trans>Explorar sets de la comunidad</Trans>
                 </Link>
               </div>
             </div>
           </section>
 
-          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CTA (non-logged) â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+          {/* ══════════════════════ CTA (non-logged) ══════════════════════ */}
           {!user && (
-            <section className="py-20 px-4 sm:px-6 relative overflow-hidden">
-              <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-                <Parallax speed={-5} className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px]">
-                  <div className="w-full h-full"
-                       style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.12) 0%, transparent 70%)' }} />
-                </Parallax>
-              </div>
-
+            <section className="px-4 py-20 sm:px-6">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.6 }}
-                className="max-w-2xl mx-auto text-center relative z-10"
+                className="mx-auto max-w-2xl text-center"
               >
-                <div className="rounded-3xl border-2 border-brand-200 bg-white
-                                shadow-card-lift px-8 py-12 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand-50/60 to-transparent pointer-events-none" aria-hidden="true" />
+                <GlassCard className="relative overflow-hidden px-8 py-12">
                   <div className="relative z-10">
-                    <div className="flex justify-center mb-6">
-                      <ZenDolphin size={100} mood="happy" bob={false} />
+                    <div className="mb-6 flex justify-center">
+                      <div className="h-24 w-24 select-none overflow-hidden rounded-full border border-glass-light-border dark:border-glass-dark-border" aria-hidden="true">
+                        <img src={robotCtaLight} alt="" className="h-full w-full object-cover dark:hidden" width="320" height="320" loading="lazy" />
+                        <img src={robotCtaDark} alt="" className="hidden h-full w-full object-cover dark:block" width="320" height="320" loading="lazy" />
+                      </div>
                     </div>
-                    <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-100 text-brand-700
-                                    text-xs font-black px-4 py-1 mb-4">
+                    <GlassBadge tone="brand" className="mb-4">
                       <Shield size={11} /> <Trans>Freemium · Plan gratuito disponible</Trans>
-                    </div>
-                    <h2 className="font-display font-black text-3xl sm:text-4xl text-ink mb-3">
+                    </GlassBadge>
+                    <h2 className="mb-3 text-3xl font-extrabold sm:text-4xl">
                       <Trans>Empieza gratis hoy</Trans>
                     </h2>
-                    <p className="text-ink-soft text-sm sm:text-base mb-8 max-w-md mx-auto leading-relaxed font-semibold">
+                    <p className="mx-auto mb-8 max-w-md text-sm leading-relaxed text-zen-ink/70 dark:text-white/60 sm:text-base">
                       <Trans>Crea tu cuenta en segundos y practica con simuladores reales. Plan gratuito para siempre. Actualiza cuando lo necesites.</Trans>
                     </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                      <Link
-                        to="/register"
-                        className="inline-flex items-center gap-2 rounded-2xl bg-brand-500 hover:bg-brand-600
-                                   active:scale-[0.97] text-white font-black text-base px-8 py-3.5
-                                   shadow-brand-lg transition-all duration-200 w-full sm:w-auto justify-center"
-                      >
+                    <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+                      <GlassButton to="/register" className="w-full px-8 text-base sm:w-auto">
                         <Trans>Crear cuenta gratis</Trans>
                         <ArrowRight size={16} />
-                      </Link>
-                      <Link
-                        to="/login"
-                        className="inline-flex items-center gap-2 rounded-2xl border-2 border-surface-border
-                                   bg-surface-soft hover:bg-surface-muted text-ink font-bold
-                                   text-base px-7 py-3.5 transition-all duration-200
-                                   w-full sm:w-auto justify-center"
-                      >
+                      </GlassButton>
+                      <GlassButton to="/login" variant="secondary" className="w-full px-7 text-base sm:w-auto">
                         <Trans>Ya tengo cuenta</Trans>
-                      </Link>
+                      </GlassButton>
                     </div>
                   </div>
-                </div>
+                </GlassCard>
               </motion.div>
             </section>
           )}
 
         </main>
 
-      </div>
-      <Footer />
-    </ParallaxProvider>
+        <Footer variant="glass" />
+      </PageBackground>
+    </>
   );
 }

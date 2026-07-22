@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
-
+/* Inter se carga async desde index.html con display=swap (evita render-blocking y doble descarga) */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,7 +14,7 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   background-color: #f8f7f4;
   color: #1a1a1a;
 }
@@ -49,6 +48,14 @@ select, input, button, textarea { font-family: inherit; }
   }
 
   /* Brand gradient text */
+  /* Glassmorphism (spec 02) — texto en gradiente indigo→violeta del diseño */
+  .text-gradient-zen {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .text-gradient-brand {
     background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 60%, #0369a1 100%);
     -webkit-background-clip: text;
