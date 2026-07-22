@@ -5,6 +5,27 @@ export default {
   theme: {
     extend: {
       colors: {
+        // CertZen v4 — Glassmorphism redesign (spec 02). Coexiste con tokens
+        // legacy (brand/surface/ink/appian) hasta completar specs 03–05.
+        zen: {
+          DEFAULT: '#6366F1', // indigo primario
+          violet:  '#8B5CF6', // extremo violeta del gradiente de marca
+          ink:     '#1E1B4B', // texto sobre superficies glass light
+          success: '#34D399',
+          warning: '#FBBF24',
+          danger:  '#F87171',
+        },
+        // Superficies glass (alpha embebido en el hex)
+        glass: {
+          'dark-1':       '#ffffff08', // nav / superficies sutiles (dark)
+          'dark-2':       '#ffffff12', // cards (dark)
+          'dark-3':       '#ffffff1f', // hover / elevado (dark)
+          'dark-border':  '#ffffff14',
+          'light-1':      '#FFFFFF80', // superficies sutiles (light)
+          'light-2':      '#FFFFFF99', // cards (light)
+          'light-3':      '#FFFFFFCC', // elevado (light)
+          'light-border': '#1E1B4B1A',
+        },
         // CertZen v3 — warm educational brand (Duolingo-inspired, light-first)
         brand: {
           50:  '#f0f9ff',
@@ -74,17 +95,23 @@ export default {
         },
       },
       fontFamily: {
-        sans:    ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        toon:    ['Fredoka', 'Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans:    ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // toon se mantiene como alias (usado por AppShell) pero ya apunta a Inter
+        toon:    ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
+        'zen': '10px', // radio base de botones/controles del diseño glass
         'xl':  '12px',
         '2xl': '16px',
         '3xl': '24px',
         '4xl': '32px',
       },
       boxShadow: {
+        // Glassmorphism (spec 02)
+        'zen':        '0 4px 14px rgba(99,102,241,0.35), 0 1px 4px rgba(99,102,241,0.18)',
+        'zen-lg':     '0 8px 28px rgba(99,102,241,0.40), 0 3px 8px rgba(139,92,246,0.22)',
+        'zen-glass':  '0 8px 32px rgba(30,27,75,0.10), 0 2px 8px rgba(30,27,75,0.06)',
         'brand':      '0 4px 14px rgba(14,165,233,0.25), 0 1px 4px rgba(14,165,233,0.12)',
         'brand-lg':   '0 8px 28px rgba(14,165,233,0.30), 0 3px 8px rgba(14,165,233,0.18)',
         'card':       '0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
@@ -97,6 +124,11 @@ export default {
         'glow-amber':   '0 0 20px rgba(251,191,36,0.4),  0 0 40px rgba(251,191,36,0.15)',
       },
       backgroundImage: {
+        // Glassmorphism (spec 02) — gradientes exactos del diseño certzen.html
+        'zen-bg-dark':   'linear-gradient(0deg, #0F0F2A 0%, #1A0E3C 40%, #0D1F3C 100%)',
+        'zen-bg-light':  'linear-gradient(0deg, #EEF2FF 0%, #F5F3FF 40%, #E0F2FE 100%)',
+        'zen-brand':     'linear-gradient(0deg, #6366F1 0%, #8B5CF6 100%)',
+        'zen-brand-diag':'linear-gradient(-45deg, #6366F1 14.645%, #8B5CF6 85.355%)',
         'gradient-radial':  'radial-gradient(var(--tw-gradient-stops))',
         'brand-gradient':   'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
         'warm-gradient':    'linear-gradient(180deg, #f8f7f4 0%, #ffffff 100%)',

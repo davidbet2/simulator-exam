@@ -107,7 +107,7 @@ export function ZenOwl({ size = 200, mood = 'default', bob = true }) {
 
         {/* ── Certificate badge on belly ── */}
         <rect x="86" y="152" width="28" height="20" rx="6" fill="#16a34a" />
-        <text x="100" y="166" textAnchor="middle" fontSize="9" fontWeight="800" fill="white" fontFamily="Nunito, sans-serif">PRO</text>
+        <text x="100" y="166" textAnchor="middle" fontSize="9" fontWeight="800" fill="white" fontFamily="Inter, sans-serif">PRO</text>
 
         {/* ── Thinking bubble (only in thinking mood) ── */}
         {mood === 'thinking' && (
