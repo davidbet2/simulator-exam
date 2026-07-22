@@ -105,3 +105,6 @@ htmlcov/
 ehthumbs.db
 Thumbs.db
 desktop.ini
+
+# Generator LLM cache (respuestas cacheadas, regenerables)
+scripts/generator/.cache/
