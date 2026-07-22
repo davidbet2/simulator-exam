@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   BookOpen, BarChart2, ArrowRight,
-  LayoutDashboard, User, Zap, Sparkles, CheckCircle2,
+  Zap, Sparkles, CheckCircle2,
   Shield, Target,
 } from 'lucide-react';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -11,8 +11,7 @@ import { msg } from '@lingui/core/macro';
 import { useAuthStore } from '../../core/store/useAuthStore';
 import { useUserPlan } from '../plans/hooks/useUserPlan';
 import { PageSEO } from '../../components/seo/PageSEO';
-import { Footer } from '../../components/layout/Footer';
-import { PageBackground } from '../../components/glass/PageBackground';
+import { PublicLayout } from '../../components/layout/PublicLayout';
 import robotHeroDark from '../../assets/mascot/robot-hero-dark.webp';
 import robotHeroLight from '../../assets/mascot/robot-hero-light.webp';
 import robotCtaDark from '../../assets/mascot/robot-cta-dark.webp';
@@ -204,54 +203,7 @@ export function WelcomePage() {
         }}
       />
 
-      <PageBackground>
-
-        {/* ══════════════════════ HEADER (glass, spec 02 paso 5) ══════════════════════ */}
-        <header className="sticky top-0 z-20 border-b border-glass-light-border bg-glass-light-1 backdrop-blur-xl dark:border-glass-dark-border dark:bg-glass-dark-1">
-          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 md:h-[4.75rem]">
-            {/* Logo — mark en gradiente indigo→violeta como el diseño */}
-            <Link to="/" className="flex items-center gap-2.5" aria-label={t`CertZen inicio`}>
-              <div className="flex h-[2.125rem] w-[2.125rem] items-center justify-center rounded-zen bg-zen-brand">
-                <Sparkles size={16} className="text-white" />
-              </div>
-              <span className="text-xl font-bold tracking-tight">CertZen</span>
-            </Link>
-
-            {/* Nav right.
-               Mobile (inferido): con ≤3 acciones no se usa hamburger; los botones
-               compactos con icono cumplen touch target y caben en 375px. */}
-            <nav className="flex items-center gap-1 sm:gap-3">
-              {user ? (
-                <>
-                  {!isPro && !planLoading && (
-                    <GlassButton to="/pricing" variant="ghost" className="px-3">
-                      <Zap size={14} className="text-zen-warning" />
-                      <span className="hidden sm:inline">Pro</span>
-                    </GlassButton>
-                  )}
-                  <GlassButton to="/dashboard" variant="ghost" className="px-3">
-                    <LayoutDashboard size={14} />
-                    <span className="hidden sm:inline"><Trans>Dashboard</Trans></span>
-                  </GlassButton>
-                  <GlassButton to="/profile" variant="ghost" className="px-3">
-                    <User size={14} />
-                    <span className="hidden sm:inline"><Trans>Perfil</Trans></span>
-                  </GlassButton>
-                </>
-              ) : (
-                <>
-                  <GlassButton to="/login" variant="ghost" className="px-4">
-                    <Trans>Ingresar</Trans>
-                  </GlassButton>
-                  <GlassButton to="/register" className="px-5">
-                    <Trans>Registro gratis</Trans>
-                    <ArrowRight size={13} />
-                  </GlassButton>
-                </>
-              )}
-            </nav>
-          </div>
-        </header>
+      <PublicLayout>
 
         <main id="main-content" tabIndex={-1} className="outline-none">
 
@@ -500,8 +452,7 @@ export function WelcomePage() {
 
         </main>
 
-        <Footer variant="glass" />
-      </PageBackground>
+      </PublicLayout>
     </>
   );
 }

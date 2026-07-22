@@ -3,8 +3,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { LogIn } from 'lucide-react'
+import { LogIn, Lock, Mail } from 'lucide-react'
 import { Turnstile } from '@marsidev/react-turnstile'
 const VERIFY_TURNSTILE_URL = `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net/verifyTurnstile`
 
@@ -18,8 +17,8 @@ const GoogleIcon = () => (
 )
 
 import { useAuthStore } from '../../../core/store/useAuthStore'
-import Button from '../../../components/ui/Button'
-import Input from '../../../components/ui/Input'
+import { GlassButton } from '../../../components/glass/GlassButton'
+import { AuthShell, GlassField, authLinkClass } from '../components/AuthShell'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { SEOHead } from '../../../components/SEOHead'
 
@@ -70,113 +69,101 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center p-4">
+    <AuthShell>
       <SEOHead title={t`Iniciar sesión`} description={t`Accede a CertZen para continuar tu preparación.`} path="/login" noindex />
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-sm"
-      >
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-2">
-            <span className="text-3xl font-bold bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">
-              CertZen
-            </span>
-          </div>
-          <p className="text-ink-soft text-sm"><Trans>Domina tu certificación</Trans></p>
+      <h1 className="text-xl font-bold"><Trans>Iniciar sesión</Trans></h1>
+
+      {error && (
+        <div className="rounded-zen border border-zen-danger/30 bg-zen-danger/10 px-4 py-3 text-sm text-zen-danger" role="alert">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <GlassField
+          id="login-email"
+          label={t`Correo electrónico`}
+          icon={Mail}
+          type="email"
+          autoComplete="email"
+          placeholder="tu@correo.com"
+          error={errors.email?.message}
+          {...register('email')}
+        />
+        <GlassField
+          id="login-password"
+          label={t`Contraseña`}
+          icon={Lock}
+          type="password"
+          autoComplete="current-password"
+          placeholder="••••••••"
+          error={errors.password?.message}
+          {...register('password')}
+        />
+
+        <div className="-mt-1 flex justify-end">
+          <Link to="/forgot-password" className={`text-xs ${authLinkClass}`}>
+            <Trans>¿Olvidaste tu contraseña?</Trans>
+          </Link>
         </div>
 
-        <div className="rounded-2xl border border-surface-border bg-surface-soft p-6 space-y-5">
-          <h1 className="text-xl font-semibold text-ink"><Trans>Iniciar sesión</Trans></h1>
-
-          {error && (
-            <div className="rounded-lg bg-danger-500/10 border border-danger-500/30 px-4 py-3 text-sm text-red-400" role="alert">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-            <Input
-              label={t`Correo electrónico`}
-              type="email"
-              autoComplete="email"
-              placeholder="tu@email.com"
-              error={errors.email?.message}
-              {...register('email')}
-            />
-            <Input
-              label={t`Contraseña`}
-              type="password"
-              autoComplete="current-password"
-              placeholder="••••••••"
-              error={errors.password?.message}
-              {...register('password')}
-            />
-
-            <div className="flex justify-end -mt-1">
-              <Link to="/forgot-password" className="text-xs text-brand-600 hover:text-brand-700 font-medium">
-                <Trans>¿Olvidaste tu contraseña?</Trans>
-              </Link>
-            </div>
-
-            {TURNSTILE_KEY && (
-              <div>
-                <Controller
-                  name="captchaToken"
-                  control={control}
-                  render={({ field }) => (
-                    <Turnstile
-                      siteKey={TURNSTILE_KEY}
-                      onSuccess={(token) => { field.onChange(token); setTurnstileReady(true) }}
-                      onExpire={() => { field.onChange(''); setTurnstileReady(false) }}
-                      onError={() => { field.onChange(''); setTurnstileReady(false) }}
-                      options={{ theme: 'auto', size: 'normal', language: 'auto' }}
-                    />
-                  )}
-                />
-                {errors.captchaToken && (
-                  <p className="text-xs text-danger-400 mt-1">{errors.captchaToken.message}</p>
+        {TURNSTILE_KEY && (
+          <div>
+            {/* Widget "Verificación de seguridad" del diseño (Turnstile restylado) */}
+            <div className="overflow-hidden rounded-zen border border-glass-light-border bg-glass-light-1 dark:border-glass-dark-border dark:bg-glass-dark-1 [&_iframe]:!w-full">
+              <Controller
+                name="captchaToken"
+                control={control}
+                render={({ field }) => (
+                  <Turnstile
+                    siteKey={TURNSTILE_KEY}
+                    onSuccess={(token) => { field.onChange(token); setTurnstileReady(true) }}
+                    onExpire={() => { field.onChange(''); setTurnstileReady(false) }}
+                    onError={() => { field.onChange(''); setTurnstileReady(false) }}
+                    options={{ theme: 'auto', size: 'flexible', language: 'auto' }}
+                  />
                 )}
-              </div>
+              />
+            </div>
+            {errors.captchaToken && (
+              <p className="mt-1 text-xs text-zen-danger">{errors.captchaToken.message}</p>
             )}
-
-            <Button type="submit" className="w-full" disabled={isLoading || !turnstileReady}>
-              <LogIn size={16} />
-              {isLoading ? t`Ingresando…` : t`Ingresar`}
-            </Button>
-          </form>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-surface-border" />
-            </div>
-            <div className="relative flex justify-center text-xs text-ink-soft">
-              <span className="bg-surface-soft px-2"><Trans>o continúa con</Trans></span>
-            </div>
           </div>
+        )}
 
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-center gap-2"
-            type="button"
-            onClick={loginWithGoogle}
-            disabled={isLoading}
-            aria-label={t`Ingresar con Google`}
-          >
-            <GoogleIcon />
-            <span>Google</span>
-          </Button>
+        <GlassButton type="submit" className="w-full" disabled={isLoading || !turnstileReady}>
+          <LogIn size={16} />
+          {isLoading ? t`Ingresando…` : t`Ingresar`}
+        </GlassButton>
+      </form>
 
-          <p className="text-center text-sm text-ink-soft">
-            <Trans>¿No tienes cuenta?</Trans>{' '}
-            <Link to="/register" className="text-brand-600 hover:text-brand-700 font-medium">
-              <Trans>Regístrate gratis</Trans>
-            </Link>
-          </p>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-glass-light-border dark:border-glass-dark-border" />
         </div>
-      </motion.div>
-    </div>
+        <div className="relative flex justify-center text-xs text-zen-ink/60 dark:text-white/50">
+          <span className="bg-transparent px-2 backdrop-blur-sm"><Trans>o continúa con</Trans></span>
+        </div>
+      </div>
+
+      <GlassButton
+        variant="secondary"
+        className="w-full"
+        type="button"
+        onClick={loginWithGoogle}
+        disabled={isLoading}
+        aria-label={t`Ingresar con Google`}
+      >
+        <GoogleIcon />
+        <span>Google</span>
+      </GlassButton>
+
+      <p className="text-center text-sm text-zen-ink/70 dark:text-white/60">
+        <Trans>¿No tienes cuenta?</Trans>{' '}
+        <Link to="/register" className={authLinkClass}>
+          <Trans>Regístrate gratis</Trans>
+        </Link>
+      </p>
+    </AuthShell>
   )
 }

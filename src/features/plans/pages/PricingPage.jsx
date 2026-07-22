@@ -1,13 +1,14 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Check, Zap, Star, Loader2 } from 'lucide-react'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { getApp } from 'firebase/app'
-import { Card, CardBody, CardHeader } from '../../../components/ui/Card'
-import { Badge } from '../../../components/ui/Badge'
-import Button from '../../../components/ui/Button'
+import { GlassCard } from '../../../components/glass/GlassCard'
+import { GlassBadge } from '../../../components/glass/GlassBadge'
+import { GlassButton } from '../../../components/glass/GlassButton'
 import { AppShell } from '../../../components/layout/AppShell'
+import { PublicLayout } from '../../../components/layout/PublicLayout'
 import { SEOHead } from '../../../components/SEOHead'
 import { useAuthStore } from '../../../core/store/useAuthStore'
 
@@ -29,40 +30,38 @@ const PRO_FEATURES = [
 
 function PlanCard({ title, price, period, badge, features, cta, onClick, highlighted }) {
   return (
-    <Card className={highlighted ? 'border-brand-500 ring-1 ring-brand-500/50' : ''}>
-      <CardHeader>
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="text-lg font-semibold text-ink">{title}</h3>
-          {badge && <Badge variant={highlighted ? 'brand' : 'default'}>{badge}</Badge>}
-        </div>
-        <div className="flex items-end gap-1">
-          <span className="text-4xl font-bold text-ink">{price}</span>
-          {period && <span className="text-ink-soft text-sm mb-1">/{period}</span>}
-        </div>
-      </CardHeader>
-      <CardBody className="space-y-4">
+    <GlassCard className={`p-6 ${highlighted ? '!border-zen ring-1 ring-zen/50 shadow-zen' : ''}`}>
+      <div className="mb-1 flex items-center justify-between">
+        <h3 className="text-lg font-bold">{title}</h3>
+        {badge && <GlassBadge tone={highlighted ? 'brand' : 'neutral'}>{badge}</GlassBadge>}
+      </div>
+      <div className="flex items-end gap-1">
+        <span className="text-4xl font-extrabold">{price}</span>
+        {period && <span className="mb-1 text-sm text-zen-ink/60 dark:text-white/50">/{period}</span>}
+      </div>
+      <div className="mt-5 space-y-4">
         <ul className="space-y-2.5">
           {features.map((f) => (
-            <li key={f} className="flex items-start gap-2.5 text-sm text-ink-soft">
-              <Check size={15} className="text-success-500 mt-0.5 shrink-0" />
+            <li key={f} className="flex items-start gap-2.5 text-sm text-zen-ink/70 dark:text-white/60">
+              <Check size={15} className="mt-0.5 shrink-0 text-zen dark:text-indigo-300" />
               {f}
             </li>
           ))}
         </ul>
-        <Button
-          variant={highlighted ? 'primary' : 'outline'}
+        <GlassButton
+          variant={highlighted ? 'primary' : 'secondary'}
           className="w-full"
           onClick={onClick}
         >
           {cta}
-        </Button>
-      </CardBody>
-    </Card>
+        </GlassButton>
+      </div>
+    </GlassCard>
   )
 }
 
 export function PricingPage() {
-  const { isPro } = useAuthStore()
+  const { user, isPro } = useAuthStore()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -107,36 +106,38 @@ export function PricingPage() {
     navigate('/profile')
   }
 
+  const Shell = user ? AppShell : PublicLayout
+
   return (
-    <AppShell>
+    <Shell>
       <SEOHead
         title="Planes y precios"
         description="Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado."
         path="/pricing"
       />
-      <div className="max-w-4xl mx-auto px-4 py-12 space-y-10">
+      <div className="mx-auto max-w-4xl space-y-10 px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-3"
+          className="space-y-3 text-center"
         >
-          <Badge variant="brand"><Zap size={11} /> Planes CertZen</Badge>
-          <h1 className="text-3xl font-bold text-ink">
+          <GlassBadge tone="brand" className="border border-zen/20"><Zap size={11} /> Planes CertZen</GlassBadge>
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
             Elige el plan que te lleva a la certificación
           </h1>
-          <p className="text-ink-soft max-w-lg mx-auto">
+          <p className="mx-auto max-w-lg text-zen-ink/70 dark:text-white/60">
             Empieza gratis. Actualiza cuando necesites más intentos o análisis avanzado.
           </p>
         </motion.div>
 
         {error && (
-          <p className="text-center text-sm text-error-600 bg-error-50 rounded-lg py-2 px-4 max-w-sm mx-auto">
+          <p className="mx-auto max-w-sm rounded-zen border border-zen-danger/30 bg-zen-danger/10 px-4 py-2 text-center text-sm text-zen-danger">
             {error}
           </p>
         )}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto"
+          className="mx-auto grid max-w-2xl grid-cols-1 gap-6 sm:grid-cols-2"
         >
           <PlanCard
             title="Free"
@@ -165,11 +166,11 @@ export function PricingPage() {
         </motion.div>
 
         {isPro && (
-          <p className="text-center text-sm text-success-600">
+          <p className="text-center text-sm text-emerald-600 dark:text-zen-success">
             ✓ Eres usuario Pro — gracias por tu apoyo.
           </p>
         )}
       </div>
-    </AppShell>
+    </Shell>
   )
 }

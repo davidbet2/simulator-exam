@@ -1,16 +1,17 @@
 ﻿import { Link } from 'react-router-dom';
 import { PageSEO } from '../../../components/seo/PageSEO';
-import { Footer } from '../../../components/layout/Footer';
+import { PublicLayout } from '../../../components/layout/PublicLayout';
+import { GlassCard } from '../../../components/glass/GlassCard';
 
 const LAST_UPDATED = '13 de abril de 2026';
 
 function Section({ id, title, children }) {
   return (
     <section aria-labelledby={id} className="mb-10">
-      <h2 id={id} className="text-lg font-display font-bold text-ink mb-3 pb-2 border-b border-surface-border">
+      <h2 id={id} className="mb-3 border-b border-glass-light-border pb-2 text-lg font-bold dark:border-glass-dark-border">
         {title}
       </h2>
-      <div className="space-y-3 text-sm text-ink-soft leading-relaxed">
+      <div className="space-y-3 text-sm leading-relaxed text-zen-ink/80 dark:text-white/70">
         {children}
       </div>
     </section>
@@ -19,7 +20,7 @@ function Section({ id, title, children }) {
 
 export function PrivacyPage() {
   return (
-    <>
+    <PublicLayout>
       <PageSEO
         title="Política de Privacidad"
         description="Conoce cómo CertZen recopila, usa y protege tu información personal. Última actualización: abril 2026."
@@ -28,27 +29,13 @@ export function PrivacyPage() {
 
       <div id="main-content" />
 
-      <header className="border-b border-surface-border bg-white/90 backdrop-blur-xl sticky top-0 z-20" role="banner">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2" aria-label="CertZen inicio">
-            <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center">
-              <span className="text-white font-black text-xs leading-none">CZ</span>
-            </div>
-            <span className="text-xl font-display font-black text-ink tracking-tight">
-              Cert<span className="text-brand-500">Zen</span>
-            </span>
-          </Link>
-          <Link to="/" className="text-sm text-ink-soft hover:text-ink transition-colors">← Volver al inicio</Link>
-        </div>
-      </header>
-
       <main id="privacy-content" tabIndex={-1} className="max-w-3xl mx-auto px-4 py-12">
         <header className="mb-10">
-          <h1 className="text-3xl font-display font-bold text-ink mb-2">Política de Privacidad</h1>
-          <p className="text-sm text-ink-soft">Última actualización: {LAST_UPDATED}</p>
+          <h1 className="mb-2 text-3xl font-extrabold tracking-tight">Política de Privacidad</h1>
+          <p className="text-sm text-zen-ink/60 dark:text-white/50">Última actualización: {LAST_UPDATED}</p>
         </header>
 
-        <div className="glass rounded-2xl border border-surface-border p-6 sm:p-8 space-y-0">
+        <GlassCard variant="elevated" className="space-y-0 p-6 sm:p-8">
           <Section id="intro" title="1. Introducción">
             <p>
               CertZen (&ldquo;nosotros&rdquo;, &ldquo;nos&rdquo; o &ldquo;nuestro&rdquo;) respeta tu privacidad y se
@@ -61,19 +48,19 @@ export function PrivacyPage() {
           </Section>
 
           <Section id="data-collected" title="2. Datos que recopilamos">
-            <p><strong className="text-ink-soft">Datos que tú proporcionas:</strong></p>
+            <p><strong className="font-semibold text-zen-ink dark:text-white">Datos que tú proporcionas:</strong></p>
             <ul className="list-disc ml-5 space-y-1">
               <li>Dirección de correo electrónico (para autenticación)</li>
               <li>Nombre o apodo (opcional, para personalizar tu perfil)</li>
               <li>Preguntas y sets de examen que crees en la plataforma</li>
             </ul>
-            <p className="mt-2"><strong className="text-ink-soft">Datos generados automáticamente:</strong></p>
+            <p className="mt-2"><strong className="font-semibold text-zen-ink dark:text-white">Datos generados automáticamente:</strong></p>
             <ul className="list-disc ml-5 space-y-1">
               <li>Historial de intentos (puntuación, fecha, certificación, modo)</li>
               <li>Preferencias de uso almacenadas localmente en tu navegador (<code className="bg-surface-muted px-1 rounded text-xs">sessionStorage</code>)</li>
             </ul>
             <p className="mt-2">
-              <strong className="text-ink-soft">No recopilamos:</strong> datos de pago directamente (procesados por Dodo Payments con su propia política), ubicación precisa, ni identificadores biométricos.
+              <strong className="font-semibold text-zen-ink dark:text-white">No recopilamos:</strong> datos de pago directamente (procesados por Dodo Payments con su propia política), ubicación precisa, ni identificadores biométricos.
             </p>
           </Section>
 
@@ -86,7 +73,7 @@ export function PrivacyPage() {
               <li>Cumplir obligaciones legales aplicables</li>
             </ul>
             <p>
-              <strong className="text-ink-soft">No vendemos ni alquilamos</strong> tu información personal a terceros.
+              <strong className="font-semibold text-zen-ink dark:text-white">No vendemos ni alquilamos</strong> tu información personal a terceros.
               No usamos tus datos para publicidad comportamental de terceros.
             </p>
           </Section>
@@ -95,14 +82,14 @@ export function PrivacyPage() {
           <Section id="retention" title="4. Retención de datos">
             <p>
               Conservamos tus datos mientras tu cuenta esté activa. Si solicitas la eliminación de tu cuenta,
-              borraremos tus datos personales en un plazo máximo de <strong className="text-ink-soft">30 días</strong>,
+              borraremos tus datos personales en un plazo máximo de <strong className="font-semibold text-zen-ink dark:text-white">30 días</strong>,
               excepto aquellos que debamos conservar por obligación legal.
             </p>
           </Section>
 
           <Section id="cookies" title="5. Cookies y almacenamiento local">
             <p>
-              CertZen <strong className="text-ink-soft">no utiliza cookies de seguimiento ni publicidad</strong>.
+              CertZen <strong className="font-semibold text-zen-ink dark:text-white">no utiliza cookies de seguimiento ni publicidad</strong>.
               Usamos exclusivamente:
             </p>
             <ul className="list-disc ml-5 space-y-1">
@@ -114,18 +101,18 @@ export function PrivacyPage() {
           <Section id="rights" title="6. Tus derechos">
             <p>Dependiendo de tu jurisdicción, tienes derecho a:</p>
             <ul className="list-disc ml-5 space-y-1">
-              <li><strong className="text-ink-soft">Acceso</strong>: solicitar una copia de tus datos</li>
-              <li><strong className="text-ink-soft">Rectificación</strong>: corregir datos inexactos</li>
-              <li><strong className="text-ink-soft">Eliminación</strong>: solicitar el borrado de tu cuenta y datos</li>
-              <li><strong className="text-ink-soft">Portabilidad</strong>: recibir tus datos en formato estructurado</li>
-              <li><strong className="text-ink-soft">Oposición</strong>: oponerte al procesamiento de tus datos</li>
+              <li><strong className="font-semibold text-zen-ink dark:text-white">Acceso</strong>: solicitar una copia de tus datos</li>
+              <li><strong className="font-semibold text-zen-ink dark:text-white">Rectificación</strong>: corregir datos inexactos</li>
+              <li><strong className="font-semibold text-zen-ink dark:text-white">Eliminación</strong>: solicitar el borrado de tu cuenta y datos</li>
+              <li><strong className="font-semibold text-zen-ink dark:text-white">Portabilidad</strong>: recibir tus datos en formato estructurado</li>
+              <li><strong className="font-semibold text-zen-ink dark:text-white">Oposición</strong>: oponerte al procesamiento de tus datos</li>
             </ul>
-            <p>Para ejercer cualquiera de estos derechos, contáctanos en <a href="mailto:privacy@certzen.app" className="text-brand-600 hover:text-brand-700 underline">privacy@certzen.app</a>.</p>
+            <p>Para ejercer cualquiera de estos derechos, contáctanos en <a href="mailto:privacy@certzen.app" className="text-zen underline hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">privacy@certzen.app</a>.</p>
           </Section>
 
           <Section id="changes" title="7. Cambios a esta política">
             <p>
-              Notificaremos cambios materiales con al menos <strong className="text-ink-soft">14 días de anticipación</strong>
+              Notificaremos cambios materiales con al menos <strong className="font-semibold text-zen-ink dark:text-white">14 días de anticipación</strong>
               {' '}por correo electrónico o mediante aviso destacado en la plataforma. El uso continuado
               de la plataforma después de dichos cambios constituye aceptación.
             </p>
@@ -133,13 +120,12 @@ export function PrivacyPage() {
 
           <Section id="contact-privacy" title="8. Contacto">
             <p>
-              Para preguntas sobre privacidad: <a href="mailto:privacy@certzen.app" className="text-brand-600 hover:text-brand-700 underline">privacy@certzen.app</a>
+              Para preguntas sobre privacidad: <a href="mailto:privacy@certzen.app" className="text-zen underline hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">privacy@certzen.app</a>
             </p>
           </Section>
-        </div>
+        </GlassCard>
       </main>
 
-      <Footer />
-    </>
+    </PublicLayout>
   );
 }

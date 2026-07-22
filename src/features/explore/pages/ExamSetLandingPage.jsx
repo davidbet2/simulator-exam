@@ -15,9 +15,11 @@ import { useUserPlan } from '../../plans/hooks/useUserPlan';
 import { getDomain } from '../../../core/constants/domains';
 import { fetchStatsSummary, fetchDomainMastery } from '../../exam/utils/questionStats';
 import { AppShell } from '../../../components/layout/AppShell';
-import { Card, CardBody } from '../../../components/ui/Card';
-import { Badge } from '../../../components/ui/Badge';
-import Button from '../../../components/ui/Button';
+import { PublicLayout } from '../../../components/layout/PublicLayout';
+import { PageBackground } from '../../../components/glass/PageBackground';
+import { GlassCard } from '../../../components/glass/GlassCard';
+import { GlassBadge } from '../../../components/glass/GlassBadge';
+import { GlassButton } from '../../../components/glass/GlassButton';
 import { RatingStars } from '../../social/components/RatingStars';
 import { FavoriteButton } from '../../social/components/FavoriteButton';
 import { AuthorChip } from '../../social/components/AuthorChip';
@@ -28,13 +30,13 @@ import { SEOHead } from '../../../components/SEOHead';
 
 function MetaStat({ icon: Icon, label, value }) {
   return (
-    <div className="flex items-center gap-2.5 bg-surface-soft border border-surface-border rounded-xl px-3 py-2.5">
-      <div className="w-9 h-9 rounded-lg bg-brand-500/10 text-brand-600 flex items-center justify-center">
+    <div className="flex items-center gap-2.5 rounded-xl border border-glass-light-border bg-glass-light-2 px-3 py-2.5 backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2">
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zen/15 text-zen dark:bg-zen/25 dark:text-indigo-300">
         <Icon size={16} />
       </div>
       <div className="min-w-0">
-        <p className="text-xs text-ink-muted">{label}</p>
-        <p className="text-sm font-semibold text-ink truncate">{value}</p>
+        <p className="text-xs text-zen-ink/50 dark:text-white/40">{label}</p>
+        <p className="truncate text-sm font-semibold">{value}</p>
       </div>
     </div>
   );
@@ -57,51 +59,50 @@ function ModeCard({
     <div
       className={`group relative flex flex-col rounded-2xl border p-5 transition-all ${
         disabled
-          ? 'border-surface-border bg-surface-soft/60 opacity-70'
+          ? 'border-glass-light-border bg-glass-light-1 opacity-70 dark:border-glass-dark-border dark:bg-glass-dark-1'
           : highlighted
-            ? `border-transparent bg-gradient-to-br from-brand-500/10 to-brand-500/5 ring-1 ${a.ring} hover:shadow-lg hover:-translate-y-0.5`
-            : 'border-surface-border bg-white hover:border-brand-500/40 hover:shadow-md hover:-translate-y-0.5'
+            ? `border-zen/40 bg-glass-light-2 ring-1 backdrop-blur-md dark:bg-glass-dark-2 ${a.ring} hover:-translate-y-0.5 hover:shadow-zen`
+            : 'border-glass-light-border bg-glass-light-2 backdrop-blur-md hover:-translate-y-0.5 hover:border-zen/40 dark:border-glass-dark-border dark:bg-glass-dark-2'
       }`}
     >
       {soon && (
-        <span className="absolute top-3 right-3 text-[10px] font-semibold uppercase tracking-wider bg-ink-muted/10 text-ink-muted rounded-full px-2 py-0.5">
+        <span className="absolute right-3 top-3 rounded-full bg-glass-light-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-zen-ink/50 dark:bg-glass-dark-1 dark:text-white/40">
           <Trans>Próximamente</Trans>
         </span>
       )}
       {highlighted && !soon && (
-        <span className="absolute top-3 right-3 text-[10px] font-semibold uppercase tracking-wider bg-brand-500 text-white rounded-full px-2 py-0.5 flex items-center gap-1">
+        <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-zen-brand px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
           <Sparkles size={9} /><Trans>Recomendado</Trans>
         </span>
       )}
       <div className={`w-11 h-11 rounded-xl ${a.bg} ${a.text} flex items-center justify-center mb-3`}>
         <Icon size={20} />
       </div>
-      <h3 className="text-base font-semibold text-ink">{title}</h3>
-      <p className="text-xs text-ink-muted mt-0.5 mb-2">{subtitle}</p>
-      <p className="text-sm text-ink-soft flex-1 leading-relaxed">{description}</p>
+      <h3 className="text-base font-semibold">{title}</h3>
+      <p className="mb-2 mt-0.5 text-xs text-zen-ink/50 dark:text-white/40">{subtitle}</p>
+      <p className="flex-1 text-sm leading-relaxed text-zen-ink/70 dark:text-white/60">{description}</p>
       {technique && (
-        <p className="text-[11px] text-ink-muted mt-3 italic">
+        <p className="mt-3 text-[11px] italic text-zen-ink/50 dark:text-white/40">
           <Trans>Técnica:</Trans> {technique}
         </p>
       )}
       {meta && (
-        <div className="flex flex-wrap items-center gap-2 mt-3 text-[11px] text-ink-muted">
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-zen-ink/50 dark:text-white/40">
           {meta.map((m, i) => (
-            <span key={i} className="inline-flex items-center gap-1 bg-surface-soft border border-surface-border rounded-full px-2 py-0.5">
+            <span key={i} className="inline-flex items-center gap-1 rounded-full border border-glass-light-border bg-glass-light-1 px-2 py-0.5 dark:border-glass-dark-border dark:bg-glass-dark-1">
               {m.icon && <m.icon size={10} />}{m.label}
             </span>
           ))}
         </div>
       )}
-      <Button
+      <GlassButton
         onClick={onClick}
         disabled={disabled}
         variant={highlighted ? 'primary' : 'secondary'}
-        size="sm"
         className="mt-4 w-full"
       >
         {disabled ? <><Lock size={13} />{ctaLabel}</> : <><Play size={13} />{ctaLabel}</>}
-      </Button>
+      </GlassButton>
     </div>
   );
 }
@@ -110,33 +111,33 @@ function QuestionPreview({ q, index, locked }) {
   const { t } = useLingui();
   const options = q.options ?? {};
   return (
-    <Card>
-      <CardBody className="p-5 space-y-3">
+    <GlassCard>
+      <div className="space-y-3 p-5">
         <div className="flex items-start justify-between gap-3">
-          <span className="text-xs font-semibold text-ink-muted">{t`Pregunta ${index + 1}`}</span>
+          <span className="text-xs font-semibold text-zen-ink/50 dark:text-white/40">{t`Pregunta ${index + 1}`}</span>
           {q.difficulty && (
-            <Badge variant={q.difficulty === 'hard' ? 'danger' : q.difficulty === 'medium' ? 'warning' : 'success'}>
+            <GlassBadge tone={q.difficulty === 'hard' ? 'danger' : q.difficulty === 'medium' ? 'warning' : 'success'}>
               {q.difficulty === 'hard' ? <Trans>Difícil</Trans> : q.difficulty === 'medium' ? <Trans>Intermedia</Trans> : <Trans>Fácil</Trans>}
-            </Badge>
+            </GlassBadge>
           )}
         </div>
-        <h3 className="text-sm font-medium text-ink leading-relaxed">{q.question}</h3>
+        <h3 className="text-sm font-medium leading-relaxed">{q.question}</h3>
         <ul className="space-y-1.5">
           {Object.entries(options).map(([key, val]) => (
-            <li key={key} className="text-xs text-ink-soft flex gap-2">
-              <span className="font-semibold text-ink-muted shrink-0 w-5">{key}.</span>
+            <li key={key} className="flex gap-2 text-xs text-zen-ink/70 dark:text-white/60">
+              <span className="w-5 shrink-0 font-semibold text-zen-ink/50 dark:text-white/40">{key}.</span>
               <span>{val}</span>
             </li>
           ))}
         </ul>
         {locked && (
-          <div className="flex items-center gap-2 text-xs text-ink-muted pt-2 border-t border-surface-border">
+          <div className="flex items-center gap-2 border-t border-glass-light-border pt-2 text-xs text-zen-ink/50 dark:border-glass-dark-border dark:text-white/40">
             <Lock size={12} />
             <Trans>Regístrate para ver la respuesta y explicación.</Trans>
           </div>
         )}
-      </CardBody>
-    </Card>
+      </div>
+    </GlassCard>
   );
 }
 
@@ -215,23 +216,25 @@ export function ExamSetLandingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-2 border-brand-500/30 border-t-brand-500 animate-spin" />
-      </div>
+      <PageBackground>
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-zen/30 border-t-zen" />
+        </div>
+      </PageBackground>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-surface flex flex-col items-center justify-center px-4 text-center">
-        <Helmet><title>{t`Set no encontrado — CertZen`}</title><meta name="robots" content="noindex" /></Helmet>
-        <BookOpen size={40} className="text-ink-muted mb-3" />
-        <h1 className="text-xl font-semibold text-ink"><Trans>Set no disponible</Trans></h1>
-        <p className="text-sm text-ink-soft mt-1"><Trans>Este examen no existe o no es público.</Trans></p>
-        <Link to="/explore" className="mt-5">
-          <Button variant="outline" size="sm"><ArrowLeft size={14} /><Trans>Volver a explorar</Trans></Button>
-        </Link>
-      </div>
+      <PageBackground>
+        <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
+          <Helmet><title>{t`Set no encontrado — CertZen`}</title><meta name="robots" content="noindex" /></Helmet>
+          <BookOpen size={40} className="mb-3 text-zen-ink/40 dark:text-white/40" />
+          <h1 className="text-xl font-bold"><Trans>Set no disponible</Trans></h1>
+          <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60"><Trans>Este examen no existe o no es público.</Trans></p>
+          <GlassButton to="/explore" variant="secondary" className="mt-5"><ArrowLeft size={14} /><Trans>Volver a explorar</Trans></GlassButton>
+        </div>
+      </PageBackground>
     );
   }
 
@@ -269,8 +272,10 @@ export function ExamSetLandingPage() {
     navigate(`/exam?${qs}`);
   };
 
+  const Shell = user ? AppShell : PublicLayout;
+
   return (
-    <AppShell>
+    <Shell>
       <Helmet>
         <title>{set.title} — Simulador gratis | CertZen</title>
         <meta name="description" content={description} />
@@ -292,16 +297,16 @@ export function ExamSetLandingPage() {
       </Helmet>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
-        <Link to="/explore" className="text-sm text-ink-soft hover:text-ink inline-flex items-center gap-1.5">
+        <Link to="/explore" className="inline-flex items-center gap-1.5 text-sm text-zen-ink/70 hover:text-zen-ink dark:text-white/60 dark:hover:text-white">
           <ArrowLeft size={14} /> <Trans>Exámenes</Trans>
         </Link>
         {/* Hero */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <Link to={`/explore?domain=${set.domain}`}>
-              <Badge>{domain.icon} {domain.label}</Badge>
+              <GlassBadge tone="brand">{domain.icon} {domain.label}</GlassBadge>
             </Link>
-            {set.level && <Badge>{set.level}</Badge>}
+            {set.level && <GlassBadge tone="neutral">{set.level}</GlassBadge>}
             <AuthorChip
               official={!!set.official}
               ownerEmail={set.ownerEmail}
@@ -309,9 +314,9 @@ export function ExamSetLandingPage() {
               size="md"
             />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-ink leading-tight">{set.title}</h1>
+          <h1 className="text-3xl font-bold leading-tight sm:text-4xl">{set.title}</h1>
           {set.description && (
-            <p className="text-base text-ink-soft mt-3 max-w-3xl">{set.description}</p>
+            <p className="mt-3 max-w-3xl text-base text-zen-ink/70 dark:text-white/60">{set.description}</p>
           )}
 
           {/* Rating + favorite row */}
@@ -344,10 +349,10 @@ export function ExamSetLandingPage() {
           {/* Anon prompt */}
           {!user && (
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <Button size="lg" onClick={() => navigate('/register')}>
-                <Lock size={16} /><Trans>Regístrate para practicar</Trans>
-              </Button>
-              <span className="text-xs text-ink-muted">
+              <GlassButton onClick={() => navigate('/register')} className="px-6 text-base">
+                <Sparkles size={16} /><Trans>Regístrate para practicar</Trans>
+              </GlassButton>
+              <span className="text-xs text-zen-ink/50 dark:text-white/40">
                 <Trans>Gratis · guarda tu progreso y ve explicaciones completas</Trans>
               </span>
             </div>
@@ -373,11 +378,11 @@ export function ExamSetLandingPage() {
             className="space-y-4 scroll-mt-20"
           >
             <div>
-              <h2 className="text-xl font-bold text-ink flex items-center gap-2">
-                <Layers size={20} className="text-brand-600" />
+              <h2 className="flex items-center gap-2 text-xl font-bold">
+                <Layers size={20} className="text-zen dark:text-indigo-300" />
                 <Trans>Ruta de Dominio</Trans>
               </h2>
-              <p className="text-sm text-ink-soft mt-1">
+              <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60">
                 <Trans>Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada.</Trans>
               </p>
             </div>
@@ -396,11 +401,11 @@ export function ExamSetLandingPage() {
           className="space-y-4 scroll-mt-20"
         >
           <div>
-            <h2 className="text-xl font-bold text-ink flex items-center gap-2">
-              <GraduationCap size={20} className="text-brand-600" />
+            <h2 className="flex items-center gap-2 text-xl font-bold">
+              <GraduationCap size={20} className="text-zen dark:text-indigo-300" />
               <Trans>Elige tu modo de estudio</Trans>
             </h2>
-            <p className="text-sm text-ink-soft mt-1">
+            <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60">
               <Trans>Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje.</Trans>
             </p>
           </div>
@@ -510,22 +515,22 @@ export function ExamSetLandingPage() {
         {(set.source || set.tags?.length > 0) && (
           <motion.section
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-surface-soft border border-surface-border rounded-2xl p-5 space-y-3"
+            className="space-y-3 rounded-2xl border border-glass-light-border bg-glass-light-2 p-5 backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2"
           >
             {set.source && (
-              <div className="flex items-start gap-2 text-xs text-ink-soft">
-                <CheckCircle2 size={14} className="text-success-500 mt-0.5 shrink-0" />
+              <div className="flex items-start gap-2 text-xs text-zen-ink/70 dark:text-white/60">
+                <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-emerald-600 dark:text-zen-success" />
                 <p>
-                  <span className="font-semibold text-ink"><Trans>Fuente:</Trans></span> {set.source}
+                  <span className="font-semibold"><Trans>Fuente:</Trans></span> {set.source}
                 </p>
               </div>
             )}
             {set.tags?.length > 0 && (
               <div className="flex items-center gap-2 flex-wrap">
-                <Tag size={12} className="text-ink-muted" />
+                <Tag size={12} className="text-zen-ink/40 dark:text-white/40" />
                 {set.tags.map((t) => (
                   <Link key={t} to={`/explore?domain=${set.domain}`}>
-                    <span className="text-xs bg-white border border-surface-border text-ink-soft px-2 py-0.5 rounded-full hover:border-brand-500/50 hover:text-ink transition-colors">
+                    <span className="rounded-full border border-glass-light-border bg-glass-light-1 px-2 py-0.5 text-xs text-zen-ink/70 transition-colors hover:border-zen/40 hover:text-zen-ink dark:border-glass-dark-border dark:bg-glass-dark-1 dark:text-white/60 dark:hover:text-white">
                       #{t}
                     </span>
                   </Link>
@@ -542,8 +547,8 @@ export function ExamSetLandingPage() {
             className="space-y-4"
           >
             <div>
-              <h2 className="text-xl font-bold text-ink"><Trans>Vista previa</Trans></h2>
-              <p className="text-sm text-ink-soft mt-1">{t`Primeras ${preview.length} preguntas del set.`}</p>
+              <h2 className="text-xl font-bold"><Trans>Vista previa</Trans></h2>
+              <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60">{t`Primeras ${preview.length} preguntas del set.`}</p>
             </div>
             <div className="grid grid-cols-1 gap-3">
               {preview.map((q, i) => (
@@ -557,18 +562,18 @@ export function ExamSetLandingPage() {
         {!user && (
           <motion.section
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-brand-500/10 p-8 text-center"
+            className="rounded-2xl border border-glass-light-border bg-glass-light-2 p-8 text-center backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2"
           >
-            <h2 className="text-xl font-semibold text-ink"><Trans>Regístrate para empezar</Trans></h2>
-            <p className="text-sm text-ink-soft mt-2 mb-5 max-w-xl mx-auto">
+            <h2 className="text-xl font-bold"><Trans>Regístrate para empezar</Trans></h2>
+            <p className="mx-auto mb-5 mt-2 max-w-xl text-sm text-zen-ink/70 dark:text-white/60">
               <Trans>El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas.</Trans>
             </p>
-            <Button size="lg" onClick={() => navigate('/register')}>
+            <GlassButton onClick={() => navigate('/register')} className="mx-auto w-fit px-6 text-base">
               <Trans>Crear cuenta gratis</Trans>
-            </Button>
+            </GlassButton>
           </motion.section>
         )}
       </div>
-    </AppShell>
+    </Shell>
   );
 }

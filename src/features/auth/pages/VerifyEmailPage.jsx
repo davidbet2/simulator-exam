@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { MailCheck, RefreshCw, LogOut } from 'lucide-react';
 import { useAuthStore } from '../../../core/store/useAuthStore';
-import Button from '../../../components/ui/Button';
+import { GlassButton } from '../../../components/glass/GlassButton';
+import { AuthShell } from '../components/AuthShell';
 import { SEOHead } from '../../../components/SEOHead';
 
 export function VerifyEmailPage() {
@@ -48,75 +48,58 @@ export function VerifyEmailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center p-4">
+    <AuthShell>
       <SEOHead title="Verifica tu correo" description="" path="/verify-email" noindex />
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-sm text-center"
-      >
-        {/* Logo */}
-        <div className="inline-flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center shadow-brand">
-            <span className="text-white font-black text-xs leading-none">CZ</span>
+      <div className="space-y-5 text-center">
+        <div className="flex justify-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-zen/15 dark:bg-zen/25">
+            <MailCheck size={32} className="text-zen dark:text-indigo-300" />
           </div>
-          <span className="text-xl font-display font-black text-ink tracking-tight">
-            Cert<span className="text-brand-500">Zen</span>
-          </span>
         </div>
 
-        <div className="rounded-2xl border border-surface-border bg-surface-soft p-8 space-y-5">
-          <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center">
-              <MailCheck size={32} className="text-brand-500" />
-            </div>
-          </div>
-
-          <div>
-            <h1 className="text-xl font-semibold text-ink mb-2">Revisa tu correo</h1>
-            <p className="text-sm text-ink-soft leading-relaxed">
-              Enviamos un enlace de verificación a{' '}
-              <span className="font-semibold text-ink">{user?.email}</span>.
-              <br />
-              Haz clic en el enlace y luego regresa aquí.
-            </p>
-          </div>
-
-          {sent && (
-            <div className="rounded-lg bg-success-500/10 border border-success-500/30 px-4 py-2 text-sm text-green-400">
-              ¡Correo reenviado!
-            </div>
-          )}
-
-          {notYet && (
-            <div className="rounded-lg bg-warning-500/10 border border-warning-500/30 px-4 py-2 text-sm text-amber-500">
-              Aún no hemos recibido la confirmación. Revisa tu bandeja de entrada o spam.
-            </div>
-          )}
-
-          <Button className="w-full" onClick={handleCheckVerified} disabled={checking}>
-            {checking ? (
-              <><RefreshCw size={15} className="animate-spin" /> Verificando...</>
-            ) : (
-              'Ya verifiqué, continuar'
-            )}
-          </Button>
-
-          <Button variant="ghost" className="w-full text-sm" onClick={handleResend} disabled={sending || sent}>
-            <RefreshCw size={14} />
-            {sent ? 'Correo enviado' : sending ? 'Enviando...' : 'Reenviar correo'}
-          </Button>
-
-          <button
-            onClick={handleLogout}
-            className="flex items-center justify-center gap-1.5 w-full text-xs text-ink-muted hover:text-ink transition-colors"
-          >
-            <LogOut size={12} />
-            Salir de la cuenta
-          </button>
+        <div>
+          <h1 className="mb-2 text-xl font-bold">Revisa tu correo</h1>
+          <p className="text-sm leading-relaxed text-zen-ink/70 dark:text-white/60">
+            Enviamos un enlace de verificación a{' '}
+            <span className="font-semibold text-zen-ink dark:text-white">{user?.email}</span>.
+            <br />
+            Haz clic en el enlace y luego regresa aquí.
+          </p>
         </div>
-      </motion.div>
-    </div>
+
+        {sent && (
+          <div className="rounded-zen border border-zen-success/30 bg-zen-success/10 px-4 py-2 text-sm text-emerald-600 dark:text-zen-success">
+            ¡Correo reenviado!
+          </div>
+        )}
+
+        {notYet && (
+          <div className="rounded-zen border border-zen-warning/30 bg-zen-warning/10 px-4 py-2 text-sm text-amber-600 dark:text-zen-warning">
+            Aún no hemos recibido la confirmación. Revisa tu bandeja de entrada o spam.
+          </div>
+        )}
+
+        <GlassButton className="w-full" onClick={handleCheckVerified} disabled={checking}>
+          {checking ? (
+            <><RefreshCw size={15} className="animate-spin" /> Verificando...</>
+          ) : (
+            'Ya verifiqué, continuar'
+          )}
+        </GlassButton>
+
+        <GlassButton variant="ghost" className="w-full text-sm" onClick={handleResend} disabled={sending || sent}>
+          <RefreshCw size={14} />
+          {sent ? 'Correo enviado' : sending ? 'Enviando...' : 'Reenviar correo'}
+        </GlassButton>
+
+        <button
+          onClick={handleLogout}
+          className="flex min-h-11 w-full items-center justify-center gap-1.5 text-xs text-zen-ink/50 transition-colors hover:text-zen-ink dark:text-white/40 dark:hover:text-white"
+        >
+          <LogOut size={12} />
+          Salir de la cuenta
+        </button>
+      </div>
+    </AuthShell>
   );
 }
