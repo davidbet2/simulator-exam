@@ -1,16 +1,17 @@
 ﻿import { Link } from 'react-router-dom';
 import { PageSEO } from '../../../components/seo/PageSEO';
-import { Footer } from '../../../components/layout/Footer';
+import { PublicLayout } from '../../../components/layout/PublicLayout';
+import { GlassCard } from '../../../components/glass/GlassCard';
 
 const LAST_UPDATED = '18 de abril de 2026';
 
 function Section({ id, title, children }) {
   return (
     <section aria-labelledby={id} className="mb-10">
-      <h2 id={id} className="text-lg font-display font-bold text-ink mb-3 pb-2 border-b border-surface-border">
+      <h2 id={id} className="mb-3 border-b border-glass-light-border pb-2 text-lg font-bold dark:border-glass-dark-border">
         {title}
       </h2>
-      <div className="space-y-3 text-sm text-ink-soft leading-relaxed">
+      <div className="space-y-3 text-sm leading-relaxed text-zen-ink/80 dark:text-white/70">
         {children}
       </div>
     </section>
@@ -19,7 +20,7 @@ function Section({ id, title, children }) {
 
 export function TermsPage() {
   return (
-    <>
+    <PublicLayout>
       <PageSEO
         title="Términos de Uso"
         description="Lee los términos y condiciones de uso de CertZen. Al usar la plataforma aceptas estos términos."
@@ -28,27 +29,13 @@ export function TermsPage() {
 
       <div id="main-content" />
 
-      <header className="border-b border-surface-border bg-white/90 backdrop-blur-xl sticky top-0 z-20" role="banner">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2" aria-label="CertZen inicio">
-            <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center">
-              <span className="text-white font-black text-xs leading-none">CZ</span>
-            </div>
-            <span className="text-xl font-display font-black text-ink tracking-tight">
-              Cert<span className="text-brand-500">Zen</span>
-            </span>
-          </Link>
-          <Link to="/" className="text-sm text-ink-soft hover:text-ink transition-colors">← Volver al inicio</Link>
-        </div>
-      </header>
-
       <main id="terms-content" tabIndex={-1} className="max-w-3xl mx-auto px-4 py-12">
         <header className="mb-10">
-          <h1 className="text-3xl font-display font-bold text-ink mb-2">Términos de Uso</h1>
-          <p className="text-sm text-ink-soft">Última actualización: {LAST_UPDATED}</p>
+          <h1 className="mb-2 text-3xl font-extrabold tracking-tight">Términos de Uso</h1>
+          <p className="text-sm text-zen-ink/60 dark:text-white/50">Última actualización: {LAST_UPDATED}</p>
         </header>
 
-        <div className="glass rounded-2xl border border-surface-border p-6 sm:p-8 space-y-0">
+        <GlassCard variant="elevated" className="space-y-0 p-6 sm:p-8">
           <Section id="acceptance" title="1. Aceptación de los términos">
             <p>
               Al acceder o usar CertZen (&ldquo;la Plataforma&rdquo;), aceptas quedar vinculado por estos
@@ -67,7 +54,7 @@ export function TermsPage() {
               <li>Creación y compartición de sets de preguntas por la comunidad</li>
             </ul>
             <p>
-              CertZen <strong className="text-ink-soft">no está afiliado ni patrocinado</strong> por ningún proveedor de certificaciones
+              CertZen <strong className="font-semibold text-zen-ink dark:text-white">no está afiliado ni patrocinado</strong> por ningún proveedor de certificaciones
               (incluyendo sus marcas, productos y exámenes oficiales). Las preguntas son creadas con fines educativos.
             </p>
           </Section>
@@ -80,26 +67,26 @@ export function TermsPage() {
               <li>Notificarnos inmediatamente ante cualquier uso no autorizado</li>
             </ul>
             <p>
-              Debes tener al menos <strong className="text-ink-soft">18 años</strong> para crear una cuenta,
+              Debes tener al menos <strong className="font-semibold text-zen-ink dark:text-white">18 años</strong> para crear una cuenta,
               o contar con el consentimiento de un tutor legal.
             </p>
           </Section>
 
           <Section id="plans" title="4. Planes y pagos">
             <p>
-              CertZen ofrece un <strong className="text-ink-soft">plan gratuito</strong> con 3 exámenes por mes
-              y un <strong className="text-ink-soft">plan Pro</strong> de pago con acceso ilimitado.
+              CertZen ofrece un <strong className="font-semibold text-zen-ink dark:text-white">plan gratuito</strong> con 3 exámenes por mes
+              y un <strong className="font-semibold text-zen-ink dark:text-white">plan Pro</strong> de pago con acceso ilimitado.
             </p>
             <p>
-              Los pagos son procesados por <strong className="text-ink-soft">Dodo Payments</strong> de forma segura.
+              Los pagos son procesados por <strong className="font-semibold text-zen-ink dark:text-white">Dodo Payments</strong> de forma segura.
               CertZen no almacena datos de tarjetas de crédito. Los precios pueden cambiar con
               30 días de aviso previo a suscriptores activos.
             </p>
             <p>
-              <strong className="text-ink-soft">Todos los pagos son definitivos y no se realizan reembolsos</strong>,
+              <strong className="font-semibold text-zen-ink dark:text-white">Todos los pagos son definitivos y no se realizan reembolsos</strong>,
               salvo donde la ley aplicable lo exija expresamente. Al completar un pago aceptas esta política.
               Para consultas sobre tu suscripción contáctanos en{' '}
-              <a href="mailto:support@certzen.app" className="text-brand-600 hover:text-brand-700 underline">support@certzen.app</a>.
+              <a href="mailto:support@certzen.app" className="text-zen underline hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">support@certzen.app</a>.
             </p>
           </Section>
 
@@ -153,7 +140,7 @@ export function TermsPage() {
 
           <Section id="governing-law" title="10. Ley aplicable">
             <p>
-              Estos términos se rigen por las leyes de la <strong className="text-ink-soft">República de Colombia</strong>.
+              Estos términos se rigen por las leyes de la <strong className="font-semibold text-zen-ink dark:text-white">República de Colombia</strong>.
               Cualquier disputa se resolverá en los tribunales competentes de Medellín, Colombia,
               sin perjuicio de los derechos del consumidor que te apliquen en tu jurisdicción.
             </p>
@@ -161,13 +148,12 @@ export function TermsPage() {
 
           <Section id="contact-terms" title="11. Contacto">
             <p>
-              Para preguntas sobre estos términos: <a href="mailto:legal@certzen.app" className="text-brand-600 hover:text-brand-700 underline">legal@certzen.app</a>
+              Para preguntas sobre estos términos: <a href="mailto:legal@certzen.app" className="text-zen underline hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">legal@certzen.app</a>
             </p>
           </Section>
-        </div>
+        </GlassCard>
       </main>
 
-      <Footer />
-    </>
+    </PublicLayout>
   );
 }

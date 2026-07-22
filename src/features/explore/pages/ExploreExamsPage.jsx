@@ -8,8 +8,9 @@ import { useExploreQuery } from '../hooks/useExploreQuery';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { getDomain } from '../../../core/constants/domains';
 import { AppShell } from '../../../components/layout/AppShell';
-import { Card, CardBody } from '../../../components/ui/Card';
-import Button from '../../../components/ui/Button';
+import { PublicLayout } from '../../../components/layout/PublicLayout';
+import { GlassCard } from '../../../components/glass/GlassCard';
+import { GlassButton } from '../../../components/glass/GlassButton';
 import { RatingStars } from '../../social/components/RatingStars';
 import { FavoriteButton } from '../../social/components/FavoriteButton';
 import { AuthorChip } from '../../social/components/AuthorChip';
@@ -22,7 +23,7 @@ function Highlight({ text, needle }) {
   return (
     <>
       {text.slice(0, idx)}
-      <mark className="bg-brand-500/20 text-ink rounded-sm not-italic">{text.slice(idx, idx + needle.length)}</mark>
+      <mark className="rounded-sm bg-zen/25 text-inherit not-italic">{text.slice(idx, idx + needle.length)}</mark>
       {text.slice(idx + needle.length)}
     </>
   );
@@ -34,12 +35,12 @@ const ExamSetCard = memo(function ExamSetCard({ set, needle }) {
   const ratingCount = set.ratingCount ?? 0;
   const ratingAvg = ratingCount > 0 ? (set.ratingSum ?? 0) / ratingCount : 0;
   return (
-    <Card className="hover:border-brand-500/50 transition-colors h-full flex flex-col">
-      <CardBody className="p-5 space-y-3 flex-1 flex flex-col">
+    <GlassCard className="flex h-full flex-col transition-colors hover:border-zen/40">
+      <div className="flex flex-1 flex-col space-y-3 p-5">
         <div className="flex items-start justify-between gap-2">
-          <Link to={`/exam-sets/${set.id}`} className="flex items-center gap-2 min-w-0 group flex-1">
-            <span className="text-lg" aria-hidden>{domain.icon}</span>
-            <h3 className="font-semibold text-ink text-sm leading-snug flex-1 group-hover:text-brand-600 transition-colors truncate">
+          <Link to={`/exam-sets/${set.id}`} className="group flex min-w-0 flex-1 items-center gap-2">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zen/15 text-lg dark:bg-zen/25" aria-hidden>{domain.icon}</span>
+            <h3 className="flex-1 truncate text-sm font-semibold leading-snug transition-colors group-hover:text-zen dark:group-hover:text-indigo-300">
               <Highlight text={set.title} needle={needle} />
             </h3>
           </Link>
@@ -61,7 +62,7 @@ const ExamSetCard = memo(function ExamSetCard({ set, needle }) {
 
         {set.description && (
           <Link to={`/exam-sets/${set.id}`} className="block">
-            <p className="text-xs text-ink-soft line-clamp-2 hover:text-ink transition-colors">
+            <p className="line-clamp-2 text-xs text-zen-ink/70 transition-colors hover:text-zen-ink dark:text-white/60 dark:hover:text-white">
               {set.description}
             </p>
           </Link>
@@ -76,13 +77,13 @@ const ExamSetCard = memo(function ExamSetCard({ set, needle }) {
             size={14}
             readOnly
           />
-          <div className="flex items-center gap-3 text-xs text-ink-muted">
+          <div className="flex items-center gap-3 border-t border-glass-light-border pt-2 text-xs text-zen-ink/50 dark:border-glass-dark-border dark:text-white/40">
             <span className="flex items-center gap-1"><BookOpen size={11} />{set.questionCount ?? '?'} {t`preguntas`}</span>
             <span className="flex items-center gap-1"><Users size={11} />{set.attempts ?? 0} {t`intentos`}</span>
           </div>
         </div>
-      </CardBody>
-    </Card>
+      </div>
+    </GlassCard>
   );
 });
 
@@ -178,8 +179,10 @@ export function ExploreExamsPage() {
     ? t`Simulacros gratuitos de ${getDomain(activeDomain).label}. Preguntas basadas en exam guides públicos. Estudia y evalúate en línea.`
     : t`Plataforma colaborativa de simuladores de examen: IT, Cloud, Salud, Inglés, Appian y más. Exploración gratis, regístrate para practicar.`;
 
+  const Shell = user ? AppShell : PublicLayout;
+
   return (
-    <AppShell>
+    <Shell>
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
@@ -200,17 +203,17 @@ export function ExploreExamsPage() {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-ink">
+              <h1 className="text-2xl font-bold sm:text-3xl">
                 {activeDomain ? t`Exámenes de ${getDomain(activeDomain).label}` : t`Explorar exámenes`}
               </h1>
-              <p className="text-ink-soft text-sm mt-1">
+              <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60">
                 <Trans>Sets oficiales y de la comunidad. Estudia gratis, regístrate para guardar tu progreso.</Trans>
               </p>
             </div>
             {user && (
-              <Button onClick={() => navigate('/create-exam')}>
+              <GlassButton onClick={() => navigate('/create-exam')}>
                 <Plus size={16} /><Trans>Crear set</Trans>
-              </Button>
+              </GlassButton>
             )}
           </div>
         </motion.div>
@@ -222,7 +225,7 @@ export function ExploreExamsPage() {
             className="relative"
             ref={searchBoxRef}
           >
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-soft pointer-events-none" />
+            <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-zen-ink/40 dark:text-white/40" />
             <input
               ref={inputRef}
               id="explore-search-input"
@@ -241,7 +244,7 @@ export function ExploreExamsPage() {
               }}
               onFocus={() => { if (search.trim().length >= 2 && suggestions.length > 0) setShowSuggestions(true); }}
               onKeyDown={handleInputKeyDown}
-              className="h-11 w-full rounded-xl border border-surface-border bg-white pl-10 pr-9 text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+              className="h-11 w-full rounded-zen border border-glass-light-border bg-glass-light-2 pl-10 pr-9 text-sm text-zen-ink backdrop-blur-md placeholder:text-zen-ink/50 focus:border-zen focus:outline-none focus:ring-2 focus:ring-zen/40 dark:border-glass-dark-border dark:bg-glass-dark-2 dark:text-white dark:placeholder:text-white/40"
               aria-label={t`Buscar sets de examen`}
               aria-controls="explore-results"
               aria-autocomplete="list"
@@ -256,7 +259,7 @@ export function ExploreExamsPage() {
                   applySearch('');
                   inputRef.current?.focus();
                 }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-soft hover:text-ink transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zen-ink/50 transition-colors hover:text-zen-ink dark:text-white/50 dark:hover:text-white"
                 aria-label={t`Limpiar búsqueda`}
               >
                 <X size={14} />
@@ -268,7 +271,7 @@ export function ExploreExamsPage() {
               <ul
                 role="listbox"
                 aria-label={t`Sugerencias de búsqueda`}
-                className="absolute z-50 mt-1.5 w-full rounded-xl border border-surface-border bg-white shadow-lg overflow-hidden"
+                className="absolute z-50 mt-1.5 w-full overflow-hidden rounded-xl border border-glass-light-border bg-white/95 shadow-lg backdrop-blur-xl dark:border-glass-dark-border dark:bg-[#221c49]/95"
               >
                 {suggestions.map((s, i) => (
                   <li
@@ -280,13 +283,13 @@ export function ExploreExamsPage() {
                     onMouseEnter={() => setActiveIdx(i)}
                     className={`flex items-center gap-2.5 px-3.5 py-2.5 text-sm cursor-pointer transition-colors ${
                       i === activeIdx
-                        ? 'bg-brand-500/10 text-brand-700'
-                        : 'text-ink hover:bg-surface-soft'
+                        ? 'bg-zen/15 text-zen dark:text-indigo-300'
+                        : 'hover:bg-zen/5 dark:hover:bg-white/5'
                     }`}
                   >
                     {s.kind === 'tag'
-                      ? <span className="text-xs bg-surface-soft border border-surface-border rounded px-1.5 py-0.5 text-ink-soft shrink-0">#</span>
-                      : <Search size={13} className="text-ink-muted shrink-0" />
+                      ? <span className="shrink-0 rounded border border-glass-light-border bg-glass-light-1 px-1.5 py-0.5 text-xs text-zen-ink/60 dark:border-glass-dark-border dark:bg-glass-dark-1 dark:text-white/50">#</span>
+                      : <Search size={13} className="shrink-0 text-zen-ink/40 dark:text-white/40" />
                     }
                     <Highlight text={s.label} needle={search} />
                   </li>
@@ -298,7 +301,7 @@ export function ExploreExamsPage() {
 
         <div id="explore-results" aria-live="polite" aria-busy={loading} aria-label={t`Resultados de búsqueda`}>
           {!loading && sets.length > 0 && (
-            <p className="text-xs text-ink-muted mb-3">
+            <p className="mb-3 text-xs text-zen-ink/50 dark:text-white/40">
               {isSearchMode
                 ? (sets.length === 1 ? t`${sets.length} resultado` : t`${sets.length} resultados`)
                 : (sets.length === 1 ? t`${sets.length} set encontrado` : t`${sets.length} sets encontrados`)
@@ -309,19 +312,19 @@ export function ExploreExamsPage() {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-40 rounded-2xl bg-surface-soft animate-pulse" />
+                <div key={i} className="h-40 animate-pulse rounded-2xl bg-glass-light-2 dark:bg-glass-dark-2" />
               ))}
             </div>
           ) : sets.length === 0 ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 space-y-3">
-              <BookOpen size={40} className="text-ink-muted mx-auto" />
-              <p className="text-ink-soft">{search || activeDomain ? t`No se encontraron resultados.` : t`Aún no hay sets publicados.`}</p>
+              <BookOpen size={40} className="mx-auto text-zen-ink/40 dark:text-white/40" />
+              <p className="text-zen-ink/70 dark:text-white/60">{search || activeDomain ? t`No se encontraron resultados.` : t`Aún no hay sets publicados.`}</p>
               {user ? (
-                <Button onClick={() => navigate('/create-exam')} variant="secondary" size="sm">
+                <GlassButton onClick={() => navigate('/create-exam')} variant="secondary">
                   <Plus size={14} /><Trans>Crea el primero</Trans>
-                </Button>
+                </GlassButton>
               ) : (
-                <Button onClick={() => navigate('/register')} size="sm"><Trans>Regístrate gratis</Trans></Button>
+                <GlassButton onClick={() => navigate('/register')}><Trans>Regístrate gratis</Trans></GlassButton>
               )}
             </motion.div>
           ) : (
@@ -336,12 +339,12 @@ export function ExploreExamsPage() {
           {/* Cursor-based load more — hidden in search mode */}
           {hasMore && (
             <div className="flex justify-center mt-8">
-              <Button onClick={loadMore} disabled={loadingMore} variant="secondary">
+              <GlassButton onClick={loadMore} disabled={loadingMore} variant="secondary">
                 {loadingMore
                   ? <><Loader2 size={14} className="animate-spin mr-1.5" /><Trans>Cargando…</Trans></>
                   : <Trans>Cargar más sets</Trans>
                 }
-              </Button>
+              </GlassButton>
             </div>
           )}
         </div>
@@ -349,16 +352,16 @@ export function ExploreExamsPage() {
         {!user && !loading && sets.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-brand-500/10 p-6 text-center"
+            className="rounded-2xl border border-glass-light-border bg-glass-light-2 p-6 text-center backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2"
           >
-            <h2 className="text-lg font-semibold text-ink"><Trans>¿Listo para practicar?</Trans></h2>
-            <p className="text-sm text-ink-soft mt-1 mb-4">
+            <h2 className="text-lg font-bold"><Trans>¿Listo para practicar?</Trans></h2>
+            <p className="mb-4 mt-1 text-sm text-zen-ink/70 dark:text-white/60">
               <Trans>Regístrate gratis para empezar exámenes, guardar resultados y crear tus propios sets.</Trans>
             </p>
-            <Button onClick={() => navigate('/register')}><Trans>Crear cuenta gratis</Trans></Button>
+            <GlassButton onClick={() => navigate('/register')} className="mx-auto w-fit"><Trans>Crear cuenta gratis</Trans></GlassButton>
           </motion.div>
         )}
       </div>
-    </AppShell>
+    </Shell>
   );
 }

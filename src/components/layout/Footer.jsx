@@ -6,8 +6,8 @@ const NAV = [
   {
     heading: 'Plataforma',
     links: [
-      { to: '/',          label: 'Simuladores' },
-      { to: '/about',     label: 'Sobre CertZen' },
+      { to: '/',          label: 'Inicio' },
+      { to: '/about',     label: 'Simuladores' },
       { to: '/pricing',   label: 'Planes' },
       { to: '/explore',   label: 'Comunidad' },
     ],

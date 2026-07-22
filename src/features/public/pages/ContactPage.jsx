@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { PageSEO } from '../../../components/seo/PageSEO';
-import { Footer } from '../../../components/layout/Footer';
+import { PublicLayout } from '../../../components/layout/PublicLayout';
+import { GlassCard } from '../../../components/glass/GlassCard';
+import { GlassButton } from '../../../components/glass/GlassButton';
 
 const buildSubjects = (t) => [
   { value: 'support', label: t`Soporte técnico` },
@@ -15,12 +17,12 @@ const buildSubjects = (t) => [
 function Field({ label, id, error, children }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-ink-soft mb-1">
+      <label htmlFor={id} className="mb-1 block text-sm font-semibold">
         {label}
       </label>
       {children}
       {error && (
-        <p role="alert" className="mt-1 text-xs text-danger-400">{error}</p>
+        <p role="alert" className="mt-1 text-xs text-zen-danger">{error}</p>
       )}
     </div>
   );
@@ -92,11 +94,11 @@ export function ContactPage() {
   }
 
   const inputClass =
-    'w-full rounded-xl bg-surface-soft border border-surface-border text-ink text-sm px-3 py-2.5 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 transition';
-  const errorInputClass = 'border-danger-500 focus:ring-danger-500';
+    'min-h-11 w-full rounded-zen border border-glass-light-border bg-glass-light-2 px-3 py-2.5 text-sm text-zen-ink backdrop-blur-md transition placeholder:text-zen-ink/50 focus:border-zen focus:outline-none focus:ring-2 focus:ring-zen/40 dark:border-glass-dark-border dark:bg-glass-dark-2 dark:text-white dark:placeholder:text-white/40';
+  const errorInputClass = 'border-zen-danger focus:ring-zen-danger/40';
 
   return (
-    <>
+    <PublicLayout>
       <PageSEO
         title={t`Contacto`}
         description={t`¿Tienes alguna pregunta o problema con CertZen? Escríbenos y te respondemos lo antes posible.`}
@@ -105,42 +107,28 @@ export function ContactPage() {
 
       <div id="main-content" />
 
-      <header className="border-b border-surface-border bg-white/90 backdrop-blur-xl sticky top-0 z-20" role="banner">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2" aria-label="CertZen inicio">
-            <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center">
-              <span className="text-white font-black text-xs leading-none">CZ</span>
-            </div>
-            <span className="text-xl font-display font-black text-ink tracking-tight">
-              Cert<span className="text-brand-500">Zen</span>
-            </span>
-          </Link>
-          <Link to="/" className="text-sm text-ink-soft hover:text-ink transition-colors"><Trans>← Volver al inicio</Trans></Link>
-        </div>
-      </header>
-
       <main id="contact-content" tabIndex={-1} className="max-w-3xl mx-auto px-4 py-12">
         <div className="mb-10">
-          <h1 className="text-3xl font-display font-bold text-ink mb-2"><Trans>Contacto</Trans></h1>
-          <p className="text-ink-soft text-sm">
+          <h1 className="mb-2 text-3xl font-extrabold tracking-tight"><Trans>Contacto</Trans></h1>
+          <p className="text-sm text-zen-ink/70 dark:text-white/60">
             <Trans>¿Tienes dudas, encontraste un bug o necesitas ayuda? Escríbenos y te respondemos en máximo</Trans>
-            <strong className="text-ink-soft"> <Trans>2 días hábiles</Trans></strong>.
+            <strong className="font-semibold text-zen-ink dark:text-white"> <Trans>2 días hábiles</Trans></strong>.
           </p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-5">
           {/* Contact info column */}
           <aside className="md:col-span-2 space-y-5" aria-label={t`Información de contacto`}>
-            <div className="glass rounded-2xl border border-surface-border p-5 space-y-4">
-              <h2 className="font-display font-semibold text-ink text-sm tracking-wide uppercase">
+            <GlassCard className="space-y-4 p-5">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-zen-ink/60 dark:text-white/50">
                 <Trans>Canales de soporte</Trans>
               </h2>
               <ul className="space-y-3 text-sm" role="list">
                 <li className="flex items-start gap-3">
                   <span className="text-lg" aria-hidden="true">✉️</span>
                   <div>
-                    <p className="text-ink-soft text-xs mb-0.5"><Trans>Soporte general</Trans></p>
-                    <a href="mailto:support@certzen.app" className="text-brand-600 hover:text-brand-700 underline">
+                    <p className="mb-0.5 text-xs text-zen-ink/50 dark:text-white/40"><Trans>Soporte general</Trans></p>
+                    <a href="mailto:support@certzen.app" className="text-zen underline hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">
                       support@certzen.app
                     </a>
                   </div>
@@ -148,8 +136,8 @@ export function ContactPage() {
                 <li className="flex items-start gap-3">
                   <span className="text-lg" aria-hidden="true">🔒</span>
                   <div>
-                    <p className="text-ink-soft text-xs mb-0.5"><Trans>Privacidad y legal</Trans></p>
-                    <a href="mailto:privacy@certzen.app" className="text-brand-600 hover:text-brand-700 underline">
+                    <p className="mb-0.5 text-xs text-zen-ink/50 dark:text-white/40"><Trans>Privacidad y legal</Trans></p>
+                    <a href="mailto:privacy@certzen.app" className="text-zen underline hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">
                       privacy@certzen.app
                     </a>
                   </div>
@@ -157,35 +145,35 @@ export function ContactPage() {
                 <li className="flex items-start gap-3">
                   <span className="text-lg" aria-hidden="true">⚡</span>
                   <div>
-                    <p className="text-ink-soft text-xs mb-0.5"><Trans>Tiempo de respuesta</Trans></p>
-                    <p className="text-ink-soft"><Trans>≤ 2 días hábiles</Trans></p>
+                    <p className="mb-0.5 text-xs text-zen-ink/50 dark:text-white/40"><Trans>Tiempo de respuesta</Trans></p>
+                    <p className="text-zen-ink/80 dark:text-white/70"><Trans>≤ 2 días hábiles</Trans></p>
                   </div>
                 </li>
               </ul>
-            </div>
+            </GlassCard>
 
-            <div className="glass rounded-2xl border border-surface-border p-5 space-y-2">
-              <h2 className="font-display font-semibold text-ink text-sm tracking-wide uppercase">
+            <GlassCard className="space-y-2 p-5">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-zen-ink/60 dark:text-white/50">
                 <Trans>Recursos útiles</Trans>
               </h2>
               <ul className="space-y-1 text-sm" role="list">
                 <li>
-                  <Link to="/about" className="text-brand-600 hover:text-brand-700 transition-colors">
+                  <Link to="/about" className="text-zen transition-colors hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">
                     <Trans>Cómo funciona CertZen →</Trans>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/privacy" className="text-brand-600 hover:text-brand-700 transition-colors">
+                  <Link to="/privacy" className="text-zen transition-colors hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">
                     <Trans>Política de privacidad →</Trans>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/terms" className="text-brand-600 hover:text-brand-700 transition-colors">
+                  <Link to="/terms" className="text-zen transition-colors hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200">
                     <Trans>Términos de uso →</Trans>
                   </Link>
                 </li>
               </ul>
-            </div>
+            </GlassCard>
           </aside>
 
           {/* Form column */}
@@ -194,17 +182,17 @@ export function ContactPage() {
               <div
                 role="status"
                 aria-live="polite"
-                className="glass rounded-2xl border border-surface-border p-8 text-center space-y-3"
+                className="rounded-2xl border border-glass-light-border bg-glass-light-2 p-8 text-center space-y-3 backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2"
               >
                 <span className="text-4xl" aria-hidden="true">✅</span>
-                <h2 className="font-display font-bold text-ink text-xl"><Trans>¡Mensaje enviado!</Trans></h2>
-                <p className="text-ink-soft text-sm">
+                <h2 className="text-xl font-bold"><Trans>¡Mensaje enviado!</Trans></h2>
+                <p className="text-sm text-zen-ink/70 dark:text-white/60">
                   <Trans>Recibimos tu mensaje y te responderemos en máximo 2 días hábiles.</Trans>
                 </p>
                 <button
                   type="button"
                   onClick={() => { setSent(false); setForm({ name: '', email: '', subject: '', message: '' }); }}
-                  className="mt-2 text-sm text-ink-soft hover:text-ink underline transition-colors"
+                  className="mt-2 min-h-11 text-sm text-zen-ink/70 underline transition-colors hover:text-zen-ink dark:text-white/60 dark:hover:text-white"
                 >
                   <Trans>Enviar otro mensaje</Trans>
                 </button>
@@ -214,7 +202,7 @@ export function ContactPage() {
                 onSubmit={handleSubmit}
                 noValidate
                 aria-label={t`Formulario de contacto`}
-                className="glass rounded-2xl border border-surface-border p-6 sm:p-7 space-y-5"
+                className="space-y-5 rounded-2xl border border-glass-light-border bg-glass-light-2 p-6 backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2 sm:p-7"
               >
                 <Field label={t`Nombre completo`} id={nameId} error={errors.name}>
                   <input
@@ -278,21 +266,17 @@ export function ContactPage() {
                   />
                 </Field>
 
-                <button
-                  type="submit"
-                  disabled={sending}
-                  className="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm transition-colors focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
-                >
+                <GlassButton type="submit" disabled={sending} className="w-full">
                   {sending ? <Trans>Enviando…</Trans> : <Trans>Enviar mensaje</Trans>}
-                </button>
+                </GlassButton>
 
                 {submitError && (
-                  <p role="alert" className="text-xs text-danger-500 text-center">{submitError}</p>
+                  <p role="alert" className="text-center text-xs text-zen-danger">{submitError}</p>
                 )}
 
-                <p className="text-xs text-slate-600 text-center">
+                <p className="text-center text-xs text-zen-ink/50 dark:text-white/40">
                   <Trans>Al enviar aceptas nuestra</Trans>{' '}
-                  <Link to="/privacy" className="underline hover:text-ink-soft transition-colors">
+                  <Link to="/privacy" className="underline transition-colors hover:text-zen-ink dark:hover:text-white">
                     <Trans>política de privacidad</Trans>
                   </Link>
                   .
@@ -303,7 +287,6 @@ export function ContactPage() {
         </div>
       </main>
 
-      <Footer />
-    </>
+    </PublicLayout>
   );
 }

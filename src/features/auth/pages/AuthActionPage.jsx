@@ -17,21 +17,22 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { applyActionCode, confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth'
 import { auth } from '../../../core/firebase/firebase'
-import { CheckCircle, XCircle, Eye, EyeOff, Loader2 } from 'lucide-react'
-import Button from '../../../components/ui/Button'
+import { CheckCircle, XCircle, Eye, EyeOff, Loader2, Sparkles } from 'lucide-react'
+import { GlassButton } from '../../../components/glass/GlassButton'
+import { GlassCard } from '../../../components/glass/GlassCard'
+import { GlassInput } from '../../../components/glass/GlassInput'
+import { PublicLayout } from '../../../components/layout/PublicLayout'
 import { SEOHead } from '../../../components/SEOHead'
 
 // ─── tiny helpers ────────────────────────────────────────────────────────────
 
 function Logo() {
   return (
-    <div className="inline-flex items-center gap-2 mb-8">
-      <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center shadow-brand">
-        <span className="text-white font-black text-xs leading-none">CZ</span>
+    <div className="mb-8 inline-flex items-center gap-2.5">
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-zen-brand">
+        <Sparkles size={20} className="text-white" />
       </div>
-      <span className="text-xl font-display font-black text-ink tracking-tight">
-        Cert<span className="text-brand-500">Zen</span>
-      </span>
+      <span className="text-3xl font-bold tracking-tight">CertZen</span>
     </div>
   )
 }
@@ -45,16 +46,16 @@ function StatusCard({ icon: Icon, iconClass, title, body, action }) {
       className="w-full max-w-sm text-center"
     >
       <Logo />
-      <div className="rounded-2xl border border-surface-border bg-surface-soft p-8 space-y-5">
+      <GlassCard className="space-y-5 p-8">
         <div className="flex justify-center">
           <Icon size={40} className={iconClass} />
         </div>
         <div>
-          <h1 className="text-xl font-semibold text-ink mb-2">{title}</h1>
-          <p className="text-sm text-ink-soft leading-relaxed">{body}</p>
+          <h1 className="mb-2 text-xl font-bold">{title}</h1>
+          <p className="text-sm leading-relaxed text-zen-ink/70 dark:text-white/60">{body}</p>
         </div>
         {action}
-      </div>
+      </GlassCard>
     </motion.div>
   )
 }
@@ -80,7 +81,7 @@ function VerifyEmailHandler({ oobCode }) {
     return (
       <StatusCard
         icon={Loader2}
-        iconClass="text-brand-500 animate-spin"
+        iconClass="text-zen animate-spin dark:text-indigo-300"
         title="Verificando…"
         body="Estamos confirmando tu dirección de correo."
       />
@@ -91,13 +92,13 @@ function VerifyEmailHandler({ oobCode }) {
     return (
       <StatusCard
         icon={CheckCircle}
-        iconClass="text-success-500"
+        iconClass="text-emerald-600 dark:text-zen-success"
         title="¡Correo verificado!"
         body="Tu cuenta está confirmada. En unos segundos te redirigimos."
         action={
-          <Button variant="primary" className="w-full" onClick={() => navigate('/', { replace: true })}>
+          <GlassButton className="w-full" onClick={() => navigate('/', { replace: true })}>
             Ir a CertZen
-          </Button>
+          </GlassButton>
         }
       />
     )
@@ -106,12 +107,12 @@ function VerifyEmailHandler({ oobCode }) {
   return (
     <StatusCard
       icon={XCircle}
-      iconClass="text-danger-500"
+      iconClass="text-zen-danger"
       title="Enlace inválido"
       body="El enlace ya fue usado o expiró. Solicita uno nuevo desde la aplicación."
       action={
         <Link to="/verify-email">
-          <Button variant="primary" className="w-full">Solicitar nuevo enlace</Button>
+          <GlassButton className="w-full">Solicitar nuevo enlace</GlassButton>
         </Link>
       }
     />
@@ -164,7 +165,7 @@ function ResetPasswordHandler({ oobCode }) {
     return (
       <StatusCard
         icon={Loader2}
-        iconClass="text-brand-500 animate-spin"
+        iconClass="text-zen animate-spin dark:text-indigo-300"
         title="Verificando enlace…"
         body=""
       />
@@ -175,12 +176,12 @@ function ResetPasswordHandler({ oobCode }) {
     return (
       <StatusCard
         icon={XCircle}
-        iconClass="text-danger-500"
+        iconClass="text-zen-danger"
         title="Enlace inválido"
         body="El enlace ya fue usado o expiró. Solicita uno nuevo."
         action={
           <Link to="/forgot-password">
-            <Button variant="primary" className="w-full">Olvidé mi contraseña</Button>
+            <GlassButton className="w-full">Olvidé mi contraseña</GlassButton>
           </Link>
         }
       />
@@ -191,13 +192,13 @@ function ResetPasswordHandler({ oobCode }) {
     return (
       <StatusCard
         icon={CheckCircle}
-        iconClass="text-success-500"
+        iconClass="text-emerald-600 dark:text-zen-success"
         title="¡Contraseña actualizada!"
         body="Tu contraseña ha sido cambiada. En unos segundos te redirigimos al inicio de sesión."
         action={
-          <Button variant="primary" className="w-full" onClick={() => navigate('/login', { replace: true })}>
+          <GlassButton className="w-full" onClick={() => navigate('/login', { replace: true })}>
             Iniciar sesión
-          </Button>
+          </GlassButton>
         }
       />
     )
@@ -214,53 +215,52 @@ function ResetPasswordHandler({ oobCode }) {
       <div className="text-center">
         <Logo />
       </div>
-      <div className="rounded-2xl border border-surface-border bg-surface-soft p-8 space-y-5">
+      <GlassCard className="space-y-5 p-8">
         <div>
-          <h1 className="text-xl font-semibold text-ink mb-1">Nueva contraseña</h1>
-          <p className="text-sm text-ink-soft">Para <span className="font-medium text-ink">{email}</span></p>
+          <h1 className="mb-1 text-xl font-bold">Nueva contraseña</h1>
+          <p className="text-sm text-zen-ink/70 dark:text-white/60">Para <span className="font-medium text-zen-ink dark:text-white">{email}</span></p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
-            <input
+            <GlassInput
               type={showPw ? 'text' : 'password'}
               placeholder="Nueva contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={8}
-              className="w-full rounded-xl border border-surface-border bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-brand-500 pr-11"
+              className="pr-11"
             />
             <button
               type="button"
               tabIndex={-1}
               onClick={() => setShowPw((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zen-ink/40 hover:text-zen-ink dark:text-white/40 dark:hover:text-white"
               aria-label={showPw ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             >
               {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
 
-          <input
+          <GlassInput
             type={showPw ? 'text' : 'password'}
             placeholder="Confirmar contraseña"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             required
             minLength={8}
-            className="w-full rounded-xl border border-surface-border bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
 
           {fieldError && (
-            <p className="text-xs text-danger-500">{fieldError}</p>
+            <p className="text-xs text-zen-danger">{fieldError}</p>
           )}
 
-          <Button type="submit" variant="primary" className="w-full" disabled={submitting}>
+          <GlassButton type="submit" className="w-full" disabled={submitting}>
             {submitting ? <Loader2 size={16} className="animate-spin" /> : 'Cambiar contraseña'}
-          </Button>
+          </GlassButton>
         </form>
-      </div>
+      </GlassCard>
     </motion.div>
   )
 }
@@ -278,7 +278,7 @@ function RecoverEmailHandler({ oobCode }) {
     return (
       <StatusCard
         icon={Loader2}
-        iconClass="text-brand-500 animate-spin"
+        iconClass="text-zen animate-spin dark:text-indigo-300"
         title="Recuperando correo…"
         body=""
       />
@@ -289,12 +289,12 @@ function RecoverEmailHandler({ oobCode }) {
     return (
       <StatusCard
         icon={CheckCircle}
-        iconClass="text-success-500"
+        iconClass="text-emerald-600 dark:text-zen-success"
         title="Correo recuperado"
         body="Tu dirección de correo anterior ha sido restaurada. Revisa tu bandeja para más información."
         action={
           <Link to="/login">
-            <Button variant="primary" className="w-full">Iniciar sesión</Button>
+            <GlassButton className="w-full">Iniciar sesión</GlassButton>
           </Link>
         }
       />
@@ -304,12 +304,12 @@ function RecoverEmailHandler({ oobCode }) {
   return (
     <StatusCard
       icon={XCircle}
-      iconClass="text-danger-500"
+      iconClass="text-zen-danger"
       title="Enlace inválido"
       body="El enlace ya fue usado o expiró."
       action={
         <Link to="/">
-          <Button variant="primary" className="w-full">Ir a inicio</Button>
+          <GlassButton className="w-full">Ir a inicio</GlassButton>
         </Link>
       }
     />
@@ -328,12 +328,12 @@ export function AuthActionPage() {
       return (
         <StatusCard
           icon={XCircle}
-          iconClass="text-danger-500"
+          iconClass="text-zen-danger"
           title="Enlace inválido"
           body="Este enlace no es válido. Pide uno nuevo desde la aplicación."
           action={
             <Link to="/">
-              <Button variant="primary" className="w-full">Ir a inicio</Button>
+              <GlassButton className="w-full">Ir a inicio</GlassButton>
             </Link>
           }
         />
@@ -348,12 +348,12 @@ export function AuthActionPage() {
         return (
           <StatusCard
             icon={XCircle}
-            iconClass="text-danger-500"
+            iconClass="text-zen-danger"
             title="Acción desconocida"
             body="Este tipo de enlace no está soportado."
             action={
               <Link to="/">
-                <Button variant="primary" className="w-full">Ir a inicio</Button>
+                <GlassButton className="w-full">Ir a inicio</GlassButton>
               </Link>
             }
           />
@@ -362,9 +362,11 @@ export function AuthActionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center p-4">
-      <SEOHead title="CertZen" description="" path="/auth/action" noindex />
-      {renderHandler()}
-    </div>
+    <PublicLayout hideChrome>
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <SEOHead title="CertZen" description="" path="/auth/action" noindex />
+        {renderHandler()}
+      </div>
+    </PublicLayout>
   )
 }
