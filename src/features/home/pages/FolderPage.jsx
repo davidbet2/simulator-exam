@@ -10,8 +10,9 @@ import { useAuthStore } from '../../../core/store/useAuthStore';
 import { useTranslation } from '../../../core/i18n';
 import { Trans, useLingui, Plural } from '@lingui/react/macro';
 import { AppShell } from '../../../components/layout/AppShell';
-import { Card, CardBody } from '../../../components/ui/Card';
-import Button from '../../../components/ui/Button';
+import { GlassCard } from '../../../components/glass/GlassCard';
+import { GlassButton } from '../../../components/glass/GlassButton';
+import { GlassInput } from '../../../components/glass/GlassInput';
 import { getDomain } from '../../../core/constants/domains';
 import { useFolders } from '../hooks/useFolders';
 
@@ -74,35 +75,35 @@ export function FolderPage() {
       <Helmet>
         <title>{folder?.name ?? tMacro`Carpeta`} — CertZen</title>
       </Helmet>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-        <Link to="/home" className="text-sm text-ink-soft hover:text-ink flex items-center gap-1.5">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+        <Link to="/home" className="text-sm text-zen-ink/60 dark:text-white/60 hover:text-zen-ink dark:hover:text-white flex items-center gap-1.5">
           <ArrowLeft size={14} />{t('common.back')}
         </Link>
 
         {loading ? (
-          <div className="h-20 rounded-xl bg-surface-soft animate-pulse" />
+          <div className="h-20 rounded-2xl bg-glass-light-2 dark:bg-glass-dark-2 animate-pulse" />
         ) : !folder ? (
-          <Card><CardBody className="p-8 text-center">
-            <p className="text-ink-soft"><Trans>Carpeta no encontrada.</Trans></p>
-          </CardBody></Card>
+          <GlassCard className="p-8 text-center">
+            <p className="text-zen-ink/60 dark:text-white/60"><Trans>Carpeta no encontrada.</Trans></p>
+          </GlassCard>
         ) : (
           <>
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                <Folder size={28} className="text-brand-500 shrink-0" />
+                <Folder size={28} className="text-zen dark:text-indigo-300 shrink-0" />
                 {editing ? (
                   <div className="flex items-center gap-2 flex-1">
-                    <input
+                    <GlassInput
                       autoFocus
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && saveName()}
-                      className="h-10 px-3 rounded-lg bg-surface-muted border border-surface-border text-lg font-bold text-ink focus:outline-none focus:border-brand-500 flex-1 max-w-md"
+                      className="text-lg font-bold flex-1 max-w-md"
                     />
                     <button
                       type="button"
                       onClick={saveName}
-                      className="h-10 w-10 rounded-lg bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600"
+                      className="h-10 w-10 rounded-lg bg-zen text-white flex items-center justify-center hover:brightness-110"
                       aria-label={t('common.save')}
                     >
                       <Check size={16} />
@@ -110,14 +111,14 @@ export function FolderPage() {
                     <button
                       type="button"
                       onClick={() => { setEditing(false); setName(folder.name); }}
-                      className="h-10 w-10 rounded-lg bg-surface-muted border border-surface-border text-ink-soft flex items-center justify-center hover:bg-surface-muted"
+                      className="h-10 w-10 rounded-lg bg-glass-light-2 dark:bg-glass-dark-2 border border-glass-light-border dark:border-glass-dark-border text-zen-ink/60 dark:text-white/60 flex items-center justify-center hover:bg-glass-light-3 dark:hover:bg-glass-dark-3"
                       aria-label={t('common.cancel')}
                     >
                       <X size={16} />
                     </button>
                   </div>
                 ) : (
-                  <h1 className="text-2xl font-bold text-ink truncate">{folder.name}</h1>
+                  <h1 className="text-2xl font-bold text-zen-ink dark:text-white truncate">{folder.name}</h1>
                 )}
               </div>
               {!editing && (
@@ -125,7 +126,7 @@ export function FolderPage() {
                   <button
                     type="button"
                     onClick={() => setEditing(true)}
-                    className="h-9 w-9 rounded-lg text-ink-soft hover:bg-surface-muted flex items-center justify-center"
+                    className="h-9 w-9 rounded-lg text-zen-ink/50 dark:text-white/50 hover:bg-glass-light-2 dark:hover:bg-glass-dark-2 flex items-center justify-center"
                     aria-label={t('common.edit')}
                   >
                     <Pencil size={14} />
@@ -133,7 +134,7 @@ export function FolderPage() {
                   <button
                     type="button"
                     onClick={handleDelete}
-                    className="h-9 w-9 rounded-lg text-danger-600 hover:bg-danger-500/10 flex items-center justify-center"
+                    className="h-9 w-9 rounded-lg text-zen-danger hover:bg-zen-danger/10 flex items-center justify-center"
                     aria-label={t('common.delete')}
                   >
                     <Trash2 size={14} />
@@ -142,45 +143,43 @@ export function FolderPage() {
               )}
             </div>
 
-            <p className="text-sm text-ink-muted">
+            <p className="text-sm text-zen-ink/50 dark:text-white/50">
               <Plural value={sets.length} one="# set" other="# sets" />
             </p>
 
             {sets.length === 0 ? (
-              <Card><CardBody className="p-8 text-center space-y-3">
-                <Folder size={40} className="text-ink-muted mx-auto" />
-                <p className="text-sm text-ink-soft"><Trans>Esta carpeta está vacía.</Trans></p>
-                <Button onClick={() => navigate('/explore')}>
+              <GlassCard className="p-8 text-center space-y-3">
+                <Folder size={40} className="text-zen-ink/30 dark:text-white/30 mx-auto" />
+                <p className="text-sm text-zen-ink/60 dark:text-white/60"><Trans>Esta carpeta está vacía.</Trans></p>
+                <GlassButton onClick={() => navigate('/explore')}>
                   <Plus size={14} /><Trans>Agregar sets</Trans>
-                </Button>
-              </CardBody></Card>
+                </GlassButton>
+              </GlassCard>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {sets.map((s) => {
                   const domain = getDomain(s.domain);
                   return (
-                    <Card key={s.id} className="hover:border-brand-500/50 transition-colors">
-                      <CardBody className="p-4 flex items-center gap-3">
-                        <Link to={`/exam-sets/${s.id}`} className="flex items-center gap-3 min-w-0 flex-1">
-                          <span className="h-10 w-10 rounded-xl bg-surface-muted flex items-center justify-center text-lg shrink-0" aria-hidden>
-                            {domain.icon}
-                          </span>
-                          <div className="min-w-0">
-                            <p className="text-sm font-semibold text-ink truncate">{s.title}</p>
-                            <p className="text-xs text-ink-muted"><Trans>{s.questionCount ?? '?'} preguntas</Trans></p>
-                          </div>
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveSet(s.id)}
-                          className="h-8 w-8 rounded-md text-ink-muted hover:text-danger-600 hover:bg-danger-500/10 flex items-center justify-center shrink-0"
-                          aria-label={tMacro`Quitar de carpeta`}
-                          title={tMacro`Quitar de carpeta`}
-                        >
-                          <X size={14} />
-                        </button>
-                      </CardBody>
-                    </Card>
+                    <GlassCard key={s.id} className="p-4 flex items-center gap-3 hover:border-zen/40 transition-colors">
+                      <Link to={`/exam-sets/${s.id}`} className="flex items-center gap-3 min-w-0 flex-1">
+                        <span className="h-10 w-10 rounded-xl bg-zen/15 dark:bg-zen/25 flex items-center justify-center text-lg shrink-0" aria-hidden>
+                          {domain.icon}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-zen-ink dark:text-white truncate">{s.title}</p>
+                          <p className="text-xs text-zen-ink/50 dark:text-white/50"><Trans>{s.questionCount ?? '?'} preguntas</Trans></p>
+                        </div>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveSet(s.id)}
+                        className="h-8 w-8 rounded-md text-zen-ink/40 dark:text-white/40 hover:text-zen-danger hover:bg-zen-danger/10 flex items-center justify-center shrink-0"
+                        aria-label={tMacro`Quitar de carpeta`}
+                        title={tMacro`Quitar de carpeta`}
+                      >
+                        <X size={14} />
+                      </button>
+                    </GlassCard>
                   );
                 })}
               </div>

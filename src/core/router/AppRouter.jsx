@@ -13,6 +13,7 @@ import { WelcomePage } from '../../features/welcome/WelcomePage';
 // Lazy-loaded — split into separate chunks for faster initial load
 const ExamPage           = lazy(() => import('../../features/exam/pages/ExamPage').then(m => ({ default: m.ExamPage })));
 const ResultsPage        = lazy(() => import('../../features/results/ResultsPage').then(m => ({ default: m.ResultsPage })));
+const ReviewPage         = lazy(() => import('../../features/results/ReviewPage').then(m => ({ default: m.ReviewPage })));
 const LoginPage          = lazy(() => import('../../features/auth/pages/LoginPage').then(m => ({ default: m.LoginPage })));
 const RegisterPage       = lazy(() => import('../../features/auth/pages/RegisterPage').then(m => ({ default: m.RegisterPage })));
 const DashboardPage      = lazy(() => import('../../features/dashboard/pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
@@ -109,6 +110,7 @@ export function AppRouter() {
             Community/official sets enforce auth at the landing page (ExamSetLandingPage.launchMode). */}
         <Route path="/exam" element={<ExamPage />} />
         <Route path="/results" element={<ResultsPage />} />
+        <Route path="/results/review" element={<ReviewPage />} />
 
         {/* Authenticated user routes */}
         <Route path="/home" element={<ProtectedRoute requireUser><HomePage /></ProtectedRoute>} />
