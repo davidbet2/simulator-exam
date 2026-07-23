@@ -9,8 +9,15 @@ import {
 import { db } from '../../../core/firebase/firebase'
 import { useAuthStore } from '../../../core/store/useAuthStore'
 import { AppShell } from '../../../components/layout/AppShell'
+import { GlassCard } from '../../../components/glass/GlassCard'
+import { GlassButton } from '../../../components/glass/GlassButton'
+import { GlassInput } from '../../../components/glass/GlassInput'
 import { QuestionForm } from '../../admin/components/QuestionForm'
 import { parseXLSX, extractPDFText, parseTextToQuestions } from '../utils/importParsers'
+import { DOMAINS } from '../../../core/constants/domains'
+
+const INPUT_CLS = 'w-full border border-glass-light-border dark:border-glass-dark-border rounded-zen px-3 py-2 text-sm text-zen-ink dark:text-white bg-glass-light-2 dark:bg-glass-dark-2 backdrop-blur-md focus:outline-none focus:border-zen focus:ring-2 focus:ring-zen/40'
+const LABEL_CLS = 'block text-xs font-semibold text-zen-ink/60 dark:text-white/60 mb-1'
 
 const buildTypeLabels = (t) => ({
   multiple: t`Opción múltiple`,
@@ -67,21 +74,21 @@ function QuestionRow({ q, index, onEdit, onDelete }) {
   const TYPE_LABELS = buildTypeLabels(t)
   const preview = q.question.length > 90 ? q.question.slice(0, 90) + '…' : q.question
   return (
-    <div className="flex items-start gap-3 py-3 px-4 border border-surface-border rounded-lg bg-surface-card hover:border-brand-400/40 transition-colors">
-      <span className="mt-0.5 w-6 h-6 rounded-full bg-brand-100 text-brand-600 text-xs font-bold flex items-center justify-center shrink-0">
+    <div className="flex items-start gap-3 py-3 px-4 border border-glass-light-border dark:border-glass-dark-border rounded-xl bg-glass-light-1 dark:bg-glass-dark-1 hover:border-zen/40 transition-colors">
+      <span className="mt-0.5 w-6 h-6 rounded-full bg-zen/15 text-zen dark:bg-zen/25 dark:text-indigo-300 text-xs font-bold flex items-center justify-center shrink-0">
         {index + 1}
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-ink leading-snug">{preview}</p>
-        <span className="text-xs text-ink-faint mt-0.5 block">{TYPE_LABELS[q.type] ?? 'Opción múltiple'}</span>
+        <p className="text-sm text-zen-ink dark:text-white leading-snug">{preview}</p>
+        <span className="text-xs text-zen-ink/40 dark:text-white/40 mt-0.5 block">{TYPE_LABELS[q.type] ?? 'Opción múltiple'}</span>
       </div>
       <div className="flex items-center gap-1 shrink-0">
         <button type="button" onClick={() => onEdit(index)}
-          className="p-1.5 text-ink-faint hover:text-brand-500 rounded transition-colors" title="Editar">
+          className="p-1.5 text-zen-ink/40 dark:text-white/40 hover:text-zen dark:hover:text-indigo-300 rounded transition-colors" title="Editar">
           <Pencil size={14} />
         </button>
         <button type="button" onClick={() => onDelete(index)}
-          className="p-1.5 text-ink-faint hover:text-danger-500 rounded transition-colors" title="Eliminar">
+          className="p-1.5 text-zen-ink/40 dark:text-white/40 hover:text-zen-danger rounded transition-colors" title="Eliminar">
           <Trash2 size={14} />
         </button>
       </div>
@@ -103,6 +110,7 @@ export function EditExamPage() {
   // ── set metadata ──────────────────────────────────────────────────────────
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [domain, setDomain] = useState(DOMAINS[0]?.id ?? '')
   const [tags, setTags] = useState('')
   const [timeMinutes, setTimeMinutes] = useState(60)
   const [passPercent, setPassPercent] = useState(70)
@@ -147,6 +155,7 @@ export function EditExamPage() {
 
         setTitle(data.title ?? '')
         setDescription(data.description ?? '')
+        setDomain(data.domain ?? DOMAINS[0]?.id ?? '')
         setTags((data.tags ?? []).join(', '))
         setTimeMinutes(data.timeMinutes ?? 60)
         setPassPercent(data.passPercent ?? 70)
@@ -257,6 +266,7 @@ export function EditExamPage() {
       await updateDoc(doc(db, 'examSets', id), {
         title:         title.trim(),
         description:   description.trim(),
+        domain,
         tags:          tagsArr,
         questionCount: questions.length,
         timeMinutes:   Number(timeMinutes),
@@ -286,7 +296,7 @@ export function EditExamPage() {
     return (
       <AppShell>
         <div className="flex items-center justify-center py-32">
-          <Loader2 size={32} className="animate-spin text-brand-500" />
+          <Loader2 size={32} className="animate-spin text-zen" />
         </div>
       </AppShell>
     )
@@ -297,10 +307,10 @@ export function EditExamPage() {
       <AppShell>
         <div className="flex items-center justify-center p-4 py-20">
           <div className="text-center space-y-4">
-            <p className="text-ink-muted">{loadError}</p>
-            <Link to="/my-sets" className="inline-block px-5 py-2 bg-brand-500 text-white rounded font-semibold text-sm">
+            <p className="text-zen-ink/60 dark:text-white/60">{loadError}</p>
+            <GlassButton to="/my-sets">
               <Trans>Volver a mis sets</Trans>
-            </Link>
+            </GlassButton>
           </div>
         </div>
       </AppShell>
@@ -309,10 +319,10 @@ export function EditExamPage() {
 
   return (
     <AppShell>
-      <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+      <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8 space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-ink"><Trans>Editar set</Trans></h1>
-          <Link to="/my-sets" className="text-sm text-ink-muted hover:text-ink flex items-center gap-1">
+          <h1 className="text-2xl font-bold text-zen-ink dark:text-white"><Trans>Editar set</Trans></h1>
+          <Link to="/my-sets" className="text-sm text-zen-ink/50 dark:text-white/50 hover:text-zen-ink dark:hover:text-white flex items-center gap-1">
             <ArrowLeft size={14} /> <Trans>Mis sets</Trans>
           </Link>
         </div>
@@ -320,101 +330,110 @@ export function EditExamPage() {
         <form onSubmit={handleSubmit} noValidate className="space-y-6">
 
           {/* Información del set */}
-          <section className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-4 shadow-card">
-            <h2 className="font-semibold text-ink"><Trans>Información del set</Trans></h2>
+          <GlassCard className="p-5 space-y-4">
+            <h2 className="font-semibold text-zen-ink dark:text-white"><Trans>Información del set</Trans></h2>
 
             <div>
-              <label className="block text-xs font-semibold text-ink-soft mb-1"><Trans>Título *</Trans></label>
-              <input
+              <label className={LABEL_CLS}><Trans>Título *</Trans></label>
+              <GlassInput
                 type="text"
                 value={title}
                 onChange={(e) => { setTitle(e.target.value); setErrors((p) => ({ ...p, title: undefined })) }}
                 placeholder={t`Ej: Examen de Práctica`}
-                className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
               />
-              {errors.title && <p className="text-danger-500 text-xs mt-1">{errors.title}</p>}
+              {errors.title && <p className="text-zen-danger text-xs mt-1">{errors.title}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-ink-soft mb-1"><Trans>Descripción (opcional)</Trans></label>
+              <label className={LABEL_CLS}><Trans>Descripción (opcional)</Trans></label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={2}
                 placeholder={t`Describe el contenido de este set…`}
-                className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 resize-none bg-white"
+                className={`${INPUT_CLS} resize-none`}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-ink-soft mb-1"><Trans>Categorías / Etiquetas (opcional)</Trans></label>
-              <input
+              <label className={LABEL_CLS}><Trans>Categoría</Trans></label>
+              <select
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+                className={INPUT_CLS}
+              >
+                {DOMAINS.map((d) => (
+                  <option key={d.id} value={d.id}>{d.icon} {d.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className={LABEL_CLS}><Trans>Categorías / Etiquetas (opcional)</Trans></label>
+              <GlassInput
                 type="text"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 placeholder={t`Ej: Procesos, Interfaces, Registros, Seguridad`}
-                className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
               />
-              <p className="text-xs text-ink-faint mt-1"><Trans>Separa las categorías con comas para clasificar el contenido del examen.</Trans></p>
+              <p className="text-xs text-zen-ink/40 dark:text-white/40 mt-1"><Trans>Separa las categorías con comas para clasificar el contenido del examen.</Trans></p>
             </div>
-          </section>
+          </GlassCard>
 
           {/* Configuración del examen */}
-          <section className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-4 shadow-card">
-            <h2 className="font-semibold text-ink"><Trans>Configuración del examen</Trans></h2>
+          <GlassCard className="p-5 space-y-4">
+            <h2 className="font-semibold text-zen-ink dark:text-white"><Trans>Configuración del examen</Trans></h2>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center gap-1 text-xs font-semibold text-ink-soft mb-1">
+                <label className={`flex items-center gap-1 ${LABEL_CLS}`}>
                   <Clock size={12} /> <Trans>Tiempo límite (minutos)</Trans>
                 </label>
-                <input
+                <GlassInput
                   type="number"
                   min={1}
                   max={300}
                   value={timeMinutes}
                   onChange={(e) => { setTimeMinutes(e.target.value); setErrors((p) => ({ ...p, timeMinutes: undefined })) }}
-                  className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
                 />
-                {errors.timeMinutes && <p className="text-danger-500 text-xs mt-1">{errors.timeMinutes}</p>}
+                {errors.timeMinutes && <p className="text-zen-danger text-xs mt-1">{errors.timeMinutes}</p>}
               </div>
 
               <div>
-                <label className="flex items-center gap-1 text-xs font-semibold text-ink-soft mb-1">
+                <label className={`flex items-center gap-1 ${LABEL_CLS}`}>
                   <Target size={12} /> <Trans>Puntaje mínimo para aprobar (%)</Trans>
                 </label>
-                <input
+                <GlassInput
                   type="number"
                   min={1}
                   max={100}
                   value={passPercent}
                   onChange={(e) => { setPassPercent(e.target.value); setErrors((p) => ({ ...p, passPercent: undefined })) }}
-                  className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
                 />
-                {errors.passPercent && <p className="text-danger-500 text-xs mt-1">{errors.passPercent}</p>}
+                {errors.passPercent && <p className="text-zen-danger text-xs mt-1">{errors.passPercent}</p>}
               </div>
             </div>
-          </section>
+          </GlassCard>
 
           {/* ── Importar preguntas ─────────────────────────────── */}
           {isPro ? (
-          <section className="bg-surface-card border border-surface-border rounded-xl overflow-hidden shadow-card">
+          <GlassCard className="overflow-hidden">
             <button
               type="button"
               onClick={() => setShowImport((v) => !v)}
-              className="w-full flex items-center justify-between px-5 py-4 hover:bg-surface-muted transition-colors"
+              className="w-full flex items-center justify-between px-5 py-4 hover:bg-glass-light-2 dark:hover:bg-glass-dark-2 transition-colors"
             >
               <div className="flex items-center gap-2">
-                <Plus size={15} className="text-brand-500" />
-                <span className="font-semibold text-ink text-sm"><Trans>Importar más preguntas</Trans></span>
-                <span className="text-xs text-ink-faint font-normal">JSON · Excel · PDF</span>
+                <Plus size={15} className="text-zen dark:text-indigo-300" />
+                <span className="font-semibold text-zen-ink dark:text-white text-sm"><Trans>Importar más preguntas</Trans></span>
+                <span className="text-xs text-zen-ink/40 dark:text-white/40 font-normal">JSON · Excel · PDF</span>
               </div>
-              <span className="text-ink-faint text-xs">{showImport ? '▲' : '▼'}</span>
+              <span className="text-zen-ink/40 dark:text-white/40 text-xs">{showImport ? '▲' : '▼'}</span>
             </button>
 
             {showImport && (
-              <div className="border-t border-surface-border">
-                <div className="flex border-b border-surface-border">
+              <div className="border-t border-glass-light-border dark:border-glass-dark-border">
+                <div className="flex border-b border-glass-light-border dark:border-glass-dark-border">
                   {[
                     { id: 'json',  icon: FileJson,        label: 'JSON' },
                     { id: 'xlsx',  icon: FileSpreadsheet, label: 'Excel' },
@@ -426,8 +445,8 @@ export function EditExamPage() {
                       onClick={() => setImportTab(tabId)}
                       className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors ${
                         importTab === tabId
-                          ? 'border-brand-500 text-brand-600 bg-brand-50'
-                          : 'border-transparent text-ink-muted hover:text-ink-soft'
+                          ? 'border-zen text-zen bg-zen/10 dark:text-indigo-300'
+                          : 'border-transparent text-zen-ink/50 dark:text-white/50 hover:text-zen-ink dark:hover:text-white'
                       }`}
                     >
                       <Icon size={13} /> {label}
@@ -437,131 +456,127 @@ export function EditExamPage() {
 
                 {importTab === 'json' && (
                   <div className="p-5 space-y-3">
-                    <p className="text-xs text-ink-muted">
+                    <p className="text-xs text-zen-ink/50 dark:text-white/50">
                       <Trans>Pega un array JSON. Tipos soportados:</Trans> <strong>multiple</strong>, <strong>ordering</strong>, <strong>matching</strong>.
                     </p>
                     <details className="group">
-                      <summary className="text-xs font-semibold text-brand-600 cursor-pointer list-none flex items-center gap-1">
+                      <summary className="text-xs font-semibold text-zen dark:text-indigo-300 cursor-pointer list-none flex items-center gap-1">
                         <span className="group-open:hidden">▶</span><span className="hidden group-open:inline">▼</span> <Trans>Ver formato de ejemplo</Trans>
                       </summary>
-                      <pre className="mt-2 text-xs text-ink-muted bg-surface-soft rounded-lg p-3 overflow-x-auto whitespace-pre-wrap border border-surface-border">{JSON_EXAMPLE}</pre>
+                      <pre className="mt-2 text-xs text-zen-ink/60 dark:text-white/50 bg-glass-light-1 dark:bg-glass-dark-1 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap border border-glass-light-border dark:border-glass-dark-border">{JSON_EXAMPLE}</pre>
                     </details>
                     <textarea
                       value={jsonText}
                       onChange={(e) => { setJsonText(e.target.value); setJsonError(null); setJsonSuccess(null) }}
                       rows={7}
                       placeholder={t`Pega aquí el JSON...`}
-                      className="w-full border border-surface-border rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:border-brand-500 resize-y bg-white"
+                      className={`${INPUT_CLS} text-xs font-mono resize-y`}
                     />
-                    {jsonError && <p className="text-danger-500 text-xs">{jsonError}</p>}
-                    {jsonSuccess && <p className="text-success-600 text-xs">{jsonSuccess}</p>}
+                    {jsonError && <p className="text-zen-danger text-xs">{jsonError}</p>}
+                    {jsonSuccess && <p className="text-emerald-600 dark:text-zen-success text-xs">{jsonSuccess}</p>}
                     <div className="flex items-center gap-3">
                       <button type="button" onClick={() => { setJsonText(JSON_EXAMPLE); setJsonError(null); setJsonSuccess(null) }}
-                        className="text-xs text-ink-faint hover:text-brand-500 underline">
+                        className="text-xs text-zen-ink/40 dark:text-white/40 hover:text-zen dark:hover:text-indigo-300 underline">
                         <Trans>Cargar ejemplo</Trans>
                       </button>
-                      <button type="button" onClick={handleJsonImport} disabled={!jsonText.trim()}
-                        className="ml-auto px-4 py-1.5 bg-brand-500 hover:bg-brand-600 disabled:bg-surface-muted disabled:text-ink-faint text-white text-xs font-semibold rounded-lg transition-colors">
+                      <GlassButton type="button" onClick={handleJsonImport} disabled={!jsonText.trim()} className="ml-auto px-4 py-1.5 text-xs">
                         <Trans>Importar</Trans>
-                      </button>
+                      </GlassButton>
                     </div>
                   </div>
                 )}
 
                 {importTab === 'xlsx' && (
                   <div className="p-5 space-y-3">
-                    <p className="text-xs text-ink-muted">
+                    <p className="text-xs text-zen-ink/50 dark:text-white/50">
                       <Trans>Sube un archivo</Trans> <strong>.xlsx</strong>. <Trans>La primera fila debe ser el encabezado.</Trans>
                     </p>
                     <input ref={xlsxRef} type="file" accept=".xlsx" className="hidden" onChange={handleXlsxImport} />
-                    {xlsxStatus?.type === 'error' && <p className="text-danger-500 text-xs">{xlsxStatus.msg}</p>}
+                    {xlsxStatus?.type === 'error' && <p className="text-zen-danger text-xs">{xlsxStatus.msg}</p>}
                     {xlsxStatus?.type === 'success' && (
-                      <p className="text-success-600 text-xs">
+                      <p className="text-emerald-600 dark:text-zen-success text-xs">
                         ✓ {xlsxStatus.count} pregunta{xlsxStatus.count !== 1 ? 's' : ''} importada{xlsxStatus.count !== 1 ? 's' : ''}.
                         {xlsxStatus.msg && ` ${xlsxStatus.msg}`}
                       </p>
                     )}
-                    <button type="button" onClick={() => xlsxRef.current?.click()}
-                      className="flex items-center gap-2 px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg transition-colors">
+                    <GlassButton type="button" onClick={() => xlsxRef.current?.click()} className="px-4 py-2 text-xs">
                       <FileSpreadsheet size={13} /> <Trans>Seleccionar archivo .xlsx</Trans>
-                    </button>
+                    </GlassButton>
                   </div>
                 )}
 
                 {importTab === 'pdf' && (
                   <div className="p-5 space-y-3">
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-zen-ink/50 dark:text-white/50">
                       <Trans>Sube un PDF con preguntas numeradas. Se extraen automáticamente.</Trans>
                     </p>
-                    <p className="text-warning-600 text-xs">
+                    <p className="text-amber-600 dark:text-zen-warning text-xs">
                       ⚠ <Trans>PDFs escaneados (imágenes) no soportados — el texto debe ser copiable desde el PDF.</Trans>
                     </p>
                     <input ref={pdfRef} type="file" accept=".pdf" className="hidden" onChange={handlePdfImport} />
-                    {pdfStatus?.type === 'error' && <p className="text-danger-500 text-xs">{pdfStatus.msg}</p>}
+                    {pdfStatus?.type === 'error' && <p className="text-zen-danger text-xs">{pdfStatus.msg}</p>}
                     {pdfStatus?.type === 'success' && (
-                      <p className="text-success-600 text-xs">
+                      <p className="text-emerald-600 dark:text-zen-success text-xs">
                         ✓ {pdfStatus.count} pregunta{pdfStatus.count !== 1 ? 's' : ''} detectada{pdfStatus.count !== 1 ? 's' : ''} e importada{pdfStatus.count !== 1 ? 's' : ''}.
                       </p>
                     )}
-                    {pdfStatus?.type === 'partial' && <p className="text-warning-600 text-xs">{pdfStatus.msg}</p>}
-                    <button type="button" onClick={() => pdfRef.current?.click()} disabled={pdfLoading}
-                      className="flex items-center gap-2 px-4 py-2 bg-brand-500 hover:bg-brand-600 disabled:bg-surface-muted disabled:text-ink-faint text-white text-xs font-semibold rounded-lg transition-colors">
+                    {pdfStatus?.type === 'partial' && <p className="text-amber-600 dark:text-zen-warning text-xs">{pdfStatus.msg}</p>}
+                    <GlassButton type="button" onClick={() => pdfRef.current?.click()} disabled={pdfLoading} className="px-4 py-2 text-xs">
                       <FileText size={13} /> {pdfLoading ? t`Procesando PDF…` : t`Seleccionar archivo PDF`}
-                    </button>
+                    </GlassButton>
                     {pdfRawText && (
                       <div className="space-y-2">
-                        <p className="text-xs font-semibold text-ink-soft"><Trans>Texto extraído del PDF:</Trans></p>
+                        <p className="text-xs font-semibold text-zen-ink/60 dark:text-white/60"><Trans>Texto extraído del PDF:</Trans></p>
                         <textarea readOnly value={pdfRawText} rows={8}
-                          className="w-full border border-surface-border rounded-lg px-3 py-2 text-xs font-mono bg-surface-soft resize-y" />
+                          className={`${INPUT_CLS} text-xs font-mono resize-y`} />
                       </div>
                     )}
                   </div>
                 )}
               </div>
             )}
-          </section>
+          </GlassCard>
           ) : (
-          <section className="bg-surface-card border border-surface-border rounded-xl p-5 shadow-card">
+          <GlassCard className="p-5">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center shrink-0 mt-0.5">
-                <Lock size={15} className="text-brand-500" />
+              <div className="w-8 h-8 rounded-lg bg-zen/15 dark:bg-zen/25 flex items-center justify-center shrink-0 mt-0.5">
+                <Lock size={15} className="text-zen dark:text-indigo-300" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-ink"><Trans>Importación masiva — plan Pro</Trans></p>
-                <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+                <p className="text-sm font-semibold text-zen-ink dark:text-white"><Trans>Importación masiva — plan Pro</Trans></p>
+                <p className="text-xs text-zen-ink/60 dark:text-white/60 mt-1 leading-relaxed">
                   <Trans>Actualiza a Pro para importar desde JSON, Excel o PDF e importar cientos de preguntas en segundos.</Trans>
                 </p>
-                <Link to="/pricing"
-                  className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg transition-colors">
+                <GlassButton to="/pricing" className="mt-3 px-3 py-1.5 text-xs">
                   <Trans>Ver plan Pro →</Trans>
-                </Link>
+                </GlassButton>
               </div>
             </div>
-          </section>
+          </GlassCard>
           )}
 
           {/* Preguntas */}
           <section className="space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-ink">
-                <Trans>Preguntas</Trans> <span className="text-ink-faint font-normal">({questions.length})</span>
+              <h2 className="font-semibold text-zen-ink dark:text-white">
+                <Trans>Preguntas</Trans> <span className="text-zen-ink/40 dark:text-white/40 font-normal">({questions.length})</span>
               </h2>
-              <button
+              <GlassButton
                 type="button"
                 onClick={() => { setEditIndex(null); setShowForm(true) }}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-lg transition-colors"
+                className="px-3 py-1.5 text-sm"
               >
                 <Plus size={14} /> <Trans>Nueva pregunta</Trans>
-              </button>
+              </GlassButton>
             </div>
 
-            {errors.questions && <p className="text-danger-500 text-xs">{errors.questions}</p>}
+            {errors.questions && <p className="text-zen-danger text-xs">{errors.questions}</p>}
 
             {questions.length === 0 ? (
-              <div className="border-2 border-dashed border-surface-border rounded-xl py-12 text-center bg-surface-card">
-                <p className="text-ink-faint text-sm"><Trans>Aún no hay preguntas.</Trans></p>
-                <p className="text-ink-faint text-xs mt-1">{isPro ? <Trans>Usa "Nueva pregunta" o importa desde JSON, Excel o PDF.</Trans> : <Trans>Usa el botón "Nueva pregunta" para añadir preguntas.</Trans>}</p>
-              </div>
+              <GlassCard className="border-dashed py-12 text-center">
+                <p className="text-zen-ink/50 dark:text-white/50 text-sm"><Trans>Aún no hay preguntas.</Trans></p>
+                <p className="text-zen-ink/40 dark:text-white/40 text-xs mt-1">{isPro ? <Trans>Usa "Nueva pregunta" o importa desde JSON, Excel o PDF.</Trans> : <Trans>Usa el botón "Nueva pregunta" para añadir preguntas.</Trans>}</p>
+              </GlassCard>
             ) : (
               <div className="space-y-2">
                 {questions.map((q, i) => (
@@ -577,15 +592,11 @@ export function EditExamPage() {
             )}
           </section>
 
-          {formError && <p className="text-sm text-danger-500">{formError}</p>}
+          {formError && <p className="text-sm text-zen-danger">{formError}</p>}
 
-          <button
-            type="submit"
-            disabled={saving}
-            className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-surface-muted disabled:text-ink-muted text-white font-bold rounded-xl text-sm transition-colors shadow-brand"
-          >
+          <GlassButton type="submit" disabled={saving} className="w-full py-3 font-bold">
             {saving ? t`Guardando…` : t`Guardar cambios`}
-          </button>
+          </GlassButton>
         </form>
       </div>
 

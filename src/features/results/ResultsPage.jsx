@@ -1,120 +1,41 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
+import { X, Check, XCircle, Clock, ClipboardList } from 'lucide-react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../core/firebase/firebase';
 import { useAuthStore } from '../../core/store/useAuthStore';
-import { Trans, useLingui, Plural } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { SEOHead } from '../../components/SEOHead';
 import { ShareButton } from '../../components/ui/ShareButton';
+import { PageBackground } from '../../components/glass/PageBackground';
+import { GlassCard } from '../../components/glass/GlassCard';
+import { GlassButton } from '../../components/glass/GlassButton';
 import { analytics } from '../../core/analytics/events';
 
-/** Modal that shows every question the user got wrong or skipped */
-function WrongAnswersModal({ wrongItems, onClose }) {
-  const { t } = useLingui();
+function StatPill({ icon: Icon, label, value, tone }) {
+  const TONES = {
+    success: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300',
+    danger:  'bg-rose-500/15 text-rose-600 dark:text-rose-300',
+    neutral: 'bg-zen/15 text-zen dark:text-indigo-300',
+  };
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start justify-center z-50 px-4 py-8 overflow-y-auto">
-      <div className="glass-bright rounded-2xl shadow-card w-full max-w-2xl border border-surface-border">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border sticky top-0 bg-surface-soft/90 backdrop-blur-md rounded-t-2xl z-10">
-          <h2 className="font-display font-bold text-ink text-base">
-            <Trans>Respuestas incorrectas / sin responder ({wrongItems.length})</Trans>
-          </h2>
-          <button onClick={onClose} className="text-ink-soft hover:text-ink text-lg leading-none font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-muted transition-colors">
-            ✕
-          </button>
-        </div>
-
-        {/* List */}
-        <div className="divide-y divide-surface-border">
-          {wrongItems.map(({ idx, question, selected }) => {
-            const unanswered = selected.length === 0;
-            return (
-              <div key={idx} className="px-6 py-5">
-                <div className="flex items-start gap-2 mb-3">
-                  <span className="shrink-0 text-xs font-bold bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded-full mt-0.5">#{idx + 1}</span>
-                  {unanswered && (
-                    <span className="shrink-0 text-xs font-bold bg-surface-muted text-ink-soft px-2 py-0.5 rounded-full mt-0.5"><Trans>Sin responder</Trans></span>
-                  )}
-                  <p className="text-sm font-semibold text-ink leading-relaxed">{question.question}</p>
-                </div>
-
-                {/* Options — multiple choice */}
-                {(!question.type || question.type === 'multiple') ? (() => {
-                  const correctSet = new Set(question.answer);
-                  const selectedSet = new Set(selected);
-                  const sortedEntries = Object.keys(question.options).sort().map((k) => [k, question.options[k]]);
-                  return (
-                    <div className="flex flex-col gap-2 ml-4">
-                      {sortedEntries.map(([key, value]) => {
-                        const isCorrect = correctSet.has(key);
-                        const wasSelected = selectedSet.has(key);
-                        let cls = 'flex items-baseline gap-2 px-3 py-2 rounded-lg border text-sm ';
-                        if (isCorrect) cls += 'bg-success-500/15 border-success-500/50 text-success-300';
-                        else if (wasSelected) cls += 'bg-danger-500/15 border-danger-500/50 text-danger-300';
-                        else cls += 'bg-surface-card border-surface-border text-ink-soft';
-                        return (
-                          <div key={key} className={cls}>
-                            <span className="font-bold shrink-0">{key}.</span>
-                            <span>{value}</span>
-                            {isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-success-400"><Trans>✓ Correcta</Trans></span>}
-                            {wasSelected && !isCorrect && <span className="ml-auto shrink-0 text-xs font-bold text-danger-400"><Trans>✗ Tu respuesta</Trans></span>}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })() : null}
-
-                {/* Options — matching */}
-                {question.type === 'matching' && (
-                  <div className="flex flex-col gap-2 ml-4">
-                    {question.pairs.map((pair, i) => {
-                      const chosen = selected[i] ?? '';
-                      const isCorrect = chosen === pair.correctMatch;
-                      return (
-                        <div key={pair.term} className={`flex items-center gap-3 px-3 py-2 rounded-lg border text-sm ${isCorrect ? 'bg-success-500/15 border-success-500/50' : 'bg-danger-500/15 border-danger-500/50'}`}>
-                          <span className="font-medium text-ink shrink-0">{pair.term}</span>
-                          <span className="text-slate-600">→</span>
-                          <span className={isCorrect ? 'text-success-300' : 'text-danger-300 line-through'}>
-                            {chosen ? question.matches[chosen] : t`— sin responder —`}
-                          </span>
-                          {!isCorrect && (
-                            <span className="ml-auto shrink-0 text-xs text-success-400 font-semibold">✓ {question.matches[pair.correctMatch]}</span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* Options — ordering */}
-                {question.type === 'ordering' && (
-                  <div className="flex flex-col gap-2 ml-4">
-                    <p className="text-xs text-ink-soft mb-1"><Trans>Orden correcto:</Trans></p>
-                    {question.correctOrder.map((item, i) => (
-                      <div key={item} className="flex items-center gap-3 px-3 py-2 rounded-lg border text-sm bg-success-500/10 border-success-500/40 text-success-300">
-                        <span className="font-bold shrink-0">{i + 1}.</span>
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-surface-border flex justify-end">
-          <button onClick={onClose} className="bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-2 rounded-xl transition-colors text-sm">
-            <Trans>Cerrar</Trans>
-          </button>
-        </div>
-      </div>
-    </div>
+    <GlassCard className="flex flex-col items-center gap-1.5 p-4">
+      <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${TONES[tone] ?? TONES.neutral}`}>
+        <Icon size={16} />
+      </span>
+      <span className="text-lg font-bold text-zen-ink dark:text-white tabular-nums">{value}</span>
+      <span className="text-[11px] text-zen-ink/50 dark:text-white/50">{label}</span>
+    </GlassCard>
   );
+}
+
+function formatDuration(totalSeconds) {
+  if (totalSeconds == null) return '—';
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
 }
 
 export function ResultsPage() {
@@ -122,7 +43,6 @@ export function ResultsPage() {
   const { state } = useLocation();
   const { user } = useAuthStore();
   const { t } = useLingui();
-  const [showWrong, setShowWrong] = useState(false);
   const [displayScore, setDisplayScore] = useState(0);
   const savedRef = useRef(false);
 
@@ -158,13 +78,12 @@ export function ResultsPage() {
 
   if (!state) return null;
 
-  const { score, total, isTimeOut, certLabel, passPercent, displayQuestions, answers, mode, confidence } = state;
+  const { score, total, isTimeOut, certLabel, passPercent, displayQuestions, answers, mode, confidence, timeSpentSeconds } = state;
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const passed = percentage >= passPercent;
   const isWager = mode === 'wager';
 
   // ── Wager mode calibration ────────────────────────────────────────────────
-  // For each confidence level (1/2/3), compute correct vs total and signed points.
   const wagerStats = isWager ? (() => {
     const buckets = { 1: { correct: 0, total: 0 }, 2: { correct: 0, total: 0 }, 3: { correct: 0, total: 0 } };
     let points = 0;
@@ -210,149 +129,58 @@ export function ResultsPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Compute wrong/unanswered items
-  const wrongItems = (displayQuestions ?? []).map((dq, idx) => {
+  // Compute per-question correctness (reused for wrong list + topic breakdown)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const graded = useMemo(() => (displayQuestions ?? []).map((dq, idx) => {
     const sel = answers?.[idx] ?? [];
     let isCorrect = false;
     if (dq.type === 'matching') {
       isCorrect = sel.length > 0 && dq.pairs.every((p, i) => sel[i] === p.correctMatch);
     } else if (dq.type === 'ordering') {
       isCorrect = sel.length > 0 && sel.length === dq.correctOrder?.length && sel.every((v, i) => v === dq.correctOrder[i]);
-    } else {
-      if (sel.length > 0) {
-        const correct = [...dq.answer].sort();
-        const sortedSel = [...sel].sort();
-        isCorrect = sortedSel.length === correct.length && sortedSel.every((v, i) => v === correct[i]);
-      }
+    } else if (sel.length > 0) {
+      const correct = [...dq.answer].sort();
+      const sortedSel = [...sel].sort();
+      isCorrect = sortedSel.length === correct.length && sortedSel.every((v, i) => v === correct[i]);
     }
-    return isCorrect ? null : { idx, question: dq, selected: sel };
-  }).filter(Boolean);
+    return { idx, question: dq, selected: sel, isCorrect };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), []);
 
-  const ringColor = passed ? '#22c55e' : '#f43f5e';
+  // "Rendimiento por tema" — solo si las preguntas traen domain/category (no todos los sets lo tienen)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const topicBreakdown = useMemo(() => {
+    const byTopic = new Map();
+    for (const g of graded) {
+      const topic = g.question.domain || g.question.category;
+      if (!topic) continue;
+      if (!byTopic.has(topic)) byTopic.set(topic, { correct: 0, total: 0 });
+      const bucket = byTopic.get(topic);
+      bucket.total += 1;
+      if (g.isCorrect) bucket.correct += 1;
+    }
+    return [...byTopic.entries()]
+      .map(([topic, { correct, total: t2 }]) => ({ topic, pct: Math.round((correct / t2) * 100) }))
+      .sort((a, b) => b.pct - a.pct)
+      .slice(0, 6);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const ringColor = passed ? '#34D399' : '#F87171';
   const RADIUS = 54;
   const CIRC = 2 * Math.PI * RADIUS;
   const ringOffset = CIRC * (1 - percentage / 100);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden">
+    <PageBackground>
       <SEOHead title={t`Resultados`} description={t`Resultados de tu examen de práctica.`} path="/results" noindex />
-      {/* Background blobs */}
-      <div className="pointer-events-none fixed inset-0">
-        <div className={`absolute inset-0 opacity-10 ${passed ? 'bg-success-500' : 'bg-danger-500'} blur-3xl scale-150`} />
-      </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="glass-bright rounded-2xl shadow-card w-full max-w-md px-8 py-10 text-center border border-surface-border relative"
-      >
-        {/* Circular score ring */}
-        <div className="relative w-36 h-36 mx-auto mb-6">
-          <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r={RADIUS} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
-            <circle
-              cx="60" cy="60" r={RADIUS}
-              fill="none"
-              stroke={ringColor}
-              strokeWidth="8"
-              strokeLinecap="round"
-              strokeDasharray={CIRC}
-              strokeDashoffset={ringOffset}
-              style={{ transition: 'stroke-dashoffset 1.2s ease-out, stroke 0.3s' }}
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`text-3xl font-display font-bold tabular-nums ${
-              passed ? 'text-success-400' : 'text-danger-400'
-            }`}>{displayScore}%</span>
-            <span className="text-xs text-ink-soft mt-0.5">{isTimeOut ? '⏱️' : passed ? '🎉' : '📚'}</span>
-          </div>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-zen-ink/40 dark:text-white/40"><Trans>Resultados</Trans></p>
+          <p className="font-bold text-zen-ink dark:text-white text-sm truncate">{certLabel}</p>
         </div>
-
-        {/* Title */}
-        <h1 className={`text-xl font-display font-bold mb-1 ${
-          isTimeOut ? 'text-warning-400' : passed ? 'text-success-400' : 'text-danger-400'
-        }`}>
-          {isTimeOut ? <Trans>¡Tiempo Agotado!</Trans> : passed ? <Trans>¡Felicitaciones! Aprobaste</Trans> : <Trans>No aprobaste esta vez</Trans>}
-        </h1>
-        <p className="text-ink-soft text-sm mb-6">{certLabel}</p>
-
-        {/* Stats */}
-        <div className="bg-surface-card rounded-xl p-4 mb-6 space-y-3 text-left border border-surface-border">
-          <div className="flex justify-between text-sm">
-            <span className="text-ink-soft"><Trans>Respuestas correctas</Trans></span>
-            <span className="font-bold text-ink">{score} / {total}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-ink-soft"><Trans>Porcentaje obtenido</Trans></span>
-            <span className={`font-bold text-lg ${passed ? 'text-success-400' : 'text-danger-400'}`}>{percentage}%</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-ink-soft"><Trans>Umbral de aprobación</Trans></span>
-            <span className="font-semibold text-ink-soft">{passPercent}%</span>
-          </div>
-        </div>
-
-        {/* Wager calibration panel */}
-        {isWager && wagerStats && (
-          <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 text-left">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display font-bold text-ink text-sm flex items-center gap-1.5">
-                <span>🎲</span><Trans>Apuesta · Calibración</Trans>
-              </h3>
-              <span className={`text-lg font-bold tabular-nums ${
-                wagerStats.points >= 0 ? 'text-success-500' : 'text-danger-500'
-              }`}>
-                {wagerStats.points >= 0 ? '+' : ''}{wagerStats.points}
-              </span>
-            </div>
-            <p className="text-xs text-ink-soft mb-3">
-              Puntos netos: <span className="font-semibold">{wagerStats.points}</span> de{' '}
-              <span className="font-semibold">{wagerStats.totalBet}</span> apostados.
-              {(() => {
-                const badBet = wagerStats.buckets[3].total > 0 && (wagerStats.buckets[3].correct / wagerStats.buckets[3].total) < 0.7;
-                if (badBet) return ' ⚠️ Tu seguridad (×3) no se corresponde con tu precisión — revisa esas preguntas.';
-                if (wagerStats.points > wagerStats.totalBet * 0.5) return ' 🎯 Buena calibración: sabes cuándo sabes.';
-                return '';
-              })()}
-            </p>
-            <div className="space-y-1.5">
-              {[
-                { level: 3, label: t`⚡ Seguro · ×3`, color: 'bg-rose-500' },
-                { level: 2, label: t`✓ Creo · ×2`,   color: 'bg-amber-500' },
-                { level: 1, label: t`🤔 Dudo · ×1`,  color: 'bg-brand-500' },
-              ].map(({ level, label, color }) => {
-                const b = wagerStats.buckets[level];
-                const pct = b.total > 0 ? Math.round((b.correct / b.total) * 100) : 0;
-                return (
-                  <div key={level} className="flex items-center gap-2 text-xs">
-                    <span className="text-ink-soft w-24 shrink-0">{label}</span>
-                    <div className="flex-1 h-2 bg-surface-muted rounded-full overflow-hidden">
-                      <div className={`h-full ${color} transition-all`} style={{ width: `${pct}%` }} />
-                    </div>
-                    <span className="font-semibold text-ink tabular-nums w-16 text-right shrink-0">
-                      {b.correct}/{b.total} ({pct}%)
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Progress bar */}
-        <div className="h-2 bg-surface-muted rounded-full mb-8 overflow-hidden">
-          <div
-            className={`h-2 rounded-full transition-all duration-1000 ${
-              passed ? 'bg-gradient-to-r from-success-500 to-success-400' : 'bg-gradient-to-r from-danger-600 to-danger-400'
-            }`}
-            style={{ width: `${percentage}%` }}
-          />
-        </div>
-
-        {/* Actions */}
-        <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2 shrink-0">
           <ShareButton
             url={state.certId && state.certId !== 'demo' ? `https://certzen.app/exam-sets/${state.certId}` : 'https://certzen.app'}
             title={certLabel}
@@ -360,37 +188,149 @@ export function ResultsPage() {
               ? `¡Saqué ${percentage}% en ${certLabel}! 🎯 Practica gratis en CertZen`
               : `Obtuve ${percentage}% en ${certLabel}. ¡Lo intentaré de nuevo! 💪 Practica en CertZen`
             }
-            variant="button"
+            variant="icon"
           />
           <button
-            onClick={() => navigate('/')}
-            className="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl transition-all active:scale-95 w-full"
+            onClick={() => navigate('/home')}
+            className="h-9 px-3 inline-flex items-center gap-1.5 rounded-full text-sm font-medium text-zen-ink/70 dark:text-white/70 bg-glass-light-2 dark:bg-glass-dark-2 border border-glass-light-border dark:border-glass-dark-border hover:text-zen-ink dark:hover:text-white transition-colors"
           >
-            <Trans>Volver al inicio</Trans>
+            <X size={14} /> <Trans>Cerrar</Trans>
           </button>
-          <button
-            onClick={() => navigate(-1)}
-            className="border border-brand-500/50 text-brand-400 hover:bg-brand-500/15 font-semibold py-3 px-6 rounded-xl transition-all w-full"
-          >
-            <Trans>Reintentar mismo examen</Trans>
-          </button>
-          {wrongItems.length > 0 && (
-            <button
-              onClick={() => setShowWrong(true)}
-              className="border border-danger-500/40 text-danger-400 hover:bg-danger-500/10 font-semibold py-3 px-6 rounded-xl transition-all w-full"
-            >
-              📖 <Plural value={wrongItems.length} one="Ver # respuesta incorrecta" other="Ver # respuestas incorrectas" />
-            </button>
-          )}
         </div>
-      </motion.div>
+      </div>
 
-      {showWrong && (
-        <WrongAnswersModal wrongItems={wrongItems} onClose={() => setShowWrong(false)} />
-      )}
-    </div>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+          <GlassCard className="px-6 sm:px-8 py-10 text-center">
+            {/* Circular score ring */}
+            <div className="relative w-36 h-36 mx-auto mb-6">
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r={RADIUS} fill="none" stroke="currentColor" className="text-glass-light-border dark:text-glass-dark-border" strokeWidth="8" />
+                <circle
+                  cx="60" cy="60" r={RADIUS}
+                  fill="none"
+                  stroke={ringColor}
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={CIRC}
+                  strokeDashoffset={ringOffset}
+                  style={{ transition: 'stroke-dashoffset 1.2s ease-out, stroke 0.3s' }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-3xl font-bold tabular-nums text-zen-ink dark:text-white">{displayScore}%</span>
+                <span className="text-xs text-zen-ink/50 dark:text-white/50 mt-0.5">{isTimeOut ? '⏱️' : passed ? '🎉' : '📚'}</span>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-xl font-bold mb-1 text-zen-ink dark:text-white">
+              {isTimeOut ? <Trans>¡Tiempo Agotado!</Trans> : passed ? <Trans>¡Aprobado!</Trans> : <Trans>No aprobaste esta vez</Trans>}
+            </h1>
+            <p className="text-zen-ink/60 dark:text-white/60 text-sm mb-6">
+              {passed
+                ? <Trans>Superaste el {passPercent}% necesario para aprobar este simulacro.</Trans>
+                : <Trans>Necesitas {passPercent}% para aprobar — sigue practicando.</Trans>
+              }
+            </p>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <StatPill icon={Check} tone="success" value={score} label={t`Correctas`} />
+              <StatPill icon={XCircle} tone="danger" value={total - score} label={t`Incorrectas`} />
+              <StatPill icon={Clock} tone="neutral" value={formatDuration(timeSpentSeconds)} label={t`Tiempo total`} />
+            </div>
+
+            {/* Rendimiento por tema — solo si las preguntas traen dominio/categoría */}
+            {topicBreakdown.length > 0 && (
+              <div className="mb-6 text-left">
+                <h2 className="text-sm font-semibold text-zen-ink dark:text-white mb-3 flex items-center gap-1.5">
+                  <ClipboardList size={14} className="text-zen dark:text-indigo-300" />
+                  <Trans>Rendimiento por tema</Trans>
+                </h2>
+                <div className="space-y-2.5">
+                  {topicBreakdown.map(({ topic, pct }) => (
+                    <div key={topic} className="flex items-center gap-3 text-xs">
+                      <span className="w-28 shrink-0 truncate text-zen-ink/70 dark:text-white/60">{topic}</span>
+                      <div className="flex-1 h-2 rounded-full bg-glass-light-2 dark:bg-glass-dark-2 overflow-hidden">
+                        <div className="h-full rounded-full bg-zen-brand transition-all" style={{ width: `${pct}%` }} />
+                      </div>
+                      <span className="w-9 shrink-0 text-right font-semibold text-zen-ink dark:text-white tabular-nums">{pct}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Wager calibration panel */}
+            {isWager && wagerStats && (
+              <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 text-left">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-zen-ink dark:text-white text-sm flex items-center gap-1.5">
+                    <span>🎲</span><Trans>Apuesta · Calibración</Trans>
+                  </h3>
+                  <span className={`text-lg font-bold tabular-nums ${
+                    wagerStats.points >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                  }`}>
+                    {wagerStats.points >= 0 ? '+' : ''}{wagerStats.points}
+                  </span>
+                </div>
+                <p className="text-xs text-zen-ink/60 dark:text-white/60 mb-3">
+                  Puntos netos: <span className="font-semibold">{wagerStats.points}</span> de{' '}
+                  <span className="font-semibold">{wagerStats.totalBet}</span> apostados.
+                  {(() => {
+                    const badBet = wagerStats.buckets[3].total > 0 && (wagerStats.buckets[3].correct / wagerStats.buckets[3].total) < 0.7;
+                    if (badBet) return ' ⚠️ Tu seguridad (×3) no se corresponde con tu precisión — revisa esas preguntas.';
+                    if (wagerStats.points > wagerStats.totalBet * 0.5) return ' 🎯 Buena calibración: sabes cuándo sabes.';
+                    return '';
+                  })()}
+                </p>
+                <div className="space-y-1.5">
+                  {[
+                    { level: 3, label: t`⚡ Seguro · ×3`, color: 'bg-rose-500' },
+                    { level: 2, label: t`✓ Creo · ×2`,   color: 'bg-amber-500' },
+                    { level: 1, label: t`🤔 Dudo · ×1`,  color: 'bg-zen' },
+                  ].map(({ level, label, color }) => {
+                    const b = wagerStats.buckets[level];
+                    const pct = b.total > 0 ? Math.round((b.correct / b.total) * 100) : 0;
+                    return (
+                      <div key={level} className="flex items-center gap-2 text-xs">
+                        <span className="text-zen-ink/60 dark:text-white/60 w-24 shrink-0">{label}</span>
+                        <div className="flex-1 h-2 bg-glass-light-2 dark:bg-glass-dark-2 rounded-full overflow-hidden">
+                          <div className={`h-full ${color} transition-all`} style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="font-semibold text-zen-ink dark:text-white tabular-nums w-16 text-right shrink-0">
+                          {b.correct}/{b.total} ({pct}%)
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              {graded.length > 0 && (
+                <GlassButton
+                  variant="secondary"
+                  onClick={() => navigate('/results/review', { state: { graded, certLabel, percentage, passed, passPercent } })}
+                  className="flex-1"
+                >
+                  <Trans>Revisar respuestas</Trans>
+                </GlassButton>
+              )}
+              <GlassButton onClick={() => navigate(-1)} className="flex-1">
+                <Trans>Repetir simulacro</Trans>
+              </GlassButton>
+            </div>
+          </GlassCard>
+        </motion.div>
+      </div>
+    </PageBackground>
   );
 }
-
-
-

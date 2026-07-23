@@ -301,12 +301,15 @@ export function ExamPage() {
 
   useEffect(() => {
     if (status === 'finished') {
+      const timeSpentSeconds = certification?.timeMinutes
+        ? Math.max(0, certification.timeMinutes * 60 - timeLeft)
+        : null;
       navigate('/results', {
         replace: true,
-        state: { score, total, isTimeOut, certLabel: certification?.labelEs ?? certId, certId, passPercent, displayQuestions, answers, mode, confidence },
+        state: { score, total, isTimeOut, certLabel: certification?.labelEs ?? certId, certId, passPercent, displayQuestions, answers, mode, confidence, timeSpentSeconds },
       });
     }
-  }, [status, navigate, score, total, isTimeOut, certification, certId, passPercent, displayQuestions, answers, mode, confidence]);
+  }, [status, navigate, score, total, isTimeOut, certification, certId, passPercent, displayQuestions, answers, mode, confidence, timeLeft]);
 
   useEffect(() => {
     if (setLoadError) { navigate('/explore', { replace: true }); return; }
