@@ -10,7 +10,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { msg } from '@lingui/core/macro';
 import { useAuthStore } from '../../core/store/useAuthStore';
 import { useUserPlan } from '../plans/hooks/useUserPlan';
-import { PageSEO } from '../../components/seo/PageSEO';
+import { SEOHead } from '../../components/SEOHead';
 import { PublicLayout } from '../../components/layout/PublicLayout';
 import robotHeroDark from '../../assets/mascot/robot-hero-dark.webp';
 import robotHeroLight from '../../assets/mascot/robot-hero-light.webp';
@@ -157,10 +157,10 @@ export function WelcomePage() {
 
   return (
     <>
-      <PageSEO
+      <SEOHead
         title={t`Simuladores de Certificación Profesional`}
         description={t`Prepárate para tus certificaciones con simuladores reales, banco de preguntas oficial y seguimiento de progreso. Gratis para empezar.`}
-        canonical="/"
+        path="/"
         jsonLd={{
           '@context': 'https://schema.org',
           '@graph': [

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { BookOpen, Target, Zap, Shield, Users, Award, ChevronRight } from 'lucide-react';
-import { PageSEO } from '../../../components/seo/PageSEO';
+import { SEOHead } from '../../../components/SEOHead';
 import { PublicLayout } from '../../../components/layout/PublicLayout';
 import { GlassCard } from '../../../components/glass/GlassCard';
 import { GlassBadge } from '../../../components/glass/GlassBadge';
@@ -71,10 +71,10 @@ export function AboutPage() {
   ];
   return (
     <PublicLayout>
-      <PageSEO
+      <SEOHead
         title={t`Sobre la plataforma`}
         description={t`CertZen es un simulador inteligente de certificaciones profesionales. Aprende cómo funciona, qué certificaciones cubre y por qué miles de profesionales confían en nosotros.`}
-        canonical="/about"
+        path="/about"
         jsonLd={SITE_JSON_LD}
       />
 

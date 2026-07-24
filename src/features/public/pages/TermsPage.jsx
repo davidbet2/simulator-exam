@@ -1,5 +1,5 @@
 ﻿import { Link } from 'react-router-dom';
-import { PageSEO } from '../../../components/seo/PageSEO';
+import { SEOHead } from '../../../components/SEOHead';
 import { PublicLayout } from '../../../components/layout/PublicLayout';
 import { GlassCard } from '../../../components/glass/GlassCard';
 
@@ -21,10 +21,10 @@ function Section({ id, title, children }) {
 export function TermsPage() {
   return (
     <PublicLayout>
-      <PageSEO
+      <SEOHead
         title="Términos de Uso"
         description="Lee los términos y condiciones de uso de CertZen. Al usar la plataforma aceptas estos términos."
-        canonical="/terms"
+        path="/terms"
       />
 
       <div id="main-content" />

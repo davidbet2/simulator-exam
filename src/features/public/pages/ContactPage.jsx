@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { PageSEO } from '../../../components/seo/PageSEO';
+import { SEOHead } from '../../../components/SEOHead';
 import { PublicLayout } from '../../../components/layout/PublicLayout';
 import { GlassCard } from '../../../components/glass/GlassCard';
 import { GlassButton } from '../../../components/glass/GlassButton';
@@ -99,10 +99,10 @@ export function ContactPage() {
 
   return (
     <PublicLayout>
-      <PageSEO
+      <SEOHead
         title={t`Contacto`}
         description={t`¿Tienes alguna pregunta o problema con CertZen? Escríbenos y te respondemos lo antes posible.`}
-        canonical="/contact"
+        path="/contact"
       />
 
       <div id="main-content" />

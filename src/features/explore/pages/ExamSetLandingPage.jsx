@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { doc, getDoc, collection, getDocs, limit, query } from 'firebase/firestore';
 import {
@@ -228,7 +227,7 @@ export function ExamSetLandingPage() {
     return (
       <PageBackground>
         <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
-          <Helmet><title>{t`Set no encontrado — CertZen`}</title><meta name="robots" content="noindex" /></Helmet>
+          <SEOHead title={t`Set no encontrado`} path={`/exam-sets/${slug}`} noindex />
           <BookOpen size={40} className="mb-3 text-zen-ink/40 dark:text-white/40" />
           <h1 className="text-xl font-bold"><Trans>Set no disponible</Trans></h1>
           <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60"><Trans>Este examen no existe o no es público.</Trans></p>
@@ -276,25 +275,15 @@ export function ExamSetLandingPage() {
 
   return (
     <Shell>
-      <Helmet>
-        <title>{set.title} — Simulador gratis | CertZen</title>
-        <meta name="description" content={description} />
-        <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:title" content={`${set.title} — CertZen`} />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:type" content="article" />
-        <meta property="og:image" content="https://certzen.app/og-image.png" />
-        <meta property="og:locale" content="es_CO" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${set.title} — CertZen`} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content="https://certzen.app/og-image.png" />
-        {set.tags?.length > 0 && (
-          <meta name="keywords" content={set.tags.join(', ')} />
-        )}
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
-      </Helmet>
+      <SEOHead
+        title={`${set.title} — Simulador gratis`}
+        description={description}
+        path={`/exam-sets/${slug}`}
+        image="https://certzen.app/og-image.png"
+        ogType="article"
+        keywords={set.tags?.length > 0 ? set.tags.join(', ') : undefined}
+        jsonLd={jsonLd}
+      />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
         <Link to="/explore" className="inline-flex items-center gap-1.5 text-sm text-zen-ink/70 hover:text-zen-ink dark:text-white/60 dark:hover:text-white">

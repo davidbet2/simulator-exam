@@ -1,12 +1,12 @@
 ﻿import { useState, useEffect, useMemo, memo, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
 import { Search, BookOpen, Users, Plus, X, Loader2 } from 'lucide-react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useExploreQuery } from '../hooks/useExploreQuery';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { getDomain } from '../../../core/constants/domains';
+import { SEOHead } from '../../../components/SEOHead';
 import { AppShell } from '../../../components/layout/AppShell';
 import { PublicLayout } from '../../../components/layout/PublicLayout';
 import { GlassCard } from '../../../components/glass/GlassCard';
@@ -173,8 +173,8 @@ export function ExploreExamsPage() {
   }
 
   const pageTitle = activeDomain
-    ? t`Exámenes de ${getDomain(activeDomain).label} — CertZen`
-    : t`Explorar exámenes de certificación — CertZen`;
+    ? t`Exámenes de ${getDomain(activeDomain).label}`
+    : t`Explorar exámenes de certificación`;
   const pageDescription = activeDomain
     ? t`Simulacros gratuitos de ${getDomain(activeDomain).label}. Preguntas basadas en exam guides públicos. Estudia y evalúate en línea.`
     : t`Plataforma colaborativa de simuladores de examen: IT, Cloud, Salud, Inglés, Appian y más. Exploración gratis, regístrate para practicar.`;
@@ -183,21 +183,12 @@ export function ExploreExamsPage() {
 
   return (
     <Shell>
-      <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://certzen.app/og-image.png" />
-        <meta property="og:locale" content="es_CO" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content={pageDescription} />
-        <meta name="twitter:image" content="https://certzen.app/og-image.png" />
-        <link rel="canonical" href={`https://certzen.app/explore${activeDomain ? `?domain=${activeDomain}` : ''}`} />
-      </Helmet>
+      <SEOHead
+        title={pageTitle}
+        description={pageDescription}
+        path={`/explore${activeDomain ? `?domain=${activeDomain}` : ''}`}
+        image="https://certzen.app/og-image.png"
+      />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>

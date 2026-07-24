@@ -52,7 +52,16 @@ function canonicalUrl(path) {
   return `${SITE_URL}${clean}`;
 }
 
-export function SEOHead({ title, description, path = '/', image, noindex = false }) {
+export function SEOHead({
+  title,
+  description,
+  path = '/',
+  image,
+  noindex = false,
+  keywords,
+  ogType = 'website',
+  jsonLd,
+}) {
   const { lang } = useLangStore();
   const fullTitle = title ? `${title} — CertZen` : 'CertZen';
   const canonical = canonicalUrl(path);
@@ -63,6 +72,7 @@ export function SEOHead({ title, description, path = '/', image, noindex = false
       <html lang={htmlLang} />
       <title>{fullTitle}</title>
       {description && <meta name="description" content={description} />}
+      {keywords && <meta name="keywords" content={keywords} />}
       {noindex && <meta name="robots" content="noindex, nofollow" />}
       <link rel="canonical" href={canonical} />
 
@@ -82,7 +92,7 @@ export function SEOHead({ title, description, path = '/', image, noindex = false
       <meta property="og:title" content={fullTitle} />
       {description && <meta property="og:description" content={description} />}
       <meta property="og:url" content={canonical} />
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={ogType} />
       <meta property="og:site_name" content="CertZen" />
       <meta property="og:locale" content={OG_LOCALE_MAP[lang] ?? 'es_ES'} />
       {SUPPORTED_LANGS.filter((l) => l.id !== lang).map((l) => (
@@ -100,6 +110,10 @@ export function SEOHead({ title, description, path = '/', image, noindex = false
       {description && <meta name="twitter:description" content={description} />}
       {image && <meta name="twitter:image" content={image} />}
       {image && <meta name="twitter:image:alt" content={fullTitle} />}
+
+      {jsonLd && (
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      )}
     </Helmet>
   );
 }

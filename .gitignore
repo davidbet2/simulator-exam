@@ -55,6 +55,7 @@ env/
 # BUILDS & ARTEFACTOS
 # =============================================================================
 dist/
+.prerender-staging/
 build/
 out/
 target/

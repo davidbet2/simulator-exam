@@ -106,11 +106,17 @@ Allow: /
 
 Disallow: /admin
 Disallow: /admin/*
-Disallow: /dashboard
-Disallow: /profile
-Disallow: /create-exam
 Disallow: /exam
 Disallow: /results
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /settings
+Disallow: /home
+Disallow: /payment-success
+Disallow: /create-exam
+Disallow: /my-sets
+Disallow: /edit-exam
+Disallow: /folders/
 
 Sitemap: ${BASE_URL}/sitemap.xml
 `;

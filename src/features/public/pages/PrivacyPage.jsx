@@ -1,5 +1,5 @@
 ﻿import { Link } from 'react-router-dom';
-import { PageSEO } from '../../../components/seo/PageSEO';
+import { SEOHead } from '../../../components/SEOHead';
 import { PublicLayout } from '../../../components/layout/PublicLayout';
 import { GlassCard } from '../../../components/glass/GlassCard';
 
@@ -21,10 +21,10 @@ function Section({ id, title, children }) {
 export function PrivacyPage() {
   return (
     <PublicLayout>
-      <PageSEO
+      <SEOHead
         title="Política de Privacidad"
         description="Conoce cómo CertZen recopila, usa y protege tu información personal. Última actualización: abril 2026."
-        canonical="/privacy"
+        path="/privacy"
       />
 
       <div id="main-content" />
