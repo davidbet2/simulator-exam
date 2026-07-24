@@ -77,7 +77,16 @@ const authedDb = (uid, email) =>
   testEnv.authenticatedContext(uid, email ? { email } : undefined).firestore();
 const anonDb = () => testEnv.unauthenticatedContext().firestore();
 const adminDb = () =>
-  testEnv.authenticatedContext('adminUid', { email: ADMIN_EMAIL }).firestore();
+  testEnv
+    .authenticatedContext('adminUid', { email: ADMIN_EMAIL, email_verified: true })
+    .firestore();
+// Same email as a real admin, but WITHOUT a verified email claim — simulates
+// an attacker who signed up with an admin's email via email/password without
+// proving inbox ownership.
+const unverifiedAdminEmailDb = () =>
+  testEnv
+    .authenticatedContext('attackerUid', { email: ADMIN_EMAIL, email_verified: false })
+    .firestore();
 
 describe('users/{uid}', () => {
   it('owner can create their profile with plan=free', async () => {
@@ -231,6 +240,22 @@ describe('admins/{email}', () => {
     // No admin doc exists for them → read succeeds (returns null)
     await assertSucceeds(getDoc(doc(db, 'admins', USER_A_EMAIL)));
   });
+
+  it('CANNOT gain admin access with an unverified admin email (spoofed signup)', async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'users', USER_B_UID), {
+        email: 'b@example.com',
+        plan: 'free',
+      });
+    });
+    const db = unverifiedAdminEmailDb();
+    await assertFails(
+      setDoc(doc(db, 'admins', 'newadmin@example.com'), { addedAt: Date.now() })
+    );
+    // Same email as a real admin, but email_verified: false → treated as a
+    // regular (non-admin) user, so reading someone else's profile fails.
+    await assertFails(getDoc(doc(db, 'users', USER_B_UID)));
+  });
 });
 
 describe('attempts/{attemptId}', () => {
@@ -379,7 +404,33 @@ describe('examSets/{setId}', () => {
     );
   });
 
-  it('non-owner CAN update aggregate counters (rating/favorites)', async () => {
+  it('user who rated the set CAN denormalize their rating into the aggregate counters', async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1'), {
+        ownerUid: USER_B_UID,
+        title: 'Set',
+        questionCount: 5,
+        published: true,
+        ratingSum: 0,
+        ratingCount: 0,
+      });
+      // User A must have actually rated the set first.
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1', 'ratings', USER_A_UID), {
+        uid: USER_A_UID,
+        stars: 5,
+      });
+    });
+    const db = authedDb(USER_A_UID, USER_A_EMAIL);
+    await assertSucceeds(
+      updateDoc(doc(db, 'examSets', 'set1'), {
+        ratingSum: 5,
+        ratingCount: 1,
+        updatedAt: Date.now(),
+      })
+    );
+  });
+
+  it('user CANNOT update rating aggregate counters without having rated the set', async () => {
     await testEnv.withSecurityRulesDisabled(async (ctx) => {
       await setDoc(doc(ctx.firestore(), 'examSets', 'set1'), {
         ownerUid: USER_B_UID,
@@ -391,11 +442,76 @@ describe('examSets/{setId}', () => {
       });
     });
     const db = authedDb(USER_A_UID, USER_A_EMAIL);
-    await assertSucceeds(
+    await assertFails(
       updateDoc(doc(db, 'examSets', 'set1'), {
         ratingSum: 5,
         ratingCount: 1,
-        ratingAvg: 5,
+        updatedAt: Date.now(),
+      })
+    );
+  });
+
+  it('user CANNOT inflate ratingSum beyond what ratingCount justifies (fake average)', async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1'), {
+        ownerUid: USER_B_UID,
+        title: 'Set',
+        questionCount: 5,
+        published: true,
+        ratingSum: 0,
+        ratingCount: 0,
+      });
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1', 'ratings', USER_A_UID), {
+        uid: USER_A_UID,
+        stars: 5,
+      });
+    });
+    const db = authedDb(USER_A_UID, USER_A_EMAIL);
+    await assertFails(
+      updateDoc(doc(db, 'examSets', 'set1'), {
+        ratingSum: 999999,
+        ratingCount: 1,
+        updatedAt: Date.now(),
+      })
+    );
+  });
+
+  it('user who favorited the set CAN update favoritesCount', async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1'), {
+        ownerUid: USER_B_UID,
+        title: 'Set',
+        questionCount: 5,
+        published: true,
+        favoritesCount: 0,
+      });
+      await setDoc(doc(ctx.firestore(), 'users', USER_A_UID, 'favorites', 'set1'), {
+        slug: 'set1',
+      });
+    });
+    const db = authedDb(USER_A_UID, USER_A_EMAIL);
+    await assertSucceeds(
+      updateDoc(doc(db, 'examSets', 'set1'), {
+        favoritesCount: 1,
+        updatedAt: Date.now(),
+      })
+    );
+  });
+
+  it('user CANNOT update favoritesCount without a favorites doc for that set', async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1'), {
+        ownerUid: USER_B_UID,
+        title: 'Set',
+        questionCount: 5,
+        published: true,
+        favoritesCount: 0,
+      });
+    });
+    const db = authedDb(USER_A_UID, USER_A_EMAIL);
+    await assertFails(
+      updateDoc(doc(db, 'examSets', 'set1'), {
+        favoritesCount: 1,
         updatedAt: Date.now(),
       })
     );
@@ -413,6 +529,53 @@ describe('examSets/{setId}', () => {
     const db = authedDb(USER_A_UID, USER_A_EMAIL);
     await assertFails(
       updateDoc(doc(db, 'examSets', 'set1'), { title: 'Hacked' })
+    );
+  });
+
+  it('owner CANNOT self-promote their set to official via update (update-bypass)', async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1'), {
+        ownerUid: USER_A_UID,
+        title: 'Set',
+        questionCount: 5,
+        published: true,
+        official: false,
+      });
+    });
+    const db = authedDb(USER_A_UID, USER_A_EMAIL);
+    await assertFails(
+      updateDoc(doc(db, 'examSets', 'set1'), { official: true })
+    );
+  });
+
+  it('owner CANNOT bypass the 500 questionCount cap via update', async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1'), {
+        ownerUid: USER_A_UID,
+        title: 'Set',
+        questionCount: 5,
+        published: true,
+      });
+    });
+    const db = authedDb(USER_A_UID, USER_A_EMAIL);
+    await assertFails(
+      updateDoc(doc(db, 'examSets', 'set1'), { questionCount: 9999 })
+    );
+  });
+
+  it('admin CAN promote a set to official', async () => {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'examSets', 'set1'), {
+        ownerUid: USER_A_UID,
+        title: 'Set',
+        questionCount: 5,
+        published: true,
+        official: false,
+      });
+    });
+    const db = adminDb();
+    await assertSucceeds(
+      updateDoc(doc(db, 'examSets', 'set1'), { official: true })
     );
   });
 });

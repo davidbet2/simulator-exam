@@ -2,25 +2,33 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Admin authority check. Requires a verified email claim in addition to
+    // the /admins/{email} doc so an attacker cannot pass this check merely
+    // by signing up (email/password) with an admin's email before that
+    // admin ever creates their own Auth account — email/password signup
+    // does not prove inbox ownership until email_verified flips to true.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
     // Questions: anyone can read (exam), only admins can write
     match /questions/{docId} {
       allow read: if true;
-      allow write: if request.auth != null
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+      allow write: if isAdmin();
     }
 
     // Settings: anyone can read (exam uses them), only admins can write
     match /settings/{certId} {
       allow read: if true;
-      allow write: if request.auth != null
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+      allow write: if isAdmin();
     }
 
     // Certifications: anyone can read (public simulator), only admins can write
     match /certifications/{certId} {
       allow read: if true;
-      allow write: if request.auth != null
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+      allow write: if isAdmin();
     }
 
     // Admins: a user can read their own admin doc to check status.
@@ -28,25 +36,22 @@ service cloud.firestore {
     // Only existing admins can write (add or remove admin docs).
     match /admins/{adminEmail} {
       allow read: if request.auth != null
-        && (request.auth.token.email == adminEmail
-            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
-      allow write: if request.auth != null
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+        && (request.auth.token.email == adminEmail || isAdmin());
+      allow write: if isAdmin();
     }
 
     // Users: each user reads and writes only their own profile document.
     // Admins can read, list, and update (plan changes, ban) any user profile.
     match /users/{uid} {
       allow read, list: if request.auth != null
-        && (request.auth.uid == uid
-            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+        && (request.auth.uid == uid || isAdmin());
       // On create, owners cannot seed themselves into any privileged tier.
       allow create: if request.auth != null && request.auth.uid == uid
         && (!('plan' in request.resource.data) || request.resource.data.plan == 'free')
         && !request.resource.data.keys().hasAny(['isPro','role','verifiedAuthor','reputationScore','banned']);
       allow update: if request.auth != null && (
         // Admins can update any user (plan, banned, notes, etc.)
-        exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
+        isAdmin()
         // Owners cannot change any privileged field.
         || (request.auth.uid == uid
             && !request.resource.data.diff(resource.data).affectedKeys()
@@ -57,37 +62,93 @@ service cloud.firestore {
     // Attempts: users can read and create their own attempts; admins can list/read all. No updates or deletes.
     match /attempts/{attemptId} {
       allow read, list: if request.auth != null
-        && (resource.data.uid == request.auth.uid
-            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+        && (resource.data.uid == request.auth.uid || isAdmin());
+      // Basic shape validation so a user can't forge an arbitrary/inflated
+      // exam result (score must be a real number, bounded by total when
+      // total is supplied, passPercent bounded to a percentage).
       allow create: if request.auth != null
-        && request.resource.data.uid == request.auth.uid;
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.score is number
+        && request.resource.data.score >= 0
+        && (!('total' in request.resource.data) || (
+              request.resource.data.total is number
+              && request.resource.data.total >= 0
+              && request.resource.data.score <= request.resource.data.total))
+        && (!('passPercent' in request.resource.data) || (
+              request.resource.data.passPercent is number
+              && request.resource.data.passPercent >= 0
+              && request.resource.data.passPercent <= 100))
+        && (!('mode' in request.resource.data) || request.resource.data.mode is string)
+        && (!('certId' in request.resource.data)
+              || request.resource.data.certId == null
+              || request.resource.data.certId is string);
     }
 
     // Audit log: append-only. Only admins can read or list. Only admins can create.
     // No update/delete ever — tamper-evident.
     match /auditLog/{logId} {
-      allow read, list: if request.auth != null
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
-      allow create: if request.auth != null
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
+      allow read, list: if isAdmin();
+      allow create: if isAdmin()
         && request.resource.data.actorEmail == request.auth.token.email;
     }
 
     // Feature flags: public read (app reads them to toggle features), admin-only write.
     match /featureFlags/{flagId} {
       allow read: if true;
-      allow write: if request.auth != null
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+      allow write: if isAdmin();
     }
 
     // ExamSets: PUBLISHED sets are publicly readable (SEO-indexable, no auth required).
     // Unpublished/draft sets are only readable by owner or admins.
     // Only the owner can create/update/delete their set.
     match /examSets/{setId} {
+      // An owner may freely edit their own set EXCEPT fields that grant
+      // privileges beyond their own data (official badge, ownership
+      // transfer) — those still go through create-time constraints, since
+      // otherwise a create-time restriction (e.g. official must be false)
+      // could be trivially bypassed by an immediate update.
+      function ownerUpdateIsValid() {
+        let changedKeys = request.resource.data.diff(resource.data).affectedKeys();
+        return resource.data.ownerUid == request.auth.uid
+          && !changedKeys.hasAny(['ownerUid', 'official'])
+          && (!changedKeys.hasAny(['questionCount']) || (
+                request.resource.data.questionCount is int
+                && request.resource.data.questionCount >= 1
+                && request.resource.data.questionCount <= 500))
+          && (!changedKeys.hasAny(['title']) || (
+                request.resource.data.title is string
+                && request.resource.data.title.size() <= 200));
+      }
+
+      // Any authenticated user may denormalize their OWN rating into the
+      // set's aggregate counters — but only if they actually have a rating
+      // doc for this set (proves they went through the rating flow), only
+      // those two counter fields may move, and the resulting sum can never
+      // imply an average above 5 stars.
+      function ratingAggregateUpdateIsValid() {
+        let changedKeys = request.resource.data.diff(resource.data).affectedKeys();
+        return changedKeys.hasOnly(['ratingSum', 'ratingCount', 'updatedAt'])
+          && exists(/databases/$(database)/documents/examSets/$(setId)/ratings/$(request.auth.uid))
+          && request.resource.data.ratingCount is int
+          && request.resource.data.ratingCount >= 0
+          && request.resource.data.ratingSum is number
+          && request.resource.data.ratingSum >= 0
+          && request.resource.data.ratingSum <= request.resource.data.ratingCount * 5;
+      }
+
+      // Same idea for the favorites counter: only movable by a user who has
+      // an actual favorites doc for this set.
+      function favoritesAggregateUpdateIsValid() {
+        let changedKeys = request.resource.data.diff(resource.data).affectedKeys();
+        return changedKeys.hasOnly(['favoritesCount', 'updatedAt'])
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid)/favorites/$(setId))
+          && request.resource.data.favoritesCount is int
+          && request.resource.data.favoritesCount >= 0;
+      }
+
       allow get: if resource.data.published == true
         || (request.auth != null
-            && (resource.data.ownerUid == request.auth.uid
-                || exists(/databases/$(database)/documents/admins/$(request.auth.token.email))));
+            && (resource.data.ownerUid == request.auth.uid || isAdmin()));
       // Listing: admins may list freely. Owners can list their own sets (for MySets page).
       // For everyone else, the rule is evaluated per-document; clients MUST filter by
       // published==true (and bound the limit), otherwise any non-published doc trips the
@@ -95,8 +156,7 @@ service cloud.firestore {
       // NOTE: request.query.filters does NOT exist in Firestore Rules — only
       // limit/offset/orderBy are exposed. Use resource.data instead.
       allow list: if
-        (request.auth != null
-          && exists(/databases/$(database)/documents/admins/$(request.auth.token.email)))
+        (request.auth != null && isAdmin())
         || (request.auth != null
             && request.query.limit <= 50
             && resource.data.ownerUid == request.auth.uid)
@@ -110,31 +170,19 @@ service cloud.firestore {
         && request.resource.data.title is string
         && request.resource.data.title.size() <= 200
         && (!('official' in request.resource.data) || request.resource.data.official == false);
-      // Update: owner/admin for full write. Authenticated non-owners may
-      // only touch aggregate counter fields (rating/favorites) — enabling
-      // client-side denormalization when a user rates or favorites a set.
+      // Update: owner may edit their own set (minus privileged fields, see
+      // ownerUpdateIsValid). Admins have unrestricted write. Authenticated
+      // non-owners may only touch their own proven aggregate counter
+      // (rating or favorites) — enabling client-side denormalization
+      // without letting anyone forge another set's public metrics.
       allow update: if request.auth != null && (
-        resource.data.ownerUid == request.auth.uid
-        || exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
-        || (
-          request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['ratingSum','ratingCount','ratingAvg','wilsonScore','favoritesCount','updatedAt'])
-          && request.resource.data.ratingSum is number
-          && request.resource.data.ratingCount is int
-          && request.resource.data.ratingCount >= 0
-          && request.resource.data.ratingAvg is number
-          && request.resource.data.ratingAvg >= 0
-          && request.resource.data.ratingAvg <= 5
-          && request.resource.data.wilsonScore is number
-          && request.resource.data.wilsonScore >= 0
-          && request.resource.data.wilsonScore <= 1
-          && request.resource.data.favoritesCount is int
-          && request.resource.data.favoritesCount >= 0
-        )
+        isAdmin()
+        || ownerUpdateIsValid()
+        || ratingAggregateUpdateIsValid()
+        || favoritesAggregateUpdateIsValid()
       );
       allow delete: if request.auth != null
-        && (resource.data.ownerUid == request.auth.uid
-            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+        && (resource.data.ownerUid == request.auth.uid || isAdmin());
 
       // Questions of a published set are public (SEO + preview).
       // For unpublished sets, only owner/admins can read.
@@ -143,10 +191,10 @@ service cloud.firestore {
           get(/databases/$(database)/documents/examSets/$(setId)).data.published == true
           || (request.auth != null
               && (get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid == request.auth.uid
-                  || exists(/databases/$(database)/documents/admins/$(request.auth.token.email))));
+                  || isAdmin()));
         allow write: if request.auth != null
           && (get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid == request.auth.uid
-              || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+              || isAdmin());
       }
 
       // Ratings: one per user per set (doc id = uid prevents duplicates).
@@ -161,8 +209,7 @@ service cloud.firestore {
           && request.resource.data.stars <= 5
           && get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid != uid;
         allow delete: if request.auth != null
-          && (request.auth.uid == uid
-              || exists(/databases/$(database)/documents/admins/$(request.auth.token.email)));
+          && (request.auth.uid == uid || isAdmin());
       }
     }
 
