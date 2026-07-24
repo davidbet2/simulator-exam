@@ -2,12 +2,12 @@ import { forwardRef } from 'react'
 import { cn } from '../../lib/utils'
 
 const variants = {
-  primary:   'bg-brand-600 hover:bg-brand-700 text-white shadow-sm shadow-brand-500/25 focus-visible:ring-brand-500',
-  secondary: 'bg-surface-soft hover:bg-surface-muted text-ink border border-surface-border focus-visible:ring-brand-500',
-  success:   'bg-success-500 hover:bg-success-600 text-white shadow-sm shadow-success-500/25 focus-visible:ring-success-500',
-  danger:    'bg-danger-500 hover:bg-danger-600 text-white shadow-sm shadow-danger-500/25 focus-visible:ring-danger-500',
-  ghost:     'text-ink-soft hover:bg-surface-soft hover:text-ink focus-visible:ring-brand-500',
-  outline:   'border border-surface-border text-ink-soft hover:bg-surface-soft focus-visible:ring-brand-500',
+  primary:   'bg-zen-brand text-white shadow-zen hover:shadow-zen-lg hover:brightness-110 focus-visible:ring-zen',
+  secondary: 'bg-glass-light-2 dark:bg-glass-dark-2 text-zen-ink dark:text-white border border-glass-light-border dark:border-glass-dark-border backdrop-blur-md hover:bg-glass-light-3 dark:hover:bg-glass-dark-3 focus-visible:ring-zen',
+  success:   'bg-zen-success text-white shadow-sm hover:brightness-95 focus-visible:ring-zen-success',
+  danger:    'bg-zen-danger text-white shadow-sm hover:brightness-95 focus-visible:ring-zen-danger',
+  ghost:     'text-zen-ink/70 dark:text-white/70 hover:bg-glass-light-2 dark:hover:bg-glass-dark-2 hover:text-zen-ink dark:hover:text-white focus-visible:ring-zen',
+  outline:   'border border-glass-light-border dark:border-glass-dark-border text-zen-ink/80 dark:text-white/80 hover:bg-glass-light-2 dark:hover:bg-glass-dark-2 focus-visible:ring-zen',
 }
 
 const sizes = {
@@ -28,7 +28,7 @@ const Button = forwardRef(function Button(
       disabled={disabled}
       className={cn(
         'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-150',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
+        'focus-visible:outline-none focus-visible:ring-2',
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
         'active:scale-[0.97]',
         variants[variant],

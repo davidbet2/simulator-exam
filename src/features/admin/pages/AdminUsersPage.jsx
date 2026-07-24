@@ -9,6 +9,9 @@ import { useAdmin } from '../hooks/useAdmin';
 import { useAudit } from '../hooks/useAudit';
 import { Modal } from '../../../components/ui/Modal';
 import Button from '../../../components/ui/Button';
+import { GlassCard } from '../../../components/glass/GlassCard';
+import { GlassInput } from '../../../components/glass/GlassInput';
+import { GlassBadge } from '../../../components/glass/GlassBadge';
 
 function formatDate(v) {
   if (!v) return '—';
@@ -18,32 +21,16 @@ function formatDate(v) {
 
 function PlanBadge({ plan }) {
   if (plan === 'pro') {
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
-        <Crown size={10} /> Pro
-      </span>
-    );
+    return <GlassBadge tone="warning"><Crown size={10} /> Pro</GlassBadge>;
   }
-  return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-surface-muted text-ink-soft border border-surface-border">
-      Free
-    </span>
-  );
+  return <GlassBadge tone="neutral">Free</GlassBadge>;
 }
 
 function StatusBadge({ banned }) {
   if (banned) {
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-danger-50 text-danger-600 border border-danger-500/30">
-        <Ban size={10} /> Baneado
-      </span>
-    );
+    return <GlassBadge tone="danger"><Ban size={10} /> Baneado</GlassBadge>;
   }
-  return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-success-50 text-success-600 border border-success-500/30">
-      <CheckCircle2 size={10} /> Activo
-    </span>
-  );
+  return <GlassBadge tone="success"><CheckCircle2 size={10} /> Activo</GlassBadge>;
 }
 
 export function AdminUsersPage() {
@@ -183,15 +170,15 @@ export function AdminUsersPage() {
       subtitle="Busca, inspecciona y gestiona cuentas de usuarios finales."
     >
       {/* Search bar */}
-      <form onSubmit={handleSearch} className="flex gap-2 mb-5">
+      <form onSubmit={handleSearch} className="mb-5 flex gap-2">
         <div className="relative flex-1">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-          <input
+          <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zen-ink/40 dark:text-white/40" />
+          <GlassInput
             type="search"
             placeholder="Buscar por email exacto (ej: user@example.com)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 h-10 rounded-xl bg-white border border-surface-border text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+            className="pl-9"
           />
         </div>
         <Button type="submit" size="md">Buscar</Button>
@@ -202,51 +189,51 @@ export function AdminUsersPage() {
 
       {/* Loading */}
       {loading ? (
-        <div className="py-16 text-center text-ink-soft">
-          <Loader2 size={24} className="inline animate-spin text-brand-500 mr-2" />
+        <div className="py-16 text-center text-zen-ink/60 dark:text-white/60">
+          <Loader2 size={24} className="mr-2 inline animate-spin text-zen" />
           Cargando usuarios…
         </div>
       ) : users.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-surface-border">
-          <UserRound size={32} className="mx-auto text-ink-muted mb-2" />
-          <p className="text-sm text-ink-soft">
+        <GlassCard className="py-16 text-center">
+          <UserRound size={32} className="mx-auto mb-2 text-zen-ink/40 dark:text-white/40" />
+          <p className="text-sm text-zen-ink/60 dark:text-white/60">
             {searchMode ? 'No se encontraron usuarios con ese email.' : 'No hay usuarios registrados.'}
           </p>
-        </div>
+        </GlassCard>
       ) : (
         <>
-          <div className="bg-white rounded-2xl border border-surface-border shadow-card overflow-hidden">
-            <div className="px-5 py-3 border-b border-surface-border flex items-center justify-between">
-              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider">
+          <GlassCard className="overflow-hidden">
+            <div className="flex items-center justify-between border-b border-glass-light-border px-5 py-3 dark:border-glass-dark-border">
+              <span className="text-xs font-semibold uppercase tracking-wider text-zen-ink/50 dark:text-white/50">
                 {users.length} {searchMode ? 'resultado(s)' : 'usuarios'}
               </span>
             </div>
-            <ul className="divide-y divide-surface-border">
+            <ul className="divide-y divide-glass-light-border dark:divide-glass-dark-border">
               {users.map((u) => (
                 <li key={u.id}>
                   <button
                     onClick={() => openDetail(u)}
-                    className="w-full px-5 py-3 flex items-center gap-3 hover:bg-surface-muted/60 transition-colors text-left"
+                    className="flex w-full items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-glass-light-2 dark:hover:bg-glass-dark-2"
                   >
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zen-brand text-xs font-bold text-white">
                       {(u.displayName ?? u.email ?? 'U').slice(0, 2).toUpperCase()}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-ink truncate">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">
                         {u.displayName ?? u.email}
                       </p>
-                      <p className="text-xs text-ink-muted truncate">{u.email}</p>
+                      <p className="truncate text-xs text-zen-ink/50 dark:text-white/50">{u.email}</p>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex shrink-0 items-center gap-2">
                       <PlanBadge plan={u.plan ?? 'free'} />
                       {u.banned && <StatusBadge banned />}
-                      <ChevronRight size={15} className="text-ink-muted" />
+                      <ChevronRight size={15} className="text-zen-ink/40 dark:text-white/40" />
                     </div>
                   </button>
                 </li>
               ))}
             </ul>
-          </div>
+          </GlassCard>
 
           {hasMore && !searchMode && (
             <div className="mt-5 text-center">
@@ -269,18 +256,18 @@ export function AdminUsersPage() {
           <div className="space-y-5">
             {/* Identity */}
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center font-bold text-base shrink-0">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-zen-brand text-base font-bold text-white">
                 {(detailUser.displayName ?? detailUser.email ?? 'U').slice(0, 2).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-base font-bold text-ink truncate">
+                <h3 className="truncate text-base font-bold">
                   {detailUser.displayName ?? detailUser.email}
                 </h3>
-                <div className="flex items-center gap-1.5 text-xs text-ink-soft mt-0.5">
+                <div className="mt-0.5 flex items-center gap-1.5 text-xs text-zen-ink/60 dark:text-white/60">
                   <Mail size={11} />
                   <span className="truncate">{detailUser.email}</span>
                 </div>
-                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
                   <PlanBadge plan={detailUser.plan ?? 'free'} />
                   <StatusBadge banned={detailUser.banned === true} />
                 </div>
@@ -289,32 +276,32 @@ export function AdminUsersPage() {
 
             {/* Metadata grid */}
             <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3 rounded-lg bg-surface-soft border border-surface-border">
-                <p className="text-ink-muted flex items-center gap-1"><Calendar size={11} />Registrado</p>
-                <p className="font-semibold text-ink mt-0.5">{formatDate(detailUser.createdAt)}</p>
+              <div className="rounded-lg border border-glass-light-border bg-glass-light-1 p-3 dark:border-glass-dark-border dark:bg-glass-dark-1">
+                <p className="flex items-center gap-1 text-zen-ink/50 dark:text-white/50"><Calendar size={11} />Registrado</p>
+                <p className="mt-0.5 font-semibold">{formatDate(detailUser.createdAt)}</p>
               </div>
-              <div className="p-3 rounded-lg bg-surface-soft border border-surface-border">
-                <p className="text-ink-muted flex items-center gap-1"><Activity size={11} />Intentos totales</p>
-                <p className="font-semibold text-ink mt-0.5">
+              <div className="rounded-lg border border-glass-light-border bg-glass-light-1 p-3 dark:border-glass-dark-border dark:bg-glass-dark-1">
+                <p className="flex items-center gap-1 text-zen-ink/50 dark:text-white/50"><Activity size={11} />Intentos totales</p>
+                <p className="mt-0.5 font-semibold">
                   {attemptCount === null ? '…' : attemptCount}
                 </p>
               </div>
               {detailUser.planChangedBy && (
-                <div className="p-3 rounded-lg bg-surface-soft border border-surface-border col-span-2">
-                  <p className="text-ink-muted">Plan cambiado por</p>
-                  <p className="font-medium text-ink mt-0.5 truncate">
+                <div className="col-span-2 rounded-lg border border-glass-light-border bg-glass-light-1 p-3 dark:border-glass-dark-border dark:bg-glass-dark-1">
+                  <p className="text-zen-ink/50 dark:text-white/50">Plan cambiado por</p>
+                  <p className="mt-0.5 truncate font-medium">
                     {detailUser.planChangedBy} — {formatDate(detailUser.planChangedAt)}
                   </p>
                 </div>
               )}
               {detailUser.banned && detailUser.bannedReason && (
-                <div className="p-3 rounded-lg bg-danger-50 border border-danger-500/30 col-span-2">
-                  <p className="text-danger-600 font-semibold flex items-center gap-1">
+                <div className="col-span-2 rounded-lg border border-zen-danger/30 bg-zen-danger/10 p-3">
+                  <p className="flex items-center gap-1 font-semibold text-zen-danger">
                     <ShieldAlert size={11} /> Razón del ban
                   </p>
-                  <p className="text-ink mt-1">{detailUser.bannedReason}</p>
+                  <p className="mt-1">{detailUser.bannedReason}</p>
                   {detailUser.bannedBy && (
-                    <p className="text-xs text-ink-muted mt-1">Por: {detailUser.bannedBy}</p>
+                    <p className="mt-1 text-xs text-zen-ink/50 dark:text-white/50">Por: {detailUser.bannedBy}</p>
                   )}
                 </div>
               )}
@@ -322,12 +309,12 @@ export function AdminUsersPage() {
 
             {/* Actions */}
             {actionError && (
-              <div className="text-xs text-danger-600 bg-danger-50 border border-danger-500/30 rounded-lg px-3 py-2">
+              <div className="rounded-lg border border-zen-danger/30 bg-zen-danger/10 px-3 py-2 text-xs text-zen-danger">
                 {actionError}
               </div>
             )}
 
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-surface-border">
+            <div className="flex flex-wrap gap-2 border-t border-glass-light-border pt-2 dark:border-glass-dark-border">
               <Button
                 variant={detailUser.plan === 'pro' ? 'outline' : 'primary'}
                 size="sm"
@@ -346,16 +333,16 @@ export function AdminUsersPage() {
               </Link>
 
               {confirmBan ? (
-                <div className="w-full flex flex-col gap-2 p-3 rounded-lg bg-danger-50 border border-danger-500/30">
-                  <label className="text-xs font-semibold text-danger-600">
+                <div className="flex w-full flex-col gap-2 rounded-lg border border-zen-danger/30 bg-zen-danger/10 p-3">
+                  <label className="text-xs font-semibold text-zen-danger">
                     {detailUser.banned ? '¿Revertir ban?' : 'Razón del ban:'}
                   </label>
                   {!detailUser.banned && (
-                    <input
+                    <GlassInput
                       value={banReason}
                       onChange={(e) => setBanReason(e.target.value)}
                       placeholder="Ej: conducta abusiva, spam…"
-                      className="w-full border border-surface-border rounded px-2 py-1 text-sm"
+                      className="min-h-9 text-sm"
                     />
                   )}
                   <div className="flex gap-2">

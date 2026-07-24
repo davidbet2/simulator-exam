@@ -25,7 +25,7 @@ function App() {
         {/* Skip to content — accessibility (fixed off-screen, visible on focus) */}
         <a
           href="#main-content"
-          className="fixed top-[-100px] left-4 z-[9999] focus:top-4 transition-[top] duration-100 bg-brand-600 text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-glow-brand"
+          className="fixed top-[-100px] left-4 z-[9999] focus:top-4 transition-[top] duration-100 bg-zen-brand text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-zen"
         >
           Saltar al contenido
         </a>

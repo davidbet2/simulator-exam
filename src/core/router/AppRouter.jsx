@@ -45,7 +45,7 @@ const AuthActionPage          = lazy(() => import('../../features/auth/pages/Aut
 
 function PageLoader() {  return (
     <div className="min-h-screen bg-surface flex items-center justify-center" aria-busy="true" aria-label="Cargando página">
-      <div className="w-8 h-8 rounded-full border-2 border-brand-500/30 border-t-brand-500 animate-spin" />
+      <div className="w-8 h-8 rounded-full border-2 border-zen/30 border-t-zen animate-spin" />
     </div>
   );
 }

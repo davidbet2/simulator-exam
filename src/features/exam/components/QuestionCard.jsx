@@ -14,8 +14,8 @@ function QuestionHeader({ question, questionNumber: _questionNumber, flagged, is
             title={flagged ? t`Quitar bandera` : t`Marcar con duda`}
             className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all ${
               flagged
-                ? 'bg-zen-danger/100 border-danger-500 text-white shadow-glow-danger'
-                : 'bg-transparent border-glass-light-border dark:border-glass-dark-border text-zen-ink/70 dark:text-white/60 hover:border-danger-500 hover:text-danger-600'
+                ? 'bg-zen-danger/100 border-zen-danger text-white shadow-glow-danger'
+                : 'bg-transparent border-glass-light-border dark:border-glass-dark-border text-zen-ink/70 dark:text-white/60 hover:border-zen-danger hover:text-rose-600'
             }`}
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -35,7 +35,7 @@ function QuestionHeader({ question, questionNumber: _questionNumber, flagged, is
 function ExplanationBox({ text }) {
   if (!text) return null;
   return (
-    <div className="flex gap-2 mt-4 px-4 py-3 rounded-lg border border-zen/30 bg-zen/10 text-sm text-brand-700">
+    <div className="flex gap-2 mt-4 px-4 py-3 rounded-lg border border-zen/30 bg-zen/10 text-sm text-zen dark:text-indigo-300">
       <span className="shrink-0 text-base">💡</span>
       <p className="leading-relaxed">{text}</p>
     </div>
@@ -47,8 +47,8 @@ function FeedbackBanner({ isCorrect }) {
   return (
     <div className={`flex items-center gap-2 px-4 py-2 rounded-xl mb-4 text-sm font-semibold border ${
       isCorrect
-        ? 'bg-zen-success/10 border-success-500/40 text-success-600 dark:bg-emerald-500/15 dark:border-emerald-400/50 dark:text-emerald-200'
-        : 'bg-zen-danger/10 border-danger-500/40 text-danger-600 dark:bg-rose-500/15 dark:border-rose-400/50 dark:text-rose-200'
+        ? 'bg-zen-success/10 border-zen-success/40 text-emerald-600 dark:bg-emerald-500/15 dark:border-emerald-400/50 dark:text-emerald-200'
+        : 'bg-zen-danger/10 border-zen-danger/40 text-rose-600 dark:bg-rose-500/15 dark:border-rose-400/50 dark:text-rose-200'
     }`}>
       <span>{isCorrect ? '✅' : '❌'}</span>
       <span>
@@ -82,9 +82,9 @@ function MatchingQuestion({ question, savedSelection, revealed, onSelectionChang
         let rowCls = 'grid gap-3 p-3 rounded-lg border ';
         if (revealed) {
           rowCls += isCorrect
-            ? 'border-success-500/50 bg-zen-success/100/10'
+            ? 'border-zen-success/50 bg-zen-success/100/10'
             : isWrong
-            ? 'border-danger-500/50 bg-zen-danger/100/10'
+            ? 'border-zen-danger/50 bg-zen-danger/100/10'
             : 'border-glass-light-border dark:border-glass-dark-border bg-glass-light-2 dark:bg-glass-dark-2';
         } else {
           rowCls += 'border-glass-light-border dark:border-glass-dark-border bg-glass-light-2 dark:bg-glass-dark-2';
@@ -100,7 +100,7 @@ function MatchingQuestion({ question, savedSelection, revealed, onSelectionChang
                 disabled={revealed}
                 className={`flex-1 min-w-0 w-0 border rounded-lg px-2 py-1.5 text-sm bg-glass-light-3 dark:bg-glass-dark-3 text-zen-ink dark:text-white focus:outline-none focus:border-zen ${
                   revealed ? 'cursor-default' : 'cursor-pointer'
-                } ${isCorrect ? 'border-success-500' : isWrong ? 'border-danger-500' : 'border-glass-light-border dark:border-glass-dark-border'}`}
+                } ${isCorrect ? 'border-zen-success' : isWrong ? 'border-zen-danger' : 'border-glass-light-border dark:border-glass-dark-border'}`}
               >
                 <option value="">{'— '}{tSel}{' —'}</option>
                 {Object.entries(question.matches).map(([key, text]) => (
@@ -114,13 +114,13 @@ function MatchingQuestion({ question, savedSelection, revealed, onSelectionChang
                 ))}
               </select>
               {revealed && (
-                <span className={`shrink-0 font-bold text-sm ${isCorrect ? 'text-success-600' : isWrong ? 'text-danger-600' : 'text-zen-ink/50 dark:text-white/40'}`}>
+                <span className={`shrink-0 font-bold text-sm ${isCorrect ? 'text-emerald-600' : isWrong ? 'text-rose-600' : 'text-zen-ink/50 dark:text-white/40'}`}>
                   {isCorrect ? '✓' : isWrong ? '✗' : '—'}
                 </span>
               )}
             </div>
             {revealed && (isWrong || isBlank) && (
-              <div className="col-span-2 text-xs text-success-400 font-medium bg-zen-success/100/10 border border-success-500/30 rounded px-2 py-1">
+              <div className="col-span-2 text-xs text-emerald-400 font-medium bg-zen-success/100/10 border border-zen-success/30 rounded px-2 py-1">
                 <Trans>✓ Correcto: {question.matches[pair.correctMatch]}</Trans>
               </div>
             )}
@@ -239,9 +239,9 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
                 className={`flex items-center gap-2 p-2.5 border rounded-lg text-sm select-none transition-all ${
                   revealed
                     ? isCorrect
-                      ? 'bg-zen-success/10 border-success-500/50 cursor-default text-success-700'
-                      : 'bg-zen-danger/10 border-danger-500/50 cursor-default text-danger-700'
-                    : 'bg-glass-light-3 dark:bg-glass-dark-3 border-glass-light-border dark:border-glass-dark-border text-zen-ink/70 dark:text-white/60 cursor-grab active:cursor-grabbing hover:border-danger-500/50 hover:bg-zen-danger/10'
+                      ? 'bg-zen-success/10 border-zen-success/50 cursor-default text-emerald-700'
+                      : 'bg-zen-danger/10 border-zen-danger/50 cursor-default text-rose-700'
+                    : 'bg-glass-light-3 dark:bg-glass-dark-3 border-glass-light-border dark:border-glass-dark-border text-zen-ink/70 dark:text-white/60 cursor-grab active:cursor-grabbing hover:border-zen-danger/50 hover:bg-zen-danger/10'
                 }`}
               >
                 <span className="w-5 h-5 flex items-center justify-center bg-glass-light-1 dark:bg-glass-dark-1 rounded-full text-xs font-bold text-zen-ink/50 dark:text-white/40 shrink-0">
@@ -249,7 +249,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
                 </span>
                 <span className="flex-1">{item}</span>
                 {revealed && (
-                  <span className={`shrink-0 font-bold ${isCorrect ? 'text-success-600' : 'text-danger-600'}`}>
+                  <span className={`shrink-0 font-bold ${isCorrect ? 'text-emerald-600' : 'text-rose-600'}`}>
                     {isCorrect ? '✓' : '✗'}
                   </span>
                 )}
@@ -258,7 +258,7 @@ function OrderingQuestion({ question, savedSelection, revealed, onSelectionChang
           })}
         </div>
         {revealed && (
-          <div className={`mt-2 p-2 bg-zen-success/10 border border-success-500/30 rounded-lg text-xs text-success-700`}>
+          <div className={`mt-2 p-2 bg-zen-success/10 border border-zen-success/30 rounded-lg text-xs text-emerald-700`}>
             <strong>Orden correcto:</strong>
             <ol className="mt-1 ml-4 list-decimal space-y-0.5">
               {question.correctOrder.map((item, i) => (
@@ -370,8 +370,8 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
       {revealed && (
         <div className={`flex items-center gap-2 px-4 py-2 rounded-xl mb-4 text-sm font-semibold border ${
           isCorrect
-            ? 'bg-zen-success/10 border-success-500/40 text-success-600 dark:bg-emerald-500/15 dark:border-emerald-400/50 dark:text-emerald-200'
-            : 'bg-zen-danger/10 border-danger-500/40 text-danger-600 dark:bg-rose-500/15 dark:border-rose-400/50 dark:text-rose-200'
+            ? 'bg-zen-success/10 border-zen-success/40 text-emerald-600 dark:bg-emerald-500/15 dark:border-emerald-400/50 dark:text-emerald-200'
+            : 'bg-zen-danger/10 border-zen-danger/40 text-rose-600 dark:bg-rose-500/15 dark:border-rose-400/50 dark:text-rose-200'
         }`}>
           <span>{isCorrect ? '✅' : '❌'}</span>
           <span>
@@ -387,7 +387,7 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
       <div className="flex items-center justify-between mb-4">
         <div>
           {isMultiple && (
-            <span className="inline-block bg-warning-50 text-warning-600 text-xs font-semibold px-2 py-0.5 rounded-full border border-warning-500/30">
+            <span className="inline-block bg-zen-warning/10 text-amber-600 text-xs font-semibold px-2 py-0.5 rounded-full border border-zen-warning/30">
               <Trans>Selección múltiple — elige {question.answer.length} opciones</Trans>
             </span>
           )}
@@ -398,8 +398,8 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
             title={flagged ? tMacro`Quitar bandera` : tMacro`Marcar con duda`}
             className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-all ${
               flagged
-                ? 'bg-zen-danger/100 border-danger-500 text-white shadow-glow-danger'
-                : 'bg-transparent border-glass-light-border dark:border-glass-dark-border text-zen-ink/70 dark:text-white/60 hover:border-danger-500 hover:text-danger-600'
+                ? 'bg-zen-danger/100 border-zen-danger text-white shadow-glow-danger'
+                : 'bg-transparent border-glass-light-border dark:border-glass-dark-border text-zen-ink/70 dark:text-white/60 hover:border-zen-danger hover:text-rose-600'
             }`}
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -422,9 +422,9 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
           if (revealed) {
             cls += 'cursor-default ';
             if (isRight) {
-              cls += 'bg-zen-success/100/15 border-success-500/60 shadow-glow-success';
+              cls += 'bg-zen-success/100/15 border-zen-success/60 shadow-glow-success';
             } else if (isSelected) {
-              cls += 'bg-zen-danger/100/15 border-danger-500/60 animate-shake';
+              cls += 'bg-zen-danger/100/15 border-zen-danger/60 animate-shake';
             } else {
               cls += 'bg-glass-light-2 dark:bg-glass-dark-2 border-glass-light-border dark:border-glass-dark-border opacity-50';
             }
@@ -448,16 +448,16 @@ export function QuestionCard({ question, questionNumber, total: _total, savedSel
               />
               <span className={`text-sm ${
                 revealed
-                  ? isRight ? 'text-success-700 font-medium' : isSelected ? 'text-danger-700' : 'text-zen-ink/50 dark:text-white/40'
+                  ? isRight ? 'text-emerald-700 font-medium' : isSelected ? 'text-rose-700' : 'text-zen-ink/50 dark:text-white/40'
                   : isSelected ? 'text-zen-ink dark:text-white font-medium' : 'text-zen-ink/70 dark:text-white/60'
               }`}>
                 <span className="font-bold">{key}.</span> {value}
               </span>
               {revealed && isRight && (
-                <span className="ml-auto shrink-0 text-xs font-bold text-success-700"><Trans>✓ Correcta</Trans></span>
+                <span className="ml-auto shrink-0 text-xs font-bold text-emerald-700"><Trans>✓ Correcta</Trans></span>
               )}
               {revealed && isSelected && !isRight && (
-                <span className="ml-auto shrink-0 text-xs font-bold text-danger-700"><Trans>✗ Tu resp.</Trans></span>
+                <span className="ml-auto shrink-0 text-xs font-bold text-rose-700"><Trans>✗ Tu resp.</Trans></span>
               )}
             </label>
           );

@@ -7,6 +7,8 @@ import { useFeatureFlags, DEFAULT_FLAGS } from '../../../core/hooks/useFeatureFl
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { useAudit } from '../hooks/useAudit';
 import Button from '../../../components/ui/Button';
+import { GlassCard } from '../../../components/glass/GlassCard';
+import { GlassBadge } from '../../../components/glass/GlassBadge';
 
 /**
  * Human-readable metadata for each flag. Add new flags here + in DEFAULT_FLAGS.
@@ -32,7 +34,7 @@ function Toggle({ checked, onChange, disabled }) {
       disabled={disabled}
       className={[
         'relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors',
-        checked ? 'bg-brand-500' : 'bg-surface-muted',
+        checked ? 'bg-zen-brand' : 'bg-glass-light-3 dark:bg-glass-dark-3',
         disabled && 'opacity-50 cursor-not-allowed',
       ].filter(Boolean).join(' ')}
     >
@@ -119,14 +121,14 @@ export function AdminFlagsPage() {
             </Button>
           </div>
         ) : saved ? (
-          <span className="inline-flex items-center gap-1 text-xs text-success-600 font-semibold">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-zen-success">
             <CheckCircle2 size={13} /> Guardado
           </span>
         ) : null
       }
     >
       {error && (
-        <div className="mb-4 text-xs text-danger-600 bg-danger-50 border border-danger-500/30 rounded-lg px-3 py-2 flex items-center gap-1.5">
+        <div className="mb-4 flex items-center gap-1.5 rounded-lg border border-zen-danger/30 bg-zen-danger/10 px-3 py-2 text-xs text-zen-danger">
           <AlertCircle size={13} /> {error}
         </div>
       )}
@@ -134,28 +136,24 @@ export function AdminFlagsPage() {
       {loading ? (
         <div className="space-y-2">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-16 rounded-xl bg-surface-muted animate-pulse" />
+            <div key={i} className="h-16 animate-pulse rounded-xl bg-glass-light-2 dark:bg-glass-dark-2" />
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-surface-border shadow-card overflow-hidden">
-          <ul className="divide-y divide-surface-border">
+        <GlassCard className="overflow-hidden">
+          <ul className="divide-y divide-glass-light-border dark:divide-glass-dark-border">
             {FLAG_META.map((f) => (
-              <li key={f.key} className="px-5 py-4 flex items-center gap-4">
+              <li key={f.key} className="flex items-center gap-4 px-5 py-4">
                 <Flag
                   size={16}
-                  className={f.danger ? 'text-danger-500 shrink-0' : 'text-brand-600 shrink-0'}
+                  className={f.danger ? 'shrink-0 text-zen-danger' : 'shrink-0 text-zen'}
                 />
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-ink">{f.label}</p>
-                    {f.danger && (
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0 rounded text-[10px] font-semibold bg-danger-50 text-danger-600 border border-danger-500/30">
-                        destructivo
-                      </span>
-                    )}
+                    <p className="text-sm font-semibold">{f.label}</p>
+                    {f.danger && <GlassBadge tone="danger">destructivo</GlassBadge>}
                   </div>
-                  <p className="text-xs text-ink-muted mt-0.5">{f.desc}</p>
+                  <p className="mt-0.5 text-xs text-zen-ink/50 dark:text-white/50">{f.desc}</p>
                 </div>
                 <Toggle
                   checked={!!draft[f.key]}
@@ -165,7 +163,7 @@ export function AdminFlagsPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </GlassCard>
       )}
     </AdminShell>
   );

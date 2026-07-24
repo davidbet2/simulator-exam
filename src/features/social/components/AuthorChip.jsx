@@ -16,8 +16,8 @@ export function AuthorChip({ official, ownerEmail, ownerDisplayName, size = 'sm'
 
   if (official) {
     return (
-      <span className={`inline-flex items-center gap-1 font-medium text-brand-700 ${textSize}`}>
-        <ShieldCheck size={iconSize} className="fill-brand-500 stroke-white" strokeWidth={2.5} />
+      <span className={`inline-flex items-center gap-1 font-medium text-zen dark:text-indigo-300 ${textSize}`}>
+        <ShieldCheck size={iconSize} className="fill-zen stroke-white" strokeWidth={2.5} />
         <Trans>CertZen Oficial</Trans>
       </span>
     );
@@ -29,7 +29,7 @@ export function AuthorChip({ official, ownerEmail, ownerDisplayName, size = 'sm'
       ?? (ownerEmail ? ownerEmail.split('@')[0] : 'anónimo');
 
   return (
-    <span className={`inline-flex items-center gap-1 text-ink-soft ${textSize}`}>
+    <span className={`inline-flex items-center gap-1 text-zen-ink/60 dark:text-white/50 ${textSize}`}>
       <User size={iconSize} />
       <span className="font-medium">{label}</span>
       <span className="text-[10px] opacity-60">· Comunidad</span>

@@ -3,15 +3,14 @@ import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { motion } from 'framer-motion';
-import { ShieldCheck, LogIn, AlertTriangle, Timer } from 'lucide-react';
+import { ShieldCheck, LogIn, AlertTriangle, Timer, Mail, Lock } from 'lucide-react';
 import { Turnstile } from '@marsidev/react-turnstile';
 const VERIFY_TURNSTILE_URL = import.meta.env.VITE_TURNSTILE_VERIFY_URL
   ?? `https://us-central1-${import.meta.env.VITE_FIREBASE_PROJECT_ID}.cloudfunctions.net/verifyTurnstile`;
 import { Helmet } from 'react-helmet-async';
 import { useAuthStore } from '../../../core/store/useAuthStore';
-import Button from '../../../components/ui/Button';
-import Input from '../../../components/ui/Input';
+import { AuthShell, GlassField } from '../../auth/components/AuthShell';
+import { GlassButton } from '../../../components/glass/GlassButton';
 
 // Admin login is protected server-side via Firestore rules (admins collection).
 // Client-side: Turnstile CAPTCHA + progressive lockout after failed attempts.
@@ -119,115 +118,108 @@ export function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center p-4">
+    <AuthShell>
       <Helmet>
         <title>Admin — CertZen</title>
         <meta name="robots" content="noindex, nofollow, noarchive" />
       </Helmet>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-sm"
-      >
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/20 mb-3">
-            <ShieldCheck className="text-brand-400" size={28} />
-          </div>
-          <h1 className="text-2xl font-bold text-ink">Panel Administrador</h1>
-          <p className="text-ink-soft text-sm mt-1">Acceso restringido · CertZen</p>
+      <div className="flex items-center gap-2.5">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zen/15 text-zen dark:bg-zen/25 dark:text-indigo-300">
+          <ShieldCheck size={18} />
+        </span>
+        <div>
+          <h1 className="text-xl font-bold">Panel Administrador</h1>
+          <p className="text-xs text-zen-ink/60 dark:text-white/50">Acceso restringido · CertZen</p>
         </div>
+      </div>
 
-        <div className="rounded-2xl border border-surface-border bg-surface-soft p-6 space-y-5">
+      {/* Lockout banner */}
+      {locked && (
+        <div className="flex items-start gap-3 rounded-zen border border-zen-warning/30 bg-zen-warning/10 px-4 py-3 text-sm text-amber-700 dark:text-zen-warning">
+          <Timer size={16} className="mt-0.5 shrink-0" />
+          <span>
+            Demasiados intentos fallidos. Espera <strong>{countdown}s</strong> antes de intentar de nuevo.
+          </span>
+        </div>
+      )}
 
-          {/* Lockout banner */}
-          {locked && (
-            <div className="flex items-start gap-3 rounded-lg bg-warning-500/10 border border-warning-500/30 px-4 py-3 text-sm text-yellow-400">
-              <Timer size={16} className="mt-0.5 shrink-0" />
-              <span>
-                Demasiados intentos fallidos. Espera <strong>{countdown}s</strong> antes de intentar de nuevo.
-              </span>
-            </div>
-          )}
+      {/* Remaining attempts warning */}
+      {!locked && attempts > 0 && attempts < MAX_ATTEMPTS && (
+        <div className="flex items-start gap-3 rounded-zen border border-zen-warning/30 bg-zen-warning/10 px-4 py-3 text-sm text-amber-700 dark:text-zen-warning">
+          <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+          <span>
+            Intento {attempts} de {MAX_ATTEMPTS}. Tras {MAX_ATTEMPTS} fallos se bloqueará {LOCKOUT_SECONDS}s.
+          </span>
+        </div>
+      )}
 
-          {/* Remaining attempts warning */}
-          {!locked && attempts > 0 && attempts < MAX_ATTEMPTS && (
-            <div className="flex items-start gap-3 rounded-lg bg-warning-500/10 border border-warning-500/30 px-4 py-3 text-sm text-yellow-400">
-              <AlertTriangle size={16} className="mt-0.5 shrink-0" />
-              <span>
-                Intento {attempts} de {MAX_ATTEMPTS}. Tras {MAX_ATTEMPTS} fallos se bloqueará {LOCKOUT_SECONDS}s.
-              </span>
-            </div>
-          )}
+      {/* Auth error */}
+      {error && !locked && (
+        <div className="rounded-zen border border-zen-danger/30 bg-zen-danger/10 px-4 py-3 text-sm text-zen-danger" role="alert">
+          {error}
+        </div>
+      )}
 
-          {/* Auth error */}
-          {error && !locked && (
-            <div className="rounded-lg bg-danger-500/10 border border-danger-500/30 px-4 py-3 text-sm text-red-400" role="alert">
-              {error}
-            </div>
-          )}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <GlassField
+          id="admin-login-email"
+          label="Correo electrónico"
+          icon={Mail}
+          type="email"
+          autoComplete="username"
+          placeholder="admin@empresa.com"
+          error={errors.email?.message}
+          disabled={locked}
+          {...register('email')}
+        />
+        <GlassField
+          id="admin-login-password"
+          label="Contraseña"
+          icon={Lock}
+          type="password"
+          autoComplete="current-password"
+          placeholder="••••••••"
+          error={errors.password?.message}
+          disabled={locked}
+          {...register('password')}
+        />
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-            <Input
-              label="Correo electrónico"
-              type="email"
-              autoComplete="username"
-              placeholder="admin@empresa.com"
-              error={errors.email?.message}
-              disabled={locked}
-              {...register('email')}
-            />
-            <Input
-              label="Contraseña"
-              type="password"
-              autoComplete="current-password"
-              placeholder="••••••••"
-              error={errors.password?.message}
-              disabled={locked}
-              {...register('password')}
-            />
-
-            {TURNSTILE_KEY && (
-              <div>
-                <Controller
-                  name="captchaToken"
-                  control={control}
-                  render={({ field }) => (
-                    <Turnstile
-                      key={turnstileKey}
-                      siteKey={TURNSTILE_KEY}
-                      onSuccess={(token) => field.onChange(token)}
-                      onExpire={() => field.onChange('')}
-                      onError={() => field.onChange('')}
-                      options={{ theme: 'dark', size: 'normal', language: 'auto' }}
-                    />
-                  )}
-                />
-                {errors.captchaToken && (
-                  <p className="text-xs text-danger-400 mt-1">{errors.captchaToken.message}</p>
+        {TURNSTILE_KEY && (
+          <div>
+            <div className="overflow-hidden rounded-zen border border-glass-light-border bg-glass-light-1 dark:border-glass-dark-border dark:bg-glass-dark-1 [&_iframe]:!w-full">
+              <Controller
+                name="captchaToken"
+                control={control}
+                render={({ field }) => (
+                  <Turnstile
+                    key={turnstileKey}
+                    siteKey={TURNSTILE_KEY}
+                    onSuccess={(token) => field.onChange(token)}
+                    onExpire={() => field.onChange('')}
+                    onError={() => field.onChange('')}
+                    options={{ theme: 'auto', size: 'flexible', language: 'auto' }}
+                  />
                 )}
-              </div>
+              />
+            </div>
+            {errors.captchaToken && (
+              <p className="mt-1 text-xs text-zen-danger">{errors.captchaToken.message}</p>
             )}
+          </div>
+        )}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading || locked}
-            >
-              <LogIn size={16} />
-              {isLoading ? 'Verificando…' : 'Iniciar sesión'}
-            </Button>
-          </form>
-        </div>
+        <GlassButton type="submit" className="w-full" disabled={isLoading || locked}>
+          <LogIn size={16} />
+          {isLoading ? 'Verificando…' : 'Iniciar sesión'}
+        </GlassButton>
+      </form>
 
-        <p className="text-center mt-6 text-xs text-ink-muted">
-          <Link to="/" className="hover:text-ink-soft transition-colors underline underline-offset-2">
-            ← Volver al simulador
-          </Link>
-        </p>
-      </motion.div>
-    </div>
+      <p className="text-center text-xs text-zen-ink/50 dark:text-white/40">
+        <Link to="/" className="underline underline-offset-2 transition-colors hover:text-zen-ink dark:hover:text-white/70">
+          ← Volver al simulador
+        </Link>
+      </p>
+    </AuthShell>
   );
 }

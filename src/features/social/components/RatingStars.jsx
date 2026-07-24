@@ -90,7 +90,7 @@ export function RatingStars({
                     ? 'fill-amber-400 stroke-amber-500'
                     : half
                     ? 'fill-amber-200 stroke-amber-400'
-                    : 'fill-transparent stroke-ink-soft/60'
+                    : 'fill-transparent stroke-zen-ink/40 dark:stroke-white/40'
                 }
               />
             </button>
@@ -99,7 +99,7 @@ export function RatingStars({
       </div>
 
       {showCount && (
-        <span className="text-xs text-ink-soft">
+        <span className="text-xs text-zen-ink/60 dark:text-white/50">
           {count > 0
             ? `${averageValue.toFixed(1)} (${count})`
             : <span className="italic"><Trans>sin votos</Trans></span>}
@@ -107,7 +107,7 @@ export function RatingStars({
       )}
 
       {isOwnSet && (
-        <span className="text-[10px] text-ink-soft italic"><Trans>No puedes calificar tu propio set</Trans></span>
+        <span className="text-[10px] italic text-zen-ink/60 dark:text-white/50"><Trans>No puedes calificar tu propio set</Trans></span>
       )}
       {errorMsg && (
         <span className="text-[10px] text-rose-500">{errorMsg}</span>

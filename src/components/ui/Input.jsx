@@ -10,7 +10,7 @@ const Input = forwardRef(function Input(
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={inputId} className="text-sm font-medium text-ink">
+        <label htmlFor={inputId} className="text-sm font-medium text-zen-ink dark:text-white">
           {label}
         </label>
       )}
@@ -18,12 +18,12 @@ const Input = forwardRef(function Input(
         ref={ref}
         id={inputId}
         className={cn(
-          'h-11 w-full rounded-xl border bg-white px-4 text-sm text-ink placeholder-ink-muted',
+          'min-h-11 w-full rounded-zen border bg-glass-light-2 dark:bg-glass-dark-2 px-4 text-sm text-zen-ink dark:text-white placeholder:text-zen-ink/50 dark:placeholder:text-white/40 backdrop-blur-md',
           'transition-colors duration-150 outline-none',
-          'focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20',
+          'focus:border-zen focus:ring-2 focus:ring-zen/40',
           error
-            ? 'border-danger-500 focus:border-danger-500 focus:ring-danger-500/20'
-            : 'border-surface-border hover:border-surface-muted',
+            ? 'border-zen-danger focus:border-zen-danger focus:ring-zen-danger/20'
+            : 'border-glass-light-border dark:border-glass-dark-border',
           className
         )}
         aria-invalid={!!error}
@@ -31,12 +31,12 @@ const Input = forwardRef(function Input(
         {...props}
       />
       {error && (
-        <p id={`${inputId}-error`} className="text-xs text-red-400" role="alert">
+        <p id={`${inputId}-error`} className="text-xs text-zen-danger" role="alert">
           {error}
         </p>
       )}
       {hint && !error && (
-        <p id={`${inputId}-hint`} className="text-xs text-ink-muted">
+        <p id={`${inputId}-hint`} className="text-xs text-zen-ink/50 dark:text-white/50">
           {hint}
         </p>
       )}
