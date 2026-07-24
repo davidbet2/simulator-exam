@@ -54,12 +54,16 @@ function ConfidencePicker({ value, onPick, disabled }) {
   );
 }
 
-/** Wrapping chips showing each question's status */
-function QuestionNavigator({ total, current, answers, flags, revealed, displayQuestions, mode, onNavigate }) {
+/** Grid (sidebar, desktop) or horizontal strip (mobile) of question-status chips */
+function QuestionNavigator({ total, current, answers, flags, revealed, displayQuestions, mode, onNavigate, variant = 'strip' }) {
   const { t } = useLingui();
   const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
+  const containerCls =
+    variant === 'sidebar'
+      ? 'grid grid-cols-5 gap-1.5 p-3'
+      : 'flex gap-1.5 px-4 py-3 overflow-x-auto bg-glass-light-1 dark:bg-glass-dark-1 border-b border-glass-light-border dark:border-glass-dark-border';
   return (
-      <div className="flex flex-wrap gap-1.5 px-4 py-3 bg-glass-light-1 dark:bg-glass-dark-1 border-b border-glass-light-border dark:border-glass-dark-border">
+      <div className={containerCls}>
       {Array.from({ length: total }, (_, i) => {
         const isCurrent = i === current;
         const sel = answers[i] ?? [];
@@ -107,26 +111,31 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
   );
 }
 
-/** Legend for chip colors */
-function NavLegend({ mode }) {
+/** Legend for chip colors — stacked (sidebar) or inline (mobile strip) */
+function NavLegend({ mode, variant = 'strip' }) {
   const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
+  const wrapperCls =
+    variant === 'sidebar'
+      ? 'flex flex-col gap-1 px-3 py-2 text-xs text-zen-ink/70 dark:text-white/60'
+      : 'flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 bg-glass-light-1 dark:bg-glass-dark-1 border-b border-glass-light-border dark:border-glass-dark-border text-xs text-zen-ink/70 dark:text-white/60';
+  const dot = (cls) => <span className={`inline-block w-2.5 h-2.5 rounded ${cls}`} />;
   if (isStudy) {
     return (
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 bg-glass-light-1 dark:bg-glass-dark-1 border-b border-glass-light-border dark:border-glass-dark-border text-xs text-zen-ink/70 dark:text-white/60">
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-zen-brand" /> <Trans>Actual</Trans></span>
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-zen-success/100" /> <Trans>Correcta</Trans></span>
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-zen-danger/100" /> <Trans>Incorrecta</Trans></span>
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-warning-500" /> <Trans>Sin confirmar</Trans></span>
-        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-glass-light-1 dark:bg-glass-dark-1 border border-glass-light-border dark:border-glass-dark-border" /> <Trans>Sin responder</Trans></span>
+      <div className={wrapperCls}>
+        <span className="flex items-center gap-1">{dot('bg-zen-brand')} <Trans>Actual</Trans></span>
+        <span className="flex items-center gap-1">{dot('bg-zen-success/100')} <Trans>Correcta</Trans></span>
+        <span className="flex items-center gap-1">{dot('bg-zen-danger/100')} <Trans>Incorrecta</Trans></span>
+        <span className="flex items-center gap-1">{dot('bg-warning-500')} <Trans>Sin confirmar</Trans></span>
+        <span className="flex items-center gap-1">{dot('bg-glass-light-1 dark:bg-glass-dark-1 border border-glass-light-border dark:border-glass-dark-border')} <Trans>Sin responder</Trans></span>
       </div>
     );
   }
   return (
-    <div className="flex items-center gap-4 px-4 py-1.5 bg-glass-light-1 dark:bg-glass-dark-1 border-b border-glass-light-border dark:border-glass-dark-border text-xs text-zen-ink/70 dark:text-white/60">
-      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-zen-brand" /> <Trans>Actual</Trans></span>
-      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-zen-success/100" /> <Trans>Respondida</Trans></span>
-      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-zen-danger/100" /> <Trans>Con duda</Trans></span>
-      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-glass-light-1 dark:bg-glass-dark-1 border border-glass-light-border dark:border-glass-dark-border" /> <Trans>Sin responder</Trans></span>
+    <div className={wrapperCls}>
+      <span className="flex items-center gap-1">{dot('bg-zen-brand')} <Trans>Actual</Trans></span>
+      <span className="flex items-center gap-1">{dot('bg-zen-success/100')} <Trans>Respondida</Trans></span>
+      <span className="flex items-center gap-1">{dot('bg-zen-danger/100')} <Trans>Con duda</Trans></span>
+      <span className="flex items-center gap-1">{dot('bg-glass-light-1 dark:bg-glass-dark-1 border border-glass-light-border dark:border-glass-dark-border')} <Trans>Sin responder</Trans></span>
     </div>
   );
 }
@@ -351,43 +360,45 @@ export function ExamPage() {
     (i) => (answers[i] ?? []).length === 0
   );
 
+  const isStudyLike = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
+
   return (
     <PageBackground>
-    <div className="min-h-screen flex items-start justify-center py-6 px-4">
+    <div className="h-screen flex flex-col p-2 sm:p-4 lg:p-6">
       <SEOHead title={t`Examen`} description={t`Sesión de práctica de examen de certificación.`} path="/exam" noindex />
-      <div className="w-full max-w-3xl overflow-hidden rounded-2xl border border-glass-light-border bg-glass-light-2 shadow-zen-glass backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2 dark:shadow-none">
+      <div className="w-full max-w-7xl mx-auto flex-1 min-h-0 flex flex-col overflow-hidden rounded-2xl border border-glass-light-border bg-glass-light-2 shadow-zen-glass backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2 dark:shadow-none">
 
-        {/* Header — Game HUD */}
-        <header className="flex items-center justify-between px-5 py-3.5 border-b border-glass-light-border dark:border-glass-dark-border bg-glass-light-2 dark:bg-glass-dark-2">
-          <div className="flex items-center gap-2.5">
+        {/* Header — Game HUD (always visible, never scrolls away) */}
+        <header className="shrink-0 flex items-center justify-between gap-2 px-3 sm:px-5 py-3.5 border-b border-glass-light-border dark:border-glass-dark-border bg-glass-light-2 dark:bg-glass-dark-2">
+          <div className="flex items-center gap-2.5 min-w-0">
             <button
               type="button"
               onClick={() => setShowExitGuard(true)}
-              className="w-7 h-7 flex items-center justify-center rounded-lg text-zen-ink/50 dark:text-white/40 hover:text-zen-ink dark:hover:text-white hover:bg-zen/10 transition-colors"
+              className="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg text-zen-ink/50 dark:text-white/40 hover:text-zen-ink dark:hover:text-white hover:bg-zen/10 transition-colors"
               title={t`Salir`}
               aria-label={t`Salir de la sesión`}
             >
               <X size={15} />
             </button>
-            <h1 className="font-display font-bold text-zen-ink dark:text-white text-sm">{certification.labelEs}</h1>
+            <h1 className="font-display font-bold text-zen-ink dark:text-white text-sm truncate">{certification.labelEs}</h1>
             {mode === 'study' ? (
-              <span className="text-xs bg-zen-success/100/20 text-success-500 font-semibold px-2 py-0.5 rounded-full">📖 <Trans>Estudio</Trans></span>
+              <span className="shrink-0 text-xs bg-zen-success/100/20 text-success-500 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">📖 <Trans>Estudio</Trans></span>
             ) : mode === 'weak' ? (
-              <span className="text-xs bg-violet-500/20 text-violet-500 font-semibold px-2 py-0.5 rounded-full">🎯 <Trans>Zona Débil</Trans></span>
+              <span className="shrink-0 text-xs bg-violet-500/20 text-violet-500 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">🎯 <Trans>Zona Débil</Trans></span>
             ) : mode === 'srs' ? (
-              <span className="text-xs bg-amber-500/20 text-amber-500 font-semibold px-2 py-0.5 rounded-full">🧠 <Trans>Repaso</Trans></span>
+              <span className="shrink-0 text-xs bg-amber-500/20 text-amber-500 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">🧠 <Trans>Repaso</Trans></span>
             ) : mode === 'wager' ? (
-              <span className="text-xs bg-rose-500/20 text-rose-600 font-semibold px-2 py-0.5 rounded-full">🎲 <Trans>Apuesta</Trans></span>
+              <span className="shrink-0 text-xs bg-rose-500/20 text-rose-600 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">🎲 <Trans>Apuesta</Trans></span>
             ) : (
-              <span className="text-xs bg-zen/20 text-indigo-300 font-semibold px-2 py-0.5 rounded-full">🎯 <Trans>Examen</Trans></span>
+              <span className="shrink-0 text-xs bg-zen/20 text-indigo-300 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">🎯 <Trans>Examen</Trans></span>
             )}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 shrink-0">
             <span className="text-xs text-zen-ink/70 dark:text-white/60 font-medium tabular-nums">
               <span className="text-zen-ink dark:text-white font-bold">{answeredCount}</span>/{total}
             </span>
             {mode === 'exam' && <TimerBox timeLeft={timeLeft} />}
-            {(mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager') && (
+            {isStudyLike && (
               <button
                 type="button"
                 onClick={submitExam}
@@ -400,106 +411,134 @@ export function ExamPage() {
           </div>
         </header>
 
-        {/* Question navigator */}
-        <QuestionNavigator
-          total={total}
-          current={current}
-          answers={answers}
-          flags={flags}
-          revealed={revealed}
-          displayQuestions={displayQuestions}
-          mode={mode}
-          onNavigate={navigateTo}
-        />
-
-        {/* Color legend */}
-        <NavLegend mode={mode} />
-
         {/* Progress bar */}
-        <div className="h-1 bg-glass-light-1 dark:bg-glass-dark-1">
+        <div className="shrink-0 h-1 bg-glass-light-1 dark:bg-glass-dark-1">
           <div
             className="h-1 bg-gradient-to-r from-zen to-zen-violet transition-all duration-500"
             style={{ width: total > 0 ? `${(answeredCount / total) * 100}%` : '0%' }}
           />
         </div>
 
-        {/* Question */}
-        <main className="px-6 py-6">
-          {question && (
-            <QuestionCard
-              question={question}
-              questionNumber={current + 1}
+        {/* Body: sidebar navigator (desktop) + scrollable question column */}
+        <div className="flex-1 min-h-0 flex overflow-hidden">
+
+          {/* Sidebar — desktop only, scrolls independently, header/footer stay put */}
+          <aside className="hidden lg:flex lg:flex-col w-64 shrink-0 border-r border-glass-light-border dark:border-glass-dark-border bg-glass-light-1 dark:bg-glass-dark-1 overflow-y-auto">
+            <QuestionNavigator
+              variant="sidebar"
               total={total}
-              savedSelection={answers[current] ?? []}
-              flagged={flags[current] ?? false}
+              current={current}
+              answers={answers}
+              flags={flags}
+              revealed={revealed}
+              displayQuestions={displayQuestions}
               mode={mode}
-              revealed={revealed[current] ?? false}
-              onSelectionChange={(keys) => saveAnswer(current, keys)}
-              onToggleFlag={() => toggleFlag(current)}
+              onNavigate={navigateTo}
             />
-          )}
-        </main>
+            <div className="border-t border-glass-light-border dark:border-glass-dark-border mt-1">
+              <NavLegend mode={mode} variant="sidebar" />
+            </div>
+          </aside>
 
-        {/* Wager mode — confidence picker (shown before reveal) */}
-        {mode === 'wager' && question && !(revealed[current] ?? false) && (
-          <ConfidencePicker
-            value={confidence?.[current]}
-            onPick={(lvl) => setConfidenceFor(current, lvl)}
-          />
-        )}
+          {/* Main column */}
+          <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+            {/* Mobile/tablet — horizontal scroll strip */}
+            <div className="lg:hidden shrink-0">
+              <QuestionNavigator
+                variant="strip"
+                total={total}
+                current={current}
+                answers={answers}
+                flags={flags}
+                revealed={revealed}
+                displayQuestions={displayQuestions}
+                mode={mode}
+                onNavigate={navigateTo}
+              />
+              <NavLegend mode={mode} variant="strip" />
+            </div>
 
-        {/* Footer navigation */}
-        <footer className="px-6 py-4 border-t border-glass-light-border dark:border-glass-dark-border bg-glass-light-2 dark:bg-glass-dark-2 flex items-center justify-between gap-3">
-          <button
-            onClick={() => navigateTo(current - 1)}
-            disabled={current === 0}
-            className="px-4 py-2 text-sm border border-glass-light-border dark:border-glass-dark-border rounded-xl text-zen-ink/70 dark:text-white/60 hover:bg-zen/10 hover:text-zen-ink dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-          >
-            <Trans>← Anterior</Trans>
-          </button>
+            {/* Question — the only part that scrolls */}
+            <main className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-6">
+              {question && (
+                <QuestionCard
+                  question={question}
+                  questionNumber={current + 1}
+                  total={total}
+                  savedSelection={answers[current] ?? []}
+                  flagged={flags[current] ?? false}
+                  mode={mode}
+                  revealed={revealed[current] ?? false}
+                  onSelectionChange={(keys) => saveAnswer(current, keys)}
+                  onToggleFlag={() => toggleFlag(current)}
+                />
+              )}
+            </main>
 
-          {/* Study / wager mode: confirm button */}
-          {(mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager') && (answers[current] ?? []).length > 0 && !(revealed[current] ?? false) && (() => {
-            const needsConfidence = mode === 'wager' && !confidence?.[current];
-            return (
+            {/* Wager mode — confidence picker (shown before reveal) */}
+            {mode === 'wager' && question && !(revealed[current] ?? false) && (
+              <div className="shrink-0">
+                <ConfidencePicker
+                  value={confidence?.[current]}
+                  onPick={(lvl) => setConfidenceFor(current, lvl)}
+                />
+              </div>
+            )}
+
+            {/* Footer navigation (always visible, never scrolls away) */}
+            <footer className="shrink-0 px-4 sm:px-6 py-4 border-t border-glass-light-border dark:border-glass-dark-border bg-glass-light-2 dark:bg-glass-dark-2 flex items-center justify-between gap-3">
               <button
-                onClick={() => !needsConfidence && confirmAnswer(current)}
-                disabled={needsConfidence}
-                title={needsConfidence ? t`Elige tu nivel de confianza antes de confirmar` : undefined}
-                className={`px-5 py-2 text-sm text-white font-bold rounded-xl transition-all active:scale-95 ${
-                  needsConfidence
-                    ? 'bg-zen-success/100/40 cursor-not-allowed'
-                    : 'bg-zen-success/100 hover:bg-success-600'
-                }`}
+                onClick={() => navigateTo(current - 1)}
+                disabled={current === 0}
+                className="px-4 py-2 text-sm border border-glass-light-border dark:border-glass-dark-border rounded-xl text-zen-ink/70 dark:text-white/60 hover:bg-zen/10 hover:text-zen-ink dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               >
-                <Trans>Confirmar ✓</Trans>
+                <Trans>← Anterior</Trans>
               </button>
-            );
-          })()}
 
-          {current < total - 1 ? (
-            <button
-              onClick={() => navigateTo(current + 1)}
-              className="px-5 py-2 text-sm bg-zen-brand hover:opacity-90 text-white font-bold rounded-xl transition-all active:scale-95"
-            >
-              <Trans>Siguiente →</Trans>
-            </button>
-          ) : (mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager') ? (
-            <button
-              onClick={submitExam}
-              className="px-5 py-2 text-sm bg-zen-success/100 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
-            >
-              <Trans>Ver resultados ✓</Trans>
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowSubmitGuard(true)}
-              className="px-5 py-2 text-sm bg-zen-success/100 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
-            >
-              <Trans>Finalizar examen ✓</Trans>
-            </button>
-          )}
-        </footer>
+              {/* Study / wager mode: confirm button */}
+              {isStudyLike && (answers[current] ?? []).length > 0 && !(revealed[current] ?? false) && (() => {
+                const needsConfidence = mode === 'wager' && !confidence?.[current];
+                return (
+                  <button
+                    onClick={() => !needsConfidence && confirmAnswer(current)}
+                    disabled={needsConfidence}
+                    title={needsConfidence ? t`Elige tu nivel de confianza antes de confirmar` : undefined}
+                    className={`px-5 py-2 text-sm text-white font-bold rounded-xl transition-all active:scale-95 ${
+                      needsConfidence
+                        ? 'bg-zen-success/100/40 cursor-not-allowed'
+                        : 'bg-zen-success/100 hover:bg-success-600'
+                    }`}
+                  >
+                    <Trans>Confirmar ✓</Trans>
+                  </button>
+                );
+              })()}
+
+              {current < total - 1 ? (
+                <button
+                  onClick={() => navigateTo(current + 1)}
+                  className="px-5 py-2 text-sm bg-zen-brand hover:opacity-90 text-white font-bold rounded-xl transition-all active:scale-95"
+                >
+                  <Trans>Siguiente →</Trans>
+                </button>
+              ) : isStudyLike ? (
+                <button
+                  onClick={submitExam}
+                  className="px-5 py-2 text-sm bg-zen-success/100 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
+                >
+                  <Trans>Ver resultados ✓</Trans>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setShowSubmitGuard(true)}
+                  className="px-5 py-2 text-sm bg-zen-success/100 hover:bg-success-600 text-white font-bold rounded-xl transition-all active:scale-95"
+                >
+                  <Trans>Finalizar examen ✓</Trans>
+                </button>
+              )}
+            </footer>
+          </div>
+        </div>
       </div>
 
       {mode === 'exam' && showSubmitGuard && (
