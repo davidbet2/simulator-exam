@@ -103,16 +103,16 @@ export function StickyAdBar() {
     <div
       role="complementary"
       aria-label="Publicidad"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-surface-card border-t border-surface-border shadow-2xl"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-glass-light-3 border-t border-glass-light-border backdrop-blur-xl shadow-zen-glass dark:bg-glass-dark-3 dark:border-glass-dark-border"
       style={adFilled === true ? undefined : { height: 0, overflow: 'hidden' }}
     >
       {adFilled === true && (
         <div className="relative max-w-screen-xl mx-auto px-4 py-1">
           {/* Label + dismiss */}
           <div className="flex items-center justify-between mb-0.5">
-            <span className="text-[9px] uppercase tracking-widest text-ink-muted/50 select-none">
+            <span className="text-[9px] uppercase tracking-widest text-zen-ink/40 dark:text-white/30 select-none">
               Publicidad ·{' '}
-              <Link to="/pricing" className="underline text-brand-500 hover:text-brand-400">
+              <Link to="/pricing" className="underline text-zen hover:text-zen-violet">
                 <Trans>Eliminar con Pro</Trans>
               </Link>
             </span>
@@ -120,7 +120,7 @@ export function StickyAdBar() {
               type="button"
               onClick={handleDismiss}
               aria-label="Cerrar anuncio"
-              className="h-5 w-5 flex items-center justify-center rounded text-ink-muted/60 hover:text-ink-muted hover:bg-surface-muted transition-colors"
+              className="h-5 w-5 flex items-center justify-center rounded text-zen-ink/50 hover:text-zen-ink hover:bg-glass-light-2 dark:text-white/50 dark:hover:text-white dark:hover:bg-glass-dark-2 transition-colors"
             >
               <X size={12} />
             </button>

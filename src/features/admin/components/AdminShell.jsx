@@ -1,22 +1,43 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useAuthStore } from '../../../core/store/useAuthStore';
 import {
   LayoutDashboard, Users, Library,
-  Activity, Flag, ScrollText, LogOut,
+  Activity, Flag, ScrollText, LogOut, Sparkles,
 } from 'lucide-react';
+import { useAuthStore } from '../../../core/store/useAuthStore';
+import { PageBackground } from '../../../components/glass/PageBackground';
+import { GlassBadge } from '../../../components/glass/GlassBadge';
 
 const NAV = [
-  { to: '/admin',                 label: 'Dashboard',      icon: LayoutDashboard, exact: true },
-  { to: '/admin/users',           label: 'Usuarios',       icon: Users },
-  { to: '/admin/exam-sets',       label: 'Sets comunidad', icon: Library },
-  { to: '/admin/attempts',        label: 'Intentos',       icon: Activity },
-  { to: '/admin/flags',           label: 'Feature flags',  icon: Flag },
-  { to: '/admin/audit-log',       label: 'Audit log',      icon: ScrollText },
+  { to: '/admin',           label: 'Dashboard',      shortLabel: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { to: '/admin/users',     label: 'Usuarios',       shortLabel: 'Usuarios',  icon: Users },
+  { to: '/admin/exam-sets', label: 'Sets comunidad', shortLabel: 'Sets',      icon: Library },
+  { to: '/admin/attempts',  label: 'Intentos',       shortLabel: 'Intentos',  icon: Activity },
+  { to: '/admin/flags',     label: 'Feature flags',  shortLabel: 'Flags',     icon: Flag },
+  { to: '/admin/audit-log', label: 'Audit log',      shortLabel: 'Audit',     icon: ScrollText },
 ];
 
+function SidebarLink({ item, active }) {
+  const Icon = item.icon;
+  return (
+    <Link
+      to={item.to}
+      className={[
+        'flex items-center gap-2.5 h-11 px-3.5 rounded-xl text-sm font-medium transition-all',
+        active
+          ? 'bg-zen/15 text-zen font-semibold dark:bg-zen/25 dark:text-indigo-300'
+          : 'text-zen-ink/70 hover:text-zen-ink hover:bg-glass-light-2 dark:text-white/70 dark:hover:text-white dark:hover:bg-glass-dark-2',
+      ].join(' ')}
+    >
+      <Icon size={18} strokeWidth={2} />
+      {item.label}
+    </Link>
+  );
+}
+
 /**
- * Shared admin layout: top bar + left sidebar (desktop) or horizontal scroll
- * (mobile). Wraps every admin page for consistent navigation.
+ * Shared admin layout (spec 05): topbar glass + sidebar fijo (desktop) o
+ * bottom tab bar (mobile/tablet), fiel al patrón `Admin *` del diseño.
+ * Wraps every admin page for consistent navigation.
  */
 export function AdminShell({ title, subtitle, actions, children }) {
   const { pathname } = useLocation();
@@ -27,100 +48,86 @@ export function AdminShell({ title, subtitle, actions, children }) {
     item.exact ? pathname === item.to : pathname.startsWith(item.to);
 
   return (
-    <div className="min-h-screen bg-surface-soft">
-      {/* Topbar */}
-      <header className="sticky top-0 z-20 bg-white backdrop-blur-md border-b border-surface-border shadow-sm">
-        <div className="flex items-center justify-between px-5 h-14">
-          <Link to="/admin" className="flex items-center gap-2 group" aria-label="CertZen Admin inicio">
-            <div className="w-8 h-8 rounded-xl bg-brand-500 flex items-center justify-center shadow-brand">
-              <span className="text-white font-black text-xs leading-none">CZ</span>
+    <PageBackground>
+      <div className="flex min-h-screen flex-col">
+        {/* Topbar */}
+        <header className="sticky top-0 z-20 h-16 border-b border-glass-light-border bg-glass-light-1 backdrop-blur-xl dark:border-glass-dark-border dark:bg-glass-dark-1">
+          <div className="flex h-full items-center justify-between px-4 sm:px-6">
+            <Link to="/admin" className="flex items-center gap-2.5" aria-label="CertZen Admin inicio">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-zen bg-zen-brand">
+                <Sparkles size={17} className="text-white" />
+              </span>
+              <span className="hidden text-lg font-bold tracking-tight sm:inline">CertZen</span>
+              <GlassBadge tone="brand">Admin</GlassBadge>
+            </Link>
+            <div className="flex items-center gap-3">
+              <span className="hidden max-w-[12rem] truncate text-xs text-zen-ink/60 sm:inline dark:text-white/60">
+                {user?.email}
+              </span>
+              <button
+                type="button"
+                onClick={logout}
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-glass-light-border bg-glass-light-2 px-3 text-xs font-medium text-zen-ink/80 backdrop-blur-md transition-colors hover:bg-glass-light-3 dark:border-glass-dark-border dark:bg-glass-dark-2 dark:text-white/80 dark:hover:bg-glass-dark-3"
+              >
+                <LogOut size={13} /> Salir
+              </button>
             </div>
-            <span className="text-lg font-display font-black text-ink tracking-tight hidden sm:inline">
-              Cert<span className="text-brand-500">Zen</span>
-            </span>
-            <span className="text-[10px] font-black uppercase tracking-widest bg-brand-500/10 text-brand-700 border border-brand-500/20 rounded-full px-2 py-0.5">
-              Admin
-            </span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-ink-muted hidden sm:inline">{user?.email}</span>
-            <button
-              onClick={logout}
-              className="inline-flex items-center gap-1.5 text-xs text-ink-soft hover:text-ink border border-surface-border rounded-lg px-3 py-1.5 transition-colors"
-            >
-              <LogOut size={13} /> Salir
-            </button>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="flex">
-        {/* Sidebar (desktop) / horizontal scroll (mobile) */}
-        <aside className="w-56 shrink-0 border-r border-surface-border bg-white min-h-[calc(100vh-3.5rem)] hidden lg:block">
-          <nav className="py-5 px-3 flex flex-col gap-0.5">
-            {NAV.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item);
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={[
-                    'flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors',
-                    active
-                      ? 'bg-brand-500/10 text-brand-700 font-semibold'
-                      : 'text-ink hover:text-brand-700 hover:bg-brand-500/5',
-                  ].join(' ')}
-                >
-                  <Icon size={16} />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-        </aside>
+        <div className="flex flex-1">
+          {/* Sidebar (desktop) */}
+          <aside className="hidden w-56 shrink-0 border-r border-glass-light-border bg-glass-light-1 backdrop-blur-xl lg:block dark:border-glass-dark-border dark:bg-glass-dark-1">
+            <nav className="sticky top-16 flex flex-col gap-1 p-3" aria-label="Navegación de administración">
+              {NAV.map((item) => (
+                <SidebarLink key={item.to} item={item} active={isActive(item)} />
+              ))}
+            </nav>
+          </aside>
 
-        {/* Mobile nav scroller */}
-        <div className="lg:hidden w-full border-b border-surface-border bg-white overflow-x-auto">
-          <nav className="flex gap-1 px-3 py-2 whitespace-nowrap">
-            {NAV.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item);
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={[
-                    'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors',
-                    active
-                      ? 'bg-brand-500/10 text-brand-700 font-semibold'
-                      : 'text-ink hover:text-brand-700 hover:bg-brand-500/5',
-                  ].join(' ')}
-                >
-                  <Icon size={13} />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Main content */}
-        <main className="flex-1 min-w-0 px-4 lg:px-8 py-6">
-          <div className="max-w-6xl mx-auto">
-            {(title || actions) && (
-              <div className="flex items-start justify-between gap-4 mb-6 flex-wrap">
-                <div>
-                  {title && <h1 className="font-display font-bold text-ink text-2xl">{title}</h1>}
-                  {subtitle && <p className="text-sm text-ink-soft mt-1">{subtitle}</p>}
+          {/* Main content */}
+          <main className="min-w-0 flex-1 px-4 pb-24 pt-6 lg:px-8 lg:pb-8">
+            <div className="mx-auto max-w-6xl">
+              {(title || actions) && (
+                <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    {title && <h1 className="text-2xl font-bold tracking-tight">{title}</h1>}
+                    {subtitle && <p className="mt-1 text-sm text-zen-ink/60 dark:text-white/60">{subtitle}</p>}
+                  </div>
+                  {actions && <div className="flex items-center gap-2">{actions}</div>}
                 </div>
-                {actions && <div className="flex items-center gap-2">{actions}</div>}
-              </div>
-            )}
-            {children}
+              )}
+              {children}
+            </div>
+          </main>
+        </div>
+
+        {/* Bottom tab bar (mobile/tablet) */}
+        <nav
+          className="fixed inset-x-0 bottom-0 z-30 border-t border-glass-light-border bg-glass-light-3 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden dark:border-glass-dark-border dark:bg-glass-dark-3"
+          aria-label="Navegación de administración"
+        >
+          <div className="flex items-stretch justify-around">
+            {NAV.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={[
+                    'flex min-h-[3rem] flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors',
+                    active ? 'text-zen dark:text-indigo-300' : 'text-zen-ink/50 dark:text-white/50',
+                  ].join(' ')}
+                >
+                  <Icon size={20} strokeWidth={2} />
+                  <span className="max-w-[4.5rem] truncate">{item.shortLabel}</span>
+                </Link>
+              );
+            })}
           </div>
-        </main>
+        </nav>
       </div>
-    </div>
+    </PageBackground>
   );
 }

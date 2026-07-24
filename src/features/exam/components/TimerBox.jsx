@@ -41,7 +41,7 @@ export function TimerBox({ timeLeft, totalSeconds = TOTAL_SECONDS }) {
       </svg>
       <span
         className={`relative font-mono text-[10px] font-bold tabular-nums ${
-          isCritical ? 'text-danger-500' : isUrgent ? 'text-warning-600' : 'text-ink-soft'
+          isCritical ? 'text-zen-danger' : isUrgent ? 'text-amber-600' : 'text-zen-ink/60 dark:text-white/60'
         }`}
       >
         {minutes}:{seconds}

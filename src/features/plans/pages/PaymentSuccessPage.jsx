@@ -103,21 +103,21 @@ export function PaymentSuccessPage() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-4 mb-8"
           >
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-warning-500/10 border border-warning-500/30">
-              <ShieldAlert size={40} className="text-warning-600" />
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-zen-warning/10 border border-zen-warning/30">
+              <ShieldAlert size={40} className="text-amber-600 dark:text-zen-warning" />
             </div>
-            <h1 className="text-3xl font-bold text-ink">No encontramos un pago activo</h1>
-            <p className="text-ink-soft">
+            <h1 className="text-3xl font-bold">No encontramos un pago activo</h1>
+            <p className="text-zen-ink/60 dark:text-white/60">
               Esta página solo es accesible después de completar un pago.
             </p>
           </motion.div>
 
           <Card>
             <CardBody className="p-6 space-y-4">
-              <p className="text-sm text-ink-soft">
+              <p className="text-sm text-zen-ink/60 dark:text-white/60">
                 Si acabas de completar el pago, espera unos segundos y recarga la página.
                 Si crees que esto es un error, contáctanos en{' '}
-                <a href="mailto:hola@certzen.app" className="text-brand-500 underline">hola@certzen.app</a>.
+                <a href="mailto:hola@certzen.app" className="text-zen underline">hola@certzen.app</a>.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Link to="/pricing">
@@ -149,11 +149,11 @@ export function PaymentSuccessPage() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-4"
           >
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-brand-500/10 border border-brand-500/30">
-              <Loader2 size={40} className="text-brand-500 animate-spin" />
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-zen/10 border border-zen/30">
+              <Loader2 size={40} className="text-zen animate-spin" />
             </div>
-            <h1 className="text-2xl font-bold text-ink">Verificando tu pago…</h1>
-            <p className="text-ink-soft text-sm">
+            <h1 className="text-2xl font-bold">Verificando tu pago…</h1>
+            <p className="text-zen-ink/60 dark:text-white/60 text-sm">
               Esto puede tardar unos segundos. No cierres esta ventana.
             </p>
           </motion.div>
@@ -171,11 +171,11 @@ export function PaymentSuccessPage() {
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-4 mb-8"
         >
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-success-500/10 border border-success-500/30">
-            <CheckCircle2 size={40} className="text-success-500" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-zen-success/10 border border-zen-success/30">
+            <CheckCircle2 size={40} className="text-emerald-600 dark:text-zen-success" />
           </div>
-          <h1 className="text-3xl font-bold text-ink">¡Pago exitoso!</h1>
-          <p className="text-ink-soft">Gracias por unirte a CertZen Pro.</p>
+          <h1 className="text-3xl font-bold">¡Pago exitoso!</h1>
+          <p className="text-zen-ink/60 dark:text-white/60">Gracias por unirte a CertZen Pro.</p>
         </motion.div>
 
         <motion.div
@@ -183,11 +183,11 @@ export function PaymentSuccessPage() {
         >
           <Card>
             <CardBody className="space-y-5 p-6">
-              <div className="flex items-center justify-between pb-4 border-b border-line">
+              <div className="flex items-center justify-between pb-4 border-b border-glass-light-border dark:border-glass-dark-border">
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-ink-soft mb-1">Tu plan</p>
-                  <p className="text-xl font-semibold text-ink flex items-center gap-2">
-                    <Sparkles size={18} className="text-brand-500" />
+                  <p className="text-xs uppercase tracking-wider text-zen-ink/60 dark:text-white/60 mb-1">Tu plan</p>
+                  <p className="text-xl font-semibold flex items-center gap-2">
+                    <Sparkles size={18} className="text-zen" />
                     CertZen Pro
                   </p>
                 </div>
@@ -196,40 +196,40 @@ export function PaymentSuccessPage() {
 
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <CreditCard size={16} className="text-ink-soft mt-1 shrink-0" />
+                  <CreditCard size={16} className="text-zen-ink/60 dark:text-white/60 mt-1 shrink-0" />
                   <div className="flex-1">
-                    <p className="text-xs text-ink-soft">Email de facturación</p>
-                    <p className="text-sm text-ink">{user?.email ?? '—'}</p>
+                    <p className="text-xs text-zen-ink/60 dark:text-white/60">Email de facturación</p>
+                    <p className="text-sm">{user?.email ?? '—'}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <Calendar size={16} className="text-ink-soft mt-1 shrink-0" />
+                  <Calendar size={16} className="text-zen-ink/60 dark:text-white/60 mt-1 shrink-0" />
                   <div className="flex-1">
-                    <p className="text-xs text-ink-soft">Próxima renovación</p>
-                    <p className="text-sm text-ink">{formatDate(subscriptionRenewsAt)}</p>
+                    <p className="text-xs text-zen-ink/60 dark:text-white/60">Próxima renovación</p>
+                    <p className="text-sm">{formatDate(subscriptionRenewsAt)}</p>
                   </div>
                 </div>
 
                 {subscriptionStatus && (
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 size={16} className="text-ink-soft mt-1 shrink-0" />
+                    <CheckCircle2 size={16} className="text-zen-ink/60 dark:text-white/60 mt-1 shrink-0" />
                     <div className="flex-1">
-                      <p className="text-xs text-ink-soft">Estado de la suscripción</p>
-                      <p className="text-sm text-ink capitalize">{subscriptionStatus}</p>
+                      <p className="text-xs text-zen-ink/60 dark:text-white/60">Estado de la suscripción</p>
+                      <p className="text-sm capitalize">{subscriptionStatus}</p>
                     </div>
                   </div>
                 )}
               </div>
 
               {status === 'error' && (
-                <div className="flex items-start gap-2 p-3 rounded-lg bg-warning-500/5 border border-warning-500/20">
-                  <AlertCircle size={14} className="text-warning-600 mt-0.5 shrink-0" />
+                <div className="flex items-start gap-2 p-3 rounded-lg bg-zen-warning/5 border border-zen-warning/20">
+                  <AlertCircle size={14} className="text-amber-600 dark:text-zen-warning mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-xs text-ink">No pudimos confirmar la sincronización automática.</p>
-                    <p className="text-xs text-ink-soft mt-1">
+                    <p className="text-xs">No pudimos confirmar la sincronización automática.</p>
+                    <p className="text-xs text-zen-ink/60 dark:text-white/60 mt-1">
                       {errorMsg}. Si tu plan no aparece como Pro en unos minutos, contáctanos en{' '}
-                      <a href="mailto:hola@certzen.app" className="text-brand-500 underline">hola@certzen.app</a>.
+                      <a href="mailto:hola@certzen.app" className="text-zen underline">hola@certzen.app</a>.
                     </p>
                   </div>
                 </div>
@@ -254,10 +254,10 @@ export function PaymentSuccessPage() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-          className="text-center text-xs text-ink-soft mt-6"
+          className="text-center text-xs text-zen-ink/60 dark:text-white/60 mt-6"
         >
           Recibirás un email de confirmación con tu recibo en{' '}
-          <span className="text-ink">{user?.email ?? 'tu correo'}</span>.
+          <span>{user?.email ?? 'tu correo'}</span>.
         </motion.p>
       </div>
     </AppShell>

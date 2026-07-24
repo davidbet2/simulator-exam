@@ -26,7 +26,9 @@ export default {
           'light-3':      '#FFFFFFCC', // elevado (light)
           'light-border': '#1E1B4B1A',
         },
-        // CertZen v3 — warm educational brand (Duolingo-inspired, light-first)
+        // CertZen v3 — warm educational brand (Duolingo-inspired, light-first).
+        // Legacy (spec 05): el único consumidor restante es QuestionForm.jsx
+        // (sin referencia visual en el diseño Glassmorphism, ver Hallazgos spec 05).
         brand: {
           50:  '#f0f9ff',
           100: '#e0f2fe',

@@ -653,7 +653,7 @@ export function AppShell({ children }) {
       <PageBackground className="flex flex-col">
         <TopBar authed={false} />
         <main id="main-content" className="flex-1">{children}</main>
-        <Footer variant="glass" />
+        <Footer />
       </PageBackground>
     );
   }

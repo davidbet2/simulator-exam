@@ -50,12 +50,12 @@ export function FavoriteButton({ slug, setMeta, count = 0, variant = 'icon' }) {
           inline-flex items-center gap-1.5 text-xs font-medium
           px-2.5 py-1 rounded-full transition
           ${isFav
-            ? 'bg-brand-50 text-brand-700 border border-brand-200'
-            : 'bg-surface text-ink-soft border border-surface-border hover:bg-surface-soft'}
+            ? 'bg-zen/15 text-zen border border-zen/30 dark:text-indigo-300'
+            : 'bg-glass-light-2 text-zen-ink/70 border border-glass-light-border hover:bg-glass-light-3 dark:bg-glass-dark-2 dark:text-white/60 dark:border-glass-dark-border dark:hover:bg-glass-dark-3'}
           disabled:opacity-50
         `}
       >
-        <Bookmark size={12} className={isFav ? 'fill-brand-500 stroke-brand-500' : ''} />
+        <Bookmark size={12} className={isFav ? 'fill-zen stroke-zen' : ''} />
         {isFav ? <Trans>Guardado</Trans> : <Trans>Guardar</Trans>}
         {count > 0 && <span className="opacity-60">· {count}</span>}
       </button>
@@ -73,12 +73,12 @@ export function FavoriteButton({ slug, setMeta, count = 0, variant = 'icon' }) {
       className={`
         p-2 rounded-lg transition
         ${isFav
-          ? 'bg-brand-50 text-brand-600 hover:bg-brand-100'
-          : 'bg-surface-soft text-ink-soft hover:bg-surface-muted hover:text-ink'}
+          ? 'bg-zen/15 text-zen hover:bg-zen/25 dark:text-indigo-300'
+          : 'bg-glass-light-2 text-zen-ink/60 hover:bg-glass-light-3 hover:text-zen-ink dark:bg-glass-dark-2 dark:text-white/60 dark:hover:bg-glass-dark-3 dark:hover:text-white'}
         disabled:opacity-50
       `}
     >
-      <Bookmark size={16} className={isFav ? 'fill-brand-500 stroke-brand-500' : ''} />
+      <Bookmark size={16} className={isFav ? 'fill-zen stroke-zen' : ''} />
       {err && <span className="sr-only">{err}</span>}
     </button>
   );

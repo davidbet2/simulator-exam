@@ -1,12 +1,12 @@
 import { cn } from '../../lib/utils'
 
 const variants = {
-  default: 'bg-surface-muted text-slate-300 border border-surface-border',
-  brand:   'bg-brand-500/15 text-brand-300 border border-brand-500/30',
-  success: 'bg-success-500/15 text-emerald-300 border border-success-500/30',
-  warning: 'bg-warning-500/15 text-amber-300 border border-warning-500/30',
-  danger:  'bg-danger-500/15 text-red-300 border border-danger-500/30',
-  pro:     'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/40',
+  default: 'bg-glass-light-2 text-zen-ink/60 border border-glass-light-border dark:bg-glass-dark-2 dark:text-white/60 dark:border-glass-dark-border',
+  brand:   'bg-zen/15 text-zen border border-zen/30 dark:text-indigo-300',
+  success: 'bg-zen-success/15 text-emerald-600 border border-zen-success/30 dark:text-zen-success',
+  warning: 'bg-zen-warning/15 text-amber-600 border border-zen-warning/30 dark:text-zen-warning',
+  danger:  'bg-zen-danger/15 text-rose-600 border border-zen-danger/30 dark:text-zen-danger',
+  pro:     'bg-gradient-to-r from-zen-warning/20 to-orange-500/20 text-amber-600 border border-zen-warning/40 dark:text-zen-warning',
 }
 
 export function Badge({ variant = 'default', className, children, ...props }) {

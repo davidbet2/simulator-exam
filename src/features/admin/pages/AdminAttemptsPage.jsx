@@ -4,6 +4,7 @@ import { Activity, Loader2, User, CheckCircle2, XCircle, ChevronRight, X } from 
 import { AdminShell } from '../components/AdminShell';
 import { useAdmin } from '../hooks/useAdmin';
 import Button from '../../../components/ui/Button';
+import { GlassCard } from '../../../components/glass/GlassCard';
 
 function formatDate(v) {
   if (!v) return '—';
@@ -77,16 +78,16 @@ export function AdminAttemptsPage() {
         : 'Explora los intentos de examen de todos los usuarios. Útil para soporte y auditoría.'}
     >
       {uidFilter && (
-        <div className="mb-5 p-3 rounded-xl bg-brand-500/5 border border-brand-500/20 flex items-center justify-between flex-wrap gap-2">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zen/20 bg-zen/5 p-3">
           <div className="flex items-center gap-2">
-            <User size={14} className="text-brand-700" />
-            <span className="text-sm text-ink">
+            <User size={14} className="text-zen" />
+            <span className="text-sm">
               Filtrando por: <span className="font-semibold">{userInfo?.email ?? uidFilter}</span>
             </span>
           </div>
           <button
             onClick={clearUidFilter}
-            className="inline-flex items-center gap-1 text-xs text-ink-soft hover:text-ink"
+            className="inline-flex items-center gap-1 text-xs text-zen-ink/60 hover:text-zen-ink dark:text-white/60 dark:hover:text-white"
           >
             <X size={12} /> Quitar filtro
           </button>
@@ -94,48 +95,48 @@ export function AdminAttemptsPage() {
       )}
 
       {loading ? (
-        <div className="py-16 text-center text-ink-soft">
-          <Loader2 size={24} className="inline animate-spin text-brand-500 mr-2" />
+        <div className="py-16 text-center text-zen-ink/60 dark:text-white/60">
+          <Loader2 size={24} className="mr-2 inline animate-spin text-zen" />
           Cargando intentos…
         </div>
       ) : attempts.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-surface-border">
-          <Activity size={32} className="mx-auto text-ink-muted mb-2" />
-          <p className="text-sm text-ink-soft">Sin intentos registrados{uidFilter ? ' para este usuario' : ''}.</p>
-        </div>
+        <GlassCard className="py-16 text-center">
+          <Activity size={32} className="mx-auto mb-2 text-zen-ink/40 dark:text-white/40" />
+          <p className="text-sm text-zen-ink/60 dark:text-white/60">Sin intentos registrados{uidFilter ? ' para este usuario' : ''}.</p>
+        </GlassCard>
       ) : (
         <>
-          <div className="bg-white rounded-2xl border border-surface-border shadow-card overflow-hidden">
-            <div className="px-5 py-3 border-b border-surface-border">
-              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider">
+          <GlassCard className="overflow-hidden">
+            <div className="border-b border-glass-light-border px-5 py-3 dark:border-glass-dark-border">
+              <span className="text-xs font-semibold uppercase tracking-wider text-zen-ink/50 dark:text-white/50">
                 {attempts.length} intento{attempts.length !== 1 ? 's' : ''}
               </span>
             </div>
-            <ul className="divide-y divide-surface-border">
+            <ul className="divide-y divide-glass-light-border dark:divide-glass-dark-border">
               {attempts.map((a) => {
                 const pct = scorePct(a);
                 const passed = pct >= (a.passPercent ?? 72);
                 return (
-                  <li key={a.id} className="px-5 py-3 hover:bg-surface-muted/60 transition-colors">
+                  <li key={a.id} className="px-5 py-3 transition-colors hover:bg-glass-light-2 dark:hover:bg-glass-dark-2">
                     <div className="flex items-start gap-3">
-                      <div className={`mt-0.5 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                        passed ? 'bg-success-50 text-success-600' : 'bg-danger-50 text-danger-600'
+                      <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                        passed ? 'bg-zen-success/15 text-emerald-600 dark:text-zen-success' : 'bg-zen-danger/15 text-rose-600 dark:text-zen-danger'
                       }`}>
                         {passed ? <CheckCircle2 size={15} /> : <XCircle size={15} />}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-sm font-semibold text-ink truncate">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="truncate text-sm font-semibold">
                             {a.certTitle ?? a.certId ?? a.setTitle ?? '(examen sin título)'}
                           </p>
-                          <span className={`text-xs font-bold tabular-nums ${passed ? 'text-success-600' : 'text-danger-600'}`}>
+                          <span className={`text-xs font-bold tabular-nums ${passed ? 'text-emerald-600 dark:text-zen-success' : 'text-rose-600 dark:text-zen-danger'}`}>
                             {pct}%
                           </span>
-                          <span className="text-xs text-ink-muted">
+                          <span className="text-xs text-zen-ink/50 dark:text-white/50">
                             {a.score}/{a.total}
                           </span>
                         </div>
-                        <p className="text-xs text-ink-muted mt-0.5 truncate">
+                        <p className="mt-0.5 truncate text-xs text-zen-ink/50 dark:text-white/50">
                           {a.userEmail ?? a.uid} · {formatDate(a.createdAt)}
                           {a.durationSec != null && ` · ${Math.round(a.durationSec / 60)} min`}
                         </p>
@@ -143,7 +144,7 @@ export function AdminAttemptsPage() {
                       {!uidFilter && a.uid && (
                         <Link
                           to={`/admin/attempts?uid=${a.uid}`}
-                          className="text-xs text-brand-600 hover:text-brand-700 font-semibold shrink-0"
+                          className="shrink-0 text-xs font-semibold text-zen hover:text-zen-violet"
                           title="Filtrar por este usuario"
                         >
                           <ChevronRight size={14} className="inline" />
@@ -154,7 +155,7 @@ export function AdminAttemptsPage() {
                 );
               })}
             </ul>
-          </div>
+          </GlassCard>
 
           {hasMore && (
             <div className="mt-5 text-center">

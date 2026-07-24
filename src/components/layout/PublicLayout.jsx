@@ -69,7 +69,7 @@ export function PublicLayout({ hideChrome = false, children }) {
 
       {children}
 
-      <Footer variant="glass" />
+      <Footer />
     </PageBackground>
   );
 }

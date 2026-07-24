@@ -12,7 +12,7 @@ export function ProtectedRoute({ children, requireUser = false }) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-surface">
-        <div className="w-8 h-8 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" role="status" aria-label="Cargando" />
+        <div className="w-8 h-8 rounded-full border-2 border-zen border-t-transparent animate-spin" role="status" aria-label="Cargando" />
       </div>
     );
   }

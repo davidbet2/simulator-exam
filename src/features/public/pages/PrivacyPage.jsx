@@ -57,7 +57,7 @@ export function PrivacyPage() {
             <p className="mt-2"><strong className="font-semibold text-zen-ink dark:text-white">Datos generados automáticamente:</strong></p>
             <ul className="list-disc ml-5 space-y-1">
               <li>Historial de intentos (puntuación, fecha, certificación, modo)</li>
-              <li>Preferencias de uso almacenadas localmente en tu navegador (<code className="bg-surface-muted px-1 rounded text-xs">sessionStorage</code>)</li>
+              <li>Preferencias de uso almacenadas localmente en tu navegador (<code className="bg-glass-light-2 dark:bg-glass-dark-2 px-1 rounded text-xs">sessionStorage</code>)</li>
             </ul>
             <p className="mt-2">
               <strong className="font-semibold text-zen-ink dark:text-white">No recopilamos:</strong> datos de pago directamente (procesados por Dodo Payments con su propia política), ubicación precisa, ni identificadores biométricos.
@@ -93,7 +93,7 @@ export function PrivacyPage() {
               Usamos exclusivamente:
             </p>
             <ul className="list-disc ml-5 space-y-1">
-              <li><code className="bg-surface-muted px-1 rounded text-xs">sessionStorage</code>: para guardar el progreso de un examen en curso (se borra al cerrar el navegador)</li>
+              <li><code className="bg-glass-light-2 dark:bg-glass-dark-2 px-1 rounded text-xs">sessionStorage</code>: para guardar el progreso de un examen en curso (se borra al cerrar el navegador)</li>
               
             </ul>
           </Section>

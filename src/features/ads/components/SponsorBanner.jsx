@@ -30,26 +30,26 @@ export function SponsorBanner({
   return (
     <aside
       aria-label="Sponsored content"
-      className={`rounded-xl border border-surface-border bg-surface-soft/50 px-4 py-3 text-center ${className}`}
+      className={`rounded-xl border border-glass-light-border bg-glass-light-1 dark:border-glass-dark-border dark:bg-glass-dark-1 px-4 py-3 text-center ${className}`}
     >
-      <p className="text-[10px] uppercase tracking-widest text-ink-muted mb-1.5">
+      <p className="text-[10px] uppercase tracking-widest text-zen-ink/50 dark:text-white/50 mb-1.5">
         <Trans>Patrocinado</Trans>
       </p>
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer nofollow"
-        className="text-sm text-brand-600 font-medium hover:underline"
+        className="text-sm text-zen dark:text-indigo-300 font-medium hover:underline"
       >
         {label}
       </a>
       {description && (
-        <p className="text-xs text-ink-muted mt-1">{description}</p>
+        <p className="text-xs text-zen-ink/50 dark:text-white/50 mt-1">{description}</p>
       )}
-      <p className="text-[10px] text-ink-muted mt-2">
+      <p className="text-[10px] text-zen-ink/50 dark:text-white/50 mt-2">
         <Trans>
           Elimina los anuncios con{' '}
-          <Link to="/pricing" className="underline text-brand-500">
+          <Link to="/pricing" className="underline text-zen">
             CertZen Pro
           </Link>
         </Trans>

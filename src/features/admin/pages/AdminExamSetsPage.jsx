@@ -8,6 +8,9 @@ import { useAdmin } from '../hooks/useAdmin';
 import { useAudit } from '../hooks/useAudit';
 import { Modal } from '../../../components/ui/Modal';
 import Button from '../../../components/ui/Button';
+import { GlassCard } from '../../../components/glass/GlassCard';
+import { GlassInput } from '../../../components/glass/GlassInput';
+import { GlassBadge } from '../../../components/glass/GlassBadge';
 
 function formatDate(v) {
   if (!v) return '—';
@@ -16,14 +19,17 @@ function formatDate(v) {
 }
 
 function StatusBadge({ set }) {
-  if (set.deleted) {
-    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-danger-50 text-danger-600 border border-danger-500/30">Eliminado</span>;
-  }
-  if (set.published) {
-    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-success-50 text-success-600 border border-success-500/30">Publicado</span>;
-  }
-  return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-surface-muted text-ink-soft border border-surface-border">Borrador</span>;
+  if (set.deleted) return <GlassBadge tone="danger">Eliminado</GlassBadge>;
+  if (set.published) return <GlassBadge tone="success">Publicado</GlassBadge>;
+  return <GlassBadge tone="neutral">Borrador</GlassBadge>;
 }
+
+const FILTERS = [
+  { id: 'all',       label: 'Todos' },
+  { id: 'published', label: 'Publicados' },
+  { id: 'draft',     label: 'Borradores' },
+  { id: 'deleted',   label: 'Eliminados' },
+];
 
 export function AdminExamSetsPage() {
   const {
@@ -157,87 +163,82 @@ export function AdminExamSetsPage() {
 
   return (
     <AdminShell
-      title="Sets de la comunidad"
-      subtitle="Modera los exámenes creados por los usuarios. Publica, despublica, destaca o elimina."
+      title="Sets comunidad"
+      subtitle="Modera los sets públicos publicados por la comunidad."
     >
       {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {[
-          { id: 'all',       label: 'Todos' },
-          { id: 'published', label: 'Publicados' },
-          { id: 'draft',     label: 'Borradores' },
-          { id: 'deleted',   label: 'Eliminados' },
-        ].map((f) => (
+      <div className="mb-4 flex flex-wrap gap-2">
+        {FILTERS.map((f) => (
           <button
             key={f.id}
             onClick={() => setFilter(f.id)}
             className={[
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              'rounded-xl px-3 py-1.5 text-xs font-medium transition-colors',
               filter === f.id
-                ? 'bg-brand-500 text-white'
-                : 'bg-white border border-surface-border text-ink-soft hover:text-ink hover:border-brand-500/40',
+                ? 'bg-zen-brand text-white shadow-zen'
+                : 'border border-glass-light-border bg-glass-light-2 text-zen-ink/60 backdrop-blur-md hover:text-zen-ink dark:border-glass-dark-border dark:bg-glass-dark-2 dark:text-white/60 dark:hover:text-white',
             ].join(' ')}
           >
             {f.label}
           </button>
         ))}
-        <div className="relative flex-1 min-w-[200px]">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-          <input
+        <div className="relative min-w-[200px] flex-1">
+          <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zen-ink/40 dark:text-white/40" />
+          <GlassInput
             type="search"
             placeholder="Filtrar por título o autor…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 h-9 rounded-lg bg-white border border-surface-border text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-brand-500"
+            className="min-h-9 pl-9"
           />
         </div>
       </div>
 
       {loading ? (
-        <div className="py-16 text-center text-ink-soft">
-          <Loader2 size={24} className="inline animate-spin text-brand-500 mr-2" />
+        <div className="py-16 text-center text-zen-ink/60 dark:text-white/60">
+          <Loader2 size={24} className="mr-2 inline animate-spin text-zen" />
           Cargando sets…
         </div>
       ) : visible.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-surface-border">
-          <Library size={32} className="mx-auto text-ink-muted mb-2" />
-          <p className="text-sm text-ink-soft">No hay sets con el filtro actual.</p>
-        </div>
+        <GlassCard className="py-16 text-center">
+          <Library size={32} className="mx-auto mb-2 text-zen-ink/40 dark:text-white/40" />
+          <p className="text-sm text-zen-ink/60 dark:text-white/60">No hay sets con el filtro actual.</p>
+        </GlassCard>
       ) : (
         <>
-          <div className="bg-white rounded-2xl border border-surface-border shadow-card overflow-hidden">
-            <div className="px-5 py-3 border-b border-surface-border">
-              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider">
+          <GlassCard className="overflow-hidden">
+            <div className="border-b border-glass-light-border px-5 py-3 dark:border-glass-dark-border">
+              <span className="text-xs font-semibold uppercase tracking-wider text-zen-ink/50 dark:text-white/50">
                 {visible.length} set{visible.length !== 1 ? 's' : ''}
               </span>
             </div>
-            <ul className="divide-y divide-surface-border">
+            <ul className="divide-y divide-glass-light-border dark:divide-glass-dark-border">
               {visible.map((s) => (
                 <li key={s.id}>
                   <button
                     onClick={() => openDetail(s)}
-                    className="w-full px-5 py-3 flex items-center gap-3 hover:bg-surface-muted/60 transition-colors text-left"
+                    className="flex w-full items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-glass-light-2 dark:hover:bg-glass-dark-2"
                   >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-sm font-semibold text-ink truncate">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="truncate text-sm font-semibold">
                           {s.title ?? '(sin título)'}
                         </p>
-                        {s.featured && <Star size={12} className="text-amber-500 fill-amber-500" />}
+                        {s.featured && <Star size={12} className="fill-zen-warning text-zen-warning" />}
                       </div>
-                      <p className="text-xs text-ink-muted truncate">
+                      <p className="truncate text-xs text-zen-ink/50 dark:text-white/50">
                         {s.description ?? 'Sin descripción'} · por {s.ownerEmail ?? s.ownerUid ?? '—'}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex shrink-0 items-center gap-2">
                       <StatusBadge set={s} />
-                      <ChevronRight size={15} className="text-ink-muted" />
+                      <ChevronRight size={15} className="text-zen-ink/40 dark:text-white/40" />
                     </div>
                   </button>
                 </li>
               ))}
             </ul>
-          </div>
+          </GlassCard>
 
           {hasMore && (
             <div className="mt-5 text-center">
@@ -253,36 +254,34 @@ export function AdminExamSetsPage() {
         {detailSet && (
           <div className="space-y-5">
             <div>
-              <div className="flex items-start gap-3 mb-3">
-                <Library size={22} className="text-brand-600 mt-0.5 shrink-0" />
+              <div className="mb-3 flex items-start gap-3">
+                <Library size={22} className="mt-0.5 shrink-0 text-zen" />
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-base font-bold text-ink">{detailSet.title ?? '(sin título)'}</h3>
+                  <h3 className="text-base font-bold">{detailSet.title ?? '(sin título)'}</h3>
                   {detailSet.description && (
-                    <p className="text-sm text-ink-soft mt-0.5">{detailSet.description}</p>
+                    <p className="mt-0.5 text-sm text-zen-ink/60 dark:text-white/60">{detailSet.description}</p>
                   )}
-                  <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
                     <StatusBadge set={detailSet} />
                     {detailSet.featured && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-800 border border-amber-200">
-                        <Star size={10} /> Destacado
-                      </span>
+                      <GlassBadge tone="warning"><Star size={10} /> Destacado</GlassBadge>
                     )}
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2.5 rounded-lg bg-surface-soft border border-surface-border">
-                  <p className="text-ink-muted flex items-center gap-1"><User size={10} />Autor</p>
-                  <p className="text-ink font-medium mt-0.5 truncate">{detailSet.ownerEmail ?? detailSet.ownerUid ?? '—'}</p>
+                <div className="rounded-lg border border-glass-light-border bg-glass-light-1 p-2.5 dark:border-glass-dark-border dark:bg-glass-dark-1">
+                  <p className="flex items-center gap-1 text-zen-ink/50 dark:text-white/50"><User size={10} />Autor</p>
+                  <p className="mt-0.5 truncate font-medium">{detailSet.ownerEmail ?? detailSet.ownerUid ?? '—'}</p>
                 </div>
-                <div className="p-2.5 rounded-lg bg-surface-soft border border-surface-border">
-                  <p className="text-ink-muted flex items-center gap-1"><Calendar size={10} />Creado</p>
-                  <p className="text-ink font-medium mt-0.5">{formatDate(detailSet.createdAt)}</p>
+                <div className="rounded-lg border border-glass-light-border bg-glass-light-1 p-2.5 dark:border-glass-dark-border dark:bg-glass-dark-1">
+                  <p className="flex items-center gap-1 text-zen-ink/50 dark:text-white/50"><Calendar size={10} />Creado</p>
+                  <p className="mt-0.5 font-medium">{formatDate(detailSet.createdAt)}</p>
                 </div>
-                <div className="p-2.5 rounded-lg bg-surface-soft border border-surface-border col-span-2">
-                  <p className="text-ink-muted flex items-center gap-1"><Hash size={10} />Preguntas</p>
-                  <p className="text-ink font-medium mt-0.5">
+                <div className="col-span-2 rounded-lg border border-glass-light-border bg-glass-light-1 p-2.5 dark:border-glass-dark-border dark:bg-glass-dark-1">
+                  <p className="flex items-center gap-1 text-zen-ink/50 dark:text-white/50"><Hash size={10} />Preguntas</p>
+                  <p className="mt-0.5 font-medium">
                     {detailLoading ? '…' : `${detailSet.questions?.length ?? 0} pregunta(s)`}
                   </p>
                 </div>
@@ -292,18 +291,18 @@ export function AdminExamSetsPage() {
             {/* Preview first 5 questions */}
             {detailSet.questions && detailSet.questions.length > 0 && (
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider text-zen-ink/50 dark:text-white/50">
                   Primeras preguntas
                 </p>
-                <div className="space-y-2 max-h-48 overflow-y-auto">
+                <div className="max-h-48 space-y-2 overflow-y-auto">
                   {detailSet.questions.slice(0, 5).map((q, idx) => (
-                    <div key={q.id} className="p-2.5 rounded-lg bg-surface-soft border border-surface-border">
-                      <p className="text-xs text-ink-muted">Pregunta {idx + 1}</p>
-                      <p className="text-sm text-ink mt-0.5 line-clamp-2">{q.question}</p>
+                    <div key={q.id} className="rounded-lg border border-glass-light-border bg-glass-light-1 p-2.5 dark:border-glass-dark-border dark:bg-glass-dark-1">
+                      <p className="text-xs text-zen-ink/50 dark:text-white/50">Pregunta {idx + 1}</p>
+                      <p className="mt-0.5 line-clamp-2 text-sm">{q.question}</p>
                     </div>
                   ))}
                   {detailSet.questions.length > 5 && (
-                    <p className="text-xs text-ink-muted text-center">
+                    <p className="text-center text-xs text-zen-ink/50 dark:text-white/50">
                       + {detailSet.questions.length - 5} más…
                     </p>
                   )}
@@ -312,20 +311,20 @@ export function AdminExamSetsPage() {
             )}
 
             {actionError && (
-              <div className="text-xs text-danger-600 bg-danger-50 border border-danger-500/30 rounded-lg px-3 py-2 flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 rounded-lg border border-zen-danger/30 bg-zen-danger/10 px-3 py-2 text-xs text-zen-danger">
                 <AlertCircle size={13} /> {actionError}
               </div>
             )}
 
             {confirmDelete ? (
-              <div className="p-3 rounded-lg bg-danger-50 border border-danger-500/30 space-y-2">
-                <p className="text-sm font-semibold text-danger-600">¿Eliminar este set?</p>
-                <p className="text-xs text-ink-soft">El set se marca como eliminado (soft-delete). Los intentos existentes se conservan.</p>
-                <input
+              <div className="space-y-2 rounded-lg border border-zen-danger/30 bg-zen-danger/10 p-3">
+                <p className="text-sm font-semibold text-zen-danger">¿Eliminar este set?</p>
+                <p className="text-xs text-zen-ink/60 dark:text-white/60">El set se marca como eliminado (soft-delete). Los intentos existentes se conservan.</p>
+                <GlassInput
                   value={deleteReason}
                   onChange={(e) => setDeleteReason(e.target.value)}
                   placeholder="Razón (opcional)…"
-                  className="w-full border border-surface-border rounded px-2 py-1 text-sm"
+                  className="min-h-9 text-sm"
                 />
                 <div className="flex gap-2">
                   <Button size="sm" variant="danger" onClick={confirmSoftDelete} disabled={actionBusy}>
@@ -337,7 +336,7 @@ export function AdminExamSetsPage() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-wrap gap-2 pt-2 border-t border-surface-border">
+              <div className="flex flex-wrap gap-2 border-t border-glass-light-border pt-2 dark:border-glass-dark-border">
                 <Button
                   variant={detailSet.published ? 'outline' : 'primary'}
                   size="sm"

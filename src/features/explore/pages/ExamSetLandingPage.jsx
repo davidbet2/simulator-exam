@@ -48,7 +48,7 @@ function ModeCard({
   accent = 'brand', onClick, disabled = false, soon = false, highlighted = false,
 }) {
   const accentMap = {
-    brand:   { ring: 'ring-brand-500/30',   bg: 'bg-brand-500/10',   text: 'text-brand-600'   },
+    brand:   { ring: 'ring-zen/30',         bg: 'bg-zen/10',         text: 'text-zen'          },
     violet:  { ring: 'ring-violet-500/30',  bg: 'bg-violet-500/10',  text: 'text-violet-600'  },
     amber:   { ring: 'ring-amber-500/30',   bg: 'bg-amber-500/10',   text: 'text-amber-600'   },
     rose:    { ring: 'ring-rose-500/30',    bg: 'bg-rose-500/10',    text: 'text-rose-600'    },

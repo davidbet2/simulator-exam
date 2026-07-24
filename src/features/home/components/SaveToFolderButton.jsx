@@ -68,8 +68,8 @@ export function SaveToFolderButton({ slug, compact = false }) {
         title={t`Guardar en carpeta`}
         className={`rounded-full border flex items-center gap-2 transition-all ${
           compact
-            ? `h-8 w-8 justify-center ${isInAny ? 'bg-brand-500/10 border-brand-500/40 text-brand-600 hover:bg-brand-500/20' : 'bg-transparent border-surface-border text-ink-soft hover:text-ink hover:border-brand-500/40 hover:bg-surface-muted/50'}`
-            : `h-9 px-3 text-sm font-medium ${isInAny ? 'bg-brand-500/10 border-brand-500/40 text-brand-600 hover:bg-brand-500/20' : 'bg-transparent border-surface-border text-ink-soft hover:text-ink hover:border-brand-500/40 hover:bg-surface-muted/50'}`
+            ? `h-8 w-8 justify-center ${isInAny ? 'bg-zen/10 border-zen/40 text-zen dark:text-indigo-300 hover:bg-zen/20' : 'bg-transparent border-glass-light-border dark:border-glass-dark-border text-zen-ink/60 dark:text-white/60 hover:text-zen-ink dark:hover:text-white hover:border-zen/40 hover:bg-glass-light-2 dark:hover:bg-glass-dark-2'}`
+            : `h-9 px-3 text-sm font-medium ${isInAny ? 'bg-zen/10 border-zen/40 text-zen dark:text-indigo-300 hover:bg-zen/20' : 'bg-transparent border-glass-light-border dark:border-glass-dark-border text-zen-ink/60 dark:text-white/60 hover:text-zen-ink dark:hover:text-white hover:border-zen/40 hover:bg-glass-light-2 dark:hover:bg-glass-dark-2'}`
         }`}
       >
         <FolderPlus size={15} />
@@ -78,16 +78,16 @@ export function SaveToFolderButton({ slug, compact = false }) {
 
       {open && (
         <div
-          className="absolute left-0 top-full mt-2 w-64 rounded-2xl bg-surface-card border border-surface-border shadow-[0_10px_40px_-12px_rgba(0,0,0,0.25)] z-50 overflow-hidden"
+          className="absolute left-0 top-full mt-2 w-64 rounded-2xl bg-glass-light-3 border border-glass-light-border backdrop-blur-xl shadow-zen-glass z-50 overflow-hidden dark:bg-glass-dark-3 dark:border-glass-dark-border"
           role="dialog"
           aria-label={t`Carpetas`}
         >
-          <div className="px-4 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide border-b border-surface-border">
+          <div className="px-4 py-3 text-xs font-semibold text-zen-ink/50 dark:text-white/50 uppercase tracking-wide border-b border-glass-light-border dark:border-glass-dark-border">
             <Trans>Guardar en carpeta</Trans>
           </div>
 
           {folders.length === 0 && !adding && (
-            <div className="px-4 py-3 text-sm text-ink-muted">
+            <div className="px-4 py-3 text-sm text-zen-ink/50 dark:text-white/50">
               <Trans>Aún no tienes carpetas.</Trans>
             </div>
           )}
@@ -101,13 +101,13 @@ export function SaveToFolderButton({ slug, compact = false }) {
                     type="button"
                     disabled={busy === folder.id}
                     onClick={() => toggle(folder)}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-ink hover:bg-surface-muted/50 transition-colors disabled:opacity-60"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-glass-light-2 dark:hover:bg-glass-dark-2 transition-colors disabled:opacity-60"
                   >
                     <span
                       className={`h-5 w-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
                         checked
-                          ? 'bg-brand-500 border-brand-500 text-white'
-                          : 'border-surface-border'
+                          ? 'bg-zen-brand border-zen text-white'
+                          : 'border-glass-light-border dark:border-glass-dark-border'
                       }`}
                     >
                       {checked && <Check size={11} strokeWidth={3} />}
@@ -119,7 +119,7 @@ export function SaveToFolderButton({ slug, compact = false }) {
             })}
           </ul>
 
-          <div className="border-t border-surface-border px-2 py-2">
+          <div className="border-t border-glass-light-border dark:border-glass-dark-border px-2 py-2">
             {adding ? (
               <form onSubmit={handleCreate} className="flex gap-1.5 items-center">
                 <input
@@ -128,19 +128,19 @@ export function SaveToFolderButton({ slug, compact = false }) {
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder={t`Nombre de carpeta`}
-                  className="flex-1 h-8 px-3 text-xs rounded-lg bg-surface-muted/60 border border-transparent focus:outline-none focus:border-brand-500 text-ink placeholder-ink-muted"
+                  className="flex-1 h-8 px-3 text-xs rounded-lg bg-glass-light-2 dark:bg-glass-dark-2 border border-transparent focus:outline-none focus:border-zen placeholder-zen-ink/40 dark:placeholder-white/40"
                 />
                 <button
                   type="submit"
                   disabled={!newName.trim() || busy === 'create'}
-                  className="h-8 w-8 flex items-center justify-center rounded-lg bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-50"
+                  className="h-8 w-8 flex items-center justify-center rounded-lg bg-zen-brand text-white hover:brightness-110 disabled:opacity-50"
                 >
                   <Check size={13} />
                 </button>
                 <button
                   type="button"
                   onClick={() => { setAdding(false); setNewName(''); }}
-                  className="h-8 w-8 flex items-center justify-center rounded-lg text-ink-soft hover:bg-surface-muted/60"
+                  className="h-8 w-8 flex items-center justify-center rounded-lg text-zen-ink/60 dark:text-white/60 hover:bg-glass-light-2 dark:hover:bg-glass-dark-2"
                 >
                   <X size={13} />
                 </button>
@@ -149,7 +149,7 @@ export function SaveToFolderButton({ slug, compact = false }) {
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="w-full flex items-center gap-2 h-8 px-3 rounded-lg text-xs text-ink-muted hover:text-ink hover:bg-surface-muted/60 transition-colors"
+                className="w-full flex items-center gap-2 h-8 px-3 rounded-lg text-xs text-zen-ink/50 dark:text-white/50 hover:text-zen-ink dark:hover:text-white hover:bg-glass-light-2 dark:hover:bg-glass-dark-2 transition-colors"
               >
                 <Plus size={13} />
                 <Trans>Nueva carpeta</Trans>

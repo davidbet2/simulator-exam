@@ -68,8 +68,8 @@ export function ShareButton({ url, title, text, variant = 'icon' }) {
   }
 
   const triggerClass = variant === 'button'
-    ? 'inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-surface-border bg-surface-card hover:bg-surface-muted text-ink text-sm font-medium transition-colors'
-    : 'inline-flex items-center justify-center w-9 h-9 rounded-xl border border-surface-border bg-surface-card hover:bg-surface-muted text-ink-soft hover:text-ink transition-colors';
+    ? 'inline-flex items-center gap-2 px-4 py-2 rounded-zen border border-glass-light-border bg-glass-light-2 hover:bg-glass-light-3 text-zen-ink text-sm font-medium backdrop-blur-md transition-colors dark:border-glass-dark-border dark:bg-glass-dark-2 dark:hover:bg-glass-dark-3 dark:text-white'
+    : 'inline-flex items-center justify-center w-9 h-9 rounded-zen border border-glass-light-border bg-glass-light-2 hover:bg-glass-light-3 text-zen-ink/70 hover:text-zen-ink backdrop-blur-md transition-colors dark:border-glass-dark-border dark:bg-glass-dark-2 dark:hover:bg-glass-dark-3 dark:text-white/70 dark:hover:text-white';
 
   return (
     <div className="relative">
@@ -92,7 +92,7 @@ export function ShareButton({ url, title, text, variant = 'icon' }) {
             className="fixed inset-0 z-40"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl bg-surface-card border border-surface-border shadow-[0_8px_30px_-8px_rgba(0,0,0,0.2)] z-50 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl bg-glass-light-3 border border-glass-light-border backdrop-blur-xl shadow-zen-glass z-50 overflow-hidden dark:bg-glass-dark-3 dark:border-glass-dark-border">
             {links.map(({ id, label, icon: Icon, href }) => (
               <a
                 key={id}
@@ -100,20 +100,20 @@ export function ShareButton({ url, title, text, variant = 'icon' }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 text-sm text-ink hover:bg-surface-muted transition-colors"
+                className="flex items-center gap-3 px-4 py-3 text-sm text-zen-ink hover:bg-glass-light-2 transition-colors dark:text-white dark:hover:bg-glass-dark-2"
               >
-                <Icon size={15} className="text-ink-soft shrink-0" />
+                <Icon size={15} className="text-zen-ink/60 shrink-0 dark:text-white/60" />
                 {label}
               </a>
             ))}
             <button
               type="button"
               onClick={copyLink}
-              className="flex items-center gap-3 px-4 py-3 text-sm text-ink hover:bg-surface-muted transition-colors w-full border-t border-surface-border"
+              className="flex items-center gap-3 px-4 py-3 text-sm text-zen-ink hover:bg-glass-light-2 transition-colors w-full border-t border-glass-light-border dark:text-white dark:hover:bg-glass-dark-2 dark:border-glass-dark-border"
             >
               {copied
-                ? <><Check size={15} className="text-success-500 shrink-0" /> Copiado</>
-                : <><Link2 size={15} className="text-ink-soft shrink-0" /> Copiar enlace</>
+                ? <><Check size={15} className="text-zen-success shrink-0" /> Copiado</>
+                : <><Link2 size={15} className="text-zen-ink/60 shrink-0 dark:text-white/60" /> Copiar enlace</>
               }
             </button>
           </div>
