@@ -266,6 +266,15 @@ const SUBJECT_LABELS = {
   other:   'Otro',
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 exports.sendContactEmail = onCall(
   {
     cors: true,
@@ -293,6 +302,11 @@ exports.sendContactEmail = onCall(
     const cleanMessage = message.trim()
     const subjectLabel = SUBJECT_LABELS[subject]
 
+    const safeName    = escapeHtml(cleanName)
+    const safeEmail   = escapeHtml(cleanEmail)
+    const safeMessage = escapeHtml(cleanMessage)
+    const safeSubject = escapeHtml(subjectLabel)
+
     const apiKey       = RESEND_SECRET.value()
     const toEmail      = CONTACT_EMAIL.value()
 
@@ -316,25 +330,25 @@ exports.sendContactEmail = onCall(
         <body style="margin:0;padding:32px;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
           <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e2e8f0;padding:32px;">
             <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;">Mensaje de contacto — CertZen</p>
-            <h2 style="margin:0 0 24px;font-size:18px;font-weight:700;color:#0f172a;">${subjectLabel}</h2>
+            <h2 style="margin:0 0 24px;font-size:18px;font-weight:700;color:#0f172a;">${safeSubject}</h2>
             <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
               <tr>
                 <td style="padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;width:100px">De</td>
-                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#0f172a;">${cleanName}</td>
+                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#0f172a;">${safeName}</td>
               </tr>
               <tr>
                 <td style="padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;">Email</td>
-                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#6366f1;"><a href="mailto:${cleanEmail}" style="color:#6366f1;">${cleanEmail}</a></td>
+                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#6366f1;"><a href="mailto:${safeEmail}" style="color:#6366f1;">${safeEmail}</a></td>
               </tr>
               <tr>
                 <td style="padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;">Asunto</td>
-                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#0f172a;">${subjectLabel}</td>
+                <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#0f172a;">${safeSubject}</td>
               </tr>
             </table>
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:24px;">
-              <p style="margin:0;font-size:13px;color:#334155;line-height:1.7;white-space:pre-wrap;">${cleanMessage}</p>
+              <p style="margin:0;font-size:13px;color:#334155;line-height:1.7;white-space:pre-wrap;">${safeMessage}</p>
             </div>
-            <p style="margin:0;font-size:11px;color:#94a3b8;">Responde directamente a este email — el Reply-To apunta a ${cleanEmail}</p>
+            <p style="margin:0;font-size:11px;color:#94a3b8;">Responde directamente a este email — el Reply-To apunta a ${safeEmail}</p>
           </div>
         </body>
         </html>
