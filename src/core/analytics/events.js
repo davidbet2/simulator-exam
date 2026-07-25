@@ -39,6 +39,9 @@ export const analytics = {
   /** Fired on first-time Google Sign-In or email/password registration */
   signUp({ method } = {}) {
     gtag('event', 'sign_up', { method: method ?? 'email' });
+    if (typeof window !== 'undefined' && window.__metaPixelReady && window.fbq) {
+      window.fbq('track', 'CompleteRegistration');
+    }
   },
 
   /** Fired on subsequent logins (existing user) */

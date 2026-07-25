@@ -31,6 +31,30 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-MXR43F8H');</script>
 
+    <!-- Meta Pixel — gated on ad_storage consent granted (same Consent Mode v2 signal as GA4 above) -->
+    <script>
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+      window.__metaPixelReady = false;
+      function initMetaPixel() {
+        if (window.__metaPixelReady) return;
+        window.__metaPixelReady = true;
+        fbq('init', '1066467682618690');
+        fbq('track', 'PageView');
+      }
+      var _origGtag = window.gtag;
+      window.gtag = function () {
+        if (arguments[0] === 'consent' && arguments[1] === 'update' && arguments[2] && arguments[2].ad_storage === 'granted') {
+          initMetaPixel();
+        }
+        _origGtag.apply(this, arguments);
+      };
+    </script>
+
     <!-- Google AdSense verification -->
     <script id="google-adsense-client" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5212382372889604" crossorigin="anonymous"></script>
 
