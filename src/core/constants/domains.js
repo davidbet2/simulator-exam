@@ -3,7 +3,6 @@
  * Used by frontend for Explore filters and set landing metadata.
  */
 export const DOMAINS = [
-  { id: 'appian',   label: 'Appian',          icon: '🔷', description: 'Certificaciones oficiales de Appian (Developer, Analyst).',     color: 'blue' },
   { id: 'it',       label: 'IT & Cloud',      icon: '💻', description: 'Cloud, DevOps, contenedores y fundamentos de tecnología.',      color: 'indigo' },
   { id: 'security', label: 'Ciberseguridad',  icon: '🛡️', description: 'Security+, OWASP y fundamentos de seguridad ofensiva/defensiva.', color: 'red' },
   { id: 'agile',    label: 'Agile & PM',      icon: '📋', description: 'Scrum, ITIL, PMP y gestión de proyectos.',                      color: 'violet' },

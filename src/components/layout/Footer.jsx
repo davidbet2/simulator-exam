@@ -17,16 +17,6 @@ const NAV = [
     links: [
       { to: '/login',     label: 'Ingresar' },
       { to: '/register',  label: 'Registrarse gratis' },
-      { to: '/dashboard', label: 'Dashboard' },
-      { to: '/profile',   label: 'Mi perfil' },
-    ],
-  },
-  {
-    heading: 'Legal',
-    links: [
-      { to: '/privacy',   label: 'Privacidad' },
-      { to: '/terms',     label: 'Términos de uso' },
-      { to: '/contact',   label: 'Contacto' },
     ],
   },
 ];
@@ -34,7 +24,7 @@ const NAV = [
 // Estilo Glassmorphism (spec 02) — único estilo del Footer desde el spec 05.
 const S = {
   // Mobile: una sola columna apilada, como "Home — Mobile" del diseño
-  grid:     'grid grid-cols-1 sm:grid-cols-4 gap-8 mb-10',
+  grid:     'grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10',
   footer:   'border-t border-glass-light-border bg-glass-light-1 backdrop-blur-md mt-16 text-zen-ink dark:border-glass-dark-border dark:bg-glass-dark-1 dark:text-white',
   brand:    'text-xl font-display font-bold text-gradient-zen',
   tagline:  'text-xs leading-relaxed text-zen-ink/70 dark:text-white/60',

@@ -6,13 +6,6 @@
  */
 export const DOMAINS = [
   {
-    id: 'appian',
-    label: 'Appian',
-    icon: '🔷',
-    description: 'Certificaciones oficiales de Appian (Developer, Analyst).',
-    color: 'blue',
-  },
-  {
     id: 'it',
     label: 'IT & Cloud',
     icon: '💻',

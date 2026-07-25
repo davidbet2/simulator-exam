@@ -26,21 +26,6 @@ export default {
           'light-3':      '#FFFFFFCC', // elevado (light)
           'light-border': '#1E1B4B1A',
         },
-        // CertZen v3 — warm educational brand (Duolingo-inspired, light-first).
-        // Legacy (spec 05): el único consumidor restante es QuestionForm.jsx
-        // (sin referencia visual en el diseño Glassmorphism, ver Hallazgos spec 05).
-        brand: {
-          50:  '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8', // hover accents
-          500: '#0ea5e9', // primary — ocean blue
-          600: '#0284c7', // CTA, pressed state
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-        },
         accent: {
           sky:     '#38bdf8', // sky blue accent
           amber:   '#fbbf24', // achievements/gold
@@ -64,37 +49,6 @@ export default {
           500: '#ef4444',
           600: '#dc2626',
         },
-        // Light warm surfaces (replaces dark surface-*)
-        surface: {
-          DEFAULT: '#ffffff',
-          soft:    '#f8f7f4', // warm off-white section bg
-          card:    '#ffffff', // cards, panels
-          muted:   '#f1f0ed', // hover, pressed
-          border:  '#e8e6e1', // default borders
-          'border-bright': '#c9c5bc', // active borders, focus
-        },
-        // Text hierarchy on light backgrounds
-        ink: {
-          DEFAULT: '#1a1a1a',
-          soft:    '#4a4a4a',
-          muted:   '#8a8680',
-          faint:   '#b8b4ae',
-        },
-        // Keep legacy appian colors for backward compatibility
-        appian: {
-          blue: '#0052cc',
-          'blue-dark': '#0047b3',
-          'blue-light': '#e6f0ff',
-          muted: '#5e6c84',
-          bg: '#f4f5f7',
-          border: '#dfe1e6',
-          success: '#00875a',
-          'success-light': '#e3fcef',
-          error: '#de350b',
-          'error-light': '#ffebe6',
-          warning: '#ff991f',
-          'warning-light': '#fffae6',
-        },
       },
       fontFamily: {
         sans:    ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -114,8 +68,6 @@ export default {
         'zen':        '0 4px 14px rgba(99,102,241,0.35), 0 1px 4px rgba(99,102,241,0.18)',
         'zen-lg':     '0 8px 28px rgba(99,102,241,0.40), 0 3px 8px rgba(139,92,246,0.22)',
         'zen-glass':  '0 8px 32px rgba(30,27,75,0.10), 0 2px 8px rgba(30,27,75,0.06)',
-        'brand':      '0 4px 14px rgba(14,165,233,0.25), 0 1px 4px rgba(14,165,233,0.12)',
-        'brand-lg':   '0 8px 28px rgba(14,165,233,0.30), 0 3px 8px rgba(14,165,233,0.18)',
         'card':       '0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
         'card-hover': '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)',
         'card-lift':  '0 16px 48px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08)',
@@ -132,7 +84,6 @@ export default {
         'zen-brand':     'linear-gradient(0deg, #6366F1 0%, #8B5CF6 100%)',
         'zen-brand-diag':'linear-gradient(-45deg, #6366F1 14.645%, #8B5CF6 85.355%)',
         'gradient-radial':  'radial-gradient(var(--tw-gradient-stops))',
-        'brand-gradient':   'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
         'warm-gradient':    'linear-gradient(180deg, #f8f7f4 0%, #ffffff 100%)',
         'hero-warm':        'linear-gradient(165deg, #f0f9ff 0%, #f8f7f4 50%, #fefce8 100%)',
         'blob-blue':        'radial-gradient(ellipse, rgba(14,165,233,0.18) 0%, transparent 70%)',
