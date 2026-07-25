@@ -7,7 +7,7 @@
  * It pulls published examSets from Firestore to include their landing URLs.
  */
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, orderBy, limit, startAfter, getDocs } from 'firebase/firestore';
 import { writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -72,19 +72,35 @@ async function main() {
 
   let setEntries = [];
   try {
-    const snap = await getDocs(
-      query(collection(db, 'examSets'), where('published', '==', true)),
-    );
-    setEntries = snap.docs.map((d) => {
-      const data = d.data();
-      const updatedAt = data.updatedAt?.toDate?.()?.toISOString?.()?.slice(0, 10);
-      return {
-        loc: `/exam-sets/${d.id}`,
-        priority: data.official ? '0.9' : '0.7',
-        changefreq: 'weekly',
-        lastmod: updatedAt,
-      };
-    });
+    // Firestore security rules cap anonymous listing of examSets at
+    // limit <= 100 per query (see firestore.rules), so we paginate by
+    // document ID (ordered, indexless) in pages of 100 to cover all sets.
+    const PAGE_SIZE = 100;
+    let cursor = null;
+    for (;;) {
+      const constraints = [
+        where('published', '==', true),
+        orderBy('__name__'),
+        ...(cursor ? [startAfter(cursor)] : []),
+        limit(PAGE_SIZE),
+      ];
+      const snap = await getDocs(query(collection(db, 'examSets'), ...constraints));
+      if (snap.empty) break;
+      setEntries.push(
+        ...snap.docs.map((d) => {
+          const data = d.data();
+          const updatedAt = data.updatedAt?.toDate?.()?.toISOString?.()?.slice(0, 10);
+          return {
+            loc: `/exam-sets/${d.id}`,
+            priority: data.official ? '0.9' : '0.7',
+            changefreq: 'weekly',
+            lastmod: updatedAt,
+          };
+        }),
+      );
+      if (snap.docs.length < PAGE_SIZE) break;
+      cursor = snap.docs[snap.docs.length - 1];
+    }
     console.log(`   · ${setEntries.length} published sets`);
   } catch (err) {
     console.warn('⚠️  Could not fetch sets from Firestore (continuing with static only):', err.message);

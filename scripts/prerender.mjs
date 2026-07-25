@@ -16,7 +16,7 @@
  */
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
-import { spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 import { writeFileSync, mkdirSync, rmSync, cpSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -106,6 +106,19 @@ async function startPreviewServer() {
   proc.on('error', (err) => { throw err; });
   await waitForServer(20000);
   return proc;
+}
+
+function stopPreviewServer(proc) {
+  // spawn(..., { shell: true }) on Windows makes `proc` the cmd.exe wrapper,
+  // not the actual vite process — proc.kill() only kills the wrapper and
+  // leaves vite (and the port) running, which then hangs anything that
+  // waits on this script to fully exit (e.g. `npm run deploy`'s next step).
+  // `taskkill /T` kills the whole process tree instead.
+  if (process.platform === 'win32') {
+    spawnSync('taskkill', ['/pid', String(proc.pid), '/T', '/F'], { stdio: 'ignore' });
+  } else {
+    proc.kill();
+  }
 }
 
 function routeToFilePath(route) {
@@ -227,7 +240,7 @@ async function main() {
     }
   } finally {
     await browser.close();
-    server.kill();
+    stopPreviewServer(server);
   }
 
   if (failed.length > 0) {
@@ -239,6 +252,10 @@ async function main() {
   cpSync(STAGING_DIR, DIST_DIR, { recursive: true });
   rmSync(STAGING_DIR, { recursive: true, force: true });
   console.log('✅ Prerender complete.');
+  // Explicit exit as a safety net: any lingering handle (an orphaned child
+  // process, an open socket) would otherwise keep the event loop alive and
+  // hang whatever npm script chain called this (e.g. `npm run deploy`).
+  process.exit(0);
 }
 
 main().catch((err) => {

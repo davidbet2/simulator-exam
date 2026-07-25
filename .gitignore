@@ -18,6 +18,7 @@ test-results/
 # CLAUDE CODE — Configuración local (overrides privados)
 # =============================================================================
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
 CLAUDE.local.md
 migration-plan.md
 
