@@ -15,7 +15,7 @@
  * Usage: node scripts/prerender.mjs   (must run after `vite build`)
  */
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, orderBy, limit, startAfter, getDocs } from 'firebase/firestore';
 import { spawn, spawnSync } from 'child_process';
 import { writeFileSync, mkdirSync, rmSync, cpSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -77,8 +77,26 @@ async function fetchExamSetSlugs() {
   try {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const snap = await getDocs(query(collection(db, 'examSets'), where('published', '==', true)));
-    return snap.docs.map((d) => `/exam-sets/${d.id}`);
+    // Firestore security rules cap anonymous listing of examSets at
+    // limit <= 100 per query (see firestore.rules), so paginate by
+    // document ID (ordered, indexless) in pages of 100 to cover all sets.
+    const PAGE_SIZE = 100;
+    const slugs = [];
+    let cursor = null;
+    for (;;) {
+      const constraints = [
+        where('published', '==', true),
+        orderBy('__name__'),
+        ...(cursor ? [startAfter(cursor)] : []),
+        limit(PAGE_SIZE),
+      ];
+      const snap = await getDocs(query(collection(db, 'examSets'), ...constraints));
+      if (snap.empty) break;
+      slugs.push(...snap.docs.map((d) => `/exam-sets/${d.id}`));
+      if (snap.docs.length < PAGE_SIZE) break;
+      cursor = snap.docs[snap.docs.length - 1];
+    }
+    return slugs;
   } catch (err) {
     console.warn('⚠️  Could not fetch exam sets for prerender (continuing with static routes only):', err.message);
     return [];
