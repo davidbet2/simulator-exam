@@ -1,7 +1,7 @@
 # SPEC 06 — Sesión única por usuario (cerrar sesión anterior al detectar una nueva)
 
 > **Status:** Implementado
-> **Depends on:** —
+haz > **Depends on:** —
 > **Date:** 2026-07-27
 > **Objective:** Impedir que un usuario tenga más de una sesión activa simultánea (por dispositivo/navegador) en la app autenticada, cerrando automáticamente la sesión anterior en tiempo real cuando se detecta un nuevo login.
 
