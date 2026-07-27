@@ -7,13 +7,19 @@ import { useFeatureFlags } from '../../../core/hooks/useFeatureFlags';
 
 const ADSENSE_SCRIPT_ID = 'google-adsense-client';
 
-// Routes where the sticky ad should NOT appear
-const EXCLUDED_PATHS = ['/exam', '/admin', '/payment-success'];
+// Routes with substantial editorial/publisher content, where Google AdSense
+// ads are allowed to render. Everything else (auth screens, dashboard,
+// settings, exam-taking, admin, etc.) is app/utility UI with little or no
+// publisher content, which AdSense policy prohibits serving ads on — see
+// "Anuncios servidos por Google en pantallas sin contenido del editor".
+const ALLOWED_PATHS = ['/', '/about', '/explore', '/exam-sets/', '/results'];
 
 /**
  * StickyAdBar — global fixed-bottom ad strip for free users and public visitors.
  *
  * - Renders once globally (placed in AppRouter), covers all pages
+ * - Only shows on content-rich pages (see ALLOWED_PATHS) — AdSense policy
+ *   forbids ads on screens without publisher content (auth, dashboard, settings, etc.)
  * - Hides automatically for Pro users
  * - Respects `adsEnabled` feature flag
  * - User can dismiss per session (sessionStorage)
@@ -34,8 +40,8 @@ export function StickyAdBar() {
     () => sessionStorage.getItem('sticky-ad-dismissed') === '1',
   );
 
-  const excluded = EXCLUDED_PATHS.some((p) => pathname.startsWith(p));
-  const visible  = !isLoading && !isPro && flags.adsEnabled && !dismissed && !excluded && !!adsenseId && !!adSlot;
+  const allowed = ALLOWED_PATHS.some((p) => (p === '/' ? pathname === '/' : pathname.startsWith(p)));
+  const visible  = !isLoading && !isPro && flags.adsEnabled && !dismissed && allowed && !!adsenseId && !!adSlot;
 
   // ── Load AdSense script ──────────────────────────────────────────────────
   useEffect(() => {
