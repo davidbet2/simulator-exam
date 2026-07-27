@@ -385,6 +385,10 @@ msgstr "Acceso inmediato"
 msgid "Acceso rápido"
 msgstr "Acceso rápido"
 
+#: src/features/consent/components/CookieConsentBanner.jsx:42
+msgid "Aceptar"
+msgstr "Aceptar"
+
 #: src/features/profile/pages/SettingsPage.jsx:253
 msgid "Activar actualizaciones de estudio"
 msgstr "Activar actualizaciones de estudio"
@@ -2044,6 +2048,10 @@ msgstr "Reactivando..."
 msgid "Reactivar renovación automática"
 msgstr "Reactivar renovación automática"
 
+#: src/features/consent/components/CookieConsentBanner.jsx:39
+msgid "Rechazar"
+msgstr "Rechazar"
+
 #: src/features/public/pages/ContactPage.jsx:190
 msgid "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
 msgstr "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
@@ -2580,6 +2588,10 @@ msgstr "Usa \"Nueva pregunta\" o importa desde JSON, Excel o PDF."
 #: src/features/creator/pages/EditExamPage.jsx:578
 msgid "Usa el botón \"Nueva pregunta\" para añadir preguntas."
 msgstr "Usa el botón \"Nueva pregunta\" para añadir preguntas."
+
+#: src/features/consent/components/CookieConsentBanner.jsx:30
+msgid "Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Lee más en nuestra <0>Política de Privacidad</0>."
+msgstr "Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Lee más en nuestra <0>Política de Privacidad</0>."
 
 #: src/features/creator/pages/CreateExamPage.jsx:492
 msgid "Ver columnas requeridas"

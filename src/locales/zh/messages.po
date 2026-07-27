@@ -385,6 +385,10 @@ msgstr "立即访问"
 msgid "Acceso rápido"
 msgstr "快速访问"
 
+#: src/features/consent/components/CookieConsentBanner.jsx:42
+msgid "Aceptar"
+msgstr ""
+
 #: src/features/profile/pages/SettingsPage.jsx:253
 msgid "Activar actualizaciones de estudio"
 msgstr "启用学习更新"
@@ -2044,6 +2048,10 @@ msgstr ""
 msgid "Reactivar renovación automática"
 msgstr ""
 
+#: src/features/consent/components/CookieConsentBanner.jsx:39
+msgid "Rechazar"
+msgstr ""
+
 #: src/features/public/pages/ContactPage.jsx:190
 msgid "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
 msgstr "我们已收到你的消息，将在最多 2 个工作日内回复。"
@@ -2580,6 +2588,10 @@ msgstr "使用\"新问题\"或从JSON、Excel或PDF导入。"
 #: src/features/creator/pages/EditExamPage.jsx:578
 msgid "Usa el botón \"Nueva pregunta\" para añadir preguntas."
 msgstr "使用\"新问题\"按钮添加问题。"
+
+#: src/features/consent/components/CookieConsentBanner.jsx:30
+msgid "Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Lee más en nuestra <0>Política de Privacidad</0>."
+msgstr ""
 
 #: src/features/creator/pages/CreateExamPage.jsx:492
 msgid "Ver columnas requeridas"

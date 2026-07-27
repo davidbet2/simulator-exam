@@ -385,6 +385,10 @@ msgstr "即時アクセス"
 msgid "Acceso rápido"
 msgstr "クイックアクセス"
 
+#: src/features/consent/components/CookieConsentBanner.jsx:42
+msgid "Aceptar"
+msgstr ""
+
 #: src/features/profile/pages/SettingsPage.jsx:253
 msgid "Activar actualizaciones de estudio"
 msgstr "学習通知を有効にする"
@@ -2044,6 +2048,10 @@ msgstr ""
 msgid "Reactivar renovación automática"
 msgstr ""
 
+#: src/features/consent/components/CookieConsentBanner.jsx:39
+msgid "Rechazar"
+msgstr ""
+
 #: src/features/public/pages/ContactPage.jsx:190
 msgid "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
 msgstr "メッセージを受信しました。最大2営業日以内に返信いたします。"
@@ -2580,6 +2588,10 @@ msgstr "「新しい問題」を使用するか、JSON、Excel、PDFからイン
 #: src/features/creator/pages/EditExamPage.jsx:578
 msgid "Usa el botón \"Nueva pregunta\" para añadir preguntas."
 msgstr "「新しい問題」ボタンで問題を追加してください。"
+
+#: src/features/consent/components/CookieConsentBanner.jsx:30
+msgid "Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Lee más en nuestra <0>Política de Privacidad</0>."
+msgstr ""
 
 #: src/features/creator/pages/CreateExamPage.jsx:492
 msgid "Ver columnas requeridas"
