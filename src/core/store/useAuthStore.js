@@ -7,9 +7,26 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../firebase/firebase';
 import { analytics } from '../analytics/events';
+
+const SESSION_ID_KEY = 'certzen-session-id';
+
+/**
+ * Generates a new session id, persists it synchronously to localStorage
+ * (so other tabs of the same browser see it immediately), and returns it
+ * for the caller to write to the user's Firestore doc.
+ */
+function rotateSessionId() {
+  const id = crypto.randomUUID();
+  try {
+    localStorage.setItem(SESSION_ID_KEY, id);
+  } catch (e) {
+    console.warn('[auth] failed to persist session id:', e?.message);
+  }
+  return id;
+}
 
 async function fetchUserProfile(firebaseUser) {
   const [adminDoc, userDoc] = await Promise.all([
@@ -40,6 +57,7 @@ export const useAuthStore = create((set) => ({
   displayName: null,
   isLoading:   true,
   error:       null,
+  sessionClosedMessage: null,
 
   /** Call once in App.jsx — listens to auth state changes */
   init: () => {
@@ -67,7 +85,23 @@ export const useAuthStore = create((set) => ({
         // Live profile updates — webhook/sync mutations propagate instantly
         unsubscribeProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (snap) => {
           if (!snap.exists()) return;
+          // Ignore cached snapshots (e.g. on reconnect) — only server-confirmed
+          // data can trigger a single-session logout, to avoid false positives.
+          if (snap.metadata.fromCache) return;
           const profile = snap.data();
+          // Single-session enforcement: if another device/browser logged in and
+          // rotated activeSessionId, this session is stale — sign it out.
+          let localSessionId = null;
+          try {
+            localSessionId = localStorage.getItem(SESSION_ID_KEY);
+          } catch (e) {
+            console.warn('[auth] failed to read session id:', e?.message);
+          }
+          if (profile.activeSessionId && localSessionId && profile.activeSessionId !== localSessionId) {
+            signOut(auth);
+            set({ sessionClosedMessage: 'Tu sesión se cerró porque iniciaste sesión en otro dispositivo.' });
+            return;
+          }
           set({
             isPro:                profile.plan === 'pro',
             plan:                 profile.plan ?? 'free',
@@ -89,9 +123,11 @@ export const useAuthStore = create((set) => ({
   },
 
   login: async (email, password) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, sessionClosedMessage: null });
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const sessionId = rotateSessionId();
+      await updateDoc(doc(db, 'users', result.user.uid), { activeSessionId: sessionId });
       analytics.login({ method: 'email' });
       // onAuthStateChanged handles the state update
     } catch (err) {
@@ -100,20 +136,22 @@ export const useAuthStore = create((set) => ({
   },
 
   loginWithGoogle: async () => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, sessionClosedMessage: null });
     try {
       const result = await signInWithPopup(auth, googleProvider);
+      const sessionId = rotateSessionId();
       // Create user profile if first time
       const userRef = doc(db, 'users', result.user.uid);
       const existing = await getDoc(userRef);
       if (!existing.exists()) {
         try {
           await setDoc(userRef, {
-            uid:         result.user.uid,
-            email:       result.user.email,
-            displayName: result.user.displayName ?? result.user.email.split('@')[0],
-            plan:        'free',
-            createdAt:   serverTimestamp(),
+            uid:            result.user.uid,
+            email:          result.user.email,
+            displayName:    result.user.displayName ?? result.user.email.split('@')[0],
+            plan:           'free',
+            activeSessionId: sessionId,
+            createdAt:      serverTimestamp(),
           });
           analytics.signUp({ method: 'google' });
         } catch (profileErr) {
@@ -124,6 +162,7 @@ export const useAuthStore = create((set) => ({
           return;
         }
       } else {
+        await updateDoc(userRef, { activeSessionId: sessionId });
         analytics.login({ method: 'google' });
       }
       // onAuthStateChanged handles the state update
@@ -133,20 +172,22 @@ export const useAuthStore = create((set) => ({
   },
 
   register: async (email, password, displayName) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, sessionClosedMessage: null });
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       // Force the Firebase ID token to be issued and attached before the
       // Firestore write — prevents a race condition where security rules
       // evaluate request.auth as null immediately after account creation.
       await result.user.getIdToken();
+      const sessionId = rotateSessionId();
       // Write profile — this must succeed before proceeding.
       await setDoc(doc(db, 'users', result.user.uid), {
-        uid:         result.user.uid,
+        uid:            result.user.uid,
         email,
-        displayName: displayName ?? email.split('@')[0],
-        plan:        'free',
-        createdAt:   serverTimestamp(),
+        displayName:    displayName ?? email.split('@')[0],
+        plan:           'free',
+        activeSessionId: sessionId,
+        createdAt:      serverTimestamp(),
       });
       // Email verification intentionally skipped — app uses Google Sign-In;
       // Firebase Auth identity is guaranteed by Google OAuth.
@@ -169,6 +210,18 @@ export const useAuthStore = create((set) => ({
   },
 
   logout: async () => {
+    if (auth.currentUser) {
+      try {
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), { activeSessionId: null });
+      } catch (e) {
+        console.warn('[auth] failed to clear activeSessionId on logout:', e?.message);
+      }
+    }
+    try {
+      localStorage.removeItem(SESSION_ID_KEY);
+    } catch (e) {
+      console.warn('[auth] failed to clear session id:', e?.message);
+    }
     await signOut(auth);
   },
 
