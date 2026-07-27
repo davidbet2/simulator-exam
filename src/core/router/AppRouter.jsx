@@ -6,6 +6,7 @@ import { useFeatureFlags } from '../hooks/useFeatureFlags';
 import { MaintenancePage } from '../../features/public/pages/MaintenancePage';
 import { analytics } from '../analytics/events';
 import { StickyAdBar } from '../../features/ads/components/StickyAdBar';
+import { CookieConsentBanner } from '../../features/consent/components/CookieConsentBanner';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
@@ -188,6 +189,7 @@ export function AppRouter() {
       </MaintenanceGate>
       </Suspense>
       <StickyAdBar />
+      <CookieConsentBanner />
     </BrowserRouter>
   );
 }
