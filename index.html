@@ -23,22 +23,6 @@
       });
       gtag('js', new Date());
       gtag('config', 'G-8D9V2T76SG', { send_page_view: false });
-
-      // Reapply a previously-saved consent choice before GTM loads, so
-      // returning visitors aren't reset to 'denied' on every page load.
-      try {
-        var storedConsent = localStorage.getItem('cookie-consent');
-        if (storedConsent === 'granted' || storedConsent === 'denied') {
-          gtag('consent', 'update', {
-            ad_storage:              storedConsent,
-            ad_user_data:            storedConsent,
-            ad_personalization:      storedConsent,
-            analytics_storage:       storedConsent,
-            functionality_storage:   storedConsent,
-            personalization_storage: storedConsent,
-          });
-        }
-      } catch (e) {}
     </script>
     <!-- GTM loads GA4 — container GTM-MXR43F8H -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -69,6 +53,23 @@
         }
         _origGtag.apply(this, arguments);
       };
+
+      // Reapply a previously-saved consent choice now that gtag is wrapped,
+      // so returning visitors aren't reset to 'denied' on every page load
+      // and Meta Pixel still initializes if consent was already granted.
+      try {
+        var storedConsent = localStorage.getItem('cookie-consent');
+        if (storedConsent === 'granted' || storedConsent === 'denied') {
+          gtag('consent', 'update', {
+            ad_storage:              storedConsent,
+            ad_user_data:            storedConsent,
+            ad_personalization:      storedConsent,
+            analytics_storage:       storedConsent,
+            functionality_storage:   storedConsent,
+            personalization_storage: storedConsent,
+          });
+        }
+      } catch (e) {}
     </script>
 
     <!-- Google AdSense verification -->
