@@ -1041,7 +1041,7 @@ msgstr "Choose your confidence level before confirming"
 msgid "Elige un asunto."
 msgstr "Choose a subject."
 
-#: src/features/ads/components/AdBanner.jsx:169
+#: src/features/ads/components/AdBanner.jsx:167
 #: src/features/ads/components/SponsorBanner.jsx:50
 msgid "Elimina los anuncios con <0>CertZen Pro</0>"
 msgstr ""
@@ -1054,7 +1054,7 @@ msgstr "Delete your account"
 msgid "Eliminar"
 msgstr ""
 
-#: src/features/ads/components/StickyAdBar.jsx:116
+#: src/features/ads/components/StickyAdBar.jsx:122
 msgid "Eliminar con Pro"
 msgstr "Eliminar con Pro"
 
@@ -1239,6 +1239,10 @@ msgstr "Expand menu"
 #: src/features/results/ReviewPage.jsx:89
 msgid "Explicación"
 msgstr "Explicación"
+
+#: src/features/ads/components/AdBanner.jsx:164
+msgid "Explora más certificaciones →"
+msgstr "Explora más certificaciones →"
 
 #: src/features/home/pages/HomePage.jsx:273
 msgid "Explora por categoría"
@@ -1801,7 +1805,6 @@ msgstr "For learning"
 msgid "para aprobar"
 msgstr ""
 
-#: src/features/ads/components/AdBanner.jsx:158
 #: src/features/ads/components/SponsorBanner.jsx:36
 msgid "Patrocinado"
 msgstr ""
@@ -2060,6 +2063,7 @@ msgstr ""
 msgid "Recibo"
 msgstr "Recibo"
 
+#: src/features/ads/components/AdBanner.jsx:158
 #: src/features/explore/pages/ExamSetLandingPage.jsx:74
 msgid "Recomendado"
 msgstr "Recommended"

@@ -3,7 +3,7 @@
  *
  * Usage:
  *   import { analytics } from '../../../core/analytics/events'
- *   analytics.examStart({ certId: 'appian-developer', mode: 'exam' })
+ *   analytics.examStart({ certId: 'developer-senior', mode: 'exam' })
  *
  * NEVER pass PII (email, uid, displayName) as event parameters.
  * GA4 Measurement ID: G-8D9V2T76SG (managed via GTM-MXR43F8H)

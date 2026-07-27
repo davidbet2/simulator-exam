@@ -1041,7 +1041,7 @@ msgstr "确认前请选择你的把握等级"
 msgid "Elige un asunto."
 msgstr "选择主题。"
 
-#: src/features/ads/components/AdBanner.jsx:169
+#: src/features/ads/components/AdBanner.jsx:167
 #: src/features/ads/components/SponsorBanner.jsx:50
 msgid "Elimina los anuncios con <0>CertZen Pro</0>"
 msgstr "使用 <0>CertZen Pro</0> 移除广告"
@@ -1054,7 +1054,7 @@ msgstr "删除你的账户"
 msgid "Eliminar"
 msgstr "删除"
 
-#: src/features/ads/components/StickyAdBar.jsx:116
+#: src/features/ads/components/StickyAdBar.jsx:122
 msgid "Eliminar con Pro"
 msgstr ""
 
@@ -1238,6 +1238,10 @@ msgstr "展开菜单"
 
 #: src/features/results/ReviewPage.jsx:89
 msgid "Explicación"
+msgstr ""
+
+#: src/features/ads/components/AdBanner.jsx:164
+msgid "Explora más certificaciones →"
 msgstr ""
 
 #: src/features/home/pages/HomePage.jsx:273
@@ -1801,7 +1805,6 @@ msgstr "学习用"
 msgid "para aprobar"
 msgstr "通过"
 
-#: src/features/ads/components/AdBanner.jsx:158
 #: src/features/ads/components/SponsorBanner.jsx:36
 msgid "Patrocinado"
 msgstr "赞助"
@@ -2060,6 +2063,7 @@ msgstr "我们已收到你的消息，将在最多 2 个工作日内回复。"
 msgid "Recibo"
 msgstr ""
 
+#: src/features/ads/components/AdBanner.jsx:158
 #: src/features/explore/pages/ExamSetLandingPage.jsx:74
 msgid "Recomendado"
 msgstr "推荐"

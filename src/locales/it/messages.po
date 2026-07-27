@@ -1041,7 +1041,7 @@ msgstr "Scegli il tuo livello di fiducia prima di confermare"
 msgid "Elige un asunto."
 msgstr "Scegli un argomento."
 
-#: src/features/ads/components/AdBanner.jsx:169
+#: src/features/ads/components/AdBanner.jsx:167
 #: src/features/ads/components/SponsorBanner.jsx:50
 msgid "Elimina los anuncios con <0>CertZen Pro</0>"
 msgstr "Rimuovi gli annunci con <0>CertZen Pro</0>"
@@ -1054,7 +1054,7 @@ msgstr "Elimina il tuo account"
 msgid "Eliminar"
 msgstr "Elimina"
 
-#: src/features/ads/components/StickyAdBar.jsx:116
+#: src/features/ads/components/StickyAdBar.jsx:122
 msgid "Eliminar con Pro"
 msgstr ""
 
@@ -1238,6 +1238,10 @@ msgstr "Espandi menu"
 
 #: src/features/results/ReviewPage.jsx:89
 msgid "Explicación"
+msgstr ""
+
+#: src/features/ads/components/AdBanner.jsx:164
+msgid "Explora más certificaciones →"
 msgstr ""
 
 #: src/features/home/pages/HomePage.jsx:273
@@ -1801,7 +1805,6 @@ msgstr "Per imparare"
 msgid "para aprobar"
 msgstr "per superare"
 
-#: src/features/ads/components/AdBanner.jsx:158
 #: src/features/ads/components/SponsorBanner.jsx:36
 msgid "Patrocinado"
 msgstr "Sponsorizzato"
@@ -2060,6 +2063,7 @@ msgstr "Abbiamo ricevuto il tuo messaggio e risponderemo entro massimo 2 giorni 
 msgid "Recibo"
 msgstr ""
 
+#: src/features/ads/components/AdBanner.jsx:158
 #: src/features/explore/pages/ExamSetLandingPage.jsx:74
 msgid "Recomendado"
 msgstr "Consigliato"

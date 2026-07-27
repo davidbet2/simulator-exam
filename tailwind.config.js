@@ -6,7 +6,7 @@ export default {
     extend: {
       colors: {
         // CertZen v4 — Glassmorphism redesign (spec 02). Coexiste con tokens
-        // legacy (brand/surface/ink/appian) hasta completar specs 03–05.
+        // legacy (brand/surface/ink) hasta completar specs 03–05.
         zen: {
           DEFAULT: '#6366F1', // indigo primario
           violet:  '#8B5CF6', // extremo violeta del gradiente de marca

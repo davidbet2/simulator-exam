@@ -25,32 +25,32 @@ const buildTypeLabels = (t) => ({
 const JSON_EXAMPLE = `[
   {
     "type": "multiple",
-    "question": "¿Cuál es la función del XOR Gateway en Appian?",
+    "question": "¿Cuál de las siguientes opciones describe mejor el concepto A?",
     "options": {
-      "A": "Ejecuta todos los caminos en paralelo",
-      "B": "Selecciona un único camino basado en condición",
-      "C": "Inicia un subproceso",
-      "D": "Termina el proceso"
+      "A": "Descripción incorrecta 1",
+      "B": "Descripción correcta del concepto",
+      "C": "Descripción incorrecta 2",
+      "D": "Descripción incorrecta 3"
     },
     "answer": ["B"],
-    "explanation": "El XOR Gateway acepta una entrada y selecciona una salida."
+    "explanation": "Breve justificación de por qué B es la respuesta correcta."
   },
   {
     "type": "ordering",
-    "question": "Ordena los pasos para publicar un Data Store.",
-    "items": ["Crear CDT", "Crear Data Store", "Publicar Data Store"],
-    "correctOrder": ["Crear CDT", "Crear Data Store", "Publicar Data Store"]
+    "question": "Ordena los siguientes pasos del proceso.",
+    "items": ["Paso 1", "Paso 2", "Paso 3"],
+    "correctOrder": ["Paso 1", "Paso 2", "Paso 3"]
   },
   {
     "type": "matching",
-    "question": "Asocia cada elemento con su descripción.",
+    "question": "Asocia cada término con su descripción.",
     "pairs": [
-      { "term": "Record Type", "correctMatch": "A" },
-      { "term": "Process Model", "correctMatch": "B" }
+      { "term": "Término A", "correctMatch": "A" },
+      { "term": "Término B", "correctMatch": "B" }
     ],
     "matches": {
-      "A": "Define los datos y vistas de un objeto de negocio",
-      "B": "Define el flujo de trabajo de un proceso"
+      "A": "Descripción del término A",
+      "B": "Descripción del término B"
     }
   }
 ]`

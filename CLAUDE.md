@@ -15,7 +15,7 @@
 | **Deploy**    | `Firebase Hosting`              |
 | **Última actualización** | `2026-04-19`         |
 
-**Resumen en una línea:** Simulador de exámenes de certificación multi-plataforma (IT, Deportes, Salud, Inglés y más) con banco de preguntas en Firestore, autenticación Firebase y panel de administración. Appian es una de las categorías dentro de IT.
+**Resumen en una línea:** Simulador de exámenes de certificación multi-plataforma (IT, Deportes, Salud, Inglés y más) con banco de preguntas en Firestore, autenticación Firebase y panel de administración.
 
 ---
 
@@ -192,12 +192,11 @@ Layer 6 — Contexto vivo:       memory/sessions/ (log de esta sesión)
 [ ] Mantenimiento
 ```
 
-**Estado:** MVP live en Firebase Hosting. Senior Developer activo. Los demás exámenes (analyst-senior, analyst-associate, developer-associate) están como skeletons (`available: false`).
+**Estado:** MVP live en Firebase Hosting. `developer-senior`, `developer-associate` y `analyst-associate` disponibles. `analyst-senior` sigue como skeleton (`available: false`).
 
 **Próximos pasos:**
-1. Agregar banco de preguntas para `developer-associate`
-2. Agregar banco de preguntas para `analyst-*`
-3. Mejorar ResultsPage con historial de intentos en Firestore
+1. Agregar banco de preguntas para `analyst-senior`
+2. Mejorar ResultsPage con historial de intentos en Firestore
 
 ---
 

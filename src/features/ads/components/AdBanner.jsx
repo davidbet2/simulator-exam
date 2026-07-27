@@ -148,23 +148,21 @@ export function AdBanner({
     );
   }
 
-  // ── Sponsor placeholder ────────────────────────────────────────────────────
+  // ── House ad placeholder ───────────────────────────────────────────────────
   return (
     <aside
-      aria-label="Sponsored content"
+      aria-label="Contenido recomendado"
       className={`rounded-xl border border-glass-light-border bg-glass-light-1 dark:border-glass-dark-border dark:bg-glass-dark-1 px-4 py-3 text-center ${className}`}
     >
       <p className="text-[10px] uppercase tracking-widest text-zen-ink/50 dark:text-white/50 mb-1.5">
-        <Trans>Patrocinado</Trans>
+        <Trans>Recomendado</Trans>
       </p>
-      <a
-        href="https://appian.com/learn"
-        target="_blank"
-        rel="noopener noreferrer nofollow"
+      <Link
+        to="/explore"
         className="text-sm text-zen dark:text-indigo-300 font-medium hover:underline"
       >
-        Prepárate con Appian Academy →
-      </a>
+        <Trans>Explora más certificaciones →</Trans>
+      </Link>
       <p className="text-[10px] text-zen-ink/50 dark:text-white/50 mt-2">
         <Trans>
           Elimina los anuncios con{' '}

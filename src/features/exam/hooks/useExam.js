@@ -267,7 +267,7 @@ export function useExam(certification, mode = 'exam', countOverride = null, doma
         }
       }
 
-      // Domain filter (used by Ruta de Dominio — study a single Appian domain).
+      // Domain filter (used by Ruta de Dominio — study a single domain within a certification).
       if (domainFilter) {
         const target = String(domainFilter).trim().toLowerCase();
         all = all.filter((q) => {

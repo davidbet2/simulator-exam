@@ -28,15 +28,15 @@ const buildTypeLabels = (t) => ({
 const JSON_EXAMPLE = `[
   {
     "type": "multiple",
-    "question": "¿Cuál es la función del XOR Gateway en Appian?",
+    "question": "¿Cuál de las siguientes opciones describe mejor el concepto A?",
     "options": {
-      "A": "Ejecuta todos los caminos en paralelo",
-      "B": "Selecciona un único camino basado en condición",
-      "C": "Inicia un subproceso",
-      "D": "Termina el proceso"
+      "A": "Descripción incorrecta 1",
+      "B": "Descripción correcta del concepto",
+      "C": "Descripción incorrecta 2",
+      "D": "Descripción incorrecta 3"
     },
     "answer": ["B"],
-    "explanation": "El XOR Gateway acepta una entrada y selecciona una salida."
+    "explanation": "Breve justificación de por qué B es la respuesta correcta."
   }
 ]`
 

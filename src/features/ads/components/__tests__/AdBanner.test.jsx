@@ -90,14 +90,14 @@ describe('SponsorBanner — free-user gate', () => {
     expect(screen.getByRole('complementary')).toBeTruthy();
   });
 
-  it('shows default sponsor link (Appian Academy) for free user', () => {
+  it('shows default sponsor link (explore certifications) for free user', () => {
     mockPlanState = { isPro: false, isLoading: false };
     render(
       <MemoryRouter>
         <SponsorBanner />
       </MemoryRouter>
     );
-    const sponsorLink = screen.getByText(/appian academy/i);
+    const sponsorLink = screen.getByText(/explora más certificaciones/i);
     expect(sponsorLink).toBeTruthy();
   });
 

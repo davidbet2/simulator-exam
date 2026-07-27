@@ -185,7 +185,7 @@ exports.sendWelcomeEmail = onDocumentCreated(
                     <td style="padding:40px 40px 32px;text-align:center;border-bottom:1px solid #2a2d3e;">
                       <div style="display:inline-block;width:56px;height:56px;background:rgba(99,102,241,0.15);border-radius:16px;line-height:56px;text-align:center;font-size:28px;margin-bottom:16px;">🛡️</div>
                       <h1 style="margin:0;font-size:24px;font-weight:700;color:#f1f5f9;letter-spacing:-0.5px;">CertZen</h1>
-                      <p style="margin:4px 0 0;color:#94a3b8;font-size:14px;">Certificaciones Appian</p>
+                      <p style="margin:4px 0 0;color:#94a3b8;font-size:14px;">Simulador de certificaciones</p>
                     </td>
                   </tr>
 
@@ -194,7 +194,7 @@ exports.sendWelcomeEmail = onDocumentCreated(
                     <td style="padding:40px;">
                       <h2 style="margin:0 0 16px;font-size:20px;font-weight:600;color:#f1f5f9;">¡Hola, ${name}! 👋</h2>
                       <p style="margin:0 0 20px;color:#94a3b8;font-size:15px;line-height:1.6;">
-                        Tu cuenta en <strong style="color:#f1f5f9;">CertZen</strong> está lista. Ahora puedes practicar para tus certificaciones Appian con preguntas actualizadas y simuladores de examen.
+                        Tu cuenta en <strong style="color:#f1f5f9;">CertZen</strong> está lista. Ahora puedes practicar para tus certificaciones con preguntas actualizadas y simuladores de examen.
                       </p>
 
                       <!-- CTA Button -->
@@ -212,7 +212,7 @@ exports.sendWelcomeEmail = onDocumentCreated(
                         Lo que puedes hacer ahora:
                       </p>
                       <ul style="margin:0 0 24px;padding-left:20px;color:#94a3b8;font-size:14px;line-height:1.8;">
-                        <li>Practicar con el simulador de <strong style="color:#f1f5f9;">Appian Senior Developer</strong></li>
+                        <li>Practicar con el <strong style="color:#f1f5f9;">simulador de tu certificación</strong></li>
                         <li>Revisar tus resultados y analizar errores</li>
                         <li>Repetir los exámenes hasta dominar cada tema</li>
                       </ul>
@@ -828,17 +828,17 @@ exports.generateExplanation = onCall(
       questionContext = `PREGUNTA (relacionar):\n${question}\n\nRESPUESTA CORRECTA:\n${correctLabels}`
     }
 
-    const prompt = `Eres un experto certificado en Appian BPM (Business Process Management) y plataforma Low-Code.
-Tu tarea es escribir una justificación pedagógica breve para una pregunta de examen de certificación Appian.
+    const prompt = `Eres un experto certificado en la materia de la siguiente pregunta de examen de certificación profesional.
+Tu tarea es escribir una justificación pedagógica breve para esa pregunta.
 
 ${questionContext}
 
 INSTRUCCIONES:
 - Escribe exactamente 2-3 oraciones en español.
-- Primera oración: explica POR QUÉ la respuesta correcta es correcta, citando el concepto técnico específico de Appian.
+- Primera oración: explica POR QUÉ la respuesta correcta es correcta, citando el concepto técnico específico del tema.
 - Segunda oración: explica el error conceptual más común que lleva a elegir una respuesta incorrecta (si aplica).
 - NO uses markdown, asteriscos, bullets ni encabezados.
-- Usa terminología oficial de Appian (Process Model, Record Type, Site, Expression Rule, Integration Object, etc.).
+- Usa la terminología oficial propia de esa certificación.
 - Responde SOLO la justificación, sin repetir la pregunta ni las opciones.`
 
     // ── Call Gemini 2.5 Flash ──────────────────────────────────────────────

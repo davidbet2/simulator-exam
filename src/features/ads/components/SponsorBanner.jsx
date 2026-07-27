@@ -11,14 +11,14 @@ import { useUserPlan } from '../../plans/hooks/useUserPlan';
  * (EthicalAds) once approved.
  *
  * Props:
- *   href        — sponsor URL (default: Appian Academy)
+ *   href        — sponsor URL (default: internal /explore link)
  *   label       — sponsor CTA text
  *   description — small tagline below CTA
  *   className   — extra Tailwind classes for the wrapper
  */
 export function SponsorBanner({
-  href = 'https://appian.com/learn',
-  label = 'Prepárate con Appian Academy →',
+  href = '/explore',
+  label = 'Explora más certificaciones →',
   description,
   className = '',
 }) {
