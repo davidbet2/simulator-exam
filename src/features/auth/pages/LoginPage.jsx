@@ -33,7 +33,7 @@ const schema = z.object({
 export function LoginPage() {
   const navigate = useNavigate()
   const { t } = useLingui()
-  const { login, loginWithGoogle, user, isLoading, error, clearError } = useAuthStore()
+  const { login, loginWithGoogle, user, isLoading, error, clearError, sessionClosedMessage } = useAuthStore()
   const [turnstileReady, setTurnstileReady] = useState(!TURNSTILE_KEY)
 
   const { register, handleSubmit, control, formState: { errors } } = useForm({
@@ -72,6 +72,12 @@ export function LoginPage() {
     <AuthShell>
       <SEOHead title={t`Iniciar sesión`} description={t`Accede a CertZen para continuar tu preparación.`} path="/login" noindex />
       <h1 className="text-xl font-bold"><Trans>Iniciar sesión</Trans></h1>
+
+      {sessionClosedMessage && (
+        <div className="rounded-zen border border-zen-danger/30 bg-zen-danger/10 px-4 py-3 text-sm text-zen-danger" role="alert">
+          {sessionClosedMessage}
+        </div>
+      )}
 
       {error && (
         <div className="rounded-zen border border-zen-danger/30 bg-zen-danger/10 px-4 py-3 text-sm text-zen-danger" role="alert">
