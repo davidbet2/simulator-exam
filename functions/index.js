@@ -1,9 +1,9 @@
 const { onDocumentWritten, onDocumentCreated } = require('firebase-functions/v2/firestore')
 const { onCall, onRequest, HttpsError } = require('firebase-functions/v2/https')
+const { onSchedule } = require('firebase-functions/v2/scheduler')
 const { defineSecret } = require('firebase-functions/params')
 const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
-const { GoogleGenAI } = require('@google/genai')
 
 initializeApp()
 
@@ -17,10 +17,6 @@ const TURNSTILE_SECRET = defineSecret('TURNSTILE_SECRET_KEY')
 //              firebase functions:secrets:set DODO_WEBHOOK_KEY
 const DODO_API_KEY     = defineSecret('DODO_API_KEY')
 const DODO_WEBHOOK_KEY = defineSecret('DODO_WEBHOOK_KEY')
-
-// Gemini AI secret
-// Deploy with: firebase functions:secrets:set GEMINI_API_KEY
-const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY')
 
 /**
  * Verifies a Cloudflare Turnstile token server-side.
@@ -573,6 +569,45 @@ exports.dodoWebhook = onRequest(
 
 
 /**
+ * Safety-net fallback for expired subscriptions: the plan downgrade is
+ * normally driven by the Dodo webhook (subscription.cancelled/expired/failed
+ * above). If that webhook is ever missed or misrouted, a 'pro' user's plan
+ * would otherwise never get corrected. This runs daily and downgrades any
+ * 'pro' user whose subscriptionRenewsAt is more than 3 days in the past
+ * (grace period covers normal renewal/webhook latency).
+ */
+exports.expireStalePlans = onSchedule(
+  { schedule: 'every day 03:00', timeZone: 'America/Bogota' },
+  async () => {
+    const db = getFirestore()
+    const graceMs = 3 * 24 * 60 * 60 * 1000
+    const cutoff = Date.now() - graceMs
+
+    const snap = await db.collection('users').where('plan', '==', 'pro').get()
+    const batch = db.batch()
+    let downgraded = 0
+
+    snap.forEach((doc) => {
+      const renewsAt = doc.data().subscriptionRenewsAt
+      const renewsAtMs = renewsAt ? new Date(renewsAt).getTime() : NaN
+      if (!Number.isNaN(renewsAtMs) && renewsAtMs < cutoff) {
+        batch.update(doc.ref, {
+          plan:                'free',
+          isPro:               false,
+          subscriptionStatus:  'expired',
+          subscriptionEndedAt: new Date(),
+          updatedAt:           new Date(),
+        })
+        downgraded++
+      }
+    })
+
+    if (downgraded > 0) await batch.commit()
+    console.log(`expireStalePlans: downgraded ${downgraded} stale pro user(s)`)
+  }
+)
+
+/**
  * Manual sync fallback: queries Dodo API for the user's active subscription
  * and updates Firestore. Called from PaymentSuccessPage if the webhook
  * hasn't arrived yet (eventual consistency).
@@ -769,103 +804,6 @@ exports.reactivateDodoSubscription = onCall(
     })
 
     return { reactivated: true }
-  }
-)
-
-// ─── AI: Generate explanation for a question ─────────────────────────────────
-// Admin-only callable. Calls Gemini 2.5 Flash to write a 2-3 sentence
-// justification explaining why the correct answer is right.
-// Admin check is keyed by email (admins/{email}), matching firestore.rules,
-// useAuthStore.js and the admin grant/revoke scripts — NOT by uid.
-// Deploy secret: firebase functions:secrets:set GEMINI_API_KEY
-exports.generateExplanation = onCall(
-  {
-    secrets:        [GEMINI_API_KEY],
-    cors:           ALLOWED_ORIGINS_TURNSTILE,
-    maxInstances:   5,
-    timeoutSeconds: 30,
-  },
-  async (request) => {
-    // ── Auth guard ─────────────────────────────────────────────────────────
-    if (!request.auth) {
-      throw new HttpsError('unauthenticated', 'Login required')
-    }
-    if (!request.auth.token.email) {
-      throw new HttpsError('permission-denied', 'Admin access required')
-    }
-    const db = getFirestore()
-    const adminDoc = await db.collection('admins').doc(request.auth.token.email).get()
-    if (!adminDoc.exists) {
-      throw new HttpsError('permission-denied', 'Admin access required')
-    }
-
-    // ── Input validation ───────────────────────────────────────────────────
-    const { question, options, answer, type } = request.data ?? {}
-    if (!question || typeof question !== 'string' || question.length > 2000) {
-      throw new HttpsError('invalid-argument', 'Invalid "question" field')
-    }
-    if (!options || typeof options !== 'object') {
-      throw new HttpsError('invalid-argument', 'Invalid "options" field')
-    }
-    if (!answer) {
-      throw new HttpsError('invalid-argument', '"answer" field is required')
-    }
-
-    // ── Build prompt ───────────────────────────────────────────────────────
-    const optionsText = Object.entries(options)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([key, val]) => `${key}) ${val}`)
-      .join('\n')
-
-    const answerKeys    = Array.isArray(answer) ? answer : [answer]
-    const correctLabels = answerKeys.map((k) => `${k}) ${options[k] ?? k}`).join(', ')
-
-    let questionContext = `PREGUNTA:\n${question}\n\nOPCIONES:\n${optionsText}\n\nRESPUESTA CORRECTA: ${correctLabels}`
-    if (type === 'ordering') {
-      questionContext = `PREGUNTA (ordenamiento):\n${question}\n\nORDEN CORRECTO:\n${Array.isArray(answer) ? answer.map((item, i) => `${i + 1}. ${item}`).join('\n') : answer}`
-    }
-    if (type === 'matching') {
-      questionContext = `PREGUNTA (relacionar):\n${question}\n\nRESPUESTA CORRECTA:\n${correctLabels}`
-    }
-
-    const prompt = `Eres un experto certificado en la materia de la siguiente pregunta de examen de certificación profesional.
-Tu tarea es escribir una justificación pedagógica breve para esa pregunta.
-
-${questionContext}
-
-INSTRUCCIONES:
-- Escribe exactamente 2-3 oraciones en español.
-- Primera oración: explica POR QUÉ la respuesta correcta es correcta, citando el concepto técnico específico del tema.
-- Segunda oración: explica el error conceptual más común que lleva a elegir una respuesta incorrecta (si aplica).
-- NO uses markdown, asteriscos, bullets ni encabezados.
-- Usa la terminología oficial propia de esa certificación.
-- Responde SOLO la justificación, sin repetir la pregunta ni las opciones.`
-
-    // ── Call Gemini 2.5 Flash ──────────────────────────────────────────────
-    const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY.value() })
-
-    let explanation
-    try {
-      const response = await ai.models.generateContent({
-        model:    'gemini-2.5-flash',
-        contents: prompt,
-        config: {
-          temperature:      0.3,
-          maxOutputTokens:  300,
-        },
-      })
-      explanation = response.text?.trim()
-    } catch (err) {
-      console.error('generateExplanation: Gemini error', err.message)
-      throw new HttpsError('internal', 'AI model error. Please try again.')
-    }
-
-    if (!explanation || explanation.length < 20) {
-      throw new HttpsError('internal', 'Model returned an empty explanation.')
-    }
-
-    console.log('generateExplanation: success', { uid: request.auth.uid, len: explanation.length })
-    return { explanation }
   }
 )
 

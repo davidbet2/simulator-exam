@@ -28,6 +28,11 @@
         "region": "us-central1"
       },
       {
+        "source": "/api/dodo/webhookPDN",
+        "function": "dodoWebhook",
+        "region": "us-central1"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
