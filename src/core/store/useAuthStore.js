@@ -13,19 +13,25 @@ import { analytics } from '../analytics/events';
 
 const SESSION_ID_KEY = 'certzen-session-id';
 
+/** Generates a new session id for the caller to write to Firestore first. */
+function generateSessionId() {
+  return crypto.randomUUID();
+}
+
 /**
- * Generates a new session id, persists it synchronously to localStorage
- * (so other tabs of the same browser see it immediately), and returns it
- * for the caller to write to the user's Firestore doc.
+ * Persists the session id to localStorage. Must only be called AFTER the
+ * matching Firestore write (activeSessionId) has been confirmed — otherwise
+ * the single-session-enforcement listener in `init()` can observe the new
+ * local id against the still-stale remote value and sign the user out of
+ * their own, only session (race between login's own write and the snapshot
+ * listener attached concurrently by onAuthStateChanged).
  */
-function rotateSessionId() {
-  const id = crypto.randomUUID();
+function persistSessionId(id) {
   try {
     localStorage.setItem(SESSION_ID_KEY, id);
   } catch (e) {
     console.warn('[auth] failed to persist session id:', e?.message);
   }
-  return id;
 }
 
 async function fetchUserProfile(firebaseUser) {
@@ -126,8 +132,9 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null, sessionClosedMessage: null });
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
-      const sessionId = rotateSessionId();
+      const sessionId = generateSessionId();
       await updateDoc(doc(db, 'users', result.user.uid), { activeSessionId: sessionId });
+      persistSessionId(sessionId);
       analytics.login({ method: 'email' });
       // onAuthStateChanged handles the state update
     } catch (err) {
@@ -139,7 +146,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null, sessionClosedMessage: null });
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const sessionId = rotateSessionId();
+      const sessionId = generateSessionId();
       // Create user profile if first time
       const userRef = doc(db, 'users', result.user.uid);
       const existing = await getDoc(userRef);
@@ -153,6 +160,7 @@ export const useAuthStore = create((set) => ({
             activeSessionId: sessionId,
             createdAt:      serverTimestamp(),
           });
+          persistSessionId(sessionId);
           analytics.signUp({ method: 'google' });
         } catch (profileErr) {
           // Auth succeeded but profile write failed — log and surface to UI.
@@ -163,6 +171,7 @@ export const useAuthStore = create((set) => ({
         }
       } else {
         await updateDoc(userRef, { activeSessionId: sessionId });
+        persistSessionId(sessionId);
         analytics.login({ method: 'google' });
       }
       // onAuthStateChanged handles the state update
@@ -179,7 +188,7 @@ export const useAuthStore = create((set) => ({
       // Firestore write — prevents a race condition where security rules
       // evaluate request.auth as null immediately after account creation.
       await result.user.getIdToken();
-      const sessionId = rotateSessionId();
+      const sessionId = generateSessionId();
       // Write profile — this must succeed before proceeding.
       await setDoc(doc(db, 'users', result.user.uid), {
         uid:            result.user.uid,
@@ -189,6 +198,7 @@ export const useAuthStore = create((set) => ({
         activeSessionId: sessionId,
         createdAt:      serverTimestamp(),
       });
+      persistSessionId(sessionId);
       // Email verification intentionally skipped — app uses Google Sign-In;
       // Firebase Auth identity is guaranteed by Google OAuth.
       analytics.signUp({ method: 'email' });
