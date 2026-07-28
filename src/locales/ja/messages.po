@@ -74,11 +74,11 @@ msgstr "認定試験に合格する準備はできましたか？"
 msgid "¿Listo para practicar?"
 msgstr "練習する準備はできましたか？"
 
-#: src/features/auth/pages/LoginPage.jsx:162
+#: src/features/auth/pages/LoginPage.jsx:168
 msgid "¿No tienes cuenta?"
 msgstr "アカウントをお持ちでない?"
 
-#: src/features/auth/pages/LoginPage.jsx:106
+#: src/features/auth/pages/LoginPage.jsx:112
 msgid "¿Olvidaste tu contraseña?"
 msgstr "パスワードをお忘れですか？"
 
@@ -214,6 +214,10 @@ msgstr ""
 msgid "{inProgressCount} en progreso"
 msgstr "{inProgressCount}件進行中"
 
+#: src/features/flashcards/components/FlashcardSummary.jsx:21
+msgid "{knownCount} de {total} dominadas"
+msgstr ""
+
 #: src/features/explore/components/DomainPath.jsx:64
 msgid "{masteredCount, plural, one {# dominado} other {# dominados}}"
 msgstr "{masteredCount}件習得済み"
@@ -255,7 +259,7 @@ msgstr "← 前へ"
 #~ msgid "← Volver al inicio"
 #~ msgstr "← ホームに戻る"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:427
+#: src/features/explore/pages/ExamSetLandingPage.jsx:433
 msgid "~5 min"
 msgstr "約5分"
 
@@ -317,11 +321,11 @@ msgstr "1問インポートしました。"
 msgid "10 exámenes"
 msgstr "10回の試験"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:426
+#: src/features/explore/pages/ExamSetLandingPage.jsx:432
 msgid "10 preguntas"
 msgstr "10問"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:422
+#: src/features/explore/pages/ExamSetLandingPage.jsx:428
 msgid "10 preguntas · sesión corta"
 msgstr "10問 · 短いセッション"
 
@@ -352,6 +356,11 @@ msgstr "5回の試験"
 #: src/features/profile/pages/ProfilePage.jsx:239
 msgid "80%+ promedio"
 msgstr "平均80%+"
+
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:41
+#: src/features/flashcards/components/FlashcardView.jsx:151
+msgid "A repasar"
+msgstr ""
 
 #: src/components/layout/AppShell.jsx:431
 #~ msgid "Abrir menú"
@@ -401,6 +410,10 @@ msgstr "お知らせを有効にする"
 msgid "Activar promociones"
 msgstr "プロモーションを有効にする"
 
+#: src/features/explore/pages/ExamSetLandingPage.jsx:513
+msgid "Active recall"
+msgstr ""
+
 #: src/features/dashboard/pages/DashboardPage.jsx:215
 msgid "Actividad reciente"
 msgstr ""
@@ -411,6 +424,7 @@ msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:125
 #: src/features/exam/pages/ExamPage.jsx:135
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:39
 msgid "Actual"
 msgstr "現在"
 
@@ -427,7 +441,7 @@ msgid "Actualizar"
 msgstr "アップグレード"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:162
-#: src/features/welcome/WelcomePage.jsx:262
+#: src/features/welcome/WelcomePage.jsx:264
 msgid "Actualizar a Pro"
 msgstr "Proにアップグレード"
 
@@ -444,7 +458,7 @@ msgstr "設定"
 msgid "Al enviar aceptas nuestra"
 msgstr "送信することで、当社の"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:470
+#: src/features/explore/pages/ExamSetLandingPage.jsx:476
 msgid "Algoritmo Leitner que programa cuándo repasar cada pregunta para consolidar memoria a largo plazo al mínimo esfuerzo."
 msgstr "最小限の努力で長期記憶を定着させるため、各問題を復習するタイミングをスケジュールするLeitnerアルゴリズム。"
 
@@ -457,11 +471,12 @@ msgstr "少なくとも1問追加してください。"
 msgid "Análisis por dominio"
 msgstr "ドメイン別分析"
 
+#: src/features/flashcards/pages/FlashcardsPage.jsx:115
 #: src/features/results/ReviewPage.jsx:252
 msgid "Anterior"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:490
+#: src/features/explore/pages/ExamSetLandingPage.jsx:496
 msgid "Antes de revelar, apuesta qué tan seguro estás. Aciertas con ×3 y ganas; fallas con ×3 y pierdes. Descubre dónde crees saber sin saber."
 msgstr "公開する前に、自信のレベルにベット。×3で正解すると勝ち、×3で間違えると負け。知っていると思って知らない部分を発見しましょう。"
 
@@ -469,11 +484,11 @@ msgstr "公開する前に、自信のレベルにベット。×3で正解する
 msgid "Apariencia"
 msgstr "外観"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:497
+#: src/features/explore/pages/ExamSetLandingPage.jsx:503
 msgid "Apostar"
 msgstr "ベット"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:406
+#: src/features/explore/pages/ExamSetLandingPage.jsx:412
 msgid "Aprende sin presión"
 msgstr "プレッシャーなく学習"
 
@@ -486,11 +501,11 @@ msgstr "合格"
 msgid "Aprobados"
 msgstr "合格"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:442
+#: src/features/explore/pages/ExamSetLandingPage.jsx:448
 msgid "aprobar"
 msgstr "合格"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:358
+#: src/features/explore/pages/ExamSetLandingPage.jsx:364
 msgid "Aprobar"
 msgstr "合格"
 
@@ -506,11 +521,11 @@ msgstr "ベット"
 msgid "Apuesta · Calibración"
 msgstr "ベット · キャリブレーション"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:489
+#: src/features/explore/pages/ExamSetLandingPage.jsx:495
 msgid "Apuesta ×1, ×2 o ×3"
 msgstr "×1、×2、×3でベット"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:488
+#: src/features/explore/pages/ExamSetLandingPage.jsx:494
 msgid "Apuesta tu Confianza"
 msgstr "自信にベット"
 
@@ -526,7 +541,7 @@ msgstr "項目をドラッグまたはクリック"
 msgid "Asunto"
 msgstr "件名"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:452
+#: src/features/explore/pages/ExamSetLandingPage.jsx:458
 msgid "Ataca tus errores"
 msgstr "間違いを攻略"
 
@@ -593,11 +608,11 @@ msgstr "タイトル、説明、タグで検索…"
 msgid "Buscar sets de examen"
 msgstr "試験セットを検索"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:398
+#: src/features/explore/pages/ExamSetLandingPage.jsx:404
 msgid "Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje."
 msgstr "各モードは認知学習科学に裏付けられた異なるテクニックを活用します。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:491
+#: src/features/explore/pages/ExamSetLandingPage.jsx:497
 msgid "Calibración metacognitiva (Brainscape CBR · Dunning-Kruger)"
 msgstr "メタ認知キャリブレーション（Brainscape CBR · ダニング=クルーガー）"
 
@@ -747,11 +762,11 @@ msgstr "フラグ付き"
 
 #. placeholder {0}: set.timeMinutes ?? 30
 #. placeholder {1}: set.passPercent ?? 70
-#: src/features/explore/pages/ExamSetLandingPage.jsx:438
+#: src/features/explore/pages/ExamSetLandingPage.jsx:444
 msgid "Condiciones reales: {0} min · {1}% para aprobar · sin pistas. Evalúa tu preparación real."
 msgstr "実際の条件：{0}分 · {1}%で合格 · ヒントなし。実際の準備を評価しましょう。"
 
-#: src/features/welcome/WelcomePage.jsx:235
+#: src/features/welcome/WelcomePage.jsx:237
 msgid "confianza"
 msgstr "自信"
 
@@ -789,7 +804,7 @@ msgstr "お問い合わせ"
 msgid "Continuar la sesión"
 msgstr "セッションを続ける"
 
-#: src/features/auth/pages/LoginPage.jsx:95
+#: src/features/auth/pages/LoginPage.jsx:101
 #: src/features/auth/pages/RegisterPage.jsx:110
 msgid "Contraseña"
 msgstr "パスワード"
@@ -804,7 +819,7 @@ msgstr "正解"
 msgid "Correctas"
 msgstr ""
 
-#: src/features/auth/pages/LoginPage.jsx:85
+#: src/features/auth/pages/LoginPage.jsx:91
 #: src/features/auth/pages/RegisterPage.jsx:100
 #: src/features/profile/pages/ProfilePage.jsx:355
 #: src/features/public/pages/ContactPage.jsx:223
@@ -815,7 +830,7 @@ msgstr "メールアドレス"
 msgid "Crea el primero"
 msgstr "最初のものを作成"
 
-#: src/features/welcome/WelcomePage.jsx:436
+#: src/features/welcome/WelcomePage.jsx:438
 msgid "Crea tu cuenta en segundos y practica con simuladores reales. Plan gratuito para siempre. Actualiza cuando lo necesites."
 msgstr "数秒でアカウントを作成し、実際のシミュレーターで練習しましょう。永久無料プラン。必要に応じてアップグレード。"
 
@@ -841,10 +856,10 @@ msgstr "アカウント作成"
 
 #: src/features/auth/pages/RegisterPage.jsx:78
 #: src/features/auth/pages/RegisterPage.jsx:79
-#: src/features/explore/pages/ExamSetLandingPage.jsx:561
+#: src/features/explore/pages/ExamSetLandingPage.jsx:584
 #: src/features/explore/pages/ExploreExamsPage.jsx:352
 #: src/features/public/pages/AboutPage.jsx:186
-#: src/features/welcome/WelcomePage.jsx:440
+#: src/features/welcome/WelcomePage.jsx:442
 msgid "Crear cuenta gratis"
 msgstr "無料アカウント作成"
 
@@ -896,6 +911,10 @@ msgstr "アカウントデータ"
 msgid "Debes iniciar sesión para crear sets de examen."
 msgstr "試験セットを作成するにはログインが必要です。"
 
+#: src/features/flashcards/components/FlashcardView.jsx:70
+msgid "Definiciones"
+msgstr ""
+
 #: src/features/creator/pages/CreateExamPage.jsx:344
 #: src/features/creator/pages/EditExamPage.jsx:353
 msgid "Describe el contenido de este set…"
@@ -922,11 +941,15 @@ msgstr "認定資格を持つプロフェッショナルにより、認定資格
 msgid "Domina tu certificación"
 msgstr "資格をマスターしよう"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:478
+#: src/features/explore/pages/ExamSetLandingPage.jsx:484
 msgid "dominada"
 msgstr "習得済み"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:478
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:40
+msgid "Dominada"
+msgstr ""
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:484
 msgid "dominadas"
 msgstr "習得済み"
 
@@ -934,7 +957,7 @@ msgstr "習得済み"
 msgid "Dudo"
 msgstr "自信なし"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:357
+#: src/features/explore/pages/ExamSetLandingPage.jsx:363
 msgid "Duración"
 msgstr "所要時間"
 
@@ -1003,7 +1026,7 @@ msgstr "名前は必須です。"
 msgid "El set no existe."
 msgstr "このセットは存在しません。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:558
+#: src/features/explore/pages/ExamSetLandingPage.jsx:581
 msgid "El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas."
 msgstr "シミュレーターは無料です。進捗を保存し、完全な解説を見るにはアカウントだけが必要です。"
 
@@ -1021,7 +1044,7 @@ msgstr "タイトルは200文字を超えることはできません。"
 msgid "Elementos disponibles"
 msgstr "利用可能な項目"
 
-#: src/features/welcome/WelcomePage.jsx:382
+#: src/features/welcome/WelcomePage.jsx:384
 msgid "Elige tu"
 msgstr "あなたの"
 
@@ -1029,7 +1052,7 @@ msgstr "あなたの"
 msgid "Elige tu certificación"
 msgstr "認定資格を選択"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:395
+#: src/features/explore/pages/ExamSetLandingPage.jsx:401
 msgid "Elige tu modo de estudio"
 msgstr "学習モードを選択"
 
@@ -1062,8 +1085,8 @@ msgstr ""
 msgid "Email"
 msgstr "メール"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:415
-#: src/features/explore/pages/ExamSetLandingPage.jsx:462
+#: src/features/explore/pages/ExamSetLandingPage.jsx:421
+#: src/features/explore/pages/ExamSetLandingPage.jsx:468
 msgid "Empezar"
 msgstr "開始"
 
@@ -1071,12 +1094,12 @@ msgstr "開始"
 msgid "Empezar ahora"
 msgstr "今すぐ開始"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:445
+#: src/features/explore/pages/ExamSetLandingPage.jsx:451
 msgid "Empezar examen"
 msgstr "試験を開始"
 
 #: src/features/public/pages/AboutPage.jsx:110
-#: src/features/welcome/WelcomePage.jsx:253
+#: src/features/welcome/WelcomePage.jsx:255
 msgid "Empezar gratis"
 msgstr "無料で始める"
 
@@ -1084,7 +1107,7 @@ msgstr "無料で始める"
 msgid "Empieza a estudiar"
 msgstr "学習を始めよう"
 
-#: src/features/welcome/WelcomePage.jsx:433
+#: src/features/welcome/WelcomePage.jsx:435
 msgid "Empieza gratis hoy"
 msgstr "今日無料で始める"
 
@@ -1159,7 +1182,7 @@ msgstr "PDFの読み取りエラー。"
 msgid "Error al procesar el PDF."
 msgstr "PDF処理エラー。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:424
+#: src/features/explore/pages/ExamSetLandingPage.jsx:430
 msgid "Espaciado + sesiones breves (micro-learning)"
 msgstr "間隔学習 + 短いセッション（マイクロラーニング）"
 
@@ -1183,11 +1206,15 @@ msgstr "この試験は存在しないか、公開されていません。"
 msgid "estudiante"
 msgstr "学習者"
 
+#: src/features/explore/pages/ExamSetLandingPage.jsx:519
+msgid "Estudiar con Flashcards"
+msgstr ""
+
 #: src/features/exam/pages/ExamPage.jsx:385
 msgid "Estudio"
 msgstr "学習"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:405
+#: src/features/explore/pages/ExamSetLandingPage.jsx:411
 msgid "Estudio Guiado"
 msgstr "ガイド付き学習"
 
@@ -1204,7 +1231,7 @@ msgstr "試験"
 msgid "Examen oficial: 73%"
 msgstr "公式試験：73%"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:290
+#: src/features/explore/pages/ExamSetLandingPage.jsx:296
 #: src/features/profile/pages/ProfilePage.jsx:276
 msgid "Exámenes"
 msgstr "試験"
@@ -1276,7 +1303,7 @@ msgstr ""
 msgid "Explorar sets"
 msgstr "セットを探す"
 
-#: src/features/welcome/WelcomePage.jsx:405
+#: src/features/welcome/WelcomePage.jsx:407
 msgid "Explorar sets de la comunidad"
 msgstr "コミュニティセットを探索"
 
@@ -1320,9 +1347,17 @@ msgstr "セッションを終了して結果を表示"
 msgid "Finalizar y ver resultados ✓"
 msgstr "終了して結果を表示 ✓"
 
+#: src/features/explore/pages/ExamSetLandingPage.jsx:510
+#: src/features/flashcards/pages/FlashcardsPage.jsx:62
+#: src/features/flashcards/pages/FlashcardsPage.jsx:91
 #: src/features/welcome/WelcomePage.jsx:88
 msgid "Flashcards"
 msgstr "フラッシュカード"
+
+#. placeholder {0}: set?.title ?? ''
+#: src/features/flashcards/pages/FlashcardsPage.jsx:81
+msgid "Flashcards — {0}"
+msgstr ""
 
 #: src/features/creator/pages/CreateExamPage.jsx:238
 msgid "Formato inválido. Solo se permite .pdf."
@@ -1345,7 +1380,7 @@ msgstr "お問い合わせフォーム"
 msgid "Free"
 msgstr "Free"
 
-#: src/features/welcome/WelcomePage.jsx:430
+#: src/features/welcome/WelcomePage.jsx:432
 msgid "Freemium · Plan gratuito disponible"
 msgstr "フリーミアム · 無料プラン利用可能"
 
@@ -1353,11 +1388,11 @@ msgstr "フリーミアム · 無料プラン利用可能"
 msgid "Freemium sin trampa"
 msgstr "罠のないフリーミアム"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:513
+#: src/features/explore/pages/ExamSetLandingPage.jsx:536
 msgid "Fuente:"
 msgstr "出典："
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:345
+#: src/features/explore/pages/ExamSetLandingPage.jsx:351
 msgid "Gratis · guarda tu progreso y ve explicaciones completas"
 msgstr "無料 · 進捗を保存し、完全な解説を見る"
 
@@ -1475,17 +1510,17 @@ msgstr "セット情報"
 msgid "Información personal"
 msgstr "個人情報"
 
-#: src/features/auth/pages/LoginPage.jsx:136
+#: src/features/auth/pages/LoginPage.jsx:142
 msgid "Ingresando…"
 msgstr "ログイン中…"
 
 #: src/components/layout/AppShell.jsx:520
 #: src/components/layout/PublicLayout.jsx:58
-#: src/features/auth/pages/LoginPage.jsx:136
+#: src/features/auth/pages/LoginPage.jsx:142
 msgid "Ingresar"
 msgstr "ログイン"
 
-#: src/features/auth/pages/LoginPage.jsx:155
+#: src/features/auth/pages/LoginPage.jsx:161
 msgid "Ingresar con Google"
 msgstr "Googleでログイン"
 
@@ -1508,13 +1543,19 @@ msgstr "ホーム"
 msgid "intentos"
 msgstr "受験回数"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:359
+#: src/features/explore/pages/ExamSetLandingPage.jsx:365
 msgid "Intentos"
 msgstr "受験回数"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:119
 msgid "Intermedia"
 msgstr "中級"
+
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:22
+#: src/features/flashcards/pages/FlashcardsPage.jsx:135
+#: src/features/flashcards/pages/FlashcardsPage.jsx:136
+msgid "Ir a una tarjeta"
+msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:311
 msgid "La eliminación de cuenta está temporalmente manejada por soporte."
@@ -1531,6 +1572,14 @@ msgstr "最初の行はこれらの列のヘッダーでなければなりませ
 #: src/features/creator/pages/EditExamPage.jsx:492
 msgid "La primera fila debe ser el encabezado."
 msgstr "最初の行はヘッダーである必要があります。"
+
+#: src/features/flashcards/components/FlashcardView.jsx:224
+msgid "La sabía"
+msgstr ""
+
+#: src/features/flashcards/components/FlashcardView.jsx:144
+msgid "La sabías"
+msgstr ""
 
 #: src/components/layout/AppShell.jsx:565
 #: src/features/explore/pages/ExploreExamsPage.jsx:254
@@ -1584,6 +1633,11 @@ msgstr "ユーザーメニュー"
 msgid "Método de acceso"
 msgstr "アクセス方法"
 
+#: src/features/flashcards/components/FlashcardControls.jsx:15
+#: src/features/flashcards/components/FlashcardControls.jsx:26
+msgid "Mezclar"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:244
 msgid "Mi perfil"
 msgstr "マイプロフィール"
@@ -1611,7 +1665,7 @@ msgstr "自分のセット"
 msgid "Modo"
 msgstr "モード"
 
-#: src/features/welcome/WelcomePage.jsx:383
+#: src/features/welcome/WelcomePage.jsx:385
 msgid "modo de práctica"
 msgstr "練習モード"
 
@@ -1619,7 +1673,7 @@ msgstr "練習モード"
 msgid "Modo Estudio"
 msgstr "学習モード"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:436
+#: src/features/explore/pages/ExamSetLandingPage.jsx:442
 #: src/features/welcome/WelcomePage.jsx:70
 msgid "Modo Examen"
 msgstr "試験モード"
@@ -1640,7 +1694,7 @@ msgstr "練習モード"
 msgid "Monto"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:482
+#: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Nada por repasar"
 msgstr "復習するものはありません"
 
@@ -1676,6 +1730,10 @@ msgstr ""
 #: src/features/home/pages/HomePage.jsx:310
 msgid "No hay recomendaciones por ahora."
 msgstr "現在おすすめはありません。"
+
+#: src/features/flashcards/components/FlashcardView.jsx:221
+msgid "No la sabía"
+msgstr ""
 
 #: src/features/social/components/RatingStars.jsx:110
 msgid "No puedes calificar tu propio set"
@@ -1756,7 +1814,11 @@ msgstr "新しい問題"
 msgid "Nuevas funciones y consejos"
 msgstr "新機能とヒント"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:494
+#: src/features/welcome/WelcomePage.jsx:90
+msgid "Nuevo"
+msgstr ""
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:500
 msgid "Nuevo ✨"
 msgstr "新着 ✨"
 
@@ -1764,7 +1826,7 @@ msgstr "新着 ✨"
 msgid "Nuevo set"
 msgstr ""
 
-#: src/features/auth/pages/LoginPage.jsx:145
+#: src/features/auth/pages/LoginPage.jsx:151
 msgid "o continúa con"
 msgstr "または次で続ける"
 
@@ -1798,10 +1860,11 @@ msgid "Pago pendiente"
 msgstr ""
 
 #: src/features/welcome/WelcomePage.jsx:81
+#: src/features/welcome/WelcomePage.jsx:99
 msgid "Para aprender"
 msgstr "学習用"
 
-#: src/features/welcome/WelcomePage.jsx:331
+#: src/features/welcome/WelcomePage.jsx:333
 msgid "para aprobar"
 msgstr "合格用"
 
@@ -1823,6 +1886,10 @@ msgstr "JSONをここに貼り付け..."
 #: src/features/creator/pages/EditExamPage.jsx:460
 msgid "Pega un array JSON. Tipos soportados:"
 msgstr "JSON配列を貼り付けてください。サポートされているタイプ："
+
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:42
+msgid "Pendiente"
+msgstr ""
 
 #: src/components/layout/PublicLayout.jsx:52
 msgid "Perfil"
@@ -1876,21 +1943,25 @@ msgstr "本番のように練習"
 msgid "Practica con propósito"
 msgstr "目的を持って練習"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:454
+#: src/features/explore/pages/ExamSetLandingPage.jsx:460
 msgid "Práctica focalizada (targeted practice)"
 msgstr "ターゲット練習（targeted practice）"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:421
+#: src/features/explore/pages/ExamSetLandingPage.jsx:427
 msgid "Práctica Rápida"
 msgstr "クイック練習"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:430
+#: src/features/explore/pages/ExamSetLandingPage.jsx:436
 msgid "Practicar"
 msgstr "練習"
 
 #: src/features/explore/components/DomainPath.jsx:151
 msgid "Practicar {label}: {mastered} de {total} dominadas, {percent}%"
 msgstr "{label}を練習：{total}中{mastered}習得済み、{percent}%"
+
+#: src/features/flashcards/components/FlashcardView.jsx:187
+msgid "Pregunta"
+msgstr ""
 
 #. placeholder {0}: i + 1
 #. placeholder {0}: index + 1
@@ -1907,23 +1978,23 @@ msgstr "問題 {0}"
 msgid "Pregunta {0} de {1}"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:457
+#: src/features/explore/pages/ExamSetLandingPage.jsx:463
 msgid "pregunta por repasar"
 msgstr "問題を復習"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:474
+#: src/features/explore/pages/ExamSetLandingPage.jsx:480
 msgid "pregunta por repasar hoy"
 msgstr "今日復習する問題"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:410
-#: src/features/explore/pages/ExamSetLandingPage.jsx:493
+#: src/features/explore/pages/ExamSetLandingPage.jsx:416
+#: src/features/explore/pages/ExamSetLandingPage.jsx:499
 #: src/features/explore/pages/ExploreExamsPage.jsx:81
 msgid "preguntas"
 msgstr "問題"
 
 #: src/features/creator/pages/CreateExamPage.jsx:572
 #: src/features/creator/pages/EditExamPage.jsx:562
-#: src/features/explore/pages/ExamSetLandingPage.jsx:356
+#: src/features/explore/pages/ExamSetLandingPage.jsx:362
 msgid "Preguntas"
 msgstr "問題"
 
@@ -1931,11 +2002,11 @@ msgstr "問題"
 msgid "Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad."
 msgstr "実際のコンテンツに基づく問題、ドメインと難易度別に整理。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:457
+#: src/features/explore/pages/ExamSetLandingPage.jsx:463
 msgid "preguntas por repasar"
 msgstr "問題を復習"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:474
+#: src/features/explore/pages/ExamSetLandingPage.jsx:480
 msgid "preguntas por repasar hoy"
 msgstr "今日復習する問題"
 
@@ -1943,7 +2014,7 @@ msgstr "今日復習する問題"
 msgid "Preguntas similares a los exámenes oficiales de certificación, organizadas por dominio y nivel de dificultad. Actualizadas constantemente."
 msgstr "公式認定試験に似た問題、ドメインと難易度別に整理。常に更新。"
 
-#: src/features/welcome/WelcomePage.jsx:162
+#: src/features/welcome/WelcomePage.jsx:164
 msgid "Prepárate para tus certificaciones con simuladores reales, banco de preguntas oficial y seguimiento de progreso. Gratis para empezar."
 msgstr "実際のシミュレーター、公式問題バンク、進捗追跡で認定試験に備えましょう。無料で開始。"
 
@@ -1956,7 +2027,7 @@ msgid "Primer examen"
 msgstr "初回試験"
 
 #. placeholder {0}: preview.length
-#: src/features/explore/pages/ExamSetLandingPage.jsx:540
+#: src/features/explore/pages/ExamSetLandingPage.jsx:563
 msgid "Primeras {0} preguntas del set."
 msgstr "セットの最初の{0}問。"
 
@@ -2006,13 +2077,11 @@ msgid "Próxima renovación"
 msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:69
-#: src/features/welcome/WelcomePage.jsx:90
-#: src/features/welcome/WelcomePage.jsx:99
 #: src/features/welcome/WelcomePage.jsx:139
 msgid "Próximamente"
 msgstr "近日公開"
 
-#: src/features/welcome/WelcomePage.jsx:386
+#: src/features/welcome/WelcomePage.jsx:388
 msgid "Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos."
 msgstr "サンプル問題で各モードを試してみましょう。完全な試験にアクセスするには登録してください。"
 
@@ -2084,12 +2153,13 @@ msgstr "各試行を記録し、弱点を特定し、試験当日までに自信
 msgid "Registrarse con Google"
 msgstr "Googleで登録"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:415
-#: src/features/explore/pages/ExamSetLandingPage.jsx:430
-#: src/features/explore/pages/ExamSetLandingPage.jsx:445
-#: src/features/explore/pages/ExamSetLandingPage.jsx:462
-#: src/features/explore/pages/ExamSetLandingPage.jsx:482
-#: src/features/explore/pages/ExamSetLandingPage.jsx:497
+#: src/features/explore/pages/ExamSetLandingPage.jsx:421
+#: src/features/explore/pages/ExamSetLandingPage.jsx:436
+#: src/features/explore/pages/ExamSetLandingPage.jsx:451
+#: src/features/explore/pages/ExamSetLandingPage.jsx:468
+#: src/features/explore/pages/ExamSetLandingPage.jsx:488
+#: src/features/explore/pages/ExamSetLandingPage.jsx:503
+#: src/features/explore/pages/ExamSetLandingPage.jsx:519
 msgid "Regístrate"
 msgstr "登録"
 
@@ -2101,7 +2171,7 @@ msgstr "メールで30秒で登録。フリーミアムプラン利用可能。"
 msgid "Regístrate en CertZen para acceder a simuladores ilimitados."
 msgstr "CertZenに登録して無制限のシミュレーターにアクセスしましょう。"
 
-#: src/features/auth/pages/LoginPage.jsx:164
+#: src/features/auth/pages/LoginPage.jsx:170
 #: src/features/explore/pages/ExploreExamsPage.jsx:318
 msgid "Regístrate gratis"
 msgstr "無料登録"
@@ -2110,11 +2180,11 @@ msgstr "無料登録"
 msgid "Regístrate gratis para empezar exámenes, guardar resultados y crear tus propios sets."
 msgstr "無料で登録して、試験を開始し、結果を保存し、自分のセットを作成。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:556
+#: src/features/explore/pages/ExamSetLandingPage.jsx:579
 msgid "Regístrate para empezar"
 msgstr "登録して開始"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:342
+#: src/features/explore/pages/ExamSetLandingPage.jsx:348
 msgid "Regístrate para practicar"
 msgstr "練習するには登録"
 
@@ -2126,6 +2196,11 @@ msgstr "回答と解説を見るには登録してください。"
 #: src/components/layout/PublicLayout.jsx:61
 msgid "Registro gratis"
 msgstr "無料登録"
+
+#: src/features/flashcards/components/FlashcardControls.jsx:18
+#: src/features/flashcards/components/FlashcardControls.jsx:32
+msgid "Reiniciar"
+msgstr ""
 
 #: src/features/results/ResultsPage.jsx:383
 #~ msgid "Reintentar mismo examen"
@@ -2143,19 +2218,40 @@ msgstr ""
 msgid "Renovación cancelada. Tu acceso Pro continúa hasta"
 msgstr ""
 
-#: src/features/welcome/WelcomePage.jsx:89
-msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar."
-msgstr "用語と定義のインタラクティブカードで概念ごとに復習。スワイプして進む。"
+#: src/features/explore/pages/ExamSetLandingPage.jsx:512
+msgid "Repasa cada pregunta como una tarjeta: pregunta al frente, respuesta y explicación al voltear. Sesión libre, sin cronómetro."
+msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:482
+#: src/features/welcome/WelcomePage.jsx:89
+#~ msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar."
+#~ msgstr "用語と定義のインタラクティブカードで概念ごとに復習。スワイプして進む。"
+
+#: src/features/welcome/WelcomePage.jsx:89
+msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Voltea para ver la respuesta."
+msgstr ""
+
+#. placeholder {0}: set?.title ?? 'este set'
+#: src/features/flashcards/pages/FlashcardsPage.jsx:82
+msgid "Repasa las preguntas de {0} con flashcards."
+msgstr ""
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Repasar ahora"
 msgstr "今すぐ復習"
+
+#: src/features/flashcards/components/FlashcardSummary.jsx:32
+msgid "Repasar de nuevo"
+msgstr ""
+
+#: src/features/flashcards/components/FlashcardSummary.jsx:24
+msgid "Repasaste todo el mazo de esta sesión."
+msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:389
 msgid "Repaso"
 msgstr "復習"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:468
+#: src/features/explore/pages/ExamSetLandingPage.jsx:474
 msgid "Repaso Inteligente"
 msgstr "スマート復習"
 
@@ -2163,7 +2259,7 @@ msgstr "スマート復習"
 msgid "Repaso Rápido"
 msgstr "クイック復習"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:469
+#: src/features/explore/pages/ExamSetLandingPage.jsx:475
 msgid "Repetición espaciada"
 msgstr "間隔反復"
 
@@ -2175,18 +2271,22 @@ msgstr ""
 msgid "Requerido"
 msgstr "必須"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:458
-#: src/features/explore/pages/ExamSetLandingPage.jsx:477
+#: src/features/explore/pages/ExamSetLandingPage.jsx:464
+#: src/features/explore/pages/ExamSetLandingPage.jsx:483
 msgid "Responde preguntas primero"
 msgstr "まず問題に答える"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:407
+#: src/features/explore/pages/ExamSetLandingPage.jsx:413
 msgid "Responde, confirma y ve la explicación al instante. Sin tiempo, revisa cuantas veces quieras."
 msgstr "回答、確認、即座に解説を見る。時間制限なし、何度でも復習可能。"
 
 #: src/features/exam/pages/ExamPage.jsx:136
 msgid "Respondida"
 msgstr "回答済み"
+
+#: src/features/flashcards/components/FlashcardView.jsx:207
+msgid "Respuesta"
+msgstr ""
 
 #: src/features/exam/components/QuestionCard.jsx:382
 msgid "Respuesta incorrecta — la respuesta correcta está marcada en verde"
@@ -2222,7 +2322,7 @@ msgstr "練習試験の結果。"
 msgid "Retoma tu progreso o descubre nuevos exámenes. Tu próxima certificación está a un intento de distancia."
 msgstr "進捗を再開したり、新しい試験を発見しましょう。次の認定まであと一歩です。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:408
+#: src/features/explore/pages/ExamSetLandingPage.jsx:414
 msgid "Retrieval practice + feedback inmediato"
 msgstr "検索練習 + 即時フィードバック"
 
@@ -2243,21 +2343,28 @@ msgstr ""
 msgid "Revisión"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:372
+#: src/features/explore/pages/ExamSetLandingPage.jsx:378
 msgid "Ruta de Dominio"
 msgstr "習得パス"
 
 #: src/features/exam/pages/ExamPage.jsx:378
+#: src/features/flashcards/components/FlashcardSummary.jsx:29
+#: src/features/flashcards/pages/FlashcardsPage.jsx:101
 msgid "Salir"
 msgstr "退出"
 
 #: src/features/exam/pages/ExamPage.jsx:379
+#: src/features/flashcards/pages/FlashcardsPage.jsx:102
 msgid "Salir de la sesión"
 msgstr "セッションを終了"
 
 #: src/features/exam/pages/ExamPage.jsx:171
 msgid "Salir sin guardar"
 msgstr "保存せず退出"
+
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:24
+msgid "Salta directamente a cualquier tarjeta del mazo"
+msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:19
 msgid "Seguro"
@@ -2306,7 +2413,7 @@ msgstr ""
 msgid "Sesión de práctica de examen de certificación."
 msgstr "認定試験練習セッション。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:423
+#: src/features/explore/pages/ExamSetLandingPage.jsx:429
 msgid "Sesión exprés ideal para 5–10 minutos: aleatoria, con explicación inmediata. Perfecta para el día a día."
 msgstr "5〜10分に最適なエクスプレスセッション：ランダム、即時解説。日常的な練習に最適。"
 
@@ -2338,6 +2445,7 @@ msgstr "退出すると、この試験の進捗はすべて失われます。回
 msgid "Sí, cancelar"
 msgstr ""
 
+#: src/features/flashcards/pages/FlashcardsPage.jsx:126
 #: src/features/results/ReviewPage.jsx:258
 msgid "Siguiente"
 msgstr ""
@@ -2350,7 +2458,7 @@ msgstr "次へ →"
 msgid "Simulación Real"
 msgstr "リアルシミュレーション"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:437
+#: src/features/explore/pages/ExamSetLandingPage.jsx:443
 msgid "Simulacro cronometrado"
 msgstr "時間制限付き模擬"
 
@@ -2359,15 +2467,15 @@ msgstr "時間制限付き模擬"
 msgid "Simulacros gratuitos de {0}. Preguntas basadas en exam guides públicos. Estudia y evalúate en línea."
 msgstr "{0}の無料シミュレーション。公開試験ガイドに基づく問題。オンラインで学習・評価。"
 
-#: src/features/welcome/WelcomePage.jsx:225
+#: src/features/welcome/WelcomePage.jsx:227
 msgid "Simulador de Certificaciones"
 msgstr "認定資格シミュレーター"
 
-#: src/features/welcome/WelcomePage.jsx:243
+#: src/features/welcome/WelcomePage.jsx:245
 msgid "Simuladores con el formato similar del examen, banco de preguntas y seguimiento de progreso. Gratis para empezar hoy."
 msgstr "試験に似た形式のシミュレーター、問題バンク、進捗追跡。今日無料で開始。"
 
-#: src/features/welcome/WelcomePage.jsx:161
+#: src/features/welcome/WelcomePage.jsx:163
 msgid "Simuladores de Certificación Profesional"
 msgstr "プロフェッショナル認定シミュレーター"
 
@@ -2379,15 +2487,15 @@ msgstr "未確定"
 msgid "Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta."
 msgstr "タイマーなし。各回答を確認し、正解かどうかを即座に確認。各問題に解説付き。"
 
-#: src/features/welcome/WelcomePage.jsx:334
+#: src/features/welcome/WelcomePage.jsx:336
 msgid "Sin distracciones. Solo las herramientas que te acercan a tu certificación."
 msgstr "気が散ることなく。認定資格に近づけるツールのみ。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:462
+#: src/features/explore/pages/ExamSetLandingPage.jsx:468
 msgid "Sin errores aún"
 msgstr "まだ間違いはありません"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:482
+#: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Sin historial"
 msgstr "履歴なし"
 
@@ -2409,7 +2517,8 @@ msgstr "未回答"
 msgid "Sin responder — la respuesta correcta está marcada en verde"
 msgstr "未回答 — 正解は緑で表示されています"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:411
+#: src/features/explore/pages/ExamSetLandingPage.jsx:417
+#: src/features/explore/pages/ExamSetLandingPage.jsx:516
 msgid "Sin tiempo"
 msgstr "時間制限なし"
 
@@ -2429,7 +2538,7 @@ msgstr "プラットフォームについて"
 msgid "Soporte general"
 msgstr "一般サポート"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:471
+#: src/features/explore/pages/ExamSetLandingPage.jsx:477
 msgid "Spaced repetition (Leitner 5 cajas)"
 msgstr "間隔反復（Leitner 5箱）"
 
@@ -2459,11 +2568,20 @@ msgstr "サブスクリプション"
 msgid "Suscripción y facturación"
 msgstr ""
 
+#. placeholder {0}: Math.min(currentIndex + 1, total)
+#: src/features/flashcards/pages/FlashcardsPage.jsx:121
+msgid "Tarjeta {0} de {total}"
+msgstr ""
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:515
+msgid "tarjetas"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:286
 msgid "Tasa de aprobación"
 msgstr "合格率"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:453
+#: src/features/explore/pages/ExamSetLandingPage.jsx:459
 msgid "Te enfoca en las preguntas que fallaste. Aprendizaje dirigido a tus lagunas reales."
 msgstr "間違えた問題に集中。実際の弱点に向けた学習。"
 
@@ -2472,6 +2590,7 @@ msgid "Técnica:"
 msgstr "テクニック："
 
 #: src/components/layout/AppShell.jsx:401
+#: src/features/flashcards/components/FlashcardView.jsx:58
 msgid "Términos"
 msgstr "利用規約"
 
@@ -2479,7 +2598,7 @@ msgstr "利用規約"
 msgid "Términos de uso →"
 msgstr "利用規約 →"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:439
+#: src/features/explore/pages/ExamSetLandingPage.jsx:445
 msgid "Testing effect + feedback diferido"
 msgstr "テスト効果 + 遅延フィードバック"
 
@@ -2509,15 +2628,23 @@ msgstr ""
 msgid "Título *"
 msgstr "タイトル *"
 
+#: src/features/flashcards/components/FlashcardView.jsx:196
+msgid "Toca la tarjeta o presiona espacio para voltear"
+msgstr ""
+
+#: src/features/flashcards/components/FlashcardView.jsx:199
+msgid "Toca la tarjeta para voltear"
+msgstr ""
+
 #: src/features/results/ReviewPage.jsx:150
 msgid "Todas"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:476
+#: src/features/explore/pages/ExamSetLandingPage.jsx:482
 msgid "Todo al día 🎉"
 msgstr "すべて最新 🎉"
 
-#: src/features/welcome/WelcomePage.jsx:330
+#: src/features/welcome/WelcomePage.jsx:332
 msgid "Todo lo que necesitas"
 msgstr "必要なすべて"
 
@@ -2559,7 +2686,7 @@ msgstr "あなたの名前"
 msgid "Tu progreso está guardado automáticamente. Podrás retomar desde donde lo dejaste cuando vuelvas."
 msgstr "進捗は自動保存されます。次回は続きから再開できます。"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:375
+#: src/features/explore/pages/ExamSetLandingPage.jsx:381
 msgid "Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada."
 msgstr "テーマエリア別の進捗。ドメインをタップして集中練習。"
 
@@ -2630,7 +2757,7 @@ msgid "Ver resultados ✓"
 msgstr "結果を表示 ✓"
 
 #: src/features/public/pages/AboutPage.jsx:113
-#: src/features/welcome/WelcomePage.jsx:258
+#: src/features/welcome/WelcomePage.jsx:260
 msgid "Ver simuladores"
 msgstr "シミュレーターを見る"
 
@@ -2658,9 +2785,18 @@ msgstr "すべて表示 ({0})"
 msgid "Verificado"
 msgstr "確認済み"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:539
+#: src/features/explore/pages/ExamSetLandingPage.jsx:562
 msgid "Vista previa"
 msgstr "プレビュー"
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:511
+msgid "Voltea y autoevalúate"
+msgstr ""
+
+#: src/features/flashcards/components/FlashcardControls.jsx:11
+#: src/features/flashcards/components/FlashcardControls.jsx:29
+msgid "Voltear tarjeta"
+msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:234
 msgid "Volver a explorar"
@@ -2678,11 +2814,15 @@ msgstr ""
 msgid "Volver al inicio"
 msgstr "ホームに戻る"
 
-#: src/features/welcome/WelcomePage.jsx:444
+#: src/features/flashcards/pages/FlashcardsPage.jsx:69
+msgid "Volver al set"
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:446
 msgid "Ya tengo cuenta"
 msgstr "すでにアカウントがある"
 
 #: src/features/exam/pages/ExamPage.jsx:387
-#: src/features/explore/pages/ExamSetLandingPage.jsx:451
+#: src/features/explore/pages/ExamSetLandingPage.jsx:457
 msgid "Zona Débil"
 msgstr "弱点ゾーン"

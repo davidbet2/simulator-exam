@@ -74,11 +74,11 @@ msgstr "Bereit, deine Zertifizierung zu bestehen?"
 msgid "¿Listo para practicar?"
 msgstr "Bereit zum Üben?"
 
-#: src/features/auth/pages/LoginPage.jsx:162
+#: src/features/auth/pages/LoginPage.jsx:168
 msgid "¿No tienes cuenta?"
 msgstr "Kein Konto?"
 
-#: src/features/auth/pages/LoginPage.jsx:106
+#: src/features/auth/pages/LoginPage.jsx:112
 msgid "¿Olvidaste tu contraseña?"
 msgstr "Passwort vergessen?"
 
@@ -214,6 +214,10 @@ msgstr ""
 msgid "{inProgressCount} en progreso"
 msgstr "{inProgressCount} in Bearbeitung"
 
+#: src/features/flashcards/components/FlashcardSummary.jsx:21
+msgid "{knownCount} de {total} dominadas"
+msgstr ""
+
 #: src/features/explore/components/DomainPath.jsx:64
 msgid "{masteredCount, plural, one {# dominado} other {# dominados}}"
 msgstr "{masteredCount, plural, one {# beherrscht} other {# beherrscht}}"
@@ -255,7 +259,7 @@ msgstr "← Zurück"
 #~ msgid "← Volver al inicio"
 #~ msgstr "← Zurück zur Startseite"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:427
+#: src/features/explore/pages/ExamSetLandingPage.jsx:433
 msgid "~5 min"
 msgstr "~5 Min."
 
@@ -317,11 +321,11 @@ msgstr "1 Frage importiert."
 msgid "10 exámenes"
 msgstr "10 Prüfungen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:426
+#: src/features/explore/pages/ExamSetLandingPage.jsx:432
 msgid "10 preguntas"
 msgstr "10 Fragen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:422
+#: src/features/explore/pages/ExamSetLandingPage.jsx:428
 msgid "10 preguntas · sesión corta"
 msgstr "10 Fragen · kurze Sitzung"
 
@@ -352,6 +356,11 @@ msgstr "5 Prüfungen"
 #: src/features/profile/pages/ProfilePage.jsx:239
 msgid "80%+ promedio"
 msgstr "80%+ Durchschnitt"
+
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:41
+#: src/features/flashcards/components/FlashcardView.jsx:151
+msgid "A repasar"
+msgstr ""
 
 #: src/components/layout/AppShell.jsx:431
 #~ msgid "Abrir menú"
@@ -401,6 +410,10 @@ msgstr "Neuigkeiten aktivieren"
 msgid "Activar promociones"
 msgstr "Aktionen aktivieren"
 
+#: src/features/explore/pages/ExamSetLandingPage.jsx:513
+msgid "Active recall"
+msgstr ""
+
 #: src/features/dashboard/pages/DashboardPage.jsx:215
 msgid "Actividad reciente"
 msgstr ""
@@ -411,6 +424,7 @@ msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:125
 #: src/features/exam/pages/ExamPage.jsx:135
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:39
 msgid "Actual"
 msgstr "Aktuell"
 
@@ -427,7 +441,7 @@ msgid "Actualizar"
 msgstr "Upgrade"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:162
-#: src/features/welcome/WelcomePage.jsx:262
+#: src/features/welcome/WelcomePage.jsx:264
 msgid "Actualizar a Pro"
 msgstr "Auf Pro upgraden"
 
@@ -444,7 +458,7 @@ msgstr "Einstellungen"
 msgid "Al enviar aceptas nuestra"
 msgstr "Mit dem Absenden akzeptierst du unsere"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:470
+#: src/features/explore/pages/ExamSetLandingPage.jsx:476
 msgid "Algoritmo Leitner que programa cuándo repasar cada pregunta para consolidar memoria a largo plazo al mínimo esfuerzo."
 msgstr "Leitner-Algorithmus, der plant, wann jede Frage wiederholt werden soll, um das Langzeitgedächtnis mit minimalem Aufwand zu festigen."
 
@@ -457,11 +471,12 @@ msgstr "Füge mindestens 1 Frage hinzu."
 msgid "Análisis por dominio"
 msgstr "Analyse nach Domäne"
 
+#: src/features/flashcards/pages/FlashcardsPage.jsx:115
 #: src/features/results/ReviewPage.jsx:252
 msgid "Anterior"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:490
+#: src/features/explore/pages/ExamSetLandingPage.jsx:496
 msgid "Antes de revelar, apuesta qué tan seguro estás. Aciertas con ×3 y ganas; fallas con ×3 y pierdes. Descubre dónde crees saber sin saber."
 msgstr "Bevor du aufdeckst, wette, wie sicher du bist. Richtig mit ×3 und du gewinnst; falsch mit ×3 und du verlierst. Entdecke, wo du glaubst zu wissen, ohne es zu wissen."
 
@@ -469,11 +484,11 @@ msgstr "Bevor du aufdeckst, wette, wie sicher du bist. Richtig mit ×3 und du ge
 msgid "Apariencia"
 msgstr "Darstellung"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:497
+#: src/features/explore/pages/ExamSetLandingPage.jsx:503
 msgid "Apostar"
 msgstr "Wetten"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:406
+#: src/features/explore/pages/ExamSetLandingPage.jsx:412
 msgid "Aprende sin presión"
 msgstr "Lerne ohne Druck"
 
@@ -486,11 +501,11 @@ msgstr "Bestanden"
 msgid "Aprobados"
 msgstr "Bestanden"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:442
+#: src/features/explore/pages/ExamSetLandingPage.jsx:448
 msgid "aprobar"
 msgstr "bestehen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:358
+#: src/features/explore/pages/ExamSetLandingPage.jsx:364
 msgid "Aprobar"
 msgstr "Bestehen"
 
@@ -506,11 +521,11 @@ msgstr "Einsatz"
 msgid "Apuesta · Calibración"
 msgstr "Wette · Kalibrierung"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:489
+#: src/features/explore/pages/ExamSetLandingPage.jsx:495
 msgid "Apuesta ×1, ×2 o ×3"
 msgstr "Setze ×1, ×2 oder ×3"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:488
+#: src/features/explore/pages/ExamSetLandingPage.jsx:494
 msgid "Apuesta tu Confianza"
 msgstr "Setze auf dein Vertrauen"
 
@@ -526,7 +541,7 @@ msgstr "Ziehe oder klicke die Elemente"
 msgid "Asunto"
 msgstr "Betreff"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:452
+#: src/features/explore/pages/ExamSetLandingPage.jsx:458
 msgid "Ataca tus errores"
 msgstr "Greife deine Fehler an"
 
@@ -593,11 +608,11 @@ msgstr "Nach Titel, Beschreibung oder Tag suchen…"
 msgid "Buscar sets de examen"
 msgstr "Prüfungssets suchen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:398
+#: src/features/explore/pages/ExamSetLandingPage.jsx:404
 msgid "Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje."
 msgstr "Jeder Modus nutzt eine andere Technik, die durch die kognitive Lernwissenschaft gestützt wird."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:491
+#: src/features/explore/pages/ExamSetLandingPage.jsx:497
 msgid "Calibración metacognitiva (Brainscape CBR · Dunning-Kruger)"
 msgstr "Metakognitive Kalibrierung (Brainscape CBR · Dunning-Kruger)"
 
@@ -747,11 +762,11 @@ msgstr "Markiert"
 
 #. placeholder {0}: set.timeMinutes ?? 30
 #. placeholder {1}: set.passPercent ?? 70
-#: src/features/explore/pages/ExamSetLandingPage.jsx:438
+#: src/features/explore/pages/ExamSetLandingPage.jsx:444
 msgid "Condiciones reales: {0} min · {1}% para aprobar · sin pistas. Evalúa tu preparación real."
 msgstr "Echte Bedingungen: {0} Min · {1}% zum Bestehen · ohne Hinweise. Bewerte deine echte Vorbereitung."
 
-#: src/features/welcome/WelcomePage.jsx:235
+#: src/features/welcome/WelcomePage.jsx:237
 msgid "confianza"
 msgstr "Vertrauen"
 
@@ -789,7 +804,7 @@ msgstr "Kontakt"
 msgid "Continuar la sesión"
 msgstr "Sitzung fortsetzen"
 
-#: src/features/auth/pages/LoginPage.jsx:95
+#: src/features/auth/pages/LoginPage.jsx:101
 #: src/features/auth/pages/RegisterPage.jsx:110
 msgid "Contraseña"
 msgstr "Passwort"
@@ -804,7 +819,7 @@ msgstr "Richtig"
 msgid "Correctas"
 msgstr ""
 
-#: src/features/auth/pages/LoginPage.jsx:85
+#: src/features/auth/pages/LoginPage.jsx:91
 #: src/features/auth/pages/RegisterPage.jsx:100
 #: src/features/profile/pages/ProfilePage.jsx:355
 #: src/features/public/pages/ContactPage.jsx:223
@@ -815,7 +830,7 @@ msgstr "E-Mail"
 msgid "Crea el primero"
 msgstr "Erstelle das erste"
 
-#: src/features/welcome/WelcomePage.jsx:436
+#: src/features/welcome/WelcomePage.jsx:438
 msgid "Crea tu cuenta en segundos y practica con simuladores reales. Plan gratuito para siempre. Actualiza cuando lo necesites."
 msgstr "Erstelle dein Konto in Sekunden und übe mit echten Simulatoren. Kostenloser Plan für immer. Upgrade, wann immer du es brauchst."
 
@@ -841,10 +856,10 @@ msgstr "Konto erstellen"
 
 #: src/features/auth/pages/RegisterPage.jsx:78
 #: src/features/auth/pages/RegisterPage.jsx:79
-#: src/features/explore/pages/ExamSetLandingPage.jsx:561
+#: src/features/explore/pages/ExamSetLandingPage.jsx:584
 #: src/features/explore/pages/ExploreExamsPage.jsx:352
 #: src/features/public/pages/AboutPage.jsx:186
-#: src/features/welcome/WelcomePage.jsx:440
+#: src/features/welcome/WelcomePage.jsx:442
 msgid "Crear cuenta gratis"
 msgstr "Kostenloses Konto erstellen"
 
@@ -896,6 +911,10 @@ msgstr "Kontodaten"
 msgid "Debes iniciar sesión para crear sets de examen."
 msgstr "Du musst dich anmelden, um Prüfungssets zu erstellen."
 
+#: src/features/flashcards/components/FlashcardView.jsx:70
+msgid "Definiciones"
+msgstr ""
+
 #: src/features/creator/pages/CreateExamPage.jsx:344
 #: src/features/creator/pages/EditExamPage.jsx:353
 msgid "Describe el contenido de este set…"
@@ -922,11 +941,15 @@ msgstr "Entwickelt von zertifizierten Profis, für Profis, die es werden wollen.
 msgid "Domina tu certificación"
 msgstr "Meistere deine Zertifizierung"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:478
+#: src/features/explore/pages/ExamSetLandingPage.jsx:484
 msgid "dominada"
 msgstr "beherrscht"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:478
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:40
+msgid "Dominada"
+msgstr ""
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:484
 msgid "dominadas"
 msgstr "beherrscht"
 
@@ -934,7 +957,7 @@ msgstr "beherrscht"
 msgid "Dudo"
 msgstr "Unsicher"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:357
+#: src/features/explore/pages/ExamSetLandingPage.jsx:363
 msgid "Duración"
 msgstr "Dauer"
 
@@ -1003,7 +1026,7 @@ msgstr "Der Name ist erforderlich."
 msgid "El set no existe."
 msgstr "Das Set existiert nicht."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:558
+#: src/features/explore/pages/ExamSetLandingPage.jsx:581
 msgid "El simulador es gratuito. Solo necesitas una cuenta para guardar tu progreso y ver explicaciones completas."
 msgstr "Der Simulator ist kostenlos. Du brauchst nur ein Konto, um deinen Fortschritt zu speichern und vollständige Erklärungen zu sehen."
 
@@ -1021,7 +1044,7 @@ msgstr "Der Titel darf 200 Zeichen nicht überschreiten."
 msgid "Elementos disponibles"
 msgstr "Verfügbare Elemente"
 
-#: src/features/welcome/WelcomePage.jsx:382
+#: src/features/welcome/WelcomePage.jsx:384
 msgid "Elige tu"
 msgstr "Wähle dein"
 
@@ -1029,7 +1052,7 @@ msgstr "Wähle dein"
 msgid "Elige tu certificación"
 msgstr "Wähle deine Zertifizierung"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:395
+#: src/features/explore/pages/ExamSetLandingPage.jsx:401
 msgid "Elige tu modo de estudio"
 msgstr "Wählen Sie Ihren Lernmodus"
 
@@ -1062,8 +1085,8 @@ msgstr ""
 msgid "Email"
 msgstr "E-Mail"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:415
-#: src/features/explore/pages/ExamSetLandingPage.jsx:462
+#: src/features/explore/pages/ExamSetLandingPage.jsx:421
+#: src/features/explore/pages/ExamSetLandingPage.jsx:468
 msgid "Empezar"
 msgstr "Starten"
 
@@ -1071,12 +1094,12 @@ msgstr "Starten"
 msgid "Empezar ahora"
 msgstr "Jetzt starten"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:445
+#: src/features/explore/pages/ExamSetLandingPage.jsx:451
 msgid "Empezar examen"
 msgstr "Prüfung starten"
 
 #: src/features/public/pages/AboutPage.jsx:110
-#: src/features/welcome/WelcomePage.jsx:253
+#: src/features/welcome/WelcomePage.jsx:255
 msgid "Empezar gratis"
 msgstr "Kostenlos starten"
 
@@ -1084,7 +1107,7 @@ msgstr "Kostenlos starten"
 msgid "Empieza a estudiar"
 msgstr "Fang an zu lernen"
 
-#: src/features/welcome/WelcomePage.jsx:433
+#: src/features/welcome/WelcomePage.jsx:435
 msgid "Empieza gratis hoy"
 msgstr "Heute kostenlos beginnen"
 
@@ -1159,7 +1182,7 @@ msgstr "Fehler beim Lesen der PDF."
 msgid "Error al procesar el PDF."
 msgstr "Fehler bei der PDF-Verarbeitung."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:424
+#: src/features/explore/pages/ExamSetLandingPage.jsx:430
 msgid "Espaciado + sesiones breves (micro-learning)"
 msgstr "Verteilt + kurze Sitzungen (Micro-Learning)"
 
@@ -1183,11 +1206,15 @@ msgstr "Diese Prüfung existiert nicht oder ist nicht öffentlich."
 msgid "estudiante"
 msgstr "Lernende*r"
 
+#: src/features/explore/pages/ExamSetLandingPage.jsx:519
+msgid "Estudiar con Flashcards"
+msgstr ""
+
 #: src/features/exam/pages/ExamPage.jsx:385
 msgid "Estudio"
 msgstr "Lernen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:405
+#: src/features/explore/pages/ExamSetLandingPage.jsx:411
 msgid "Estudio Guiado"
 msgstr "Geführtes Lernen"
 
@@ -1204,7 +1231,7 @@ msgstr "Prüfung"
 msgid "Examen oficial: 73%"
 msgstr "Offizielle Prüfung: 73 %"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:290
+#: src/features/explore/pages/ExamSetLandingPage.jsx:296
 #: src/features/profile/pages/ProfilePage.jsx:276
 msgid "Exámenes"
 msgstr "Prüfungen"
@@ -1276,7 +1303,7 @@ msgstr ""
 msgid "Explorar sets"
 msgstr "Sets entdecken"
 
-#: src/features/welcome/WelcomePage.jsx:405
+#: src/features/welcome/WelcomePage.jsx:407
 msgid "Explorar sets de la comunidad"
 msgstr "Community-Sets erkunden"
 
@@ -1320,9 +1347,17 @@ msgstr "Sitzung beenden und Ergebnisse anzeigen"
 msgid "Finalizar y ver resultados ✓"
 msgstr "Beenden und Ergebnisse anzeigen ✓"
 
+#: src/features/explore/pages/ExamSetLandingPage.jsx:510
+#: src/features/flashcards/pages/FlashcardsPage.jsx:62
+#: src/features/flashcards/pages/FlashcardsPage.jsx:91
 #: src/features/welcome/WelcomePage.jsx:88
 msgid "Flashcards"
 msgstr "Karteikarten"
+
+#. placeholder {0}: set?.title ?? ''
+#: src/features/flashcards/pages/FlashcardsPage.jsx:81
+msgid "Flashcards — {0}"
+msgstr ""
 
 #: src/features/creator/pages/CreateExamPage.jsx:238
 msgid "Formato inválido. Solo se permite .pdf."
@@ -1345,7 +1380,7 @@ msgstr "Kontaktformular"
 msgid "Free"
 msgstr "Free"
 
-#: src/features/welcome/WelcomePage.jsx:430
+#: src/features/welcome/WelcomePage.jsx:432
 msgid "Freemium · Plan gratuito disponible"
 msgstr "Freemium · Kostenloser Plan verfügbar"
 
@@ -1353,11 +1388,11 @@ msgstr "Freemium · Kostenloser Plan verfügbar"
 msgid "Freemium sin trampa"
 msgstr "Freemium ohne Haken"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:513
+#: src/features/explore/pages/ExamSetLandingPage.jsx:536
 msgid "Fuente:"
 msgstr "Quelle:"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:345
+#: src/features/explore/pages/ExamSetLandingPage.jsx:351
 msgid "Gratis · guarda tu progreso y ve explicaciones completas"
 msgstr "Kostenlos · speichere deinen Fortschritt und sieh vollständige Erklärungen"
 
@@ -1475,17 +1510,17 @@ msgstr "Set-Informationen"
 msgid "Información personal"
 msgstr "Persönliche Informationen"
 
-#: src/features/auth/pages/LoginPage.jsx:136
+#: src/features/auth/pages/LoginPage.jsx:142
 msgid "Ingresando…"
 msgstr "Anmelden…"
 
 #: src/components/layout/AppShell.jsx:520
 #: src/components/layout/PublicLayout.jsx:58
-#: src/features/auth/pages/LoginPage.jsx:136
+#: src/features/auth/pages/LoginPage.jsx:142
 msgid "Ingresar"
 msgstr "Anmelden"
 
-#: src/features/auth/pages/LoginPage.jsx:155
+#: src/features/auth/pages/LoginPage.jsx:161
 msgid "Ingresar con Google"
 msgstr "Mit Google anmelden"
 
@@ -1508,13 +1543,19 @@ msgstr "Startseite"
 msgid "intentos"
 msgstr "Versuche"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:359
+#: src/features/explore/pages/ExamSetLandingPage.jsx:365
 msgid "Intentos"
 msgstr "Versuche"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:119
 msgid "Intermedia"
 msgstr "Mittel"
+
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:22
+#: src/features/flashcards/pages/FlashcardsPage.jsx:135
+#: src/features/flashcards/pages/FlashcardsPage.jsx:136
+msgid "Ir a una tarjeta"
+msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:311
 msgid "La eliminación de cuenta está temporalmente manejada por soporte."
@@ -1531,6 +1572,14 @@ msgstr "Die erste Zeile muss die Kopfzeile mit diesen Spalten sein:"
 #: src/features/creator/pages/EditExamPage.jsx:492
 msgid "La primera fila debe ser el encabezado."
 msgstr "Die erste Zeile muss der Header sein."
+
+#: src/features/flashcards/components/FlashcardView.jsx:224
+msgid "La sabía"
+msgstr ""
+
+#: src/features/flashcards/components/FlashcardView.jsx:144
+msgid "La sabías"
+msgstr ""
 
 #: src/components/layout/AppShell.jsx:565
 #: src/features/explore/pages/ExploreExamsPage.jsx:254
@@ -1584,6 +1633,11 @@ msgstr "Benutzermenü"
 msgid "Método de acceso"
 msgstr "Zugangsmethode"
 
+#: src/features/flashcards/components/FlashcardControls.jsx:15
+#: src/features/flashcards/components/FlashcardControls.jsx:26
+msgid "Mezclar"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:244
 msgid "Mi perfil"
 msgstr "Mein Profil"
@@ -1611,7 +1665,7 @@ msgstr "Meine Sets"
 msgid "Modo"
 msgstr "Modus"
 
-#: src/features/welcome/WelcomePage.jsx:383
+#: src/features/welcome/WelcomePage.jsx:385
 msgid "modo de práctica"
 msgstr "Übungsmodus"
 
@@ -1619,7 +1673,7 @@ msgstr "Übungsmodus"
 msgid "Modo Estudio"
 msgstr "Lernmodus"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:436
+#: src/features/explore/pages/ExamSetLandingPage.jsx:442
 #: src/features/welcome/WelcomePage.jsx:70
 msgid "Modo Examen"
 msgstr "Prüfungsmodus"
@@ -1640,7 +1694,7 @@ msgstr "Übungsmodi"
 msgid "Monto"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:482
+#: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Nada por repasar"
 msgstr "Nichts zum Wiederholen"
 
@@ -1676,6 +1730,10 @@ msgstr ""
 #: src/features/home/pages/HomePage.jsx:310
 msgid "No hay recomendaciones por ahora."
 msgstr "Derzeit keine Empfehlungen."
+
+#: src/features/flashcards/components/FlashcardView.jsx:221
+msgid "No la sabía"
+msgstr ""
 
 #: src/features/social/components/RatingStars.jsx:110
 msgid "No puedes calificar tu propio set"
@@ -1756,7 +1814,11 @@ msgstr "Neue Frage"
 msgid "Nuevas funciones y consejos"
 msgstr "Neue Funktionen und Tipps"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:494
+#: src/features/welcome/WelcomePage.jsx:90
+msgid "Nuevo"
+msgstr ""
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:500
 msgid "Nuevo ✨"
 msgstr "Neu ✨"
 
@@ -1764,7 +1826,7 @@ msgstr "Neu ✨"
 msgid "Nuevo set"
 msgstr ""
 
-#: src/features/auth/pages/LoginPage.jsx:145
+#: src/features/auth/pages/LoginPage.jsx:151
 msgid "o continúa con"
 msgstr "oder fortfahren mit"
 
@@ -1798,10 +1860,11 @@ msgid "Pago pendiente"
 msgstr ""
 
 #: src/features/welcome/WelcomePage.jsx:81
+#: src/features/welcome/WelcomePage.jsx:99
 msgid "Para aprender"
 msgstr "Zum Lernen"
 
-#: src/features/welcome/WelcomePage.jsx:331
+#: src/features/welcome/WelcomePage.jsx:333
 msgid "para aprobar"
 msgstr "zum Bestehen"
 
@@ -1823,6 +1886,10 @@ msgstr "JSON hier einfügen..."
 #: src/features/creator/pages/EditExamPage.jsx:460
 msgid "Pega un array JSON. Tipos soportados:"
 msgstr "Füge ein JSON-Array ein. Unterstützte Typen:"
+
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:42
+msgid "Pendiente"
+msgstr ""
 
 #: src/components/layout/PublicLayout.jsx:52
 msgid "Perfil"
@@ -1876,21 +1943,25 @@ msgstr "Übe, als wäre es"
 msgid "Practica con propósito"
 msgstr "Übe mit Ziel"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:454
+#: src/features/explore/pages/ExamSetLandingPage.jsx:460
 msgid "Práctica focalizada (targeted practice)"
 msgstr "Gezielte Übung (targeted practice)"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:421
+#: src/features/explore/pages/ExamSetLandingPage.jsx:427
 msgid "Práctica Rápida"
 msgstr "Schnelle Übung"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:430
+#: src/features/explore/pages/ExamSetLandingPage.jsx:436
 msgid "Practicar"
 msgstr "Üben"
 
 #: src/features/explore/components/DomainPath.jsx:151
 msgid "Practicar {label}: {mastered} de {total} dominadas, {percent}%"
 msgstr "{label} üben: {mastered} von {total} beherrscht, {percent}%"
+
+#: src/features/flashcards/components/FlashcardView.jsx:187
+msgid "Pregunta"
+msgstr ""
 
 #. placeholder {0}: i + 1
 #. placeholder {0}: index + 1
@@ -1907,23 +1978,23 @@ msgstr "Frage {0}"
 msgid "Pregunta {0} de {1}"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:457
+#: src/features/explore/pages/ExamSetLandingPage.jsx:463
 msgid "pregunta por repasar"
 msgstr "Frage zum Wiederholen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:474
+#: src/features/explore/pages/ExamSetLandingPage.jsx:480
 msgid "pregunta por repasar hoy"
 msgstr "Frage heute zum Wiederholen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:410
-#: src/features/explore/pages/ExamSetLandingPage.jsx:493
+#: src/features/explore/pages/ExamSetLandingPage.jsx:416
+#: src/features/explore/pages/ExamSetLandingPage.jsx:499
 #: src/features/explore/pages/ExploreExamsPage.jsx:81
 msgid "preguntas"
 msgstr "Fragen"
 
 #: src/features/creator/pages/CreateExamPage.jsx:572
 #: src/features/creator/pages/EditExamPage.jsx:562
-#: src/features/explore/pages/ExamSetLandingPage.jsx:356
+#: src/features/explore/pages/ExamSetLandingPage.jsx:362
 msgid "Preguntas"
 msgstr "Fragen"
 
@@ -1931,11 +2002,11 @@ msgstr "Fragen"
 msgid "Preguntas basadas en el contenido real, organizadas por dominio y nivel de dificultad."
 msgstr "Fragen basierend auf realem Inhalt, organisiert nach Domäne und Schwierigkeitsgrad."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:457
+#: src/features/explore/pages/ExamSetLandingPage.jsx:463
 msgid "preguntas por repasar"
 msgstr "Fragen zum Wiederholen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:474
+#: src/features/explore/pages/ExamSetLandingPage.jsx:480
 msgid "preguntas por repasar hoy"
 msgstr "Fragen heute zum Wiederholen"
 
@@ -1943,7 +2014,7 @@ msgstr "Fragen heute zum Wiederholen"
 msgid "Preguntas similares a los exámenes oficiales de certificación, organizadas por dominio y nivel de dificultad. Actualizadas constantemente."
 msgstr "Fragen ähnlich den offiziellen Zertifizierungsprüfungen, organisiert nach Domäne und Schwierigkeitsgrad. Ständig aktualisiert."
 
-#: src/features/welcome/WelcomePage.jsx:162
+#: src/features/welcome/WelcomePage.jsx:164
 msgid "Prepárate para tus certificaciones con simuladores reales, banco de preguntas oficial y seguimiento de progreso. Gratis para empezar."
 msgstr "Bereite dich auf deine Zertifizierungen vor mit echten Simulatoren, offiziellem Fragenpool und Fortschrittsverfolgung. Kostenlos zum Starten."
 
@@ -1956,7 +2027,7 @@ msgid "Primer examen"
 msgstr "Erste Prüfung"
 
 #. placeholder {0}: preview.length
-#: src/features/explore/pages/ExamSetLandingPage.jsx:540
+#: src/features/explore/pages/ExamSetLandingPage.jsx:563
 msgid "Primeras {0} preguntas del set."
 msgstr "Erste {0} Fragen des Sets."
 
@@ -2006,13 +2077,11 @@ msgid "Próxima renovación"
 msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:69
-#: src/features/welcome/WelcomePage.jsx:90
-#: src/features/welcome/WelcomePage.jsx:99
 #: src/features/welcome/WelcomePage.jsx:139
 msgid "Próximamente"
 msgstr "Demnächst"
 
-#: src/features/welcome/WelcomePage.jsx:386
+#: src/features/welcome/WelcomePage.jsx:388
 msgid "Prueba cada modo con preguntas de ejemplo. Regístrate para acceder a exámenes completos."
 msgstr "Teste jeden Modus mit Beispielfragen. Registriere dich für den Zugang zu vollständigen Prüfungen."
 
@@ -2084,12 +2153,13 @@ msgstr "Erfasse jeden Versuch, identifiziere deine Schwächen und baue Selbstver
 msgid "Registrarse con Google"
 msgstr "Mit Google registrieren"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:415
-#: src/features/explore/pages/ExamSetLandingPage.jsx:430
-#: src/features/explore/pages/ExamSetLandingPage.jsx:445
-#: src/features/explore/pages/ExamSetLandingPage.jsx:462
-#: src/features/explore/pages/ExamSetLandingPage.jsx:482
-#: src/features/explore/pages/ExamSetLandingPage.jsx:497
+#: src/features/explore/pages/ExamSetLandingPage.jsx:421
+#: src/features/explore/pages/ExamSetLandingPage.jsx:436
+#: src/features/explore/pages/ExamSetLandingPage.jsx:451
+#: src/features/explore/pages/ExamSetLandingPage.jsx:468
+#: src/features/explore/pages/ExamSetLandingPage.jsx:488
+#: src/features/explore/pages/ExamSetLandingPage.jsx:503
+#: src/features/explore/pages/ExamSetLandingPage.jsx:519
 msgid "Regístrate"
 msgstr "Registrieren"
 
@@ -2101,7 +2171,7 @@ msgstr "Registriere dich in 30 Sekunden per E-Mail. Freemium-Plan verfügbar."
 msgid "Regístrate en CertZen para acceder a simuladores ilimitados."
 msgstr "Registriere dich bei CertZen für unbegrenzten Zugang zu Simulatoren."
 
-#: src/features/auth/pages/LoginPage.jsx:164
+#: src/features/auth/pages/LoginPage.jsx:170
 #: src/features/explore/pages/ExploreExamsPage.jsx:318
 msgid "Regístrate gratis"
 msgstr "Kostenlos registrieren"
@@ -2110,11 +2180,11 @@ msgstr "Kostenlos registrieren"
 msgid "Regístrate gratis para empezar exámenes, guardar resultados y crear tus propios sets."
 msgstr "Registriere dich kostenlos, um Prüfungen zu beginnen, Ergebnisse zu speichern und eigene Sets zu erstellen."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:556
+#: src/features/explore/pages/ExamSetLandingPage.jsx:579
 msgid "Regístrate para empezar"
 msgstr "Registriere dich, um zu beginnen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:342
+#: src/features/explore/pages/ExamSetLandingPage.jsx:348
 msgid "Regístrate para practicar"
 msgstr "Registriere dich zum Üben"
 
@@ -2126,6 +2196,11 @@ msgstr "Registriere dich, um die Antwort und Erklärung zu sehen."
 #: src/components/layout/PublicLayout.jsx:61
 msgid "Registro gratis"
 msgstr "Kostenlose Registrierung"
+
+#: src/features/flashcards/components/FlashcardControls.jsx:18
+#: src/features/flashcards/components/FlashcardControls.jsx:32
+msgid "Reiniciar"
+msgstr ""
 
 #: src/features/results/ResultsPage.jsx:383
 #~ msgid "Reintentar mismo examen"
@@ -2143,19 +2218,40 @@ msgstr ""
 msgid "Renovación cancelada. Tu acceso Pro continúa hasta"
 msgstr ""
 
-#: src/features/welcome/WelcomePage.jsx:89
-msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar."
-msgstr "Wiederhole Konzept für Konzept mit interaktiven Begriff-Definition-Karten. Wische zum Weiterblättern."
+#: src/features/explore/pages/ExamSetLandingPage.jsx:512
+msgid "Repasa cada pregunta como una tarjeta: pregunta al frente, respuesta y explicación al voltear. Sesión libre, sin cronómetro."
+msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:482
+#: src/features/welcome/WelcomePage.jsx:89
+#~ msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar."
+#~ msgstr "Wiederhole Konzept für Konzept mit interaktiven Begriff-Definition-Karten. Wische zum Weiterblättern."
+
+#: src/features/welcome/WelcomePage.jsx:89
+msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Voltea para ver la respuesta."
+msgstr ""
+
+#. placeholder {0}: set?.title ?? 'este set'
+#: src/features/flashcards/pages/FlashcardsPage.jsx:82
+msgid "Repasa las preguntas de {0} con flashcards."
+msgstr ""
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Repasar ahora"
 msgstr "Jetzt wiederholen"
+
+#: src/features/flashcards/components/FlashcardSummary.jsx:32
+msgid "Repasar de nuevo"
+msgstr ""
+
+#: src/features/flashcards/components/FlashcardSummary.jsx:24
+msgid "Repasaste todo el mazo de esta sesión."
+msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:389
 msgid "Repaso"
 msgstr "Wiederholung"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:468
+#: src/features/explore/pages/ExamSetLandingPage.jsx:474
 msgid "Repaso Inteligente"
 msgstr "Intelligente Wiederholung"
 
@@ -2163,7 +2259,7 @@ msgstr "Intelligente Wiederholung"
 msgid "Repaso Rápido"
 msgstr "Schnelle Wiederholung"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:469
+#: src/features/explore/pages/ExamSetLandingPage.jsx:475
 msgid "Repetición espaciada"
 msgstr "Verteilte Wiederholung"
 
@@ -2175,18 +2271,22 @@ msgstr ""
 msgid "Requerido"
 msgstr "Erforderlich"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:458
-#: src/features/explore/pages/ExamSetLandingPage.jsx:477
+#: src/features/explore/pages/ExamSetLandingPage.jsx:464
+#: src/features/explore/pages/ExamSetLandingPage.jsx:483
 msgid "Responde preguntas primero"
 msgstr "Beantworte zuerst die Fragen"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:407
+#: src/features/explore/pages/ExamSetLandingPage.jsx:413
 msgid "Responde, confirma y ve la explicación al instante. Sin tiempo, revisa cuantas veces quieras."
 msgstr "Antworte, bestätige und sieh die Erklärung sofort. Ohne Zeitlimit, wiederhole so oft du willst."
 
 #: src/features/exam/pages/ExamPage.jsx:136
 msgid "Respondida"
 msgstr "Beantwortet"
+
+#: src/features/flashcards/components/FlashcardView.jsx:207
+msgid "Respuesta"
+msgstr ""
 
 #: src/features/exam/components/QuestionCard.jsx:382
 msgid "Respuesta incorrecta — la respuesta correcta está marcada en verde"
@@ -2222,7 +2322,7 @@ msgstr "Ergebnisse deiner Übungsprüfung."
 msgid "Retoma tu progreso o descubre nuevos exámenes. Tu próxima certificación está a un intento de distancia."
 msgstr "Setze deinen Fortschritt fort oder entdecke neue Prüfungen. Deine nächste Zertifizierung ist nur einen Versuch entfernt."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:408
+#: src/features/explore/pages/ExamSetLandingPage.jsx:414
 msgid "Retrieval practice + feedback inmediato"
 msgstr "Abrufpraxis + sofortiges Feedback"
 
@@ -2243,21 +2343,28 @@ msgstr ""
 msgid "Revisión"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:372
+#: src/features/explore/pages/ExamSetLandingPage.jsx:378
 msgid "Ruta de Dominio"
 msgstr "Beherrschungspfad"
 
 #: src/features/exam/pages/ExamPage.jsx:378
+#: src/features/flashcards/components/FlashcardSummary.jsx:29
+#: src/features/flashcards/pages/FlashcardsPage.jsx:101
 msgid "Salir"
 msgstr "Verlassen"
 
 #: src/features/exam/pages/ExamPage.jsx:379
+#: src/features/flashcards/pages/FlashcardsPage.jsx:102
 msgid "Salir de la sesión"
 msgstr "Sitzung verlassen"
 
 #: src/features/exam/pages/ExamPage.jsx:171
 msgid "Salir sin guardar"
 msgstr "Verlassen ohne zu speichern"
+
+#: src/features/flashcards/components/FlashcardCardPicker.jsx:24
+msgid "Salta directamente a cualquier tarjeta del mazo"
+msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:19
 msgid "Seguro"
@@ -2306,7 +2413,7 @@ msgstr ""
 msgid "Sesión de práctica de examen de certificación."
 msgstr "Übungssitzung für Zertifizierungsprüfung."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:423
+#: src/features/explore/pages/ExamSetLandingPage.jsx:429
 msgid "Sesión exprés ideal para 5–10 minutos: aleatoria, con explicación inmediata. Perfecta para el día a día."
 msgstr "Express-Sitzung ideal für 5–10 Minuten: zufällig, mit sofortiger Erklärung. Perfekt für den Alltag."
 
@@ -2338,6 +2445,7 @@ msgstr "Wenn du die Prüfung verlässt, geht dein gesamter Fortschritt verloren.
 msgid "Sí, cancelar"
 msgstr ""
 
+#: src/features/flashcards/pages/FlashcardsPage.jsx:126
 #: src/features/results/ReviewPage.jsx:258
 msgid "Siguiente"
 msgstr ""
@@ -2350,7 +2458,7 @@ msgstr "Weiter →"
 msgid "Simulación Real"
 msgstr "Echte Simulation"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:437
+#: src/features/explore/pages/ExamSetLandingPage.jsx:443
 msgid "Simulacro cronometrado"
 msgstr "Zeitgesteuerte Simulation"
 
@@ -2359,15 +2467,15 @@ msgstr "Zeitgesteuerte Simulation"
 msgid "Simulacros gratuitos de {0}. Preguntas basadas en exam guides públicos. Estudia y evalúate en línea."
 msgstr "Kostenlose Simulationen von {0}. Fragen basierend auf öffentlichen Prüfungsleitfäden. Lerne und teste dich online."
 
-#: src/features/welcome/WelcomePage.jsx:225
+#: src/features/welcome/WelcomePage.jsx:227
 msgid "Simulador de Certificaciones"
 msgstr "Zertifizierungssimulator"
 
-#: src/features/welcome/WelcomePage.jsx:243
+#: src/features/welcome/WelcomePage.jsx:245
 msgid "Simuladores con el formato similar del examen, banco de preguntas y seguimiento de progreso. Gratis para empezar hoy."
 msgstr "Simulatoren im prüfungsähnlichen Format, Fragenpool und Fortschrittsverfolgung. Kostenlos zum Starten heute."
 
-#: src/features/welcome/WelcomePage.jsx:161
+#: src/features/welcome/WelcomePage.jsx:163
 msgid "Simuladores de Certificación Profesional"
 msgstr "Simulatoren für professionelle Zertifizierungen"
 
@@ -2379,15 +2487,15 @@ msgstr "Unbestätigt"
 msgid "Sin cronómetro. Confirma cada respuesta y ve al instante si acertaste. Explicación incluida para cada pregunta."
 msgstr "Ohne Timer. Bestätige jede Antwort und sieh sofort, ob du richtig lagst. Erklärung für jede Frage enthalten."
 
-#: src/features/welcome/WelcomePage.jsx:334
+#: src/features/welcome/WelcomePage.jsx:336
 msgid "Sin distracciones. Solo las herramientas que te acercan a tu certificación."
 msgstr "Ohne Ablenkungen. Nur die Tools, die dich deiner Zertifizierung näherbringen."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:462
+#: src/features/explore/pages/ExamSetLandingPage.jsx:468
 msgid "Sin errores aún"
 msgstr "Noch keine Fehler"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:482
+#: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Sin historial"
 msgstr "Kein Verlauf"
 
@@ -2409,7 +2517,8 @@ msgstr "Unbeantwortet"
 msgid "Sin responder — la respuesta correcta está marcada en verde"
 msgstr "Unbeantwortet — die richtige Antwort ist grün markiert"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:411
+#: src/features/explore/pages/ExamSetLandingPage.jsx:417
+#: src/features/explore/pages/ExamSetLandingPage.jsx:516
 msgid "Sin tiempo"
 msgstr "Ohne Zeitlimit"
 
@@ -2429,7 +2538,7 @@ msgstr "Über die Plattform"
 msgid "Soporte general"
 msgstr "Allgemeiner Support"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:471
+#: src/features/explore/pages/ExamSetLandingPage.jsx:477
 msgid "Spaced repetition (Leitner 5 cajas)"
 msgstr "Verteilte Wiederholung (Leitner 5 Boxen)"
 
@@ -2459,11 +2568,20 @@ msgstr "Abonnement"
 msgid "Suscripción y facturación"
 msgstr ""
 
+#. placeholder {0}: Math.min(currentIndex + 1, total)
+#: src/features/flashcards/pages/FlashcardsPage.jsx:121
+msgid "Tarjeta {0} de {total}"
+msgstr ""
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:515
+msgid "tarjetas"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:286
 msgid "Tasa de aprobación"
 msgstr "Bestehensquote"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:453
+#: src/features/explore/pages/ExamSetLandingPage.jsx:459
 msgid "Te enfoca en las preguntas que fallaste. Aprendizaje dirigido a tus lagunas reales."
 msgstr "Konzentriert dich auf die Fragen, die du falsch beantwortet hast. Lernen, das auf deine echten Lücken abzielt."
 
@@ -2472,6 +2590,7 @@ msgid "Técnica:"
 msgstr "Technik:"
 
 #: src/components/layout/AppShell.jsx:401
+#: src/features/flashcards/components/FlashcardView.jsx:58
 msgid "Términos"
 msgstr "Bedingungen"
 
@@ -2479,7 +2598,7 @@ msgstr "Bedingungen"
 msgid "Términos de uso →"
 msgstr "Nutzungsbedingungen →"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:439
+#: src/features/explore/pages/ExamSetLandingPage.jsx:445
 msgid "Testing effect + feedback diferido"
 msgstr "Testeffekt + verzögertes Feedback"
 
@@ -2509,15 +2628,23 @@ msgstr ""
 msgid "Título *"
 msgstr "Titel *"
 
+#: src/features/flashcards/components/FlashcardView.jsx:196
+msgid "Toca la tarjeta o presiona espacio para voltear"
+msgstr ""
+
+#: src/features/flashcards/components/FlashcardView.jsx:199
+msgid "Toca la tarjeta para voltear"
+msgstr ""
+
 #: src/features/results/ReviewPage.jsx:150
 msgid "Todas"
 msgstr ""
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:476
+#: src/features/explore/pages/ExamSetLandingPage.jsx:482
 msgid "Todo al día 🎉"
 msgstr "Alles aktuell 🎉"
 
-#: src/features/welcome/WelcomePage.jsx:330
+#: src/features/welcome/WelcomePage.jsx:332
 msgid "Todo lo que necesitas"
 msgstr "Alles, was du brauchst"
 
@@ -2559,7 +2686,7 @@ msgstr "Dein Name"
 msgid "Tu progreso está guardado automáticamente. Podrás retomar desde donde lo dejaste cuando vuelvas."
 msgstr "Dein Fortschritt wird automatisch gespeichert. Du kannst beim nächsten Mal dort weitermachen, wo du aufgehört hast."
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:375
+#: src/features/explore/pages/ExamSetLandingPage.jsx:381
 msgid "Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada."
 msgstr "Dein Fortschritt nach Themenbereich. Tippe auf eine Domäne, um sie gezielt zu üben."
 
@@ -2630,7 +2757,7 @@ msgid "Ver resultados ✓"
 msgstr "Ergebnisse anzeigen ✓"
 
 #: src/features/public/pages/AboutPage.jsx:113
-#: src/features/welcome/WelcomePage.jsx:258
+#: src/features/welcome/WelcomePage.jsx:260
 msgid "Ver simuladores"
 msgstr "Simulatoren ansehen"
 
@@ -2658,9 +2785,18 @@ msgstr "Alle anzeigen ({0})"
 msgid "Verificado"
 msgstr "Verifiziert"
 
-#: src/features/explore/pages/ExamSetLandingPage.jsx:539
+#: src/features/explore/pages/ExamSetLandingPage.jsx:562
 msgid "Vista previa"
 msgstr "Vorschau"
+
+#: src/features/explore/pages/ExamSetLandingPage.jsx:511
+msgid "Voltea y autoevalúate"
+msgstr ""
+
+#: src/features/flashcards/components/FlashcardControls.jsx:11
+#: src/features/flashcards/components/FlashcardControls.jsx:29
+msgid "Voltear tarjeta"
+msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:234
 msgid "Volver a explorar"
@@ -2678,11 +2814,15 @@ msgstr ""
 msgid "Volver al inicio"
 msgstr "Zurück zur Startseite"
 
-#: src/features/welcome/WelcomePage.jsx:444
+#: src/features/flashcards/pages/FlashcardsPage.jsx:69
+msgid "Volver al set"
+msgstr ""
+
+#: src/features/welcome/WelcomePage.jsx:446
 msgid "Ya tengo cuenta"
 msgstr "Ich habe bereits ein Konto"
 
 #: src/features/exam/pages/ExamPage.jsx:387
-#: src/features/explore/pages/ExamSetLandingPage.jsx:451
+#: src/features/explore/pages/ExamSetLandingPage.jsx:457
 msgid "Zona Débil"
 msgstr "Schwachstelle"
