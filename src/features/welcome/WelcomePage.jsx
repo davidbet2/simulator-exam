@@ -86,19 +86,19 @@ const MODES = [
     id: 'flashcards',
     emoji: '🃏',
     title: msg`Flashcards`,
-    description: msg`Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar.`,
-    tag: msg`Próximamente`,
-    tagTone: 'neutral',
-    available: false,
+    description: msg`Repasa concepto a concepto con tarjetas interactivas de término-definición. Voltea para ver la respuesta.`,
+    tag: msg`Nuevo`,
+    tagTone: 'brand',
+    available: true,
   },
   {
     id: 'quick',
     emoji: '⚡',
     title: msg`Repaso Rápido`,
     description: msg`10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos.`,
-    tag: msg`Próximamente`,
-    tagTone: 'neutral',
-    available: false,
+    tag: msg`Para aprender`,
+    tagTone: 'brand',
+    available: true,
   },
 ];
 
@@ -152,6 +152,8 @@ export function WelcomePage() {
   const [_showGate, _setShowGate]   = useState(false);
 
   function launchMode(modeId) {
+    if (modeId === 'flashcards') { navigate('/flashcards/demo'); return; }
+    if (modeId === 'quick') { navigate('/exam?cert=demo&mode=study&count=10'); return; }
     navigate(`/exam?cert=demo&mode=${modeId}`);
   }
 

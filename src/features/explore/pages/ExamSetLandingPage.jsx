@@ -271,6 +271,12 @@ export function ExamSetLandingPage() {
     navigate(`/exam?${qs}`);
   };
 
+  const hasQuestions = (set.questionCount ?? preview.length) > 0;
+  const launchFlashcards = () => {
+    if (!user) { navigate('/register'); return; }
+    navigate(`/flashcards/${slug}`);
+  };
+
   const Shell = user ? AppShell : PublicLayout;
 
   return (
@@ -497,6 +503,23 @@ export function ExamSetLandingPage() {
               ctaLabel={user ? t`Apostar` : t`Regístrate`}
               onClick={() => launchMode({ mode: 'wager', count: String(Math.min(20, set.questionCount ?? 20)) })}
             />
+
+            {hasQuestions && (
+              <ModeCard
+                icon={Layers}
+                title={t`Flashcards`}
+                subtitle={t`Voltea y autoevalúate`}
+                description={t`Repasa cada pregunta como una tarjeta: pregunta al frente, respuesta y explicación al voltear. Sesión libre, sin cronómetro.`}
+                technique={t`Active recall`}
+                meta={[
+                  { icon: BookOpen, label: `${set.questionCount ?? preview.length} ${t`tarjetas`}` },
+                  { icon: TimerReset, label: t`Sin tiempo` },
+                ]}
+                accent="violet"
+                ctaLabel={user ? t`Estudiar con Flashcards` : t`Regístrate`}
+                onClick={launchFlashcards}
+              />
+            )}
           </div>
         </motion.section>
 
