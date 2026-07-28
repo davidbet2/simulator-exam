@@ -13,6 +13,20 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
     }
 
+    // Pro plan check, keyed off users/{uid}.plan — the same field
+    // useAuthStore/useUserPlan derive isPro from client-side.
+    function isProUser() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.plan == 'pro';
+    }
+
+    // Free plan authors are capped at 20 questions per set; Pro is unbounded
+    // (up to the hard 500 ceiling shared by both plans).
+    function maxQuestionsForCaller() {
+      return isProUser() ? 500 : 20;
+    }
+
     // Questions: anyone can read (exam), only admins can write
     match /questions/{docId} {
       allow read: if true;
@@ -114,7 +128,7 @@ service cloud.firestore {
           && (!changedKeys.hasAny(['questionCount']) || (
                 request.resource.data.questionCount is int
                 && request.resource.data.questionCount >= 1
-                && request.resource.data.questionCount <= 500))
+                && request.resource.data.questionCount <= maxQuestionsForCaller()))
           && (!changedKeys.hasAny(['title']) || (
                 request.resource.data.title is string
                 && request.resource.data.title.size() <= 200));
@@ -166,7 +180,7 @@ service cloud.firestore {
         && request.resource.data.ownerUid == request.auth.uid
         && request.resource.data.questionCount is int
         && request.resource.data.questionCount >= 1
-        && request.resource.data.questionCount <= 500
+        && request.resource.data.questionCount <= maxQuestionsForCaller()
         && request.resource.data.title is string
         && request.resource.data.title.size() <= 200
         && (!('official' in request.resource.data) || request.resource.data.official == false);
@@ -187,14 +201,25 @@ service cloud.firestore {
       // Questions of a published set are public (SEO + preview).
       // For unpublished sets, only owner/admins can read.
       match /questions/{qId} {
+        function isSetOwner() {
+          return request.auth != null
+            && get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid == request.auth.uid;
+        }
+
         allow read: if
           get(/databases/$(database)/documents/examSets/$(setId)).data.published == true
-          || (request.auth != null
-              && (get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid == request.auth.uid
-                  || isAdmin()));
-        allow write: if request.auth != null
-          && (get(/databases/$(database)/documents/examSets/$(setId)).data.ownerUid == request.auth.uid
-              || isAdmin());
+          || (request.auth != null && (isSetOwner() || isAdmin()));
+        // Create/update are additionally bounded by the caller's plan quota via
+        // the `order` index each question is written with (0-based, matches its
+        // position in the set) — this is what actually caps how many question
+        // documents a free-plan owner can have in the subcollection, since the
+        // parent set's `questionCount` field is just self-reported metadata.
+        allow create, update: if request.auth != null
+          && (isSetOwner() || isAdmin())
+          && (isAdmin()
+              || (request.resource.data.order is int
+                  && request.resource.data.order < maxQuestionsForCaller()));
+        allow delete: if request.auth != null && (isSetOwner() || isAdmin());
       }
 
       // Ratings: one per user per set (doc id = uid prevents duplicates).

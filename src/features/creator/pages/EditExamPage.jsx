@@ -18,6 +18,8 @@ import { DOMAINS } from '../../../core/constants/domains'
 
 const INPUT_CLS = 'w-full border border-glass-light-border dark:border-glass-dark-border rounded-zen px-3 py-2 text-sm text-zen-ink dark:text-white bg-glass-light-2 dark:bg-glass-dark-2 backdrop-blur-md focus:outline-none focus:border-zen focus:ring-2 focus:ring-zen/40'
 const LABEL_CLS = 'block text-xs font-semibold text-zen-ink/60 dark:text-white/60 mb-1'
+const FREE_QUESTION_LIMIT = 20
+const PRO_QUESTION_LIMIT = 500
 
 const buildTypeLabels = (t) => ({
   multiple: t`Opción múltiple`,
@@ -102,6 +104,7 @@ export function EditExamPage() {
   const { id } = useParams()
   const { user, isPro } = useAuthStore()
   const navigate = useNavigate()
+  const maxQuestions = isPro ? PRO_QUESTION_LIMIT : FREE_QUESTION_LIMIT
 
   // ── loading ───────────────────────────────────────────────────────────────
   const [initialLoading, setInitialLoading] = useState(true)
@@ -176,7 +179,7 @@ export function EditExamPage() {
   function handleSaveQuestion(payload) {
     if (editIndex !== null) {
       setQuestions((prev) => prev.map((q, i) => (i === editIndex ? payload : q)))
-    } else {
+    } else if (questions.length < maxQuestions) {
       setQuestions((prev) => [...prev, payload])
     }
     setShowForm(false)
@@ -248,7 +251,9 @@ export function EditExamPage() {
     if (!title.trim() || title.trim().length < 3) e.title = t`El título debe tener al menos 3 caracteres.`
     if (title.trim().length > 200) e.title = t`El título no puede superar 200 caracteres.`
     if (questions.length < 1) e.questions = t`Añade al menos 1 pregunta.`
-    if (questions.length > 500) e.questions = t`Máximo 500 preguntas por examen.`
+    if (questions.length > maxQuestions) e.questions = isPro
+      ? t`Máximo ${maxQuestions} preguntas por examen.`
+      : t`El plan Free permite máximo ${maxQuestions} preguntas por examen. Actualiza a Pro para preguntas ilimitadas.`
     if (Number(timeMinutes) < 1 || Number(timeMinutes) > 300) e.timeMinutes = t`Entre 1 y 300 minutos.`
     if (Number(passPercent) < 1 || Number(passPercent) > 100) e.passPercent = t`Entre 1 y 100%.`
     setErrors(e)
@@ -559,11 +564,12 @@ export function EditExamPage() {
           <section className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-zen-ink dark:text-white">
-                <Trans>Preguntas</Trans> <span className="text-zen-ink/40 dark:text-white/40 font-normal">({questions.length})</span>
+                <Trans>Preguntas</Trans> <span className="text-zen-ink/40 dark:text-white/40 font-normal">({questions.length}{!isPro ? `/${maxQuestions}` : ''})</span>
               </h2>
               <GlassButton
                 type="button"
                 onClick={() => { setEditIndex(null); setShowForm(true) }}
+                disabled={questions.length >= maxQuestions}
                 className="px-3 py-1.5 text-sm"
               >
                 <Plus size={14} /> <Trans>Nueva pregunta</Trans>
@@ -571,6 +577,13 @@ export function EditExamPage() {
             </div>
 
             {errors.questions && <p className="text-zen-danger text-xs">{errors.questions}</p>}
+
+            {!isPro && questions.length >= maxQuestions && (
+              <p className="text-xs text-zen-ink/60 dark:text-white/60">
+                <Trans>Alcanzaste el límite de {maxQuestions} preguntas del plan Free.</Trans>{' '}
+                <Link to="/pricing" className="text-zen dark:text-indigo-300 font-semibold hover:underline"><Trans>Actualiza a Pro para preguntas ilimitadas →</Trans></Link>
+              </p>
+            )}
 
             {questions.length === 0 ? (
               <GlassCard className="border-dashed py-12 text-center">
