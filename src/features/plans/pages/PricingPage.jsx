@@ -67,6 +67,11 @@ export function PricingPage() {
   const [error, setError] = useState(null)
 
   const handleUpgrade = async () => {
+    if (!user) {
+      navigate('/register')
+      return
+    }
+
     try {
       setLoading(true)
       setError(null)
