@@ -7,6 +7,8 @@ import { MaintenancePage } from '../../features/public/pages/MaintenancePage';
 import { analytics } from '../analytics/events';
 import { StickyAdBar } from '../../features/ads/components/StickyAdBar';
 import { CookieConsentBanner } from '../../features/consent/components/CookieConsentBanner';
+import { usePwaInstall } from '../../features/pwa/hooks/usePwaInstall';
+import { PwaInstallPrompt } from '../../features/pwa/components/PwaInstallPrompt';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
@@ -91,6 +93,10 @@ function RootRoute() {
 }
 
 export function AppRouter() {
+  // Own hook instance just for StickyAdBar priority — PwaInstallPrompt (mounted
+  // separately) keeps its own instance for its display-delay/UI concerns.
+  const { shouldShow: pwaPromptEligible } = usePwaInstall();
+
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -193,8 +199,9 @@ export function AppRouter() {
       </Routes>
       </MaintenanceGate>
       </Suspense>
-      <StickyAdBar />
+      {!pwaPromptEligible && <StickyAdBar />}
       <CookieConsentBanner />
+      <PwaInstallPrompt />
     </BrowserRouter>
   );
 }
