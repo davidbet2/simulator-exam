@@ -7,6 +7,7 @@ import { useFeatureFlags, DEFAULT_FLAGS } from '../../../core/hooks/useFeatureFl
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { useAudit } from '../hooks/useAudit';
 import Button from '../../../components/ui/Button';
+import Input from '../../../components/ui/Input';
 import { GlassCard } from '../../../components/glass/GlassCard';
 import { GlassBadge } from '../../../components/glass/GlassBadge';
 
@@ -22,7 +23,14 @@ const FLAG_META = [
   { key: 'pdfImportEnabled',     label: 'Importar desde PDF',    desc: 'Los usuarios pueden importar preguntas desde archivos PDF.' },
   { key: 'adsEnabled',          label: 'Publicidad (AdSense)',   desc: 'Muestra banners de publicidad a usuarios free y visitantes. Desactiva para retirar todos los anuncios.' },
   { key: 'pwaPromptEnabled',    label: 'Banner de instalación PWA', desc: 'Muestra el banner/toast que invita a instalar CertZen como app. Desactiva para ocultarlo en toda la app sin deploy.' },
+  { key: 'promoBannerEnabled',  label: 'Banner promocional',    desc: 'Muestra el banner de promoción/cupón en / y /home. Configura el contenido y la audiencia debajo.' },
   { key: 'maintenanceMode',      label: 'Modo mantenimiento',    desc: 'Bloquea el acceso a todo excepto el panel admin. ¡Cuidado!', danger: true },
+];
+
+const PROMO_AUDIENCE_META = [
+  { key: 'promoBannerShowAnonymous', label: 'Anónimos', desc: 'Visitantes sin sesión iniciada.' },
+  { key: 'promoBannerShowFree',      label: 'Usuarios free', desc: 'Registrados en el plan gratuito.' },
+  { key: 'promoBannerShowPro',       label: 'Usuarios Pro', desc: 'Registrados en el plan Pro.' },
 ];
 
 function Toggle({ checked, onChange, disabled }) {
@@ -68,6 +76,11 @@ export function AdminFlagsPage() {
 
   function toggle(key, next) {
     setDraft((p) => ({ ...p, [key]: next }));
+    setSaved(false);
+  }
+
+  function updateField(key, value) {
+    setDraft((p) => ({ ...p, [key]: value }));
     setSaved(false);
   }
 
@@ -164,6 +177,87 @@ export function AdminFlagsPage() {
               </li>
             ))}
           </ul>
+        </GlassCard>
+      )}
+
+      {!loading && (
+        <GlassCard className="mt-6 p-5 sm:p-6">
+          <div className="flex items-center gap-2">
+            <Flag size={16} className="shrink-0 text-zen" />
+            <h2 className="text-sm font-semibold">Contenido del banner promocional</h2>
+          </div>
+          <p className="mt-0.5 text-xs text-zen-ink/50 dark:text-white/50">
+            Se muestra en / y /home cuando el flag "Banner promocional" está activo, el título y el código no están vacíos, y la audiencia lo permite.
+          </p>
+
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Input
+              label="Título"
+              placeholder="50% OFF con el código WELCOME"
+              value={draft.promoBannerTitle ?? ''}
+              onChange={(e) => updateField('promoBannerTitle', e.target.value)}
+              disabled={saving}
+            />
+            <Input
+              label="Código de cupón"
+              placeholder="WELCOME"
+              value={draft.promoBannerCode ?? ''}
+              onChange={(e) => updateField('promoBannerCode', e.target.value)}
+              disabled={saving}
+            />
+            <Input
+              label="Texto del botón (CTA)"
+              placeholder="Actualizar a Pro"
+              value={draft.promoBannerCtaText ?? ''}
+              onChange={(e) => updateField('promoBannerCtaText', e.target.value)}
+              disabled={saving}
+            />
+            <Input
+              label="Badge de descuento (opcional)"
+              placeholder="50% OFF"
+              value={draft.promoBannerDiscountBadge ?? ''}
+              onChange={(e) => updateField('promoBannerDiscountBadge', e.target.value)}
+              disabled={saving}
+            />
+            <Input
+              label="Subtítulo (opcional)"
+              placeholder="Usa el código al comprar el Plan Pro y ahorra ahora."
+              value={draft.promoBannerSubtitle ?? ''}
+              onChange={(e) => updateField('promoBannerSubtitle', e.target.value)}
+              disabled={saving}
+            />
+            <Input
+              label="Badge de urgencia (opcional)"
+              placeholder="Solo 100 cupos"
+              value={draft.promoBannerUrgencyBadge ?? ''}
+              onChange={(e) => updateField('promoBannerUrgencyBadge', e.target.value)}
+              disabled={saving}
+            />
+          </div>
+
+          <div className="mt-5">
+            <p className="text-sm font-medium text-zen-ink dark:text-white">Audiencia</p>
+            <p className="mt-0.5 text-xs text-zen-ink/50 dark:text-white/50">
+              A quién se le muestra el banner. Se pueden combinar libremente.
+            </p>
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:gap-6">
+              {PROMO_AUDIENCE_META.map((a) => (
+                <label key={a.key} className="flex items-center gap-2.5 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={!!draft[a.key]}
+                    onChange={(e) => toggle(a.key, e.target.checked)}
+                    disabled={saving}
+                    className="h-5 w-5 rounded border-glass-light-border text-zen-brand focus:ring-zen/40 dark:border-glass-dark-border"
+                  />
+                  <span>
+                    {a.label}
+                    <span className="block text-xs font-normal text-zen-ink/50 dark:text-white/50">{a.desc}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
         </GlassCard>
       )}
     </AdminShell>
