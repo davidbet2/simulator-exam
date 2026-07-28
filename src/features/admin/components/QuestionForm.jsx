@@ -346,8 +346,8 @@ export function QuestionForm({ initial, certifications = CERTIFICATIONS, onSave,
                 }}
                 className="flex items-center gap-1.5 text-xs font-semibold text-zen hover:brightness-125 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
-                <Sparkles size={13} />
-                {aiLoading ? 'Generando...' : 'Generar con IA'}
+              
+               
               </button>
             </div>
             <textarea value={form.explanation} onChange={(e) => set('explanation', e.target.value)} rows={5}
