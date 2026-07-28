@@ -1,0 +1,80 @@
+// General software-dev demo questions — used by the public, no-login demo experiences
+// (ExamPage `?cert=demo`, FlashcardsPage `/flashcards/demo`). Not domain-specific to any
+// certification; shared via core/ since both features/exam and features/flashcards need it.
+export const DEMO_QUESTIONS = [
+  {
+    id: 'demo-q1',
+    type: 'multiple',
+    question: '¿Cuál de los siguientes es un principio fundamental del Manifiesto Ágil?',
+    options: {
+      A: 'Documentación exhaustiva sobre software funcionando',
+      B: 'Individuos e interacciones sobre procesos y herramientas',
+      C: 'Seguir el plan por encima de responder al cambio',
+      D: 'Negociación de contratos sobre colaboración con el cliente',
+    },
+    answer: ['B'],
+    explanation: 'El Manifiesto Ágil prioriza a las personas y su colaboración sobre los procesos rígidos y las herramientas.',
+    domain: 'Metodologías Ágiles',
+    difficulty: 'medium',
+  },
+  {
+    id: 'demo-q2',
+    type: 'multiple',
+    question: '¿Qué patrón de diseño garantiza que una clase tenga una única instancia en toda la aplicación?',
+    options: {
+      A: 'Factory',
+      B: 'Observer',
+      C: 'Singleton',
+      D: 'Strategy',
+    },
+    answer: ['C'],
+    explanation: 'Singleton restringe la instanciación de una clase a un único objeto compartido en toda la aplicación.',
+    domain: 'Patrones de Diseño',
+    difficulty: 'easy',
+  },
+  {
+    id: 'demo-q3',
+    type: 'multiple',
+    question: 'En una API REST, ¿qué código HTTP indica que un recurso fue creado exitosamente?',
+    options: {
+      A: '200 OK',
+      B: '201 Created',
+      C: '204 No Content',
+      D: '301 Moved Permanently',
+    },
+    answer: ['B'],
+    explanation: '201 Created es el código estándar para indicar que la petición creó un nuevo recurso exitosamente.',
+    domain: 'APIs y Servicios Web',
+    difficulty: 'easy',
+  },
+  {
+    id: 'demo-q4',
+    type: 'multiple',
+    question: '¿Cuál de las siguientes afirmaciones sobre Git es correcta?',
+    options: {
+      A: 'git rebase siempre crea commits de fusión (merge commits)',
+      B: 'git fetch descarga cambios del remoto y los fusiona automáticamente',
+      C: 'git pull combina git fetch y git merge en un solo comando',
+      D: 'git stash elimina permanentemente los cambios no confirmados',
+    },
+    answer: ['C'],
+    explanation: 'git pull es un atajo que ejecuta git fetch seguido de git merge sobre la rama actual.',
+    domain: 'Control de Versiones',
+    difficulty: 'medium',
+  },
+  {
+    id: 'demo-q5',
+    type: 'multiple',
+    question: '¿Cuál es la complejidad temporal de buscar un elemento en un árbol binario de búsqueda balanceado?',
+    options: {
+      A: 'O(1)',
+      B: 'O(log n)',
+      C: 'O(n)',
+      D: 'O(n log n)',
+    },
+    answer: ['B'],
+    explanation: 'Un árbol binario de búsqueda balanceado descarta la mitad de los nodos restantes en cada comparación.',
+    domain: 'Estructuras de Datos',
+    difficulty: 'medium',
+  },
+];

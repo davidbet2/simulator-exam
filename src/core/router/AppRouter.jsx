@@ -25,6 +25,7 @@ const PricingPage        = lazy(() => import('../../features/plans/pages/Pricing
 const PaymentSuccessPage = lazy(() => import('../../features/plans/pages/PaymentSuccessPage').then(m => ({ default: m.PaymentSuccessPage })));
 const ExploreExamsPage   = lazy(() => import('../../features/explore/pages/ExploreExamsPage').then(m => ({ default: m.ExploreExamsPage })));
 const ExamSetLandingPage = lazy(() => import('../../features/explore/pages/ExamSetLandingPage').then(m => ({ default: m.ExamSetLandingPage })));
+const FlashcardsPage     = lazy(() => import('../../features/flashcards/pages/FlashcardsPage').then(m => ({ default: m.FlashcardsPage })));
 const CreateExamPage     = lazy(() => import('../../features/creator/pages/CreateExamPage').then(m => ({ default: m.CreateExamPage })));
 const MySetsPage         = lazy(() => import('../../features/creator/pages/MySetsPage').then(m => ({ default: m.MySetsPage })));
 const EditExamPage       = lazy(() => import('../../features/creator/pages/EditExamPage').then(m => ({ default: m.EditExamPage })));
@@ -123,6 +124,10 @@ export function AppRouter() {
         <Route path="/payment-success" element={<ProtectedRoute requireUser><PaymentSuccessPage /></ProtectedRoute>} />
         <Route path="/explore" element={<ExploreExamsPage />} />
         <Route path="/exam-sets/:slug" element={<ExamSetLandingPage />} />
+        {/* /flashcards/:slug is public: the "demo" slug runs client-side with hardcoded
+            questions, same pattern as /exam. Real sets enforce auth inside FlashcardsPage
+            (redirects anon users to /register), mirroring ExamSetLandingPage.launchMode. */}
+        <Route path="/flashcards/:slug" element={<FlashcardsPage />} />
         <Route path="/create-exam" element={<ProtectedRoute requireUser><CreateExamPage /></ProtectedRoute>} />
         <Route path="/my-sets" element={<ProtectedRoute requireUser><MySetsPage /></ProtectedRoute>} />
         <Route path="/edit-exam/:id" element={<ProtectedRoute requireUser><EditExamPage /></ProtectedRoute>} />

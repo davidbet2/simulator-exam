@@ -4,83 +4,10 @@ import { db } from '../../../core/firebase/firebase';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { recordAnswer, recordAnswersBatch, fetchQuestionIdsForMode } from '../utils/questionStats';
 import { analytics } from '../../../core/analytics/events';
+import { DEMO_QUESTIONS } from '../../../core/constants/demoQuestions';
 
 // Modes that behave like study (reveal feedback, no timer): 'study', 'weak', 'srs', 'wager'.
 const isStudyLikeMode = (m) => m === 'study' || m === 'weak' || m === 'srs' || m === 'wager';
-
-// ─── Demo questions (general software dev knowledge, not domain-specific) ───
-const DEMO_QUESTIONS = [
-  {
-    id: 'demo-q1',
-    type: 'multiple',
-    question: '¿Cuál de los siguientes es un principio fundamental del Manifiesto Ágil?',
-    options: {
-      A: 'Documentación exhaustiva sobre software funcionando',
-      B: 'Individuos e interacciones sobre procesos y herramientas',
-      C: 'Seguir el plan por encima de responder al cambio',
-      D: 'Negociación de contratos sobre colaboración con el cliente',
-    },
-    answer: ['B'],
-    domain: 'Metodologías Ágiles',
-    difficulty: 'medium',
-  },
-  {
-    id: 'demo-q2',
-    type: 'multiple',
-    question: '¿Qué patrón de diseño garantiza que una clase tenga una única instancia en toda la aplicación?',
-    options: {
-      A: 'Factory',
-      B: 'Observer',
-      C: 'Singleton',
-      D: 'Strategy',
-    },
-    answer: ['C'],
-    domain: 'Patrones de Diseño',
-    difficulty: 'easy',
-  },
-  {
-    id: 'demo-q3',
-    type: 'multiple',
-    question: 'En una API REST, ¿qué código HTTP indica que un recurso fue creado exitosamente?',
-    options: {
-      A: '200 OK',
-      B: '201 Created',
-      C: '204 No Content',
-      D: '301 Moved Permanently',
-    },
-    answer: ['B'],
-    domain: 'APIs y Servicios Web',
-    difficulty: 'easy',
-  },
-  {
-    id: 'demo-q4',
-    type: 'multiple',
-    question: '¿Cuál de las siguientes afirmaciones sobre Git es correcta?',
-    options: {
-      A: 'git rebase siempre crea commits de fusión (merge commits)',
-      B: 'git fetch descarga cambios del remoto y los fusiona automáticamente',
-      C: 'git pull combina git fetch y git merge en un solo comando',
-      D: 'git stash elimina permanentemente los cambios no confirmados',
-    },
-    answer: ['C'],
-    domain: 'Control de Versiones',
-    difficulty: 'medium',
-  },
-  {
-    id: 'demo-q5',
-    type: 'multiple',
-    question: '¿Cuál es la complejidad temporal de buscar un elemento en un árbol binario de búsqueda balanceado?',
-    options: {
-      A: 'O(1)',
-      B: 'O(log n)',
-      C: 'O(n)',
-      D: 'O(n log n)',
-    },
-    answer: ['B'],
-    domain: 'Estructuras de Datos',
-    difficulty: 'medium',
-  },
-];
 
 function shuffle(arr) {
   const a = [...arr];
