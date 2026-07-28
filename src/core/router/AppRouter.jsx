@@ -9,6 +9,7 @@ import { StickyAdBar } from '../../features/ads/components/StickyAdBar';
 import { CookieConsentBanner } from '../../features/consent/components/CookieConsentBanner';
 import { usePwaInstall } from '../../features/pwa/hooks/usePwaInstall';
 import { PwaInstallPrompt } from '../../features/pwa/components/PwaInstallPrompt';
+import { PromoBanner } from '../../features/promo/components/PromoBanner';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
@@ -84,6 +85,13 @@ function MaintenanceGate({ children }) {
   return children;
 }
 
+/** Renders PromoBanner only on the landing (`/`) and authenticated home (`/home`) routes. */
+function PromoBannerSlot() {
+  const { pathname } = useLocation();
+  if (pathname !== '/' && pathname !== '/home') return null;
+  return <PromoBanner />;
+}
+
 /** If logged in and on `/`, redirect to `/home` (Quizlet-style authenticated landing). */
 function RootRoute() {
   const { user, isLoading } = useAuthStore();
@@ -102,6 +110,7 @@ export function AppRouter() {
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
       <MaintenanceGate>
+      <PromoBannerSlot />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<RootRoute />} />

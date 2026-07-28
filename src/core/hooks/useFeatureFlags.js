@@ -16,6 +16,16 @@ export const DEFAULT_FLAGS = {
   adsEnabled:           true,
   pwaPromptEnabled:     true,
   maintenanceMode:      false,
+  promoBannerEnabled:        false,
+  promoBannerTitle:          '',
+  promoBannerCode:           '',
+  promoBannerCtaText:        'Actualizar a Pro',
+  promoBannerDiscountBadge:  '',
+  promoBannerSubtitle:       '',
+  promoBannerUrgencyBadge:   '',
+  promoBannerShowAnonymous:  true,
+  promoBannerShowFree:       true,
+  promoBannerShowPro:        false,
 };
 
 /**
