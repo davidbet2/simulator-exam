@@ -542,6 +542,36 @@ exports.dodoWebhook = onRequest(
           break
         }
 
+        case 'refund.succeeded': {
+          // Partial refunds (e.g. proration adjustments) shouldn't revoke access
+          if (event.data?.is_partial) break
+
+          const email = event.data?.customer?.email
+          if (email) {
+            const users = await db.collection('users').where('email', '==', email).limit(1).get()
+            if (!users.empty) {
+              const profile = users.docs[0].data()
+              await users.docs[0].ref.update({
+                plan:                'free',
+                isPro:               false,
+                subscriptionStatus:  'refunded',
+                subscriptionEndedAt: new Date(),
+                updatedAt:           new Date(),
+              })
+
+              // Stop future renewals so the customer isn't charged again after a refund
+              if (profile.dodoSubscriptionId) {
+                try {
+                  await client.subscriptions.update(profile.dodoSubscriptionId, { status: 'cancelled' })
+                } catch (err) {
+                  console.error('dodoWebhook: failed to cancel subscription after refund', err.message)
+                }
+              }
+            }
+          }
+          break
+        }
+
         case 'subscription.on_hold':
         case 'subscription.past_due': {
           // Payment failed but user still has access — give grace period
