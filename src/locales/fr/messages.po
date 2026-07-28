@@ -317,6 +317,10 @@ msgstr "🤔 Je doute · ×1"
 msgid "1 pregunta importada."
 msgstr "1 question importée."
 
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:6
+msgid "1. Toca el ícono Compartir"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:236
 msgid "10 exámenes"
 msgstr "10 examens"
@@ -337,6 +341,10 @@ msgstr "10 questions aléatoires avec retour immédiat. Idéal pour réviser en 
 msgid "2 días hábiles"
 msgstr "2 jours ouvrés"
 
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:7
+msgid "2. Agregar a pantalla de inicio"
+msgstr ""
+
 #: src/features/public/pages/AboutPage.jsx:62
 msgid "3 exámenes gratis al mes para siempre. El plan gratuito incluye acceso completo al simulador. Pro desbloquea exámenes ilimitados e historial completo."
 msgstr "3 examens gratuits par mois pour toujours. Le plan gratuit inclut un accès complet au simulateur. Pro débloque des examens illimités et l'historique complet."
@@ -348,6 +356,10 @@ msgstr "3 examens par mois"
 #: src/features/profile/pages/ProfilePage.jsx:418
 msgid "3 exámenes/mes · Funciones básicas"
 msgstr "3 examens/mois · Fonctions de base"
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:8
+msgid "3. Toca Agregar"
+msgstr ""
 
 #: src/features/profile/pages/ProfilePage.jsx:235
 msgid "5 exámenes"
@@ -381,6 +393,10 @@ msgstr "Accès anticipé aux nouvelles certifications"
 #: src/features/profile/pages/ProfilePage.jsx:418
 msgid "Acceso completo · Sin restricciones"
 msgstr "Accès complet · Sans restrictions"
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:70
+msgid "Acceso directo"
+msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:158
 msgid "Acceso ilimitado a exámenes y funciones premium."
@@ -448,6 +464,10 @@ msgstr "Passer à Pro"
 #: src/features/home/pages/FolderPage.jsx:155
 msgid "Agregar sets"
 msgstr "Ajouter des sets"
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:77
+msgid "Ahora no"
+msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:140
 #: src/features/profile/pages/SettingsPage.jsx:143
@@ -536,6 +556,10 @@ msgstr "Glissez les éléments à droite et ordonnez-les correctement. Cliquez s
 #: src/features/exam/components/QuestionCard.jsx:225
 msgid "Arrastra o haz clic los elementos"
 msgstr "Glissez ou cliquez les éléments"
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:8
+msgid "Arriba a la derecha, y listo"
+msgstr ""
 
 #: src/features/public/pages/ContactPage.jsx:238
 msgid "Asunto"
@@ -709,6 +733,10 @@ msgstr "Se déconnecter"
 #: src/features/welcome/WelcomePage.jsx:47
 msgid "Certificaciones"
 msgstr "Certifications"
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:54
+msgid "CertZen aparecerá como una app más en tu pantalla de inicio"
+msgstr ""
 
 #: src/features/public/pages/AboutPage.jsx:76
 msgid "CertZen es un simulador inteligente de certificaciones profesionales. Aprende cómo funciona, qué certificaciones cubre y por qué miles de profesionales confían en nosotros."
@@ -929,6 +957,10 @@ msgstr "Décrivez votre demande avec le plus de détails possible…"
 msgid "Descripción (opcional)"
 msgstr "Description (facultatif)"
 
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:7
+msgid "Desliza hacia abajo para encontrarlo"
+msgstr ""
+
 #: src/features/explore/pages/ExamSetLandingPage.jsx:119
 msgid "Difícil"
 msgstr "Difficile"
@@ -1119,6 +1151,10 @@ msgstr "Dans le plan Free, vous pouvez ajouter des questions une par une. Passez
 msgid "En espera"
 msgstr ""
 
+#: src/features/pwa/components/PwaInstallPrompt.jsx:86
+msgid "En iPhone: Compartir → Agregar a pantalla de inicio"
+msgstr ""
+
 #: src/features/public/pages/AboutPage.jsx:42
 msgid "En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante."
 msgstr "En mode examen vous reproduisez les conditions réelles (chrono, questions aléatoires). En mode étude vous confirmez chaque réponse et voyez l'explication instantanément."
@@ -1194,6 +1230,10 @@ msgstr "Cette action supprime toutes vos données et est irréversible."
 msgid "Esta carpeta está vacía."
 msgstr "Ce dossier est vide."
 
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:6
+msgid "Está en la barra inferior de Safari"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:520
 msgid "Estado"
 msgstr ""
@@ -1201,6 +1241,10 @@ msgstr ""
 #: src/features/explore/pages/ExamSetLandingPage.jsx:233
 msgid "Este examen no existe o no es público."
 msgstr "Cet examen n'existe pas ou n'est pas public."
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:64
+msgid "Estudia desde tu pantalla de inicio, incluso sin conexión"
+msgstr ""
 
 #: src/features/home/pages/HomePage.jsx:227
 msgid "estudiante"
@@ -1539,6 +1583,18 @@ msgstr "Se connecter"
 msgid "Inicio"
 msgstr "Accueil"
 
+#: src/features/pwa/components/PwaInstallPrompt.jsx:61
+msgid "Instala CertZen"
+msgstr ""
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:17
+msgid "Instala CertZen en tu iPhone"
+msgstr ""
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:80
+msgid "Instalar app"
+msgstr ""
+
 #: src/features/explore/pages/ExploreExamsPage.jsx:82
 msgid "intentos"
 msgstr "tentatives"
@@ -1685,6 +1741,10 @@ msgstr "Mode Examen & Mode Étude"
 #: src/features/public/pages/AboutPage.jsx:69
 msgid "Modo examen para simular el día real. Modo estudio para aprender de cada error."
 msgstr "Mode examen pour simuler le jour J. Mode étude pour apprendre de chaque erreur."
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:71
+msgid "Modo offline"
+msgstr ""
 
 #: src/features/welcome/WelcomePage.jsx:46
 msgid "Modos de práctica"
@@ -2137,6 +2197,10 @@ msgstr ""
 msgid "Recomendado"
 msgstr "Recommandé"
 
+#: src/features/pwa/components/PwaInstallPrompt.jsx:72
+msgid "Recordatorios"
+msgstr ""
+
 #: src/features/profile/pages/SettingsPage.jsx:248
 msgid "Recordatorios, rutinas e insignias"
 msgstr "Rappels, routines et badges"
@@ -2533,6 +2597,10 @@ msgstr "aucun vote"
 #: src/features/public/pages/AboutPage.jsx:75
 msgid "Sobre la plataforma"
 msgstr "À propos de la plateforme"
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:20
+msgid "Solo son 3 pasos desde Safari"
+msgstr ""
 
 #: src/features/public/pages/ContactPage.jsx:130
 msgid "Soporte general"

@@ -21,6 +21,7 @@ const FLAG_META = [
   { key: 'xlsxImportEnabled',    label: 'Importar desde XLSX',   desc: 'Los usuarios pueden importar preguntas desde archivos Excel.' },
   { key: 'pdfImportEnabled',     label: 'Importar desde PDF',    desc: 'Los usuarios pueden importar preguntas desde archivos PDF.' },
   { key: 'adsEnabled',          label: 'Publicidad (AdSense)',   desc: 'Muestra banners de publicidad a usuarios free y visitantes. Desactiva para retirar todos los anuncios.' },
+  { key: 'pwaPromptEnabled',    label: 'Banner de instalación PWA', desc: 'Muestra el banner/toast que invita a instalar CertZen como app. Desactiva para ocultarlo en toda la app sin deploy.' },
   { key: 'maintenanceMode',      label: 'Modo mantenimiento',    desc: 'Bloquea el acceso a todo excepto el panel admin. ¡Cuidado!', danger: true },
 ];
 

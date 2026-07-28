@@ -317,6 +317,10 @@ msgstr "🤔 疑問 · ×1"
 msgid "1 pregunta importada."
 msgstr "1問インポートしました。"
 
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:6
+msgid "1. Toca el ícono Compartir"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:236
 msgid "10 exámenes"
 msgstr "10回の試験"
@@ -337,6 +341,10 @@ msgstr "即時フィードバック付きの10問のランダム問題。5分以
 msgid "2 días hábiles"
 msgstr "2営業日"
 
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:7
+msgid "2. Agregar a pantalla de inicio"
+msgstr ""
+
 #: src/features/public/pages/AboutPage.jsx:62
 msgid "3 exámenes gratis al mes para siempre. El plan gratuito incluye acceso completo al simulador. Pro desbloquea exámenes ilimitados e historial completo."
 msgstr "毎月3回の無料試験を永久に。無料プランにはシミュレーターへのフルアクセスが含まれます。Proで無制限の試験と完全な履歴をアンロック。"
@@ -348,6 +356,10 @@ msgstr "月3回の試験"
 #: src/features/profile/pages/ProfilePage.jsx:418
 msgid "3 exámenes/mes · Funciones básicas"
 msgstr "月3回の試験 · 基本機能"
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:8
+msgid "3. Toca Agregar"
+msgstr ""
 
 #: src/features/profile/pages/ProfilePage.jsx:235
 msgid "5 exámenes"
@@ -381,6 +393,10 @@ msgstr "新しい認定資格への早期アクセス"
 #: src/features/profile/pages/ProfilePage.jsx:418
 msgid "Acceso completo · Sin restricciones"
 msgstr "フルアクセス · 制限なし"
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:70
+msgid "Acceso directo"
+msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:158
 msgid "Acceso ilimitado a exámenes y funciones premium."
@@ -448,6 +464,10 @@ msgstr "Proにアップグレード"
 #: src/features/home/pages/FolderPage.jsx:155
 msgid "Agregar sets"
 msgstr "セットを追加"
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:77
+msgid "Ahora no"
+msgstr ""
 
 #: src/features/profile/pages/SettingsPage.jsx:140
 #: src/features/profile/pages/SettingsPage.jsx:143
@@ -536,6 +556,10 @@ msgstr "項目を右側にドラッグして正しく並べ替えてください
 #: src/features/exam/components/QuestionCard.jsx:225
 msgid "Arrastra o haz clic los elementos"
 msgstr "項目をドラッグまたはクリック"
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:8
+msgid "Arriba a la derecha, y listo"
+msgstr ""
 
 #: src/features/public/pages/ContactPage.jsx:238
 msgid "Asunto"
@@ -709,6 +733,10 @@ msgstr "ログアウト"
 #: src/features/welcome/WelcomePage.jsx:47
 msgid "Certificaciones"
 msgstr "認定資格"
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:54
+msgid "CertZen aparecerá como una app más en tu pantalla de inicio"
+msgstr ""
 
 #: src/features/public/pages/AboutPage.jsx:76
 msgid "CertZen es un simulador inteligente de certificaciones profesionales. Aprende cómo funciona, qué certificaciones cubre y por qué miles de profesionales confían en nosotros."
@@ -929,6 +957,10 @@ msgstr "お問い合わせをできるだけ詳しく記述してください…
 msgid "Descripción (opcional)"
 msgstr "説明（任意）"
 
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:7
+msgid "Desliza hacia abajo para encontrarlo"
+msgstr ""
+
 #: src/features/explore/pages/ExamSetLandingPage.jsx:119
 msgid "Difícil"
 msgstr "難しい"
@@ -1119,6 +1151,10 @@ msgstr "Freeプランでは問題を1つずつ追加できます。JSON、Excel�
 msgid "En espera"
 msgstr ""
 
+#: src/features/pwa/components/PwaInstallPrompt.jsx:86
+msgid "En iPhone: Compartir → Agregar a pantalla de inicio"
+msgstr ""
+
 #: src/features/public/pages/AboutPage.jsx:42
 msgid "En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante."
 msgstr "試験モードでは実際の条件（タイマー、ランダムな問題）を再現します。学習モードでは各回答を確認し、即座に解説を見られます。"
@@ -1194,6 +1230,10 @@ msgstr "この操作はすべてのデータを削除し、元に戻せません
 msgid "Esta carpeta está vacía."
 msgstr "このフォルダは空です。"
 
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:6
+msgid "Está en la barra inferior de Safari"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:520
 msgid "Estado"
 msgstr ""
@@ -1201,6 +1241,10 @@ msgstr ""
 #: src/features/explore/pages/ExamSetLandingPage.jsx:233
 msgid "Este examen no existe o no es público."
 msgstr "この試験は存在しないか、公開されていません。"
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:64
+msgid "Estudia desde tu pantalla de inicio, incluso sin conexión"
+msgstr ""
 
 #: src/features/home/pages/HomePage.jsx:227
 msgid "estudiante"
@@ -1539,6 +1583,18 @@ msgstr "ログイン"
 msgid "Inicio"
 msgstr "ホーム"
 
+#: src/features/pwa/components/PwaInstallPrompt.jsx:61
+msgid "Instala CertZen"
+msgstr ""
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:17
+msgid "Instala CertZen en tu iPhone"
+msgstr ""
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:80
+msgid "Instalar app"
+msgstr ""
+
 #: src/features/explore/pages/ExploreExamsPage.jsx:82
 msgid "intentos"
 msgstr "受験回数"
@@ -1685,6 +1741,10 @@ msgstr "試験モード＆学習モード"
 #: src/features/public/pages/AboutPage.jsx:69
 msgid "Modo examen para simular el día real. Modo estudio para aprender de cada error."
 msgstr "試験モードで本番当日をシミュレート。学習モードで各間違いから学ぶ。"
+
+#: src/features/pwa/components/PwaInstallPrompt.jsx:71
+msgid "Modo offline"
+msgstr ""
 
 #: src/features/welcome/WelcomePage.jsx:46
 msgid "Modos de práctica"
@@ -2137,6 +2197,10 @@ msgstr ""
 msgid "Recomendado"
 msgstr "おすすめ"
 
+#: src/features/pwa/components/PwaInstallPrompt.jsx:72
+msgid "Recordatorios"
+msgstr ""
+
 #: src/features/profile/pages/SettingsPage.jsx:248
 msgid "Recordatorios, rutinas e insignias"
 msgstr "リマインダー・ルーティン・バッジ"
@@ -2533,6 +2597,10 @@ msgstr "投票なし"
 #: src/features/public/pages/AboutPage.jsx:75
 msgid "Sobre la plataforma"
 msgstr "プラットフォームについて"
+
+#: src/features/pwa/components/PwaIosInstructionsModal.jsx:20
+msgid "Solo son 3 pasos desde Safari"
+msgstr ""
 
 #: src/features/public/pages/ContactPage.jsx:130
 msgid "Soporte general"

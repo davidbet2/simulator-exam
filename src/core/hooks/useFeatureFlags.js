@@ -14,6 +14,7 @@ export const DEFAULT_FLAGS = {
   googleLoginEnabled:   true,
   publicExploreEnabled: true,
   adsEnabled:           true,
+  pwaPromptEnabled:     true,
   maintenanceMode:      false,
 };
 
