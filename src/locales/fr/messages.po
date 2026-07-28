@@ -19,7 +19,7 @@ msgstr "— sans réponse —"
 
 #: src/features/results/ResultsPage.jsx:232
 msgid "¡Aprobado!"
-msgstr ""
+msgstr "Réussi !"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:220
 msgid "¡Empieza ahora!"
@@ -35,7 +35,7 @@ msgstr "Message envoyé !"
 
 #: src/features/profile/pages/ProfilePage.jsx:637
 msgid "¡Renovación reactivada! Tu plan Pro se renovará el"
-msgstr ""
+msgstr "Renouvellement réactivé ! Votre abonnement Pro sera renouvelé le"
 
 #: src/features/exam/components/QuestionCard.jsx:56
 #: src/features/exam/components/QuestionCard.jsx:379
@@ -64,7 +64,7 @@ msgstr "Soumettre l'examen ?"
 
 #: src/features/profile/pages/ProfilePage.jsx:578
 msgid "¿Estás seguro? Tu plan Pro se mantendrá activo hasta"
-msgstr ""
+msgstr "Êtes-vous sûr ? Votre abonnement Pro restera actif jusqu'au"
 
 #: src/features/public/pages/AboutPage.jsx:179
 msgid "¿Listo para aprobar tu certificación?"
@@ -146,7 +146,7 @@ msgstr "{0} questions"
 #. placeholder {0}: totals.questions
 #: src/features/creator/pages/MySetsPage.jsx:174
 msgid "{0} preguntas en total"
-msgstr ""
+msgstr "{0} questions au total"
 
 #. placeholder {0}: imported.length
 #: src/features/creator/pages/CreateExamPage.jsx:192
@@ -161,7 +161,7 @@ msgstr "{0} questions importées. Certaines peuvent être incomplètes — véri
 #. placeholder {0}: totals.published
 #: src/features/creator/pages/MySetsPage.jsx:175
 msgid "{0} publicados"
-msgstr ""
+msgstr "{0} publiés"
 
 #. placeholder {0}: sets.length
 #: src/features/explore/pages/ExploreExamsPage.jsx:297
@@ -181,7 +181,7 @@ msgstr "{0} set trouvé"
 #. placeholder {0}: totals.created
 #: src/features/creator/pages/MySetsPage.jsx:173
 msgid "{0} sets creados"
-msgstr ""
+msgstr "{0} sets créés"
 
 #. placeholder {0}: sets.length
 #: src/features/explore/pages/ExploreExamsPage.jsx:298
@@ -208,7 +208,7 @@ msgstr "{0}% de moyenne"
 
 #: src/features/results/ReviewPage.jsx:197
 msgid "{correctCount} correctas"
-msgstr ""
+msgstr "{correctCount} correctes"
 
 #: src/features/explore/components/DomainPath.jsx:65
 msgid "{inProgressCount} en progreso"
@@ -216,7 +216,7 @@ msgstr "{inProgressCount} en cours"
 
 #: src/features/flashcards/components/FlashcardSummary.jsx:21
 msgid "{knownCount} de {total} dominadas"
-msgstr ""
+msgstr "{knownCount} sur {total} maîtrisées"
 
 #: src/features/explore/components/DomainPath.jsx:64
 msgid "{masteredCount, plural, one {# dominado} other {# dominados}}"
@@ -249,7 +249,7 @@ msgstr "{untouchedCount} non commencés"
 
 #: src/features/results/ReviewPage.jsx:195
 msgid "{wrongCount} incorrectas"
-msgstr ""
+msgstr "{wrongCount} incorrectes"
 
 #: src/features/exam/pages/ExamPage.jsx:495
 msgid "← Anterior"
@@ -319,7 +319,7 @@ msgstr "1 question importée."
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:6
 msgid "1. Toca el ícono Compartir"
-msgstr ""
+msgstr "1. Appuyez sur l'icône Partager"
 
 #: src/features/profile/pages/ProfilePage.jsx:236
 msgid "10 exámenes"
@@ -343,7 +343,7 @@ msgstr "2 jours ouvrés"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:7
 msgid "2. Agregar a pantalla de inicio"
-msgstr ""
+msgstr "2. Ajouter à l'écran d'accueil"
 
 #: src/features/public/pages/AboutPage.jsx:62
 msgid "3 exámenes gratis al mes para siempre. El plan gratuito incluye acceso completo al simulador. Pro desbloquea exámenes ilimitados e historial completo."
@@ -359,7 +359,7 @@ msgstr "3 examens/mois · Fonctions de base"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:8
 msgid "3. Toca Agregar"
-msgstr ""
+msgstr "3. Appuyez sur Ajouter"
 
 #: src/features/profile/pages/ProfilePage.jsx:235
 msgid "5 exámenes"
@@ -372,7 +372,7 @@ msgstr "80%+ moyenne"
 #: src/features/flashcards/components/FlashcardCardPicker.jsx:41
 #: src/features/flashcards/components/FlashcardView.jsx:151
 msgid "A repasar"
-msgstr ""
+msgstr "À revoir"
 
 #: src/components/layout/AppShell.jsx:431
 #~ msgid "Abrir menú"
@@ -396,7 +396,7 @@ msgstr "Accès complet · Sans restrictions"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:70
 msgid "Acceso directo"
-msgstr ""
+msgstr "Accès direct"
 
 #: src/features/profile/pages/SettingsPage.jsx:158
 msgid "Acceso ilimitado a exámenes y funciones premium."
@@ -412,7 +412,7 @@ msgstr "Accès rapide"
 
 #: src/features/consent/components/CookieConsentBanner.jsx:42
 msgid "Aceptar"
-msgstr ""
+msgstr "Accepter"
 
 #: src/features/profile/pages/SettingsPage.jsx:253
 msgid "Activar actualizaciones de estudio"
@@ -428,15 +428,15 @@ msgstr "Activer les promotions"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:513
 msgid "Active recall"
-msgstr ""
+msgstr "Rappel actif"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:215
 msgid "Actividad reciente"
-msgstr ""
+msgstr "Activité récente"
 
 #: src/features/profile/pages/ProfilePage.jsx:426
 msgid "Activo"
-msgstr ""
+msgstr "Actif"
 
 #: src/features/exam/pages/ExamPage.jsx:125
 #: src/features/exam/pages/ExamPage.jsx:135
@@ -467,7 +467,7 @@ msgstr "Ajouter des sets"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:77
 msgid "Ahora no"
-msgstr ""
+msgstr "Pas maintenant"
 
 #: src/features/profile/pages/SettingsPage.jsx:140
 #: src/features/profile/pages/SettingsPage.jsx:143
@@ -494,7 +494,7 @@ msgstr "Analyse par domaine"
 #: src/features/flashcards/pages/FlashcardsPage.jsx:115
 #: src/features/results/ReviewPage.jsx:252
 msgid "Anterior"
-msgstr ""
+msgstr "Précédent"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:496
 msgid "Antes de revelar, apuesta qué tan seguro estás. Aciertas con ×3 y ganas; fallas con ×3 y pierdes. Descubre dónde crees saber sin saber."
@@ -559,7 +559,7 @@ msgstr "Glissez ou cliquez les éléments"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:8
 msgid "Arriba a la derecha, y listo"
-msgstr ""
+msgstr "En haut à droite, et voilà"
 
 #: src/features/public/pages/ContactPage.jsx:238
 msgid "Asunto"
@@ -575,7 +575,7 @@ msgstr "Vous n'avez encore créé aucun set."
 
 #: src/features/dashboard/pages/DashboardPage.jsx:201
 msgid "Aún no has guardado ningún set."
-msgstr ""
+msgstr "Vous n'avez encore enregistré aucun set."
 
 #: src/features/dashboard/pages/DashboardPage.jsx:219
 #: src/features/profile/pages/ProfilePage.jsx:745
@@ -664,11 +664,11 @@ msgstr "Canaux de support"
 
 #: src/features/profile/pages/ProfilePage.jsx:425
 msgid "Cancelada"
-msgstr ""
+msgstr "Annulé"
 
 #: src/features/profile/pages/ProfilePage.jsx:592
 msgid "Cancelando..."
-msgstr ""
+msgstr "Annulation..."
 
 #: src/features/creator/pages/MySetsPage.jsx:74
 #: src/features/exam/pages/ExamPage.jsx:227
@@ -678,7 +678,7 @@ msgstr "Annuler"
 
 #: src/features/profile/pages/ProfilePage.jsx:573
 msgid "Cancelar renovación automática"
-msgstr ""
+msgstr "Annuler le renouvellement automatique"
 
 #: src/features/exam/pages/ExamPage.jsx:337
 msgid "Cargando preguntas..."
@@ -686,7 +686,7 @@ msgstr "Chargement des questions..."
 
 #: src/features/profile/pages/ProfilePage.jsx:505
 msgid "Cargando..."
-msgstr ""
+msgstr "Chargement..."
 
 #: src/features/explore/pages/ExploreExamsPage.jsx:335
 msgid "Cargando…"
@@ -716,7 +716,7 @@ msgstr "Dossiers"
 #: src/features/creator/pages/CreateExamPage.jsx:350
 #: src/features/creator/pages/EditExamPage.jsx:359
 msgid "Categoría"
-msgstr ""
+msgstr "Catégorie"
 
 #: src/features/creator/pages/EditExamPage.jsx:372
 msgid "Categorías / Etiquetas (opcional)"
@@ -736,7 +736,7 @@ msgstr "Certifications"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:54
 msgid "CertZen aparecerá como una app más en tu pantalla de inicio"
-msgstr ""
+msgstr "CertZen apparaîtra comme une app de plus sur votre écran d'accueil"
 
 #: src/features/public/pages/AboutPage.jsx:76
 msgid "CertZen es un simulador inteligente de certificaciones profesionales. Aprende cómo funciona, qué certificaciones cubre y por qué miles de profesionales confían en nosotros."
@@ -778,7 +778,7 @@ msgstr "Comment fonctionne CertZen →"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:143
 msgid "Completados"
-msgstr ""
+msgstr "Terminés"
 
 #: src/features/public/pages/AboutPage.jsx:56
 msgid "Comunidad y UGC"
@@ -845,7 +845,7 @@ msgstr "Correcte"
 #: src/features/results/ResultsPage.jsx:243
 #: src/features/results/ReviewPage.jsx:150
 msgid "Correctas"
-msgstr ""
+msgstr "Correctes"
 
 #: src/features/auth/pages/LoginPage.jsx:91
 #: src/features/auth/pages/RegisterPage.jsx:100
@@ -872,7 +872,7 @@ msgstr "Créez et partagez des sets"
 
 #: src/features/creator/pages/MySetsPage.jsx:164
 msgid "Crea, edita y publica tus propios sets de preguntas."
-msgstr ""
+msgstr "Créez, modifiez et publiez vos propres sets de questions."
 
 #: src/features/auth/pages/RegisterPage.jsx:156
 msgid "Creando cuenta…"
@@ -941,7 +941,7 @@ msgstr "Vous devez vous connecter pour créer des sets d'examen."
 
 #: src/features/flashcards/components/FlashcardView.jsx:70
 msgid "Definiciones"
-msgstr ""
+msgstr "Définitions"
 
 #: src/features/creator/pages/CreateExamPage.jsx:344
 #: src/features/creator/pages/EditExamPage.jsx:353
@@ -959,7 +959,7 @@ msgstr "Description (facultatif)"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:7
 msgid "Desliza hacia abajo para encontrarlo"
-msgstr ""
+msgstr "Faites défiler vers le bas pour le trouver"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:119
 msgid "Difícil"
@@ -979,7 +979,7 @@ msgstr "maîtrisée"
 
 #: src/features/flashcards/components/FlashcardCardPicker.jsx:40
 msgid "Dominada"
-msgstr ""
+msgstr "Maîtrisée"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:484
 msgid "dominadas"
@@ -996,7 +996,7 @@ msgstr "Durée"
 #. placeholder {0}: timeAgo(updated, t)
 #: src/features/creator/pages/MySetsPage.jsx:53
 msgid "Editado {0}"
-msgstr ""
+msgstr "Modifié {0}"
 
 #: src/features/creator/pages/MySetsPage.jsx:82
 #: src/features/profile/pages/SettingsPage.jsx:215
@@ -1111,7 +1111,7 @@ msgstr "Supprimer"
 
 #: src/features/ads/components/StickyAdBar.jsx:122
 msgid "Eliminar con Pro"
-msgstr ""
+msgstr "Supprimer avec Pro"
 
 #: src/features/profile/pages/SettingsPage.jsx:219
 msgid "Email"
@@ -1149,11 +1149,11 @@ msgstr "Dans le plan Free, vous pouvez ajouter des questions une par une. Passez
 
 #: src/features/profile/pages/ProfilePage.jsx:424
 msgid "En espera"
-msgstr ""
+msgstr "En attente"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:86
 msgid "En iPhone: Compartir → Agregar a pantalla de inicio"
-msgstr ""
+msgstr "Sur iPhone : Partager → Ajouter à l'écran d'accueil"
 
 #: src/features/public/pages/AboutPage.jsx:42
 msgid "En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante."
@@ -1232,11 +1232,11 @@ msgstr "Ce dossier est vide."
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:6
 msgid "Está en la barra inferior de Safari"
-msgstr ""
+msgstr "Elle se trouve dans la barre inférieure de Safari"
 
 #: src/features/profile/pages/ProfilePage.jsx:520
 msgid "Estado"
-msgstr ""
+msgstr "État"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:233
 msgid "Este examen no existe o no es público."
@@ -1244,7 +1244,7 @@ msgstr "Cet examen n'existe pas ou n'est pas public."
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:64
 msgid "Estudia desde tu pantalla de inicio, incluso sin conexión"
-msgstr ""
+msgstr "Étudiez depuis votre écran d'accueil, même hors ligne"
 
 #: src/features/home/pages/HomePage.jsx:227
 msgid "estudiante"
@@ -1252,7 +1252,7 @@ msgstr "apprenant"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:519
 msgid "Estudiar con Flashcards"
-msgstr ""
+msgstr "Étudier avec des cartes mémoire"
 
 #: src/features/exam/pages/ExamPage.jsx:385
 msgid "Estudio"
@@ -1264,7 +1264,7 @@ msgstr "Étude Guidée"
 
 #: src/features/creator/pages/CreateExamPage.jsx:363
 msgid "Etiquetas (opcional)"
-msgstr ""
+msgstr "Tags (facultatif)"
 
 #: src/features/exam/pages/ExamPage.jsx:368
 #: src/features/exam/pages/ExamPage.jsx:393
@@ -1300,7 +1300,7 @@ msgstr "Examens illimités"
 
 #: src/features/profile/pages/ProfilePage.jsx:537
 msgid "Exitoso"
-msgstr ""
+msgstr "Réussi"
 
 #: src/components/layout/AppShell.jsx:176
 #: src/components/layout/AppShell.jsx:177
@@ -1309,11 +1309,11 @@ msgstr "Développer le menu"
 
 #: src/features/results/ReviewPage.jsx:89
 msgid "Explicación"
-msgstr ""
+msgstr "Explication"
 
 #: src/features/ads/components/AdBanner.jsx:164
 msgid "Explora más certificaciones →"
-msgstr ""
+msgstr "Découvrez plus de certifications →"
 
 #: src/features/home/pages/HomePage.jsx:273
 msgid "Explora por categoría"
@@ -1336,7 +1336,7 @@ msgstr "Explorer les examens"
 
 #: src/features/explore/pages/ExploreExamsPage.jsx:177
 msgid "Explorar exámenes de certificación"
-msgstr ""
+msgstr "Explorer les examens de certification"
 
 #: src/features/explore/pages/ExploreExamsPage.jsx:177
 #~ msgid "Explorar exámenes de certificación — CertZen"
@@ -1353,7 +1353,7 @@ msgstr "Explorer les sets de la communauté"
 
 #: src/features/home/pages/HomePage.jsx:302
 msgid "Explorar todo"
-msgstr ""
+msgstr "Tout explorer"
 
 #: src/features/home/pages/HomePage.jsx:348
 #~ msgid "Explorar todo →"
@@ -1365,15 +1365,15 @@ msgstr "Facile"
 
 #: src/features/profile/pages/ProfilePage.jsx:538
 msgid "Fallido"
-msgstr ""
+msgstr "Échoué"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:142
 msgid "Favoritos"
-msgstr ""
+msgstr "Favoris"
 
 #: src/features/profile/pages/ProfilePage.jsx:518
 msgid "Fecha"
-msgstr ""
+msgstr "Date"
 
 #: src/features/exam/pages/ExamPage.jsx:408
 msgid "Finalizar ✓"
@@ -1401,7 +1401,7 @@ msgstr "Flashcards"
 #. placeholder {0}: set?.title ?? ''
 #: src/features/flashcards/pages/FlashcardsPage.jsx:81
 msgid "Flashcards — {0}"
-msgstr ""
+msgstr "Cartes mémoire — {0}"
 
 #: src/features/creator/pages/CreateExamPage.jsx:238
 msgid "Formato inválido. Solo se permite .pdf."
@@ -1495,7 +1495,7 @@ msgstr "Historique des examens"
 
 #: src/features/profile/pages/ProfilePage.jsx:489
 msgid "Historial de pagos"
-msgstr ""
+msgstr "Historique des paiements"
 
 #: src/features/home/pages/HomePage.jsx:225
 msgid "Hola,"
@@ -1507,7 +1507,7 @@ msgstr "Bonjour,"
 
 #: src/features/profile/pages/ProfilePage.jsx:471
 msgid "Hubo un problema con tu último pago. Tu acceso Pro sigue activo por ahora, pero actualiza tu método de pago para evitar interrupciones."
-msgstr ""
+msgstr "Un problème est survenu avec votre dernier paiement. Votre accès Pro reste actif pour le moment, mais mettez à jour votre méthode de paiement pour éviter toute interruption."
 
 #: src/features/profile/pages/SettingsPage.jsx:235
 msgid "Idioma"
@@ -1539,7 +1539,7 @@ msgstr "Incorrecte"
 #: src/features/results/ResultsPage.jsx:244
 #: src/features/results/ReviewPage.jsx:150
 msgid "Incorrectas"
-msgstr ""
+msgstr "Incorrectes"
 
 #: src/features/public/pages/ContactPage.jsx:121
 msgid "Información de contacto"
@@ -1585,15 +1585,15 @@ msgstr "Accueil"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:61
 msgid "Instala CertZen"
-msgstr ""
+msgstr "Installez CertZen"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:17
 msgid "Instala CertZen en tu iPhone"
-msgstr ""
+msgstr "Installez CertZen sur votre iPhone"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:80
 msgid "Instalar app"
-msgstr ""
+msgstr "Installer l'app"
 
 #: src/features/explore/pages/ExploreExamsPage.jsx:82
 msgid "intentos"
@@ -1611,7 +1611,7 @@ msgstr "Moyen"
 #: src/features/flashcards/pages/FlashcardsPage.jsx:135
 #: src/features/flashcards/pages/FlashcardsPage.jsx:136
 msgid "Ir a una tarjeta"
-msgstr ""
+msgstr "Aller à une carte"
 
 #: src/features/profile/pages/SettingsPage.jsx:311
 msgid "La eliminación de cuenta está temporalmente manejada por soporte."
@@ -1631,11 +1631,11 @@ msgstr "La première ligne doit être l'en-tête."
 
 #: src/features/flashcards/components/FlashcardView.jsx:224
 msgid "La sabía"
-msgstr ""
+msgstr "Je le savais"
 
 #: src/features/flashcards/components/FlashcardView.jsx:144
 msgid "La sabías"
-msgstr ""
+msgstr "Vous le saviez"
 
 #: src/components/layout/AppShell.jsx:565
 #: src/features/explore/pages/ExploreExamsPage.jsx:254
@@ -1648,7 +1648,7 @@ msgstr "Succès"
 
 #: src/features/profile/pages/ProfilePage.jsx:599
 msgid "Mantener plan"
-msgstr ""
+msgstr "Garder l'abonnement"
 
 #: src/features/home/pages/HomePage.jsx:325
 msgid "Marca sets como favoritos o empieza un examen para ver tu progreso aquí."
@@ -1692,7 +1692,7 @@ msgstr "Méthode de connexion"
 #: src/features/flashcards/components/FlashcardControls.jsx:15
 #: src/features/flashcards/components/FlashcardControls.jsx:26
 msgid "Mezclar"
-msgstr ""
+msgstr "Mélanger"
 
 #: src/features/profile/pages/ProfilePage.jsx:244
 msgid "Mi perfil"
@@ -1744,7 +1744,7 @@ msgstr "Mode examen pour simuler le jour J. Mode étude pour apprendre de chaque
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:71
 msgid "Modo offline"
-msgstr ""
+msgstr "Mode hors ligne"
 
 #: src/features/welcome/WelcomePage.jsx:46
 msgid "Modos de práctica"
@@ -1752,7 +1752,7 @@ msgstr "Modes de pratique"
 
 #: src/features/profile/pages/ProfilePage.jsx:519
 msgid "Monto"
-msgstr ""
+msgstr "Montant"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Nada por repasar"
@@ -1764,7 +1764,7 @@ msgstr "Navigation principale"
 
 #: src/features/results/ResultsPage.jsx:237
 msgid "Necesitas {passPercent}% para aprobar — sigue practicando."
-msgstr ""
+msgstr "Vous avez besoin de {passPercent}% pour réussir — continuez à vous entraîner."
 
 #: src/features/profile/pages/ProfilePage.jsx:768
 #: src/features/results/ReviewPage.jsx:168
@@ -1777,15 +1777,15 @@ msgstr "Vous n'avez pas réussi cette fois"
 
 #: src/features/results/ReviewPage.jsx:92
 msgid "No hay explicación disponible para esta pregunta."
-msgstr ""
+msgstr "Aucune explication disponible pour cette question."
 
 #: src/features/profile/pages/ProfilePage.jsx:512
 msgid "No hay pagos registrados."
-msgstr ""
+msgstr "Aucun paiement enregistré."
 
 #: src/features/results/ReviewPage.jsx:220
 msgid "No hay preguntas en esta categoría."
-msgstr ""
+msgstr "Aucune question dans cette catégorie."
 
 #: src/features/home/pages/HomePage.jsx:310
 msgid "No hay recomendaciones por ahora."
@@ -1793,7 +1793,7 @@ msgstr "Aucune recommandation pour le moment."
 
 #: src/features/flashcards/components/FlashcardView.jsx:221
 msgid "No la sabía"
-msgstr ""
+msgstr "Je ne le savais pas"
 
 #: src/features/social/components/RatingStars.jsx:110
 msgid "No puedes calificar tu propio set"
@@ -1876,7 +1876,7 @@ msgstr "Nouvelles fonctionnalités et conseils"
 
 #: src/features/welcome/WelcomePage.jsx:90
 msgid "Nuevo"
-msgstr ""
+msgstr "Nouveau"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:500
 msgid "Nuevo ✨"
@@ -1884,7 +1884,7 @@ msgstr "Nouveau ✨"
 
 #: src/features/creator/pages/MySetsPage.jsx:167
 msgid "Nuevo set"
-msgstr ""
+msgstr "Nouveau set"
 
 #: src/features/auth/pages/LoginPage.jsx:151
 msgid "o continúa con"
@@ -1917,7 +1917,7 @@ msgstr "Sombre"
 
 #: src/features/profile/pages/ProfilePage.jsx:423
 msgid "Pago pendiente"
-msgstr ""
+msgstr "Paiement en attente"
 
 #: src/features/welcome/WelcomePage.jsx:81
 #: src/features/welcome/WelcomePage.jsx:99
@@ -1949,7 +1949,7 @@ msgstr "Collez un tableau JSON. Types supportés :"
 
 #: src/features/flashcards/components/FlashcardCardPicker.jsx:42
 msgid "Pendiente"
-msgstr ""
+msgstr "En attente"
 
 #: src/components/layout/PublicLayout.jsx:52
 msgid "Perfil"
@@ -1957,7 +1957,7 @@ msgstr "Profil"
 
 #: src/features/profile/pages/ProfilePage.jsx:580
 msgid "pero no se renovará."
-msgstr ""
+msgstr "mais ne sera pas renouvelé."
 
 #: src/features/profile/pages/ProfilePage.jsx:415
 msgid "Plan Gratuito"
@@ -2021,7 +2021,7 @@ msgstr "Pratiquer {label} : {mastered} sur {total} maîtrisées, {percent}%"
 
 #: src/features/flashcards/components/FlashcardView.jsx:187
 msgid "Pregunta"
-msgstr ""
+msgstr "Question"
 
 #. placeholder {0}: i + 1
 #. placeholder {0}: index + 1
@@ -2036,7 +2036,7 @@ msgstr "Question {0}"
 #. placeholder {1}: filtered.length
 #: src/features/results/ReviewPage.jsx:193
 msgid "Pregunta {0} de {1}"
-msgstr ""
+msgstr "Question {0} sur {1}"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:463
 msgid "pregunta por repasar"
@@ -2134,7 +2134,7 @@ msgstr "Promotions"
 
 #: src/features/profile/pages/ProfilePage.jsx:458
 msgid "Próxima renovación"
-msgstr ""
+msgstr "Prochain renouvellement"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:69
 #: src/features/welcome/WelcomePage.jsx:139
@@ -2174,15 +2174,15 @@ msgstr "Retirer des favoris"
 
 #: src/features/profile/pages/ProfilePage.jsx:627
 msgid "Reactivando..."
-msgstr ""
+msgstr "Réactivation..."
 
 #: src/features/profile/pages/ProfilePage.jsx:627
 msgid "Reactivar renovación automática"
-msgstr ""
+msgstr "Réactiver le renouvellement automatique"
 
 #: src/features/consent/components/CookieConsentBanner.jsx:39
 msgid "Rechazar"
-msgstr ""
+msgstr "Refuser"
 
 #: src/features/public/pages/ContactPage.jsx:190
 msgid "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
@@ -2190,7 +2190,7 @@ msgstr "Nous avons reçu votre message et nous vous répondrons sous 2 jours ouv
 
 #: src/features/profile/pages/ProfilePage.jsx:546
 msgid "Recibo"
-msgstr ""
+msgstr "Reçu"
 
 #: src/features/ads/components/AdBanner.jsx:158
 #: src/features/explore/pages/ExamSetLandingPage.jsx:74
@@ -2199,7 +2199,7 @@ msgstr "Recommandé"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:72
 msgid "Recordatorios"
-msgstr ""
+msgstr "Rappels"
 
 #: src/features/profile/pages/SettingsPage.jsx:248
 msgid "Recordatorios, rutinas e insignias"
@@ -2264,7 +2264,7 @@ msgstr "Inscription gratuite"
 #: src/features/flashcards/components/FlashcardControls.jsx:18
 #: src/features/flashcards/components/FlashcardControls.jsx:32
 msgid "Reiniciar"
-msgstr ""
+msgstr "Recommencer"
 
 #: src/features/results/ResultsPage.jsx:383
 #~ msgid "Reintentar mismo examen"
@@ -2276,15 +2276,15 @@ msgstr "Performance par certification"
 
 #: src/features/results/ResultsPage.jsx:253
 msgid "Rendimiento por tema"
-msgstr ""
+msgstr "Performance par thème"
 
 #: src/features/profile/pages/ProfilePage.jsx:613
 msgid "Renovación cancelada. Tu acceso Pro continúa hasta"
-msgstr ""
+msgstr "Renouvellement annulé. Votre accès Pro continue jusqu'au"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:512
 msgid "Repasa cada pregunta como una tarjeta: pregunta al frente, respuesta y explicación al voltear. Sesión libre, sin cronómetro."
-msgstr ""
+msgstr "Révisez chaque question comme une carte : question au recto, réponse et explication au verso. Session libre, sans chronomètre."
 
 #: src/features/welcome/WelcomePage.jsx:89
 #~ msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar."
@@ -2292,12 +2292,12 @@ msgstr ""
 
 #: src/features/welcome/WelcomePage.jsx:89
 msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Voltea para ver la respuesta."
-msgstr ""
+msgstr "Révisez concept par concept avec des cartes interactives terme-définition. Retournez pour voir la réponse."
 
 #. placeholder {0}: set?.title ?? 'este set'
 #: src/features/flashcards/pages/FlashcardsPage.jsx:82
 msgid "Repasa las preguntas de {0} con flashcards."
-msgstr ""
+msgstr "Révisez les questions de {0} avec des cartes mémoire."
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Repasar ahora"
@@ -2305,11 +2305,11 @@ msgstr "Réviser maintenant"
 
 #: src/features/flashcards/components/FlashcardSummary.jsx:32
 msgid "Repasar de nuevo"
-msgstr ""
+msgstr "Réviser à nouveau"
 
 #: src/features/flashcards/components/FlashcardSummary.jsx:24
 msgid "Repasaste todo el mazo de esta sesión."
-msgstr ""
+msgstr "Vous avez révisé tout le paquet de cette session."
 
 #: src/features/exam/pages/ExamPage.jsx:389
 msgid "Repaso"
@@ -2329,7 +2329,7 @@ msgstr "Répétition espacée"
 
 #: src/features/results/ResultsPage.jsx:328
 msgid "Repetir simulacro"
-msgstr ""
+msgstr "Recommencer l'examen blanc"
 
 #: src/features/exam/pages/ExamPage.jsx:27
 msgid "Requerido"
@@ -2350,7 +2350,7 @@ msgstr "Répondue"
 
 #: src/features/flashcards/components/FlashcardView.jsx:207
 msgid "Respuesta"
-msgstr ""
+msgstr "Réponse"
 
 #: src/features/exam/components/QuestionCard.jsx:382
 msgid "Respuesta incorrecta — la respuesta correcta está marcada en verde"
@@ -2396,16 +2396,16 @@ msgstr "Révisez votre historique, identifiez vos faiblesses et passez l'examen 
 
 #: src/features/results/ReviewPage.jsx:159
 msgid "Revisa tus respuestas pregunta por pregunta."
-msgstr ""
+msgstr "Revoyez vos réponses question par question."
 
 #: src/features/results/ResultsPage.jsx:324
 msgid "Revisar respuestas"
-msgstr ""
+msgstr "Revoir les réponses"
 
 #: src/features/results/ReviewPage.jsx:159
 #: src/features/results/ReviewPage.jsx:163
 msgid "Revisión"
-msgstr ""
+msgstr "Révision"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:378
 msgid "Ruta de Dominio"
@@ -2428,7 +2428,7 @@ msgstr "Quitter sans enregistrer"
 
 #: src/features/flashcards/components/FlashcardCardPicker.jsx:24
 msgid "Salta directamente a cualquier tarjeta del mazo"
-msgstr ""
+msgstr "Accédez directement à n'importe quelle carte du paquet"
 
 #: src/features/exam/pages/ExamPage.jsx:19
 msgid "Seguro"
@@ -2471,7 +2471,7 @@ msgstr "Séparez les catégories par des virgules pour classer le contenu."
 
 #: src/features/creator/pages/CreateExamPage.jsx:370
 msgid "Separa las etiquetas con comas para clasificar el contenido del examen."
-msgstr ""
+msgstr "Séparez les tags par des virgules pour classer le contenu de l'examen."
 
 #: src/features/exam/pages/ExamPage.jsx:368
 msgid "Sesión de práctica de examen de certificación."
@@ -2487,7 +2487,7 @@ msgstr "Set indisponible"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:230
 msgid "Set no encontrado"
-msgstr ""
+msgstr "Set introuvable"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:228
 #~ msgid "Set no encontrado — CertZen"
@@ -2507,12 +2507,12 @@ msgstr "Si vous partez, vous perdrez toute la progression de cet examen. Les ré
 
 #: src/features/profile/pages/ProfilePage.jsx:592
 msgid "Sí, cancelar"
-msgstr ""
+msgstr "Oui, annuler"
 
 #: src/features/flashcards/pages/FlashcardsPage.jsx:126
 #: src/features/results/ReviewPage.jsx:258
 msgid "Siguiente"
-msgstr ""
+msgstr "Suivant"
 
 #: src/features/exam/pages/ExamPage.jsx:522
 msgid "Siguiente →"
@@ -2600,7 +2600,7 @@ msgstr "À propos de la plateforme"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:20
 msgid "Solo son 3 pasos desde Safari"
-msgstr ""
+msgstr "Seulement 3 étapes depuis Safari"
 
 #: src/features/public/pages/ContactPage.jsx:130
 msgid "Soporte general"
@@ -2626,7 +2626,7 @@ msgstr "Suggestions de recherche"
 
 #: src/features/results/ResultsPage.jsx:236
 msgid "Superaste el {passPercent}% necesario para aprobar este simulacro."
-msgstr ""
+msgstr "Vous avez dépassé les {passPercent}% requis pour réussir cet examen blanc."
 
 #: src/features/profile/pages/SettingsPage.jsx:146
 msgid "Suscripción"
@@ -2634,16 +2634,16 @@ msgstr "Abonnement"
 
 #: src/features/profile/pages/ProfilePage.jsx:402
 msgid "Suscripción y facturación"
-msgstr ""
+msgstr "Abonnement et facturation"
 
 #. placeholder {0}: Math.min(currentIndex + 1, total)
 #: src/features/flashcards/pages/FlashcardsPage.jsx:121
 msgid "Tarjeta {0} de {total}"
-msgstr ""
+msgstr "Carte {0} sur {total}"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:515
 msgid "tarjetas"
-msgstr ""
+msgstr "cartes"
 
 #: src/features/profile/pages/ProfilePage.jsx:286
 msgid "Tasa de aprobación"
@@ -2689,7 +2689,7 @@ msgstr "Limite de temps (minutes)"
 
 #: src/features/results/ResultsPage.jsx:245
 msgid "Tiempo total"
-msgstr ""
+msgstr "Temps total"
 
 #: src/features/creator/pages/CreateExamPage.jsx:328
 #: src/features/creator/pages/EditExamPage.jsx:337
@@ -2698,15 +2698,15 @@ msgstr "Titre *"
 
 #: src/features/flashcards/components/FlashcardView.jsx:196
 msgid "Toca la tarjeta o presiona espacio para voltear"
-msgstr ""
+msgstr "Touchez la carte ou appuyez sur espace pour la retourner"
 
 #: src/features/flashcards/components/FlashcardView.jsx:199
 msgid "Toca la tarjeta para voltear"
-msgstr ""
+msgstr "Touchez la carte pour la retourner"
 
 #: src/features/results/ReviewPage.jsx:150
 msgid "Todas"
-msgstr ""
+msgstr "Toutes"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:482
 msgid "Todo al día 🎉"
@@ -2722,11 +2722,11 @@ msgstr "Tout ce qu'il faut pour réussir"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:141
 msgid "Todos"
-msgstr ""
+msgstr "Tous"
 
 #: src/features/creator/pages/MySetsPage.jsx:195
 msgid "Todos tus sets"
-msgstr ""
+msgstr "Tous vos sets"
 
 #: src/features/profile/pages/ProfilePage.jsx:664
 msgid "Tomar examen"
@@ -2735,7 +2735,7 @@ msgstr "Passer l'examen"
 #: src/features/dashboard/pages/DashboardPage.jsx:148
 #: src/features/dashboard/pages/DashboardPage.jsx:155
 msgid "Tu biblioteca"
-msgstr ""
+msgstr "Votre bibliothèque"
 
 #: src/features/profile/pages/ProfilePage.jsx:244
 msgid "Tu historial de exámenes, logros y progreso."
@@ -2764,11 +2764,11 @@ msgstr "vous@email.com"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:196
 msgid "Tus sets guardados"
-msgstr ""
+msgstr "Vos sets enregistrés"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:148
 msgid "Tus sets guardados y tu actividad reciente."
-msgstr ""
+msgstr "Vos sets enregistrés et votre activité récente."
 
 #: src/features/results/ResultsPage.jsx:293
 #~ msgid "Umbral de aprobación"
@@ -2790,7 +2790,7 @@ msgstr "Utilisez le bouton « Nouvelle question » pour ajouter des questions."
 
 #: src/features/consent/components/CookieConsentBanner.jsx:30
 msgid "Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Lee más en nuestra <0>Política de Privacidad</0>."
-msgstr ""
+msgstr "Nous utilisons des cookies pour mesurer l'utilisation du site et améliorer votre expérience. En savoir plus dans notre <0>Politique de confidentialité</0>."
 
 #: src/features/creator/pages/CreateExamPage.jsx:492
 msgid "Ver columnas requeridas"
@@ -2799,7 +2799,7 @@ msgstr "Voir les colonnes requises"
 #: src/features/results/ReviewPage.jsx:174
 #: src/features/results/ReviewPage.jsx:175
 msgid "Ver de a una"
-msgstr ""
+msgstr "Voir une par une"
 
 #: src/features/creator/pages/CreateExamPage.jsx:459
 #: src/features/creator/pages/EditExamPage.jsx:464
@@ -2832,7 +2832,7 @@ msgstr "Voir les simulateurs"
 #: src/features/results/ReviewPage.jsx:174
 #: src/features/results/ReviewPage.jsx:175
 msgid "Ver todas en lista"
-msgstr ""
+msgstr "Voir toutes en liste"
 
 #: src/features/home/pages/HomePage.jsx:322
 #~ msgid "Ver todo →"
@@ -2859,12 +2859,12 @@ msgstr "Aperçu"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:511
 msgid "Voltea y autoevalúate"
-msgstr ""
+msgstr "Retournez et évaluez-vous"
 
 #: src/features/flashcards/components/FlashcardControls.jsx:11
 #: src/features/flashcards/components/FlashcardControls.jsx:29
 msgid "Voltear tarjeta"
-msgstr ""
+msgstr "Retourner la carte"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:234
 msgid "Volver a explorar"
@@ -2876,7 +2876,7 @@ msgstr "Retour à mes sets"
 
 #: src/features/results/ReviewPage.jsx:183
 msgid "Volver a resultados"
-msgstr ""
+msgstr "Retour aux résultats"
 
 #: src/features/exam/pages/ExamPage.jsx:350
 msgid "Volver al inicio"
@@ -2884,7 +2884,7 @@ msgstr "Retour à l'accueil"
 
 #: src/features/flashcards/pages/FlashcardsPage.jsx:69
 msgid "Volver al set"
-msgstr ""
+msgstr "Retour au set"
 
 #: src/features/welcome/WelcomePage.jsx:446
 msgid "Ya tengo cuenta"

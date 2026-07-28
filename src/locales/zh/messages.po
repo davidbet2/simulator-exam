@@ -19,7 +19,7 @@ msgstr "— 未作答 —"
 
 #: src/features/results/ResultsPage.jsx:232
 msgid "¡Aprobado!"
-msgstr ""
+msgstr "已通过!"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:220
 msgid "¡Empieza ahora!"
@@ -35,7 +35,7 @@ msgstr "消息已发送！"
 
 #: src/features/profile/pages/ProfilePage.jsx:637
 msgid "¡Renovación reactivada! Tu plan Pro se renovará el"
-msgstr ""
+msgstr "续订已重新启用!您的 Pro 计划将于以下日期续订:"
 
 #: src/features/exam/components/QuestionCard.jsx:56
 #: src/features/exam/components/QuestionCard.jsx:379
@@ -64,7 +64,7 @@ msgstr "提交考试？"
 
 #: src/features/profile/pages/ProfilePage.jsx:578
 msgid "¿Estás seguro? Tu plan Pro se mantendrá activo hasta"
-msgstr ""
+msgstr "确定吗?您的 Pro 计划将保持有效直至:"
 
 #: src/features/public/pages/AboutPage.jsx:179
 msgid "¿Listo para aprobar tu certificación?"
@@ -146,7 +146,7 @@ msgstr "{0} 题"
 #. placeholder {0}: totals.questions
 #: src/features/creator/pages/MySetsPage.jsx:174
 msgid "{0} preguntas en total"
-msgstr ""
+msgstr "共 {0} 道题"
 
 #. placeholder {0}: imported.length
 #: src/features/creator/pages/CreateExamPage.jsx:192
@@ -161,7 +161,7 @@ msgstr "已导入 {0} 道题目。部分可能不完整，请检查。"
 #. placeholder {0}: totals.published
 #: src/features/creator/pages/MySetsPage.jsx:175
 msgid "{0} publicados"
-msgstr ""
+msgstr "已发布 {0} 个"
 
 #. placeholder {0}: sets.length
 #: src/features/explore/pages/ExploreExamsPage.jsx:297
@@ -181,7 +181,7 @@ msgstr "找到 {0} 个套题"
 #. placeholder {0}: totals.created
 #: src/features/creator/pages/MySetsPage.jsx:173
 msgid "{0} sets creados"
-msgstr ""
+msgstr "已创建 {0} 个套题"
 
 #. placeholder {0}: sets.length
 #: src/features/explore/pages/ExploreExamsPage.jsx:298
@@ -208,7 +208,7 @@ msgstr "平均 {0}%"
 
 #: src/features/results/ReviewPage.jsx:197
 msgid "{correctCount} correctas"
-msgstr ""
+msgstr "答对 {correctCount} 题"
 
 #: src/features/explore/components/DomainPath.jsx:65
 msgid "{inProgressCount} en progreso"
@@ -216,7 +216,7 @@ msgstr "{inProgressCount} 进行中"
 
 #: src/features/flashcards/components/FlashcardSummary.jsx:21
 msgid "{knownCount} de {total} dominadas"
-msgstr ""
+msgstr "已掌握 {knownCount} / {total}"
 
 #: src/features/explore/components/DomainPath.jsx:64
 msgid "{masteredCount, plural, one {# dominado} other {# dominados}}"
@@ -249,7 +249,7 @@ msgstr "{untouchedCount} 未开始"
 
 #: src/features/results/ReviewPage.jsx:195
 msgid "{wrongCount} incorrectas"
-msgstr ""
+msgstr "答错 {wrongCount} 题"
 
 #: src/features/exam/pages/ExamPage.jsx:495
 msgid "← Anterior"
@@ -319,7 +319,7 @@ msgstr "已导入1个问题。"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:6
 msgid "1. Toca el ícono Compartir"
-msgstr ""
+msgstr "1. 点击"分享"图标"
 
 #: src/features/profile/pages/ProfilePage.jsx:236
 msgid "10 exámenes"
@@ -343,7 +343,7 @@ msgstr "2 个工作日"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:7
 msgid "2. Agregar a pantalla de inicio"
-msgstr ""
+msgstr "2. 添加到主屏幕"
 
 #: src/features/public/pages/AboutPage.jsx:62
 msgid "3 exámenes gratis al mes para siempre. El plan gratuito incluye acceso completo al simulador. Pro desbloquea exámenes ilimitados e historial completo."
@@ -359,7 +359,7 @@ msgstr "每月 3 场考试 · 基本功能"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:8
 msgid "3. Toca Agregar"
-msgstr ""
+msgstr "3. 点击"添加""
 
 #: src/features/profile/pages/ProfilePage.jsx:235
 msgid "5 exámenes"
@@ -372,7 +372,7 @@ msgstr "平均 80%+"
 #: src/features/flashcards/components/FlashcardCardPicker.jsx:41
 #: src/features/flashcards/components/FlashcardView.jsx:151
 msgid "A repasar"
-msgstr ""
+msgstr "待复习"
 
 #: src/components/layout/AppShell.jsx:431
 #~ msgid "Abrir menú"
@@ -396,7 +396,7 @@ msgstr "完整访问 · 无限制"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:70
 msgid "Acceso directo"
-msgstr ""
+msgstr "直接访问"
 
 #: src/features/profile/pages/SettingsPage.jsx:158
 msgid "Acceso ilimitado a exámenes y funciones premium."
@@ -412,7 +412,7 @@ msgstr "快速访问"
 
 #: src/features/consent/components/CookieConsentBanner.jsx:42
 msgid "Aceptar"
-msgstr ""
+msgstr "接受"
 
 #: src/features/profile/pages/SettingsPage.jsx:253
 msgid "Activar actualizaciones de estudio"
@@ -428,15 +428,15 @@ msgstr "启用促销"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:513
 msgid "Active recall"
-msgstr ""
+msgstr "主动回忆"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:215
 msgid "Actividad reciente"
-msgstr ""
+msgstr "最近活动"
 
 #: src/features/profile/pages/ProfilePage.jsx:426
 msgid "Activo"
-msgstr ""
+msgstr "有效"
 
 #: src/features/exam/pages/ExamPage.jsx:125
 #: src/features/exam/pages/ExamPage.jsx:135
@@ -467,7 +467,7 @@ msgstr "添加资料集"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:77
 msgid "Ahora no"
-msgstr ""
+msgstr "暂不"
 
 #: src/features/profile/pages/SettingsPage.jsx:140
 #: src/features/profile/pages/SettingsPage.jsx:143
@@ -494,7 +494,7 @@ msgstr "按领域分析"
 #: src/features/flashcards/pages/FlashcardsPage.jsx:115
 #: src/features/results/ReviewPage.jsx:252
 msgid "Anterior"
-msgstr ""
+msgstr "上一题"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:496
 msgid "Antes de revelar, apuesta qué tan seguro estás. Aciertas con ×3 y ganas; fallas con ×3 y pierdes. Descubre dónde crees saber sin saber."
@@ -559,7 +559,7 @@ msgstr "拖动或点击元素"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:8
 msgid "Arriba a la derecha, y listo"
-msgstr ""
+msgstr "右上角,完成"
 
 #: src/features/public/pages/ContactPage.jsx:238
 msgid "Asunto"
@@ -575,7 +575,7 @@ msgstr "你还没有创建任何套题。"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:201
 msgid "Aún no has guardado ningún set."
-msgstr ""
+msgstr "你还没有保存任何套题。"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:219
 #: src/features/profile/pages/ProfilePage.jsx:745
@@ -664,11 +664,11 @@ msgstr "支持渠道"
 
 #: src/features/profile/pages/ProfilePage.jsx:425
 msgid "Cancelada"
-msgstr ""
+msgstr "已取消"
 
 #: src/features/profile/pages/ProfilePage.jsx:592
 msgid "Cancelando..."
-msgstr ""
+msgstr "取消中..."
 
 #: src/features/creator/pages/MySetsPage.jsx:74
 #: src/features/exam/pages/ExamPage.jsx:227
@@ -678,7 +678,7 @@ msgstr "取消"
 
 #: src/features/profile/pages/ProfilePage.jsx:573
 msgid "Cancelar renovación automática"
-msgstr ""
+msgstr "取消自动续订"
 
 #: src/features/exam/pages/ExamPage.jsx:337
 msgid "Cargando preguntas..."
@@ -686,7 +686,7 @@ msgstr "正在加载问题…"
 
 #: src/features/profile/pages/ProfilePage.jsx:505
 msgid "Cargando..."
-msgstr ""
+msgstr "加载中..."
 
 #: src/features/explore/pages/ExploreExamsPage.jsx:335
 msgid "Cargando…"
@@ -716,7 +716,7 @@ msgstr "文件夹"
 #: src/features/creator/pages/CreateExamPage.jsx:350
 #: src/features/creator/pages/EditExamPage.jsx:359
 msgid "Categoría"
-msgstr ""
+msgstr "分类"
 
 #: src/features/creator/pages/EditExamPage.jsx:372
 msgid "Categorías / Etiquetas (opcional)"
@@ -736,7 +736,7 @@ msgstr "认证"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:54
 msgid "CertZen aparecerá como una app más en tu pantalla de inicio"
-msgstr ""
+msgstr "CertZen 会作为一个应用出现在你的主屏幕上"
 
 #: src/features/public/pages/AboutPage.jsx:76
 msgid "CertZen es un simulador inteligente de certificaciones profesionales. Aprende cómo funciona, qué certificaciones cubre y por qué miles de profesionales confían en nosotros."
@@ -778,7 +778,7 @@ msgstr "CertZen 如何运作 →"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:143
 msgid "Completados"
-msgstr ""
+msgstr "已完成"
 
 #: src/features/public/pages/AboutPage.jsx:56
 msgid "Comunidad y UGC"
@@ -845,7 +845,7 @@ msgstr "正确"
 #: src/features/results/ResultsPage.jsx:243
 #: src/features/results/ReviewPage.jsx:150
 msgid "Correctas"
-msgstr ""
+msgstr "正确"
 
 #: src/features/auth/pages/LoginPage.jsx:91
 #: src/features/auth/pages/RegisterPage.jsx:100
@@ -872,7 +872,7 @@ msgstr "创建和分享套题"
 
 #: src/features/creator/pages/MySetsPage.jsx:164
 msgid "Crea, edita y publica tus propios sets de preguntas."
-msgstr ""
+msgstr "创建、编辑并发布你自己的题目套题。"
 
 #: src/features/auth/pages/RegisterPage.jsx:156
 msgid "Creando cuenta…"
@@ -941,7 +941,7 @@ msgstr "您必须登录才能创建考试集。"
 
 #: src/features/flashcards/components/FlashcardView.jsx:70
 msgid "Definiciones"
-msgstr ""
+msgstr "定义"
 
 #: src/features/creator/pages/CreateExamPage.jsx:344
 #: src/features/creator/pages/EditExamPage.jsx:353
@@ -959,7 +959,7 @@ msgstr "描述（可选）"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:7
 msgid "Desliza hacia abajo para encontrarlo"
-msgstr ""
+msgstr "向下滑动即可找到"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:119
 msgid "Difícil"
@@ -979,7 +979,7 @@ msgstr "已掌握"
 
 #: src/features/flashcards/components/FlashcardCardPicker.jsx:40
 msgid "Dominada"
-msgstr ""
+msgstr "已掌握"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:484
 msgid "dominadas"
@@ -996,7 +996,7 @@ msgstr "时长"
 #. placeholder {0}: timeAgo(updated, t)
 #: src/features/creator/pages/MySetsPage.jsx:53
 msgid "Editado {0}"
-msgstr ""
+msgstr "已编辑 {0}"
 
 #: src/features/creator/pages/MySetsPage.jsx:82
 #: src/features/profile/pages/SettingsPage.jsx:215
@@ -1111,7 +1111,7 @@ msgstr "删除"
 
 #: src/features/ads/components/StickyAdBar.jsx:122
 msgid "Eliminar con Pro"
-msgstr ""
+msgstr "使用 Pro 移除"
 
 #: src/features/profile/pages/SettingsPage.jsx:219
 msgid "Email"
@@ -1149,11 +1149,11 @@ msgstr "在免费计划中你可以一次添加一道题目。升级到 Pro 以�
 
 #: src/features/profile/pages/ProfilePage.jsx:424
 msgid "En espera"
-msgstr ""
+msgstr "待处理"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:86
 msgid "En iPhone: Compartir → Agregar a pantalla de inicio"
-msgstr ""
+msgstr "在 iPhone 上:分享 → 添加到主屏幕"
 
 #: src/features/public/pages/AboutPage.jsx:42
 msgid "En modo examen replicas las condiciones reales (cronómetro, preguntas aleatorias). En modo estudio confirmas cada respuesta y ves la explicación al instante."
@@ -1232,11 +1232,11 @@ msgstr "此文件夹为空。"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:6
 msgid "Está en la barra inferior de Safari"
-msgstr ""
+msgstr "位于 Safari 底部工具栏"
 
 #: src/features/profile/pages/ProfilePage.jsx:520
 msgid "Estado"
-msgstr ""
+msgstr "状态"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:233
 msgid "Este examen no existe o no es público."
@@ -1244,7 +1244,7 @@ msgstr "此考试不存在或非公开。"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:64
 msgid "Estudia desde tu pantalla de inicio, incluso sin conexión"
-msgstr ""
+msgstr "即使离线也能从主屏幕学习"
 
 #: src/features/home/pages/HomePage.jsx:227
 msgid "estudiante"
@@ -1252,7 +1252,7 @@ msgstr "学习者"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:519
 msgid "Estudiar con Flashcards"
-msgstr ""
+msgstr "使用记忆卡学习"
 
 #: src/features/exam/pages/ExamPage.jsx:385
 msgid "Estudio"
@@ -1264,7 +1264,7 @@ msgstr "引导式学习"
 
 #: src/features/creator/pages/CreateExamPage.jsx:363
 msgid "Etiquetas (opcional)"
-msgstr ""
+msgstr "标签(可选)"
 
 #: src/features/exam/pages/ExamPage.jsx:368
 #: src/features/exam/pages/ExamPage.jsx:393
@@ -1300,7 +1300,7 @@ msgstr "无限考试"
 
 #: src/features/profile/pages/ProfilePage.jsx:537
 msgid "Exitoso"
-msgstr ""
+msgstr "成功"
 
 #: src/components/layout/AppShell.jsx:176
 #: src/components/layout/AppShell.jsx:177
@@ -1309,11 +1309,11 @@ msgstr "展开菜单"
 
 #: src/features/results/ReviewPage.jsx:89
 msgid "Explicación"
-msgstr ""
+msgstr "解析"
 
 #: src/features/ads/components/AdBanner.jsx:164
 msgid "Explora más certificaciones →"
-msgstr ""
+msgstr "探索更多认证 →"
 
 #: src/features/home/pages/HomePage.jsx:273
 msgid "Explora por categoría"
@@ -1336,7 +1336,7 @@ msgstr "探索考试"
 
 #: src/features/explore/pages/ExploreExamsPage.jsx:177
 msgid "Explorar exámenes de certificación"
-msgstr ""
+msgstr "浏览认证考试"
 
 #: src/features/explore/pages/ExploreExamsPage.jsx:177
 #~ msgid "Explorar exámenes de certificación — CertZen"
@@ -1353,7 +1353,7 @@ msgstr "探索社区套题"
 
 #: src/features/home/pages/HomePage.jsx:302
 msgid "Explorar todo"
-msgstr ""
+msgstr "浏览全部"
 
 #: src/features/home/pages/HomePage.jsx:348
 #~ msgid "Explorar todo →"
@@ -1365,15 +1365,15 @@ msgstr "简单"
 
 #: src/features/profile/pages/ProfilePage.jsx:538
 msgid "Fallido"
-msgstr ""
+msgstr "未通过"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:142
 msgid "Favoritos"
-msgstr ""
+msgstr "收藏"
 
 #: src/features/profile/pages/ProfilePage.jsx:518
 msgid "Fecha"
-msgstr ""
+msgstr "日期"
 
 #: src/features/exam/pages/ExamPage.jsx:408
 msgid "Finalizar ✓"
@@ -1401,7 +1401,7 @@ msgstr "抽认卡"
 #. placeholder {0}: set?.title ?? ''
 #: src/features/flashcards/pages/FlashcardsPage.jsx:81
 msgid "Flashcards — {0}"
-msgstr ""
+msgstr "记忆卡 — {0}"
 
 #: src/features/creator/pages/CreateExamPage.jsx:238
 msgid "Formato inválido. Solo se permite .pdf."
@@ -1495,7 +1495,7 @@ msgstr "考试历史"
 
 #: src/features/profile/pages/ProfilePage.jsx:489
 msgid "Historial de pagos"
-msgstr ""
+msgstr "付款记录"
 
 #: src/features/home/pages/HomePage.jsx:225
 msgid "Hola,"
@@ -1507,7 +1507,7 @@ msgstr "你好，"
 
 #: src/features/profile/pages/ProfilePage.jsx:471
 msgid "Hubo un problema con tu último pago. Tu acceso Pro sigue activo por ahora, pero actualiza tu método de pago para evitar interrupciones."
-msgstr ""
+msgstr "你最近的付款出现了问题。目前 Pro 权限仍然有效,但请更新付款方式以避免中断。"
 
 #: src/features/profile/pages/SettingsPage.jsx:235
 msgid "Idioma"
@@ -1539,7 +1539,7 @@ msgstr "错误"
 #: src/features/results/ResultsPage.jsx:244
 #: src/features/results/ReviewPage.jsx:150
 msgid "Incorrectas"
-msgstr ""
+msgstr "错误"
 
 #: src/features/public/pages/ContactPage.jsx:121
 msgid "Información de contacto"
@@ -1585,15 +1585,15 @@ msgstr "首页"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:61
 msgid "Instala CertZen"
-msgstr ""
+msgstr "安装 CertZen"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:17
 msgid "Instala CertZen en tu iPhone"
-msgstr ""
+msgstr "在你的 iPhone 上安装 CertZen"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:80
 msgid "Instalar app"
-msgstr ""
+msgstr "安装应用"
 
 #: src/features/explore/pages/ExploreExamsPage.jsx:82
 msgid "intentos"
@@ -1611,7 +1611,7 @@ msgstr "中等"
 #: src/features/flashcards/pages/FlashcardsPage.jsx:135
 #: src/features/flashcards/pages/FlashcardsPage.jsx:136
 msgid "Ir a una tarjeta"
-msgstr ""
+msgstr "跳转到某张卡片"
 
 #: src/features/profile/pages/SettingsPage.jsx:311
 msgid "La eliminación de cuenta está temporalmente manejada por soporte."
@@ -1631,11 +1631,11 @@ msgstr "第一行必须是标题行。"
 
 #: src/features/flashcards/components/FlashcardView.jsx:224
 msgid "La sabía"
-msgstr ""
+msgstr "我知道"
 
 #: src/features/flashcards/components/FlashcardView.jsx:144
 msgid "La sabías"
-msgstr ""
+msgstr "你知道"
 
 #: src/components/layout/AppShell.jsx:565
 #: src/features/explore/pages/ExploreExamsPage.jsx:254
@@ -1648,7 +1648,7 @@ msgstr "成就"
 
 #: src/features/profile/pages/ProfilePage.jsx:599
 msgid "Mantener plan"
-msgstr ""
+msgstr "保留计划"
 
 #: src/features/home/pages/HomePage.jsx:325
 msgid "Marca sets como favoritos o empieza un examen para ver tu progreso aquí."
@@ -1692,7 +1692,7 @@ msgstr "访问方式"
 #: src/features/flashcards/components/FlashcardControls.jsx:15
 #: src/features/flashcards/components/FlashcardControls.jsx:26
 msgid "Mezclar"
-msgstr ""
+msgstr "洗牌"
 
 #: src/features/profile/pages/ProfilePage.jsx:244
 msgid "Mi perfil"
@@ -1744,7 +1744,7 @@ msgstr "考试模式模拟真实考试日。学习模式从每个错误中学习
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:71
 msgid "Modo offline"
-msgstr ""
+msgstr "离线模式"
 
 #: src/features/welcome/WelcomePage.jsx:46
 msgid "Modos de práctica"
@@ -1752,7 +1752,7 @@ msgstr "练习模式"
 
 #: src/features/profile/pages/ProfilePage.jsx:519
 msgid "Monto"
-msgstr ""
+msgstr "金额"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Nada por repasar"
@@ -1764,7 +1764,7 @@ msgstr "主导航"
 
 #: src/features/results/ResultsPage.jsx:237
 msgid "Necesitas {passPercent}% para aprobar — sigue practicando."
-msgstr ""
+msgstr "你需要 {passPercent}% 才能通过 — 继续练习吧。"
 
 #: src/features/profile/pages/ProfilePage.jsx:768
 #: src/features/results/ReviewPage.jsx:168
@@ -1777,15 +1777,15 @@ msgstr "本次未通过"
 
 #: src/features/results/ReviewPage.jsx:92
 msgid "No hay explicación disponible para esta pregunta."
-msgstr ""
+msgstr "此题暂无解析。"
 
 #: src/features/profile/pages/ProfilePage.jsx:512
 msgid "No hay pagos registrados."
-msgstr ""
+msgstr "暂无付款记录。"
 
 #: src/features/results/ReviewPage.jsx:220
 msgid "No hay preguntas en esta categoría."
-msgstr ""
+msgstr "该分类下暂无题目。"
 
 #: src/features/home/pages/HomePage.jsx:310
 msgid "No hay recomendaciones por ahora."
@@ -1793,7 +1793,7 @@ msgstr "暂无推荐。"
 
 #: src/features/flashcards/components/FlashcardView.jsx:221
 msgid "No la sabía"
-msgstr ""
+msgstr "我不知道"
 
 #: src/features/social/components/RatingStars.jsx:110
 msgid "No puedes calificar tu propio set"
@@ -1876,7 +1876,7 @@ msgstr "新功能与提示"
 
 #: src/features/welcome/WelcomePage.jsx:90
 msgid "Nuevo"
-msgstr ""
+msgstr "新"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:500
 msgid "Nuevo ✨"
@@ -1884,7 +1884,7 @@ msgstr "新 ✨"
 
 #: src/features/creator/pages/MySetsPage.jsx:167
 msgid "Nuevo set"
-msgstr ""
+msgstr "新建套题"
 
 #: src/features/auth/pages/LoginPage.jsx:151
 msgid "o continúa con"
@@ -1917,7 +1917,7 @@ msgstr "深色"
 
 #: src/features/profile/pages/ProfilePage.jsx:423
 msgid "Pago pendiente"
-msgstr ""
+msgstr "待付款"
 
 #: src/features/welcome/WelcomePage.jsx:81
 #: src/features/welcome/WelcomePage.jsx:99
@@ -1949,7 +1949,7 @@ msgstr "粘贴JSON数组。支持的类型："
 
 #: src/features/flashcards/components/FlashcardCardPicker.jsx:42
 msgid "Pendiente"
-msgstr ""
+msgstr "待处理"
 
 #: src/components/layout/PublicLayout.jsx:52
 msgid "Perfil"
@@ -1957,7 +1957,7 @@ msgstr "个人资料"
 
 #: src/features/profile/pages/ProfilePage.jsx:580
 msgid "pero no se renovará."
-msgstr ""
+msgstr "但不会续订。"
 
 #: src/features/profile/pages/ProfilePage.jsx:415
 msgid "Plan Gratuito"
@@ -2021,7 +2021,7 @@ msgstr "练习 {label}：已掌握 {mastered}/{total}，{percent}%"
 
 #: src/features/flashcards/components/FlashcardView.jsx:187
 msgid "Pregunta"
-msgstr ""
+msgstr "问题"
 
 #. placeholder {0}: i + 1
 #. placeholder {0}: index + 1
@@ -2036,7 +2036,7 @@ msgstr "第 {0} 题"
 #. placeholder {1}: filtered.length
 #: src/features/results/ReviewPage.jsx:193
 msgid "Pregunta {0} de {1}"
-msgstr ""
+msgstr "第 {0} / {1} 题"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:463
 msgid "pregunta por repasar"
@@ -2134,7 +2134,7 @@ msgstr "促销"
 
 #: src/features/profile/pages/ProfilePage.jsx:458
 msgid "Próxima renovación"
-msgstr ""
+msgstr "下次续订日期"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:69
 #: src/features/welcome/WelcomePage.jsx:139
@@ -2174,15 +2174,15 @@ msgstr "取消收藏"
 
 #: src/features/profile/pages/ProfilePage.jsx:627
 msgid "Reactivando..."
-msgstr ""
+msgstr "重新启用中..."
 
 #: src/features/profile/pages/ProfilePage.jsx:627
 msgid "Reactivar renovación automática"
-msgstr ""
+msgstr "重新启用自动续订"
 
 #: src/features/consent/components/CookieConsentBanner.jsx:39
 msgid "Rechazar"
-msgstr ""
+msgstr "拒绝"
 
 #: src/features/public/pages/ContactPage.jsx:190
 msgid "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
@@ -2190,7 +2190,7 @@ msgstr "我们已收到你的消息，将在最多 2 个工作日内回复。"
 
 #: src/features/profile/pages/ProfilePage.jsx:546
 msgid "Recibo"
-msgstr ""
+msgstr "收据"
 
 #: src/features/ads/components/AdBanner.jsx:158
 #: src/features/explore/pages/ExamSetLandingPage.jsx:74
@@ -2199,7 +2199,7 @@ msgstr "推荐"
 
 #: src/features/pwa/components/PwaInstallPrompt.jsx:72
 msgid "Recordatorios"
-msgstr ""
+msgstr "提醒"
 
 #: src/features/profile/pages/SettingsPage.jsx:248
 msgid "Recordatorios, rutinas e insignias"
@@ -2264,7 +2264,7 @@ msgstr "免费注册"
 #: src/features/flashcards/components/FlashcardControls.jsx:18
 #: src/features/flashcards/components/FlashcardControls.jsx:32
 msgid "Reiniciar"
-msgstr ""
+msgstr "重置"
 
 #: src/features/results/ResultsPage.jsx:383
 #~ msgid "Reintentar mismo examen"
@@ -2276,15 +2276,15 @@ msgstr "按认证分类的表现"
 
 #: src/features/results/ResultsPage.jsx:253
 msgid "Rendimiento por tema"
-msgstr ""
+msgstr "各主题表现"
 
 #: src/features/profile/pages/ProfilePage.jsx:613
 msgid "Renovación cancelada. Tu acceso Pro continúa hasta"
-msgstr ""
+msgstr "续订已取消。你的 Pro 权限将持续至:"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:512
 msgid "Repasa cada pregunta como una tarjeta: pregunta al frente, respuesta y explicación al voltear. Sesión libre, sin cronómetro."
-msgstr ""
+msgstr "将每道题当作一张卡片来复习:正面是问题,翻转后显示答案和解析。自由练习,没有计时器。"
 
 #: src/features/welcome/WelcomePage.jsx:89
 #~ msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Desliza para avanzar."
@@ -2292,12 +2292,12 @@ msgstr ""
 
 #: src/features/welcome/WelcomePage.jsx:89
 msgid "Repasa concepto a concepto con tarjetas interactivas de término-definición. Voltea para ver la respuesta."
-msgstr ""
+msgstr "通过交互式术语-定义卡片逐个概念复习。翻转即可查看答案。"
 
 #. placeholder {0}: set?.title ?? 'este set'
 #: src/features/flashcards/pages/FlashcardsPage.jsx:82
 msgid "Repasa las preguntas de {0} con flashcards."
-msgstr ""
+msgstr "用记忆卡复习 {0} 的题目。"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:488
 msgid "Repasar ahora"
@@ -2305,11 +2305,11 @@ msgstr "立即复习"
 
 #: src/features/flashcards/components/FlashcardSummary.jsx:32
 msgid "Repasar de nuevo"
-msgstr ""
+msgstr "再次复习"
 
 #: src/features/flashcards/components/FlashcardSummary.jsx:24
 msgid "Repasaste todo el mazo de esta sesión."
-msgstr ""
+msgstr "你已复习完本次会话的整副卡片。"
 
 #: src/features/exam/pages/ExamPage.jsx:389
 msgid "Repaso"
@@ -2329,7 +2329,7 @@ msgstr "间隔重复"
 
 #: src/features/results/ResultsPage.jsx:328
 msgid "Repetir simulacro"
-msgstr ""
+msgstr "重新进行模拟考试"
 
 #: src/features/exam/pages/ExamPage.jsx:27
 msgid "Requerido"
@@ -2350,7 +2350,7 @@ msgstr "已作答"
 
 #: src/features/flashcards/components/FlashcardView.jsx:207
 msgid "Respuesta"
-msgstr ""
+msgstr "答案"
 
 #: src/features/exam/components/QuestionCard.jsx:382
 msgid "Respuesta incorrecta — la respuesta correcta está marcada en verde"
@@ -2396,16 +2396,16 @@ msgstr "查看你的历史记录，识别弱点，并以充分的准备参加官
 
 #: src/features/results/ReviewPage.jsx:159
 msgid "Revisa tus respuestas pregunta por pregunta."
-msgstr ""
+msgstr "逐题查看你的答案。"
 
 #: src/features/results/ResultsPage.jsx:324
 msgid "Revisar respuestas"
-msgstr ""
+msgstr "查看答案"
 
 #: src/features/results/ReviewPage.jsx:159
 #: src/features/results/ReviewPage.jsx:163
 msgid "Revisión"
-msgstr ""
+msgstr "复习"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:378
 msgid "Ruta de Dominio"
@@ -2428,7 +2428,7 @@ msgstr "不保存退出"
 
 #: src/features/flashcards/components/FlashcardCardPicker.jsx:24
 msgid "Salta directamente a cualquier tarjeta del mazo"
-msgstr ""
+msgstr "直接跳转到卡组中的任意一张卡片"
 
 #: src/features/exam/pages/ExamPage.jsx:19
 msgid "Seguro"
@@ -2471,7 +2471,7 @@ msgstr "用逗号分隔类别以对考试内容进行分类。"
 
 #: src/features/creator/pages/CreateExamPage.jsx:370
 msgid "Separa las etiquetas con comas para clasificar el contenido del examen."
-msgstr ""
+msgstr "用逗号分隔标签,为考试内容分类。"
 
 #: src/features/exam/pages/ExamPage.jsx:368
 msgid "Sesión de práctica de examen de certificación."
@@ -2487,7 +2487,7 @@ msgstr "套题不可用"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:230
 msgid "Set no encontrado"
-msgstr ""
+msgstr "未找到套题"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:228
 #~ msgid "Set no encontrado — CertZen"
@@ -2507,12 +2507,12 @@ msgstr "如果你退出，将丢失本次考试的所有进度，答案不会被
 
 #: src/features/profile/pages/ProfilePage.jsx:592
 msgid "Sí, cancelar"
-msgstr ""
+msgstr "是的,取消"
 
 #: src/features/flashcards/pages/FlashcardsPage.jsx:126
 #: src/features/results/ReviewPage.jsx:258
 msgid "Siguiente"
-msgstr ""
+msgstr "下一题"
 
 #: src/features/exam/pages/ExamPage.jsx:522
 msgid "Siguiente →"
@@ -2600,7 +2600,7 @@ msgstr "关于平台"
 
 #: src/features/pwa/components/PwaIosInstructionsModal.jsx:20
 msgid "Solo son 3 pasos desde Safari"
-msgstr ""
+msgstr "在 Safari 中只需 3 步"
 
 #: src/features/public/pages/ContactPage.jsx:130
 msgid "Soporte general"
@@ -2626,7 +2626,7 @@ msgstr "搜索建议"
 
 #: src/features/results/ResultsPage.jsx:236
 msgid "Superaste el {passPercent}% necesario para aprobar este simulacro."
-msgstr ""
+msgstr "你已超过通过本次模拟考试所需的 {passPercent}%。"
 
 #: src/features/profile/pages/SettingsPage.jsx:146
 msgid "Suscripción"
@@ -2634,16 +2634,16 @@ msgstr "订阅"
 
 #: src/features/profile/pages/ProfilePage.jsx:402
 msgid "Suscripción y facturación"
-msgstr ""
+msgstr "订阅与账单"
 
 #. placeholder {0}: Math.min(currentIndex + 1, total)
 #: src/features/flashcards/pages/FlashcardsPage.jsx:121
 msgid "Tarjeta {0} de {total}"
-msgstr ""
+msgstr "第 {0} / {total} 张卡片"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:515
 msgid "tarjetas"
-msgstr ""
+msgstr "张卡片"
 
 #: src/features/profile/pages/ProfilePage.jsx:286
 msgid "Tasa de aprobación"
@@ -2689,7 +2689,7 @@ msgstr "时间限制（分钟）"
 
 #: src/features/results/ResultsPage.jsx:245
 msgid "Tiempo total"
-msgstr ""
+msgstr "总用时"
 
 #: src/features/creator/pages/CreateExamPage.jsx:328
 #: src/features/creator/pages/EditExamPage.jsx:337
@@ -2698,15 +2698,15 @@ msgstr "标题 *"
 
 #: src/features/flashcards/components/FlashcardView.jsx:196
 msgid "Toca la tarjeta o presiona espacio para voltear"
-msgstr ""
+msgstr "点击卡片或按空格键翻转"
 
 #: src/features/flashcards/components/FlashcardView.jsx:199
 msgid "Toca la tarjeta para voltear"
-msgstr ""
+msgstr "点击卡片翻转"
 
 #: src/features/results/ReviewPage.jsx:150
 msgid "Todas"
-msgstr ""
+msgstr "全部"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:482
 msgid "Todo al día 🎉"
@@ -2722,11 +2722,11 @@ msgstr "通过所需的一切"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:141
 msgid "Todos"
-msgstr ""
+msgstr "全部"
 
 #: src/features/creator/pages/MySetsPage.jsx:195
 msgid "Todos tus sets"
-msgstr ""
+msgstr "你的所有套题"
 
 #: src/features/profile/pages/ProfilePage.jsx:664
 msgid "Tomar examen"
@@ -2735,7 +2735,7 @@ msgstr "参加考试"
 #: src/features/dashboard/pages/DashboardPage.jsx:148
 #: src/features/dashboard/pages/DashboardPage.jsx:155
 msgid "Tu biblioteca"
-msgstr ""
+msgstr "我的资料库"
 
 #: src/features/profile/pages/ProfilePage.jsx:244
 msgid "Tu historial de exámenes, logros y progreso."
@@ -2764,11 +2764,11 @@ msgstr "you@email.com"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:196
 msgid "Tus sets guardados"
-msgstr ""
+msgstr "已保存的套题"
 
 #: src/features/dashboard/pages/DashboardPage.jsx:148
 msgid "Tus sets guardados y tu actividad reciente."
-msgstr ""
+msgstr "你已保存的套题和最近活动。"
 
 #: src/features/results/ResultsPage.jsx:293
 #~ msgid "Umbral de aprobación"
@@ -2790,7 +2790,7 @@ msgstr "使用\"新问题\"按钮添加问题。"
 
 #: src/features/consent/components/CookieConsentBanner.jsx:30
 msgid "Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Lee más en nuestra <0>Política de Privacidad</0>."
-msgstr ""
+msgstr "我们使用 Cookie 来衡量网站使用情况并改善你的体验。详见我们的<0>隐私政策</0>。"
 
 #: src/features/creator/pages/CreateExamPage.jsx:492
 msgid "Ver columnas requeridas"
@@ -2799,7 +2799,7 @@ msgstr "查看所需列"
 #: src/features/results/ReviewPage.jsx:174
 #: src/features/results/ReviewPage.jsx:175
 msgid "Ver de a una"
-msgstr ""
+msgstr "逐张查看"
 
 #: src/features/creator/pages/CreateExamPage.jsx:459
 #: src/features/creator/pages/EditExamPage.jsx:464
@@ -2832,7 +2832,7 @@ msgstr "查看模拟器"
 #: src/features/results/ReviewPage.jsx:174
 #: src/features/results/ReviewPage.jsx:175
 msgid "Ver todas en lista"
-msgstr ""
+msgstr "以列表形式查看全部"
 
 #: src/features/home/pages/HomePage.jsx:322
 #~ msgid "Ver todo →"
@@ -2859,12 +2859,12 @@ msgstr "预览"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:511
 msgid "Voltea y autoevalúate"
-msgstr ""
+msgstr "翻转并自我评估"
 
 #: src/features/flashcards/components/FlashcardControls.jsx:11
 #: src/features/flashcards/components/FlashcardControls.jsx:29
 msgid "Voltear tarjeta"
-msgstr ""
+msgstr "翻转卡片"
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:234
 msgid "Volver a explorar"
@@ -2876,7 +2876,7 @@ msgstr "返回我的套题"
 
 #: src/features/results/ReviewPage.jsx:183
 msgid "Volver a resultados"
-msgstr ""
+msgstr "返回结果"
 
 #: src/features/exam/pages/ExamPage.jsx:350
 msgid "Volver al inicio"
@@ -2884,7 +2884,7 @@ msgstr "返回首页"
 
 #: src/features/flashcards/pages/FlashcardsPage.jsx:69
 msgid "Volver al set"
-msgstr ""
+msgstr "返回套题"
 
 #: src/features/welcome/WelcomePage.jsx:446
 msgid "Ya tengo cuenta"
