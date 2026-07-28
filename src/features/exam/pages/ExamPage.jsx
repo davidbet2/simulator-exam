@@ -5,6 +5,7 @@ import { Trans, useLingui, Plural } from '@lingui/react/macro';
 import { db } from '../../../core/firebase/firebase';
 import { CERTIFICATIONS } from '../../../core/constants/certifications';
 import { useExam } from '../hooks/useExam';
+import { useUserPlan } from '../../plans/hooks/useUserPlan';
 import { QuestionCard } from '../components/QuestionCard';
 import { TimerBox } from '../components/TimerBox';
 import { X, FlagOff } from 'lucide-react';
@@ -255,6 +256,17 @@ export function ExamPage() {
   const [showSubmitGuard, setShowSubmitGuard] = useState(false);
   const [showExitGuard, setShowExitGuard] = useState(false);
 
+  // Quota guard: 'exam' mode (real, scored attempts) counts against the free monthly
+  // limit. This must be enforced here — not only on the launch button — since /exam
+  // is reachable directly by URL, bypassing any button-level check.
+  const { canTakeExam, isPro, isLoading: planLoading } = useUserPlan();
+  const isDemo = !!certification?.isDemo;
+  const quotaExceeded = mode === 'exam' && !isDemo && !planLoading && !isPro && !canTakeExam;
+
+  useEffect(() => {
+    if (quotaExceeded) navigate('/pricing', { replace: true });
+  }, [quotaExceeded, navigate]);
+
   // ExamSet path: load set metadata and build a virtual certification
   useEffect(() => {
     if (staticCertification || !setId) return;
@@ -327,8 +339,9 @@ export function ExamPage() {
   }, [certification, navigate, setId, setLoadError]);
 
   if (!certification) return null;
+  if (quotaExceeded) return null;
 
-  if (status === 'loading') {
+  if (status === 'loading' || (mode === 'exam' && !isDemo && planLoading)) {
     return (
       <PageBackground>
       <div className="flex items-center justify-center min-h-screen">
