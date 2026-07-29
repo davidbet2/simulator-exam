@@ -415,7 +415,7 @@ export function ProfilePage() {
                   {isPro ? t`CertZen Pro` : t`Plan Gratuito`}
                 </p>
                 <p className="text-xs text-zen-ink/60 dark:text-white/60">
-                  {isPro ? t`Acceso completo · Sin restricciones` : t`3 exámenes/mes · Funciones básicas`}
+                  {isPro ? t`Acceso completo · Sin restricciones` : t`Solo Práctica Rápida`}
                 </p>
               </div>
             </div>
@@ -431,7 +431,7 @@ export function ProfilePage() {
           <div className="rounded-xl border border-glass-light-border dark:border-glass-dark-border bg-glass-light-1 dark:bg-glass-dark-1 p-4 space-y-2">
             {(isPro
               ? [t`Exámenes ilimitados`, t`Historial completo`, t`Análisis por dominio`, t`Crea y comparte sets`, t`Acceso anticipado a nuevas certs`]
-              : [t`3 exámenes por mes`, t`Acceso a certificaciones oficiales`, t`Resultados básicos`]
+              : [t`Práctica Rápida (10 preguntas)`, t`Acceso a certificaciones oficiales`]
             ).map((f) => (
               <div key={f} className="flex items-center gap-2 text-xs text-zen-ink/60 dark:text-white/60">
                 <Check size={12} className="text-emerald-500 shrink-0" /> {f}

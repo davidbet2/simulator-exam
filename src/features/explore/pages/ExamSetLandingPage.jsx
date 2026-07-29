@@ -44,7 +44,7 @@ function MetaStat({ icon: Icon, label, value }) {
 // ── Study mode card ──────────────────────────────────────────────────────────
 function ModeCard({
   icon: Icon, title, subtitle, description, technique, meta, ctaLabel,
-  accent = 'brand', onClick, disabled = false, soon = false, highlighted = false,
+  accent = 'brand', onClick, disabled = false, soon = false, highlighted = false, locked = false,
 }) {
   const accentMap = {
     brand:   { ring: 'ring-zen/30',         bg: 'bg-zen/10',         text: 'text-zen'          },
@@ -69,7 +69,12 @@ function ModeCard({
           <Trans>Próximamente</Trans>
         </span>
       )}
-      {highlighted && !soon && (
+      {locked && !soon && (
+        <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+          <Lock size={9} /><Trans>Pro</Trans>
+        </span>
+      )}
+      {highlighted && !soon && !locked && (
         <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-zen-brand px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
           <Sparkles size={9} /><Trans>Recomendado</Trans>
         </span>
@@ -100,7 +105,7 @@ function ModeCard({
         variant={highlighted ? 'primary' : 'secondary'}
         className="mt-4 w-full"
       >
-        {disabled ? <><Lock size={13} />{ctaLabel}</> : <><Play size={13} />{ctaLabel}</>}
+        {disabled || locked ? <><Lock size={13} />{ctaLabel}</> : <><Play size={13} />{ctaLabel}</>}
       </GlassButton>
     </div>
   );
@@ -144,7 +149,7 @@ export function ExamSetLandingPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { canTakeExam, isPro } = useUserPlan();
+  const { isPro } = useUserPlan();
   const { t } = useLingui();
 
   const [set, setState] = useState(null);
@@ -261,9 +266,10 @@ export function ExamSetLandingPage() {
     },
   };
 
+  // Free plan only unlocks Práctica Rápida (mode=quick) — every other mode requires Pro.
   const launchMode = (params) => {
     if (!user) { navigate('/register'); return; }
-    if (params.mode === 'exam' && !isPro && !canTakeExam) {
+    if (params.mode !== 'quick' && !isPro) {
       navigate('/pricing');
       return;
     }
@@ -274,6 +280,7 @@ export function ExamSetLandingPage() {
   const hasQuestions = (set.questionCount ?? preview.length) > 0;
   const launchFlashcards = () => {
     if (!user) { navigate('/register'); return; }
+    if (!isPro) { navigate('/pricing'); return; }
     navigate(`/flashcards/${slug}`);
   };
 
@@ -407,6 +414,22 @@ export function ExamSetLandingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <ModeCard
+              icon={Zap}
+              title={t`Práctica Rápida`}
+              subtitle={t`10 preguntas · sesión corta`}
+              description={t`Sesión exprés ideal para 5–10 minutos: aleatoria, con explicación inmediata. Perfecta para el día a día. Disponible en el plan gratuito.`}
+              technique={t`Espaciado + sesiones breves (micro-learning)`}
+              meta={[
+                { icon: BookOpen, label: t`10 preguntas` },
+                { icon: Clock, label: t`~5 min` },
+              ]}
+              accent="amber"
+              highlighted
+              ctaLabel={user ? t`Practicar` : t`Regístrate`}
+              onClick={() => launchMode({ mode: 'quick', count: '10' })}
+            />
+
+            <ModeCard
               icon={GraduationCap}
               title={t`Estudio Guiado`}
               subtitle={t`Aprende sin presión`}
@@ -417,24 +440,9 @@ export function ExamSetLandingPage() {
                 { icon: TimerReset, label: t`Sin tiempo` },
               ]}
               accent="emerald"
-              highlighted
-              ctaLabel={user ? t`Empezar` : t`Regístrate`}
+              locked={!!user && !isPro}
+              ctaLabel={!user ? t`Regístrate` : !isPro ? t`Requiere Pro` : t`Empezar`}
               onClick={() => launchMode({ mode: 'study' })}
-            />
-
-            <ModeCard
-              icon={Zap}
-              title={t`Práctica Rápida`}
-              subtitle={t`10 preguntas · sesión corta`}
-              description={t`Sesión exprés ideal para 5–10 minutos: aleatoria, con explicación inmediata. Perfecta para el día a día.`}
-              technique={t`Espaciado + sesiones breves (micro-learning)`}
-              meta={[
-                { icon: BookOpen, label: t`10 preguntas` },
-                { icon: Clock, label: t`~5 min` },
-              ]}
-              accent="amber"
-              ctaLabel={user ? t`Practicar` : t`Regístrate`}
-              onClick={() => launchMode({ mode: 'study', count: '10' })}
             />
 
             <ModeCard
@@ -448,7 +456,8 @@ export function ExamSetLandingPage() {
                 { icon: Target, label: `${set.passPercent ?? 70}% ${t`aprobar`}` },
               ]}
               accent="rose"
-              ctaLabel={user ? t`Empezar examen` : t`Regístrate`}
+              locked={!!user && !isPro}
+              ctaLabel={!user ? t`Regístrate` : !isPro ? t`Requiere Pro` : t`Empezar examen`}
               onClick={() => launchMode({ mode: 'exam' })}
             />
 
@@ -464,8 +473,9 @@ export function ExamSetLandingPage() {
                   : { icon: Sparkles, label: t`Responde preguntas primero` },
               ]}
               accent="violet"
-              disabled={!user || stats.weak === 0}
-              ctaLabel={!user ? t`Regístrate` : stats.weak === 0 ? t`Sin errores aún` : t`Empezar`}
+              locked={!!user && !isPro}
+              disabled={!user || (isPro && stats.weak === 0)}
+              ctaLabel={!user ? t`Regístrate` : !isPro ? t`Requiere Pro` : stats.weak === 0 ? t`Sin errores aún` : t`Empezar`}
               onClick={() => launchMode({ mode: 'weak' })}
             />
 
@@ -484,8 +494,9 @@ export function ExamSetLandingPage() {
                 user && stats.mastered > 0 ? { icon: CheckCircle2, label: `${stats.mastered} ${stats.mastered !== 1 ? t`dominadas` : t`dominada`}` } : null,
               ].filter(Boolean)}
               accent="brand"
-              disabled={!user || stats.due === 0}
-              ctaLabel={!user ? t`Regístrate` : stats.due === 0 ? (stats.seen > 0 ? t`Nada por repasar` : t`Sin historial`) : t`Repasar ahora`}
+              locked={!!user && !isPro}
+              disabled={!user || (isPro && stats.due === 0)}
+              ctaLabel={!user ? t`Regístrate` : !isPro ? t`Requiere Pro` : stats.due === 0 ? (stats.seen > 0 ? t`Nada por repasar` : t`Sin historial`) : t`Repasar ahora`}
               onClick={() => launchMode({ mode: 'srs' })}
             />
 
@@ -500,7 +511,8 @@ export function ExamSetLandingPage() {
                 { icon: Sparkles, label: t`Nuevo ✨` },
               ]}
               accent="rose"
-              ctaLabel={user ? t`Apostar` : t`Regístrate`}
+              locked={!!user && !isPro}
+              ctaLabel={!user ? t`Regístrate` : !isPro ? t`Requiere Pro` : t`Apostar`}
               onClick={() => launchMode({ mode: 'wager', count: String(Math.min(20, set.questionCount ?? 20)) })}
             />
 
@@ -516,7 +528,8 @@ export function ExamSetLandingPage() {
                   { icon: TimerReset, label: t`Sin tiempo` },
                 ]}
                 accent="violet"
-                ctaLabel={user ? t`Estudiar con Flashcards` : t`Regístrate`}
+                locked={!!user && !isPro}
+                ctaLabel={!user ? t`Regístrate` : !isPro ? t`Requiere Pro` : t`Estudiar con Flashcards`}
                 onClick={launchFlashcards}
               />
             )}

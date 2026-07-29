@@ -6,8 +6,10 @@ import { recordAnswer, recordAnswersBatch, fetchQuestionIdsForMode } from '../ut
 import { analytics } from '../../../core/analytics/events';
 import { DEMO_QUESTIONS } from '../../../core/constants/demoQuestions';
 
-// Modes that behave like study (reveal feedback, no timer): 'study', 'weak', 'srs', 'wager'.
-const isStudyLikeMode = (m) => m === 'study' || m === 'weak' || m === 'srs' || m === 'wager';
+// Modes that behave like study (reveal feedback, no timer): 'study', 'weak', 'srs', 'wager', 'quick'.
+// 'quick' (Práctica Rápida) is the only mode available on the free plan — it behaves
+// exactly like 'study' but is always bounded to countOverride questions.
+const isStudyLikeMode = (m) => m === 'study' || m === 'weak' || m === 'srs' || m === 'wager' || m === 'quick';
 
 function shuffle(arr) {
   const a = [...arr];

@@ -148,12 +148,12 @@ export function WelcomePage() {
   const { t } = useLingui();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { remaining, isPro, isLoading: planLoading } = useUserPlan();
+  const { isPro, isLoading: planLoading } = useUserPlan();
   const [_showGate, _setShowGate]   = useState(false);
 
   function launchMode(modeId) {
     if (modeId === 'flashcards') { navigate('/flashcards/demo'); return; }
-    if (modeId === 'quick') { navigate('/exam?cert=demo&mode=study&count=10'); return; }
+    if (modeId === 'quick') { navigate('/exam?cert=demo&mode=quick&count=10'); return; }
     navigate(`/exam?cert=demo&mode=${modeId}`);
   }
 
@@ -259,7 +259,7 @@ export function WelcomePage() {
                     <GlassButton variant="secondary" href="#simuladores" className="w-full px-7 text-base sm:w-auto">
                       <Trans>Ver simuladores</Trans>
                     </GlassButton>
-                    {user && !isPro && !planLoading && remaining <= 1 && (
+                    {user && !isPro && !planLoading && (
                       <GlassButton to="/pricing" variant="secondary" className="w-full px-7 text-base !text-zen-warning sm:w-auto">
                         <Zap size={14} /> <Trans>Actualizar a Pro</Trans>
                       </GlassButton>

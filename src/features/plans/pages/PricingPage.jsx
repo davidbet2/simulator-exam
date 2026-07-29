@@ -13,14 +13,16 @@ import { SEOHead } from '../../../components/SEOHead'
 import { useAuthStore } from '../../../core/store/useAuthStore'
 
 const FREE_FEATURES = [
-  '3 exámenes por mes',
+  'Práctica Rápida (10 preguntas)',
   'Acceso a certificaciones oficiales',
-  'Resultados básicos',
-  'Modo estudio',
 ]
 
 const PRO_FEATURES = [
-  'Exámenes ilimitados',
+  'Modo Examen ilimitado',
+  'Estudio Guiado sin límite',
+  'Zona Débil y Repaso Inteligente',
+  'Apuesta tu Confianza',
+  'Flashcards',
   'Historial completo de intentos',
   'Análisis por dominio y categoría',
   'Crea y comparte tus propios sets',

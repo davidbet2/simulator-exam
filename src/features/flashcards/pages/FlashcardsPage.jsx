@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, LayoutGrid } from 'lucide-react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useAuthStore } from '../../../core/store/useAuthStore';
+import { useUserPlan } from '../../plans/hooks/useUserPlan';
 import { PageBackground } from '../../../components/glass/PageBackground';
 import { SEOHead } from '../../../components/SEOHead';
 import { useFlashcards } from '../hooks/useFlashcards';
@@ -20,6 +21,7 @@ export function FlashcardsPage() {
   const navigate = useNavigate();
   const { t } = useLingui();
   const { user, isLoading: authLoading } = useAuthStore();
+  const { isPro, isLoading: planLoading } = useUserPlan();
   const {
     set, cards, total, currentIndex, current, isFlipped, statuses, currentStatus,
     flip, next, previous, goToIndex, shuffle, restart, markKnown, markUnknown,
@@ -30,13 +32,16 @@ export function FlashcardsPage() {
   const isDemo = slug === DEMO_SLUG;
   const exitToSet = () => navigate(isDemo ? '/explore' : `/exam-sets/${slug}`);
 
-  // Real sets require an account — same gate ExamSetLandingPage.launchFlashcards already
-  // applies before linking here; this covers users who land on the URL directly.
+  // Real sets require an account + Pro — same gate ExamSetLandingPage.launchFlashcards
+  // already applies before linking here; this covers users who land on the URL directly.
+  // Flashcards are not part of the free plan (only Práctica Rápida is).
   useEffect(() => {
-    if (!isDemo && !authLoading && !user) navigate('/register');
-  }, [isDemo, authLoading, user, navigate]);
+    if (isDemo || authLoading) return;
+    if (!user) { navigate('/register'); return; }
+    if (!planLoading && !isPro) navigate('/pricing');
+  }, [isDemo, authLoading, user, planLoading, isPro, navigate]);
 
-  if (!isDemo && (authLoading || !user)) {
+  if (!isDemo && (authLoading || !user || planLoading || !isPro)) {
     return (
       <PageBackground>
         <div className="flex min-h-screen items-center justify-center">

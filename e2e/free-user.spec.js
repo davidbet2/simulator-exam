@@ -111,8 +111,8 @@ test.describe('/profile — suscripción y facturación (free user)', () => {
     await expect(page.getByText('Plan Gratuito')).toBeVisible();
   });
 
-  test('shows free-tier description "3 exámenes/mes · Funciones básicas"', async ({ page }) => {
-    await expect(page.getByText('3 exámenes/mes · Funciones básicas')).toBeVisible();
+  test('shows free-tier description "Solo Práctica Rápida"', async ({ page }) => {
+    await expect(page.getByText('Solo Práctica Rápida')).toBeVisible();
   });
 
   test('billing status badge shows "Free" (not "Activo")', async ({ page }) => {
@@ -123,9 +123,8 @@ test.describe('/profile — suscripción y facturación (free user)', () => {
   });
 
   test('shows free feature list items', async ({ page }) => {
-    await expect(page.getByText('3 exámenes por mes')).toBeVisible();
+    await expect(page.getByText('Práctica Rápida (10 preguntas)')).toBeVisible();
     await expect(page.getByText('Acceso a certificaciones oficiales')).toBeVisible();
-    await expect(page.getByText('Resultados básicos')).toBeVisible();
   });
 
   test('does NOT show subscription dates block (isPro guard)', async ({ page }) => {

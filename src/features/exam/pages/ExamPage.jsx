@@ -58,7 +58,7 @@ function ConfidencePicker({ value, onPick, disabled }) {
 /** Grid (sidebar, desktop) or horizontal strip (mobile) of question-status chips */
 function QuestionNavigator({ total, current, answers, flags, revealed, displayQuestions, mode, onNavigate, variant = 'strip' }) {
   const { t } = useLingui();
-  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
+  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager' || mode === 'quick';
   const containerCls =
     variant === 'sidebar'
       ? 'grid grid-cols-5 gap-1.5 p-3'
@@ -114,7 +114,7 @@ function QuestionNavigator({ total, current, answers, flags, revealed, displayQu
 
 /** Legend for chip colors — stacked (sidebar) or inline (mobile strip) */
 function NavLegend({ mode, variant = 'strip' }) {
-  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
+  const isStudy = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager' || mode === 'quick';
   const wrapperCls =
     variant === 'sidebar'
       ? 'flex flex-col gap-1 px-3 py-2 text-xs text-zen-ink/70 dark:text-white/60'
@@ -144,7 +144,7 @@ function NavLegend({ mode, variant = 'strip' }) {
 /** Exit confirmation modal */
 function ExitGuardModal({ mode, onExit, onFinish, onCancel }) {
   const isExam = mode === 'exam';
-  const isStudyLike = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
+  const isStudyLike = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager' || mode === 'quick';
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
       <div className="rounded-2xl border bg-white/90 backdrop-blur-xl dark:bg-[#221c49]/95 w-full max-w-sm p-6 border border-glass-light-border dark:border-glass-dark-border">
@@ -256,16 +256,16 @@ export function ExamPage() {
   const [showSubmitGuard, setShowSubmitGuard] = useState(false);
   const [showExitGuard, setShowExitGuard] = useState(false);
 
-  // Quota guard: 'exam' mode (real, scored attempts) counts against the free monthly
-  // limit. This must be enforced here — not only on the launch button — since /exam
-  // is reachable directly by URL, bypassing any button-level check.
-  const { canTakeExam, isPro, isLoading: planLoading } = useUserPlan();
+  // Plan guard: the free plan only unlocks Práctica Rápida (mode=quick). Every other
+  // mode requires Pro. This must be enforced here — not only on the launch button —
+  // since /exam is reachable directly by URL, bypassing any button-level check.
+  const { isPro, isLoading: planLoading } = useUserPlan();
   const isDemo = !!certification?.isDemo;
-  const quotaExceeded = mode === 'exam' && !isDemo && !planLoading && !isPro && !canTakeExam;
+  const planRestricted = mode !== 'quick' && !isDemo && !planLoading && !isPro;
 
   useEffect(() => {
-    if (quotaExceeded) navigate('/pricing', { replace: true });
-  }, [quotaExceeded, navigate]);
+    if (planRestricted) navigate('/pricing', { replace: true });
+  }, [planRestricted, navigate]);
 
   // ExamSet path: load set metadata and build a virtual certification
   useEffect(() => {
@@ -339,9 +339,9 @@ export function ExamPage() {
   }, [certification, navigate, setId, setLoadError]);
 
   if (!certification) return null;
-  if (quotaExceeded) return null;
+  if (planRestricted) return null;
 
-  if (status === 'loading' || (mode === 'exam' && !isDemo && planLoading)) {
+  if (status === 'loading' || (!isDemo && planLoading)) {
     return (
       <PageBackground>
       <div className="flex items-center justify-center min-h-screen">
@@ -373,7 +373,7 @@ export function ExamPage() {
     (i) => (answers[i] ?? []).length === 0
   );
 
-  const isStudyLike = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager';
+  const isStudyLike = mode === 'study' || mode === 'weak' || mode === 'srs' || mode === 'wager' || mode === 'quick';
 
   return (
     <PageBackground>
@@ -402,6 +402,8 @@ export function ExamPage() {
               <span className="shrink-0 text-xs bg-amber-500/20 text-amber-500 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">🧠 <Trans>Repaso</Trans></span>
             ) : mode === 'wager' ? (
               <span className="shrink-0 text-xs bg-rose-500/20 text-rose-600 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">🎲 <Trans>Apuesta</Trans></span>
+            ) : mode === 'quick' ? (
+              <span className="shrink-0 text-xs bg-amber-500/20 text-amber-500 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">⚡ <Trans>Práctica Rápida</Trans></span>
             ) : (
               <span className="shrink-0 text-xs bg-zen/20 text-indigo-300 font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">🎯 <Trans>Examen</Trans></span>
             )}

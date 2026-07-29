@@ -168,7 +168,7 @@ test.describe('/home — pro user', () => {
   });
 
   test('does NOT show "Actualizar a Pro" CTA button in hero section', async ({ page }) => {
-    // WelcomePage hero: {user && !isPro && !planLoading && remaining <= 1 && <Link>Actualizar a Pro</Link>}
+    // WelcomePage hero: {user && !isPro && !planLoading && <Link>Actualizar a Pro</Link>}
     await page.waitForTimeout(2000);
     await expect(page.getByText('Actualizar a Pro')).not.toBeVisible({ timeout: 5_000 });
   });
