@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Plus, Trash2, ArrowLeft, Clock, Target, Pencil, FileJson, FileSpreadsheet, FileText, Lock, Loader2 } from 'lucide-react'
+import { Plus, Trash2, ArrowLeft, Clock, Target, Pencil, FileJson, FileText, Lock, Loader2 } from 'lucide-react'
 import {
   collection, doc, getDoc, getDocs, updateDoc, addDoc, deleteDoc,
   query, orderBy, serverTimestamp
@@ -13,7 +13,7 @@ import { GlassCard } from '../../../components/glass/GlassCard'
 import { GlassButton } from '../../../components/glass/GlassButton'
 import { GlassInput } from '../../../components/glass/GlassInput'
 import { QuestionForm } from '../../admin/components/QuestionForm'
-import { parseXLSX, extractPDFText, parseTextToQuestions } from '../utils/importParsers'
+import { PdfImportPanel } from '../components/PdfImportPanel'
 import { DOMAINS } from '../../../core/constants/domains'
 
 const INPUT_CLS = 'w-full border border-glass-light-border dark:border-glass-dark-border rounded-zen px-3 py-2 text-sm text-zen-ink dark:text-white bg-glass-light-2 dark:bg-glass-dark-2 backdrop-blur-md focus:outline-none focus:border-zen focus:ring-2 focus:ring-zen/40'
@@ -129,14 +129,6 @@ export function EditExamPage() {
   const [jsonText, setJsonText] = useState('')
   const [jsonError, setJsonError] = useState(null)
   const [jsonSuccess, setJsonSuccess] = useState(null)
-  // xlsx
-  const xlsxRef = useRef(null)
-  const [xlsxStatus, setXlsxStatus] = useState(null)
-  // pdf
-  const pdfRef = useRef(null)
-  const [pdfLoading, setPdfLoading] = useState(false)
-  const [pdfRawText, setPdfRawText] = useState('')
-  const [pdfStatus, setPdfStatus] = useState(null)
 
   // ── submit ────────────────────────────────────────────────────────────────
   const [saving, setSaving] = useState(false)
@@ -208,42 +200,8 @@ export function EditExamPage() {
     }
   }
 
-  async function handleXlsxImport(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    try {
-      const { questions: imported, warnings } = await parseXLSX(file)
-      setQuestions((prev) => [...prev, ...imported])
-      setXlsxStatus({ type: 'success', count: imported.length, msg: warnings?.join('; ') ?? '' })
-    } catch (err) {
-      setXlsxStatus({ type: 'error', msg: err.message ?? t`Error al leer el archivo.` })
-    }
-    e.target.value = ''
-  }
-
-  async function handlePdfImport(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setPdfLoading(true)
-    setPdfStatus(null)
-    try {
-      const rawText = await extractPDFText(file)
-      setPdfRawText(rawText)
-      const { questions: imported, partial } = parseTextToQuestions(rawText)
-      if (imported.length === 0) {
-        setPdfStatus({ type: 'error', msg: t`No se detectaron preguntas en el PDF. Copia el texto extraído y usa el tab JSON.` })
-      } else {
-        setQuestions((prev) => [...prev, ...imported])
-        setPdfStatus(partial
-          ? { type: 'partial', msg: t`${imported.length} preguntas importadas. Algunas pueden estar incompletas — revísalas.` }
-          : { type: 'success', count: imported.length })
-      }
-    } catch (err) {
-      setPdfStatus({ type: 'error', msg: err.message ?? t`Error al procesar el PDF.` })
-    } finally {
-      setPdfLoading(false)
-      e.target.value = ''
-    }
+  function mergePdfQuestions(imported) {
+    setQuestions((prev) => [...prev, ...imported])
   }
 
   function validate() {
@@ -431,7 +389,7 @@ export function EditExamPage() {
               <div className="flex items-center gap-2">
                 <Plus size={15} className="text-zen dark:text-indigo-300" />
                 <span className="font-semibold text-zen-ink dark:text-white text-sm"><Trans>Importar más preguntas</Trans></span>
-                <span className="text-xs text-zen-ink/40 dark:text-white/40 font-normal">JSON · Excel · PDF</span>
+                <span className="text-xs text-zen-ink/40 dark:text-white/40 font-normal">JSON · PDF</span>
               </div>
               <span className="text-zen-ink/40 dark:text-white/40 text-xs">{showImport ? '▲' : '▼'}</span>
             </button>
@@ -440,9 +398,8 @@ export function EditExamPage() {
               <div className="border-t border-glass-light-border dark:border-glass-dark-border">
                 <div className="flex border-b border-glass-light-border dark:border-glass-dark-border">
                   {[
-                    { id: 'json',  icon: FileJson,        label: 'JSON' },
-                    { id: 'xlsx',  icon: FileSpreadsheet, label: 'Excel' },
-                    { id: 'pdf',   icon: FileText,        label: 'PDF' },
+                    { id: 'json',  icon: FileJson, label: 'JSON' },
+                    { id: 'pdf',   icon: FileText, label: 'PDF' },
                   ].map(({ id: tabId, icon: Icon, label }) => (
                     <button
                       key={tabId}
@@ -491,53 +448,7 @@ export function EditExamPage() {
                   </div>
                 )}
 
-                {importTab === 'xlsx' && (
-                  <div className="p-5 space-y-3">
-                    <p className="text-xs text-zen-ink/50 dark:text-white/50">
-                      <Trans>Sube un archivo</Trans> <strong>.xlsx</strong>. <Trans>La primera fila debe ser el encabezado.</Trans>
-                    </p>
-                    <input ref={xlsxRef} type="file" accept=".xlsx" className="hidden" onChange={handleXlsxImport} />
-                    {xlsxStatus?.type === 'error' && <p className="text-zen-danger text-xs">{xlsxStatus.msg}</p>}
-                    {xlsxStatus?.type === 'success' && (
-                      <p className="text-emerald-600 dark:text-zen-success text-xs">
-                        ✓ {xlsxStatus.count} pregunta{xlsxStatus.count !== 1 ? 's' : ''} importada{xlsxStatus.count !== 1 ? 's' : ''}.
-                        {xlsxStatus.msg && ` ${xlsxStatus.msg}`}
-                      </p>
-                    )}
-                    <GlassButton type="button" onClick={() => xlsxRef.current?.click()} className="px-4 py-2 text-xs">
-                      <FileSpreadsheet size={13} /> <Trans>Seleccionar archivo .xlsx</Trans>
-                    </GlassButton>
-                  </div>
-                )}
-
-                {importTab === 'pdf' && (
-                  <div className="p-5 space-y-3">
-                    <p className="text-xs text-zen-ink/50 dark:text-white/50">
-                      <Trans>Sube un PDF con preguntas numeradas. Se extraen automáticamente.</Trans>
-                    </p>
-                    <p className="text-amber-600 dark:text-zen-warning text-xs">
-                      ⚠ <Trans>PDFs escaneados (imágenes) no soportados — el texto debe ser copiable desde el PDF.</Trans>
-                    </p>
-                    <input ref={pdfRef} type="file" accept=".pdf" className="hidden" onChange={handlePdfImport} />
-                    {pdfStatus?.type === 'error' && <p className="text-zen-danger text-xs">{pdfStatus.msg}</p>}
-                    {pdfStatus?.type === 'success' && (
-                      <p className="text-emerald-600 dark:text-zen-success text-xs">
-                        ✓ {pdfStatus.count} pregunta{pdfStatus.count !== 1 ? 's' : ''} detectada{pdfStatus.count !== 1 ? 's' : ''} e importada{pdfStatus.count !== 1 ? 's' : ''}.
-                      </p>
-                    )}
-                    {pdfStatus?.type === 'partial' && <p className="text-amber-600 dark:text-zen-warning text-xs">{pdfStatus.msg}</p>}
-                    <GlassButton type="button" onClick={() => pdfRef.current?.click()} disabled={pdfLoading} className="px-4 py-2 text-xs">
-                      <FileText size={13} /> {pdfLoading ? t`Procesando PDF…` : t`Seleccionar archivo PDF`}
-                    </GlassButton>
-                    {pdfRawText && (
-                      <div className="space-y-2">
-                        <p className="text-xs font-semibold text-zen-ink/60 dark:text-white/60"><Trans>Texto extraído del PDF:</Trans></p>
-                        <textarea readOnly value={pdfRawText} rows={8}
-                          className={`${INPUT_CLS} text-xs font-mono resize-y`} />
-                      </div>
-                    )}
-                  </div>
-                )}
+                {importTab === 'pdf' && <PdfImportPanel onImport={mergePdfQuestions} />}
               </div>
             )}
           </GlassCard>
@@ -550,7 +461,7 @@ export function EditExamPage() {
               <div className="flex-1">
                 <p className="text-sm font-semibold text-zen-ink dark:text-white"><Trans>Importación masiva — plan Pro</Trans></p>
                 <p className="text-xs text-zen-ink/60 dark:text-white/60 mt-1 leading-relaxed">
-                  <Trans>Actualiza a Pro para importar desde JSON, Excel o PDF e importar cientos de preguntas en segundos.</Trans>
+                  <Trans>Actualiza a Pro para importar desde JSON o PDF e importar cientos de preguntas en segundos.</Trans>
                 </p>
                 <GlassButton to="/pricing" className="mt-3 px-3 py-1.5 text-xs">
                   <Trans>Ver plan Pro →</Trans>
@@ -588,10 +499,10 @@ export function EditExamPage() {
             {questions.length === 0 ? (
               <GlassCard className="border-dashed py-12 text-center">
                 <p className="text-zen-ink/50 dark:text-white/50 text-sm"><Trans>Aún no hay preguntas.</Trans></p>
-                <p className="text-zen-ink/40 dark:text-white/40 text-xs mt-1">{isPro ? <Trans>Usa "Nueva pregunta" o importa desde JSON, Excel o PDF.</Trans> : <Trans>Usa el botón "Nueva pregunta" para añadir preguntas.</Trans>}</p>
+                <p className="text-zen-ink/40 dark:text-white/40 text-xs mt-1">{isPro ? <Trans>Usa "Nueva pregunta" o importa desde JSON o PDF.</Trans> : <Trans>Usa el botón "Nueva pregunta" para añadir preguntas.</Trans>}</p>
               </GlassCard>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-[32rem] overflow-y-auto pr-1 -mr-1">
                 {questions.map((q, i) => (
                   <QuestionRow
                     key={i}
