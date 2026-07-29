@@ -12,12 +12,24 @@ const LOAD_MORE_SIZE   = 12;
  * and filter in-memory. This avoids a full-text search service while
  * keeping reads predictable at scale.
  *
+ * The pool is cached per domain (see poolCacheRef below), so retyping or
+ * editing the search term re-filters in memory instead of re-fetching —
+ * only a domain change triggers a new Firestore read.
+ *
  * At 10 k sets across multiple domains, a domain-scoped pool of 50 is
  * more than enough for a good match rate. Upgrade to Typesense/Algolia
  * when per-domain set counts consistently exceed 200–300.
  */
 const SEARCH_POOL      = 50;
 const SEARCH_DEBOUNCE  = 350; // ms
+
+/** Accent/diacritic-insensitive, case-insensitive normalization for search matching. */
+export function normalize(str) {
+  return (str ?? '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
+}
 
 /**
  * Build a paginated Firestore query for published examSets.
@@ -57,6 +69,7 @@ export function useExploreQuery({ domain = '', searchTerm = '' }) {
   const [loading, setLoading]         = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const debounceRef = useRef(null);
+  const poolCacheRef = useRef({ domain: null, sets: null });
   const isSearchMode = searchTerm.trim().length >= 2;
 
   // ── Browse mode: initial load or domain / mode change ────────────────────
@@ -98,15 +111,18 @@ export function useExploreQuery({ domain = '', searchTerm = '' }) {
 
     debounceRef.current = setTimeout(async () => {
       try {
-        const snap = await getDocs(buildExploreQuery(domain, null, SEARCH_POOL));
-        const needle = searchTerm.trim().toLowerCase();
-        const matched = snap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .filter((s) =>
-            s.title?.toLowerCase().includes(needle) ||
-            s.description?.toLowerCase().includes(needle) ||
-            s.tags?.some?.((tag) => tag.toLowerCase().includes(needle)),
-          );
+        let pool = poolCacheRef.current.domain === domain ? poolCacheRef.current.sets : null;
+        if (!pool) {
+          const snap = await getDocs(buildExploreQuery(domain, null, SEARCH_POOL));
+          pool = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          poolCacheRef.current = { domain, sets: pool };
+        }
+        const needle = normalize(searchTerm.trim());
+        const matched = pool.filter((s) =>
+          normalize(s.title).includes(needle) ||
+          normalize(s.description).includes(needle) ||
+          s.tags?.some?.((tag) => normalize(tag).includes(needle)),
+        );
         setSets(matched);
         setCursor(null);
         setHasMore(false);

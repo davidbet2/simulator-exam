@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, BookOpen, Users, Plus, X, Loader2 } from 'lucide-react';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { useExploreQuery } from '../hooks/useExploreQuery';
+import { useExploreQuery, normalize } from '../hooks/useExploreQuery';
 import { useAuthStore } from '../../../core/store/useAuthStore';
 import { getDomain } from '../../../core/constants/domains';
 import { SEOHead } from '../../../components/SEOHead';
@@ -108,15 +108,15 @@ export function ExploreExamsPage() {
 
   // Build suggestion candidates from titles + tags of loaded sets
   const suggestions = useMemo(() => {
-    const needle = search.trim().toLowerCase();
+    const needle = normalize(search.trim());
     if (needle.length < 2 || sets.length === 0) return [];
     const seen = new Set();
     const results = [];
     for (const s of sets) {
       if (results.length >= 8) break;
       const title = s.title ?? '';
-      if (title.toLowerCase().includes(needle) && !seen.has(title.toLowerCase())) {
-        seen.add(title.toLowerCase());
+      if (normalize(title).includes(needle) && !seen.has(normalize(title))) {
+        seen.add(normalize(title));
         results.push({ label: title, kind: 'set' });
       }
     }
@@ -124,9 +124,8 @@ export function ExploreExamsPage() {
     for (const s of sets) {
       for (const tag of s.tags ?? []) {
         if (results.length >= 8) break;
-        const t = tag.toLowerCase();
-        if (t.includes(needle) && !seen.has(t)) {
-          seen.add(t);
+        if (normalize(tag).includes(needle) && !seen.has(normalize(tag))) {
+          seen.add(normalize(tag));
           results.push({ label: tag, kind: 'tag' });
         }
       }
