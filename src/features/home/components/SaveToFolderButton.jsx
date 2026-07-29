@@ -3,6 +3,7 @@
  * Opens a popover with the list of folders + a quick "create folder" option.
  */
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FolderPlus, Check, Plus, X } from 'lucide-react';
 import { useFolders } from '../hooks/useFolders';
 import { useAuthStore } from '../../../core/store/useAuthStore';
@@ -16,12 +17,39 @@ export function SaveToFolderButton({ slug, compact = false }) {
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState('');
   const [busy, setBusy] = useState(null); // folderId being toggled
+  const [pos, setPos] = useState(null); // popover fixed position (portal)
   const ref = useRef(null);
+  const popoverRef = useRef(null);
+
+  // The popover renders in a portal because ancestor GlassCards use
+  // backdrop-filter, which creates a stacking context that would trap
+  // the popover's z-index and paint it behind sibling cards.
+
+  // Position the popover under the trigger, clamped to the viewport
+  useEffect(() => {
+    if (!open) return;
+    const update = () => {
+      const rect = ref.current?.getBoundingClientRect();
+      if (!rect) return;
+      const width = 256; // w-64
+      const left = Math.max(8, Math.min(rect.left, window.innerWidth - width - 8));
+      setPos({ top: rect.bottom + 8, left });
+    };
+    update();
+    window.addEventListener('scroll', update, true);
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update, true);
+      window.removeEventListener('resize', update);
+    };
+  }, [open]);
 
   // Close on outside click
   useEffect(() => {
     const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+      if (ref.current?.contains(e.target)) return;
+      if (popoverRef.current?.contains(e.target)) return;
+      setOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -76,9 +104,11 @@ export function SaveToFolderButton({ slug, compact = false }) {
         {!compact && <span>{isInAny ? <Plural value={inFolders.length} one="# carpeta" other="# carpetas" /> : <Trans>Guardar</Trans>}</span>}
       </button>
 
-      {open && (
+      {open && pos && createPortal(
         <div
-          className="absolute left-0 top-full mt-2 w-64 rounded-2xl bg-glass-light-3 border border-glass-light-border backdrop-blur-xl shadow-zen-glass z-50 overflow-hidden dark:bg-glass-dark-3 dark:border-glass-dark-border"
+          ref={popoverRef}
+          style={{ top: pos.top, left: pos.left }}
+          className="fixed w-64 rounded-2xl bg-glass-light-3 border border-glass-light-border backdrop-blur-xl shadow-zen-glass z-[70] overflow-hidden dark:bg-glass-dark-3 dark:border-glass-dark-border"
           role="dialog"
           aria-label={t`Carpetas`}
         >
@@ -156,7 +186,8 @@ export function SaveToFolderButton({ slug, compact = false }) {
               </button>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
