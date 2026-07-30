@@ -33,7 +33,7 @@ msgstr "Commencez maintenant !"
 msgid "¡Gracias por tu sugerencia! La tendremos en cuenta."
 msgstr "Merci pour ta suggestion ! Nous en tiendrons compte."
 
-#: src/features/public/pages/ContactPage.jsx:188
+#: src/features/public/pages/ContactPage.jsx:283
 msgid "¡Mensaje enviado!"
 msgstr "Message envoyé !"
 
@@ -90,11 +90,11 @@ msgstr "Mot de passe oublié ?"
 msgid "¿Salir de la sesión?"
 msgstr "Quitter la session ?"
 
-#: src/features/public/pages/ContactPage.jsx:104
+#: src/features/public/pages/ContactPage.jsx:199
 msgid "¿Tienes alguna pregunta o problema con CertZen? Escríbenos y te respondemos lo antes posible."
 msgstr "Une question ou un problème avec CertZen ? Écrivez-nous et nous vous répondrons au plus vite."
 
-#: src/features/public/pages/ContactPage.jsx:114
+#: src/features/public/pages/ContactPage.jsx:209
 msgid "¿Tienes dudas, encontraste un bug o necesitas ayuda? Escríbenos y te respondemos en máximo"
 msgstr "Des doutes, un bug à signaler ou besoin d'aide ? Écrivez-nous et nous répondrons sous"
 
@@ -284,7 +284,7 @@ msgstr "← Précédent"
 msgid "~5 min"
 msgstr "~5 min"
 
-#: src/features/public/pages/ContactPage.jsx:149
+#: src/features/public/pages/ContactPage.jsx:244
 msgid "≤ 2 días hábiles"
 msgstr "≤ 2 jours ouvrés"
 
@@ -358,7 +358,7 @@ msgstr "10 questions · session courte"
 msgid "10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos."
 msgstr "10 questions aléatoires avec retour immédiat. Idéal pour réviser en moins de 5 minutes."
 
-#: src/features/public/pages/ContactPage.jsx:115
+#: src/features/public/pages/ContactPage.jsx:210
 msgid "2 días hábiles"
 msgstr "2 jours ouvrés"
 
@@ -508,7 +508,7 @@ msgstr "Pas maintenant"
 msgid "Ajustes"
 msgstr "Paramètres"
 
-#: src/features/public/pages/ContactPage.jsx:278
+#: src/features/public/pages/ContactPage.jsx:373
 msgid "Al enviar aceptas nuestra"
 msgstr "En envoyant, vous acceptez notre"
 
@@ -600,7 +600,7 @@ msgstr "Glissez ou cliquez les éléments"
 msgid "Arriba a la derecha, y listo"
 msgstr "En haut à droite, et voilà"
 
-#: src/features/public/pages/ContactPage.jsx:238
+#: src/features/public/pages/ContactPage.jsx:333
 msgid "Asunto"
 msgstr "Objet"
 
@@ -709,7 +709,7 @@ msgstr "Changez votre mot de passe par email"
 msgid "Cambiar la contraseña"
 msgstr "Changer le mot de passe"
 
-#: src/features/public/pages/ContactPage.jsx:124
+#: src/features/public/pages/ContactPage.jsx:219
 msgid "Canales de soporte"
 msgstr "Canaux de support"
 
@@ -824,7 +824,7 @@ msgstr "Réduire le menu"
 msgid "Cómo funciona"
 msgstr "Comment ça marche"
 
-#: src/features/public/pages/ContactPage.jsx:162
+#: src/features/public/pages/ContactPage.jsx:257
 msgid "Cómo funciona CertZen →"
 msgstr "Comment fonctionne CertZen →"
 
@@ -875,8 +875,8 @@ msgstr "Contactez le support pour supprimer votre compte"
 msgid "Contáctenos"
 msgstr "Contactez-nous"
 
-#: src/features/public/pages/ContactPage.jsx:103
-#: src/features/public/pages/ContactPage.jsx:112
+#: src/features/public/pages/ContactPage.jsx:198
+#: src/features/public/pages/ContactPage.jsx:207
 msgid "Contacto"
 msgstr "Contact"
 
@@ -902,7 +902,7 @@ msgstr "Correctes"
 #: src/features/auth/pages/LoginPage.jsx:91
 #: src/features/auth/pages/RegisterPage.jsx:100
 #: src/features/profile/pages/ProfilePage.jsx:355
-#: src/features/public/pages/ContactPage.jsx:223
+#: src/features/public/pages/ContactPage.jsx:318
 msgid "Correo electrónico"
 msgstr "E-mail"
 
@@ -970,6 +970,10 @@ msgstr "Je crois"
 msgid "Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen."
 msgstr "Chronomètre réel, navigation libre entre les questions et révision complète des erreurs à la fin. Le format exact du jour de l'examen."
 
+#: src/features/public/pages/ContactPage.jsx:125
+msgid "Cuenta y facturación"
+msgstr ""
+
 #: src/features/profile/pages/SettingsPage.jsx:281
 msgid "Cuenta y privacidad"
 msgstr "Compte et confidentialité"
@@ -1004,7 +1008,7 @@ msgstr "Définitions"
 msgid "Describe el contenido de este set…"
 msgstr "Décrivez le contenu de ce set…"
 
-#: src/features/public/pages/ContactPage.jsx:264
+#: src/features/public/pages/ContactPage.jsx:359
 msgid "Describe tu consulta con el mayor detalle posible…"
 msgstr "Décrivez votre demande avec le plus de détails possible…"
 
@@ -1086,7 +1090,7 @@ msgstr "Le fichier dépasse 10 Mo."
 #~ msgid "El archivo supera 2 MB."
 #~ msgstr "Le fichier dépasse 2 Mo."
 
-#: src/features/public/pages/ContactPage.jsx:50
+#: src/features/public/pages/ContactPage.jsx:145
 msgid "El correo es obligatorio."
 msgstr "L'email est obligatoire."
 
@@ -1094,19 +1098,19 @@ msgstr "L'email est obligatoire."
 msgid "el día real"
 msgstr "le jour J"
 
-#: src/features/public/pages/ContactPage.jsx:52
+#: src/features/public/pages/ContactPage.jsx:147
 msgid "El formato del correo no es válido."
 msgstr "Le format de l'email est invalide."
 
-#: src/features/public/pages/ContactPage.jsx:56
+#: src/features/public/pages/ContactPage.jsx:151
 msgid "El mensaje debe tener al menos 20 caracteres."
 msgstr "Le message doit contenir au moins 20 caractères."
 
-#: src/features/public/pages/ContactPage.jsx:55
+#: src/features/public/pages/ContactPage.jsx:150
 msgid "El mensaje es obligatorio."
 msgstr "Le message est obligatoire."
 
-#: src/features/public/pages/ContactPage.jsx:48
+#: src/features/public/pages/ContactPage.jsx:143
 msgid "El nombre es obligatorio."
 msgstr "Le nom est obligatoire."
 
@@ -1157,7 +1161,7 @@ msgstr "Choisissez votre mode d'étude"
 msgid "Elige tu nivel de confianza antes de confirmar"
 msgstr "Choisissez votre niveau de confiance avant de confirmer"
 
-#: src/features/public/pages/ContactPage.jsx:54
+#: src/features/public/pages/ContactPage.jsx:149
 msgid "Elige un asunto."
 msgstr "Choisissez un objet."
 
@@ -1238,7 +1242,7 @@ msgstr "Entre 1 et 100 %."
 msgid "Entre 1 y 300 minutos."
 msgstr "Entre 1 et 300 minutes."
 
-#: src/features/public/pages/ContactPage.jsx:270
+#: src/features/public/pages/ContactPage.jsx:365
 #: src/features/suggestions/components/SuggestionModal.jsx:131
 msgid "Enviando…"
 msgstr "Envoi en cours…"
@@ -1251,11 +1255,11 @@ msgstr "Soumettre quand même"
 msgid "Enviar examen"
 msgstr "Soumettre l'examen"
 
-#: src/features/public/pages/ContactPage.jsx:270
+#: src/features/public/pages/ContactPage.jsx:365
 msgid "Enviar mensaje"
 msgstr "Envoyer le message"
 
-#: src/features/public/pages/ContactPage.jsx:197
+#: src/features/public/pages/ContactPage.jsx:292
 msgid "Enviar otro mensaje"
 msgstr "Envoyer un autre message"
 
@@ -1263,7 +1267,7 @@ msgstr "Envoyer un autre message"
 msgid "Enviar sugerencia"
 msgstr "Envoyer la suggestion"
 
-#: src/features/suggestions/components/SuggestionFab.jsx:25
+#: src/features/suggestions/components/SuggestionFab.jsx:23
 msgid "Enviar una sugerencia"
 msgstr "Envoyer une suggestion"
 
@@ -1494,7 +1498,7 @@ msgstr "Format invalide. Seul .pdf est autorisé."
 msgid "Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar."
 msgstr "Format similaire à l'examen officiel : chrono, navigation libre et révision des erreurs à la fin."
 
-#: src/features/public/pages/ContactPage.jsx:204
+#: src/features/public/pages/ContactPage.jsx:299
 msgid "Formulario de contacto"
 msgstr "Formulaire de contact"
 
@@ -1621,7 +1625,7 @@ msgstr "Incorrecte"
 msgid "Incorrectas"
 msgstr "Incorrectes"
 
-#: src/features/public/pages/ContactPage.jsx:121
+#: src/features/public/pages/ContactPage.jsx:216
 msgid "Información de contacto"
 msgstr "Informations de contact"
 
@@ -1770,7 +1774,7 @@ msgstr "Au plus 40 caractères."
 msgid "Mejor nota"
 msgstr "Meilleur score"
 
-#: src/features/public/pages/ContactPage.jsx:255
+#: src/features/public/pages/ContactPage.jsx:350
 msgid "Mensaje"
 msgstr "Message"
 
@@ -1924,7 +1928,7 @@ msgstr "Aucun résultat trouvé."
 msgid "No se pudo calificar"
 msgstr "Impossible d'évaluer"
 
-#: src/features/public/pages/ContactPage.jsx:90
+#: src/features/public/pages/ContactPage.jsx:185
 msgid "No se pudo enviar el mensaje. Intenta de nuevo o escríbenos directamente a support@certzen.app."
 msgstr "Impossible d'envoyer le message. Réessayez ou écrivez-nous directement à support@certzen.app."
 
@@ -1942,7 +1946,7 @@ msgstr "Vous n'avez pas la permission de modifier ce set."
 msgid "Nombre"
 msgstr "Nom"
 
-#: src/features/public/pages/ContactPage.jsx:207
+#: src/features/public/pages/ContactPage.jsx:302
 msgid "Nombre completo"
 msgstr "Nom complet"
 
@@ -2016,6 +2020,10 @@ msgstr "Ordre défini"
 msgid "Oscuro"
 msgstr "Sombre"
 
+#: src/features/public/pages/ContactPage.jsx:127
+msgid "Otro"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:423
 msgid "Pago pendiente"
 msgstr "Paiement en attente"
@@ -2083,11 +2091,11 @@ msgstr "Plateforme collaborative de simulateurs d'examen : IT, Cloud, Santé, An
 msgid "Plataforma de certificación profesional"
 msgstr "Plateforme de certification professionnelle"
 
-#: src/features/public/pages/ContactPage.jsx:280
+#: src/features/public/pages/ContactPage.jsx:375
 msgid "política de privacidad"
 msgstr "politique de confidentialité"
 
-#: src/features/public/pages/ContactPage.jsx:167
+#: src/features/public/pages/ContactPage.jsx:262
 msgid "Política de privacidad →"
 msgstr "Politique de confidentialité →"
 
@@ -2210,7 +2218,7 @@ msgstr "Confidentialité"
 msgid "Privacidad primero"
 msgstr "Confidentialité d'abord"
 
-#: src/features/public/pages/ContactPage.jsx:139
+#: src/features/public/pages/ContactPage.jsx:234
 msgid "Privacidad y legal"
 msgstr "Confidentialité et légal"
 
@@ -2298,7 +2306,7 @@ msgstr "Réactiver le renouvellement automatique"
 msgid "Rechazar"
 msgstr "Refuser"
 
-#: src/features/public/pages/ContactPage.jsx:190
+#: src/features/public/pages/ContactPage.jsx:285
 msgid "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
 msgstr "Nous avons reçu votre message et nous vous répondrons sous 2 jours ouvrés maximum."
 
@@ -2319,7 +2327,7 @@ msgstr "Rappels"
 msgid "Recordatorios, rutinas e insignias"
 msgstr "Rappels, routines et badges"
 
-#: src/features/public/pages/ContactPage.jsx:157
+#: src/features/public/pages/ContactPage.jsx:252
 msgid "Recursos útiles"
 msgstr "Ressources utiles"
 
@@ -2444,6 +2452,10 @@ msgstr "Répétition espacée"
 #: src/features/results/ResultsPage.jsx:328
 msgid "Repetir simulacro"
 msgstr "Recommencer l'examen blanc"
+
+#: src/features/public/pages/ContactPage.jsx:126
+msgid "Reporte de contenido"
+msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:28
 msgid "Requerido"
@@ -2570,7 +2582,7 @@ msgstr "Sélectionnez l'examen de certification que vous voulez pratiquer."
 msgid "Selecciona la definición correcta para cada término. Cada opción sólo se puede usar una vez."
 msgstr "Sélectionnez la définition correcte pour chaque terme. Chaque option ne peut être utilisée qu'une fois."
 
-#: src/features/public/pages/ContactPage.jsx:248
+#: src/features/public/pages/ContactPage.jsx:339
 msgid "Selecciona un asunto…"
 msgstr "Sélectionnez un objet…"
 
@@ -2732,9 +2744,13 @@ msgstr "Seulement Pratique rapide"
 msgid "Solo son 3 pasos desde Safari"
 msgstr "Seulement 3 étapes depuis Safari"
 
-#: src/features/public/pages/ContactPage.jsx:130
+#: src/features/public/pages/ContactPage.jsx:225
 msgid "Soporte general"
 msgstr "Support général"
+
+#: src/features/public/pages/ContactPage.jsx:124
+msgid "Soporte técnico"
+msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:487
 msgid "Spaced repetition (Leitner 5 cajas)"
@@ -2796,7 +2812,7 @@ msgstr "Technique :"
 msgid "Términos"
 msgstr "Conditions"
 
-#: src/features/public/pages/ContactPage.jsx:172
+#: src/features/public/pages/ContactPage.jsx:267
 msgid "Términos de uso →"
 msgstr "Conditions d'utilisation →"
 
@@ -2812,7 +2828,7 @@ msgstr "Effet de test + retour différé"
 #~ msgid "Texto extraído del PDF:"
 #~ msgstr "Texte extrait du PDF :"
 
-#: src/features/public/pages/ContactPage.jsx:148
+#: src/features/public/pages/ContactPage.jsx:243
 msgid "Tiempo de respuesta"
 msgstr "Temps de réponse"
 
@@ -2876,7 +2892,7 @@ msgid "Tu historial de exámenes, logros y progreso."
 msgstr "Votre historique d'examens, vos succès et votre progression."
 
 #: src/features/auth/pages/RegisterPage.jsx:94
-#: src/features/public/pages/ContactPage.jsx:218
+#: src/features/public/pages/ContactPage.jsx:313
 msgid "Tu nombre"
 msgstr "Votre nom"
 
@@ -2896,7 +2912,7 @@ msgstr "Votre progression par thématique. Touchez un domaine pour le pratiquer 
 msgid "Tu sugerencia"
 msgstr "Ta suggestion"
 
-#: src/features/public/pages/ContactPage.jsx:233
+#: src/features/public/pages/ContactPage.jsx:328
 msgid "tu@correo.com"
 msgstr "vous@email.com"
 

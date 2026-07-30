@@ -33,7 +33,7 @@ msgstr "今すぐ始めよう!"
 msgid "¡Gracias por tu sugerencia! La tendremos en cuenta."
 msgstr "ご提案ありがとうございます！参考にさせていただきます。"
 
-#: src/features/public/pages/ContactPage.jsx:188
+#: src/features/public/pages/ContactPage.jsx:283
 msgid "¡Mensaje enviado!"
 msgstr "メッセージを送信しました！"
 
@@ -90,11 +90,11 @@ msgstr "パスワードをお忘れですか？"
 msgid "¿Salir de la sesión?"
 msgstr "セッションを終了しますか？"
 
-#: src/features/public/pages/ContactPage.jsx:104
+#: src/features/public/pages/ContactPage.jsx:199
 msgid "¿Tienes alguna pregunta o problema con CertZen? Escríbenos y te respondemos lo antes posible."
 msgstr "CertZenに関する質問や問題がありますか？メッセージをお送りいただければ、できるだけ早く返信します。"
 
-#: src/features/public/pages/ContactPage.jsx:114
+#: src/features/public/pages/ContactPage.jsx:209
 msgid "¿Tienes dudas, encontraste un bug o necesitas ayuda? Escríbenos y te respondemos en máximo"
 msgstr "疑問、バグの発見、サポートが必要ですか？メッセージをお送りいただければ最大"
 
@@ -284,7 +284,7 @@ msgstr "← 前へ"
 msgid "~5 min"
 msgstr "約5分"
 
-#: src/features/public/pages/ContactPage.jsx:149
+#: src/features/public/pages/ContactPage.jsx:244
 msgid "≤ 2 días hábiles"
 msgstr "≤ 2営業日"
 
@@ -358,7 +358,7 @@ msgstr "10問 · 短いセッション"
 msgid "10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos."
 msgstr "即時フィードバック付きの10問のランダム問題。5分以内の復習に最適。"
 
-#: src/features/public/pages/ContactPage.jsx:115
+#: src/features/public/pages/ContactPage.jsx:210
 msgid "2 días hábiles"
 msgstr "2営業日"
 
@@ -508,7 +508,7 @@ msgstr "今はしない"
 msgid "Ajustes"
 msgstr "設定"
 
-#: src/features/public/pages/ContactPage.jsx:278
+#: src/features/public/pages/ContactPage.jsx:373
 msgid "Al enviar aceptas nuestra"
 msgstr "送信することで、当社の"
 
@@ -600,7 +600,7 @@ msgstr "項目をドラッグまたはクリック"
 msgid "Arriba a la derecha, y listo"
 msgstr "右上、それで完了です"
 
-#: src/features/public/pages/ContactPage.jsx:238
+#: src/features/public/pages/ContactPage.jsx:333
 msgid "Asunto"
 msgstr "件名"
 
@@ -709,7 +709,7 @@ msgstr "メールでパスワードを変更"
 msgid "Cambiar la contraseña"
 msgstr "パスワードを変更"
 
-#: src/features/public/pages/ContactPage.jsx:124
+#: src/features/public/pages/ContactPage.jsx:219
 msgid "Canales de soporte"
 msgstr "サポートチャネル"
 
@@ -824,7 +824,7 @@ msgstr "メニューを折りたたむ"
 msgid "Cómo funciona"
 msgstr "仕組み"
 
-#: src/features/public/pages/ContactPage.jsx:162
+#: src/features/public/pages/ContactPage.jsx:257
 msgid "Cómo funciona CertZen →"
 msgstr "CertZenの仕組み →"
 
@@ -875,8 +875,8 @@ msgstr "アカウント削除はサポートまでご連絡ください"
 msgid "Contáctenos"
 msgstr "お問い合わせ"
 
-#: src/features/public/pages/ContactPage.jsx:103
-#: src/features/public/pages/ContactPage.jsx:112
+#: src/features/public/pages/ContactPage.jsx:198
+#: src/features/public/pages/ContactPage.jsx:207
 msgid "Contacto"
 msgstr "お問い合わせ"
 
@@ -902,7 +902,7 @@ msgstr "正解"
 #: src/features/auth/pages/LoginPage.jsx:91
 #: src/features/auth/pages/RegisterPage.jsx:100
 #: src/features/profile/pages/ProfilePage.jsx:355
-#: src/features/public/pages/ContactPage.jsx:223
+#: src/features/public/pages/ContactPage.jsx:318
 msgid "Correo electrónico"
 msgstr "メールアドレス"
 
@@ -970,6 +970,10 @@ msgstr "たぶん"
 msgid "Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen."
 msgstr "本物のタイマー、問題間の自由なナビゲーション、終了時の完全な間違いレビュー。試験当日の正確な形式。"
 
+#: src/features/public/pages/ContactPage.jsx:125
+msgid "Cuenta y facturación"
+msgstr ""
+
 #: src/features/profile/pages/SettingsPage.jsx:281
 msgid "Cuenta y privacidad"
 msgstr "アカウントとプライバシー"
@@ -1004,7 +1008,7 @@ msgstr "定義"
 msgid "Describe el contenido de este set…"
 msgstr "このセットの内容を説明してください…"
 
-#: src/features/public/pages/ContactPage.jsx:264
+#: src/features/public/pages/ContactPage.jsx:359
 msgid "Describe tu consulta con el mayor detalle posible…"
 msgstr "お問い合わせをできるだけ詳しく記述してください…"
 
@@ -1086,7 +1090,7 @@ msgstr "ファイルが10MBを超えています。"
 #~ msgid "El archivo supera 2 MB."
 #~ msgstr "ファイルが2MBを超えています。"
 
-#: src/features/public/pages/ContactPage.jsx:50
+#: src/features/public/pages/ContactPage.jsx:145
 msgid "El correo es obligatorio."
 msgstr "メールアドレスは必須です。"
 
@@ -1094,19 +1098,19 @@ msgstr "メールアドレスは必須です。"
 msgid "el día real"
 msgstr "本番当日"
 
-#: src/features/public/pages/ContactPage.jsx:52
+#: src/features/public/pages/ContactPage.jsx:147
 msgid "El formato del correo no es válido."
 msgstr "メール形式が無効です。"
 
-#: src/features/public/pages/ContactPage.jsx:56
+#: src/features/public/pages/ContactPage.jsx:151
 msgid "El mensaje debe tener al menos 20 caracteres."
 msgstr "メッセージは20文字以上必要です。"
 
-#: src/features/public/pages/ContactPage.jsx:55
+#: src/features/public/pages/ContactPage.jsx:150
 msgid "El mensaje es obligatorio."
 msgstr "メッセージは必須です。"
 
-#: src/features/public/pages/ContactPage.jsx:48
+#: src/features/public/pages/ContactPage.jsx:143
 msgid "El nombre es obligatorio."
 msgstr "名前は必須です。"
 
@@ -1157,7 +1161,7 @@ msgstr "学習モードを選択"
 msgid "Elige tu nivel de confianza antes de confirmar"
 msgstr "確定する前に自信レベルを選択してください"
 
-#: src/features/public/pages/ContactPage.jsx:54
+#: src/features/public/pages/ContactPage.jsx:149
 msgid "Elige un asunto."
 msgstr "件名を選択してください。"
 
@@ -1238,7 +1242,7 @@ msgstr "1〜100%の間で入力してください。"
 msgid "Entre 1 y 300 minutos."
 msgstr "1〜300分の間で入力してください。"
 
-#: src/features/public/pages/ContactPage.jsx:270
+#: src/features/public/pages/ContactPage.jsx:365
 #: src/features/suggestions/components/SuggestionModal.jsx:131
 msgid "Enviando…"
 msgstr "送信中…"
@@ -1251,11 +1255,11 @@ msgstr "それでも提出"
 msgid "Enviar examen"
 msgstr "試験を提出"
 
-#: src/features/public/pages/ContactPage.jsx:270
+#: src/features/public/pages/ContactPage.jsx:365
 msgid "Enviar mensaje"
 msgstr "メッセージを送信"
 
-#: src/features/public/pages/ContactPage.jsx:197
+#: src/features/public/pages/ContactPage.jsx:292
 msgid "Enviar otro mensaje"
 msgstr "別のメッセージを送信"
 
@@ -1263,7 +1267,7 @@ msgstr "別のメッセージを送信"
 msgid "Enviar sugerencia"
 msgstr "提案を送信"
 
-#: src/features/suggestions/components/SuggestionFab.jsx:25
+#: src/features/suggestions/components/SuggestionFab.jsx:23
 msgid "Enviar una sugerencia"
 msgstr "提案を送信する"
 
@@ -1494,7 +1498,7 @@ msgstr "無効な形式です。.pdfのみ許可されています。"
 msgid "Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar."
 msgstr "公式試験に似た形式：タイマー、自由なナビゲーション、終了時の間違いレビュー。"
 
-#: src/features/public/pages/ContactPage.jsx:204
+#: src/features/public/pages/ContactPage.jsx:299
 msgid "Formulario de contacto"
 msgstr "お問い合わせフォーム"
 
@@ -1621,7 +1625,7 @@ msgstr "不正解"
 msgid "Incorrectas"
 msgstr "不正解"
 
-#: src/features/public/pages/ContactPage.jsx:121
+#: src/features/public/pages/ContactPage.jsx:216
 msgid "Información de contacto"
 msgstr "お問い合わせ情報"
 
@@ -1770,7 +1774,7 @@ msgstr "最大40文字です。"
 msgid "Mejor nota"
 msgstr "最高点"
 
-#: src/features/public/pages/ContactPage.jsx:255
+#: src/features/public/pages/ContactPage.jsx:350
 msgid "Mensaje"
 msgstr "メッセージ"
 
@@ -1924,7 +1928,7 @@ msgstr "結果が見つかりません。"
 msgid "No se pudo calificar"
 msgstr "評価できませんでした"
 
-#: src/features/public/pages/ContactPage.jsx:90
+#: src/features/public/pages/ContactPage.jsx:185
 msgid "No se pudo enviar el mensaje. Intenta de nuevo o escríbenos directamente a support@certzen.app."
 msgstr "メッセージを送信できませんでした。再試行するか、support@certzen.appに直接ご連絡ください。"
 
@@ -1942,7 +1946,7 @@ msgstr "このセットを編集する権限がありません。"
 msgid "Nombre"
 msgstr "名前"
 
-#: src/features/public/pages/ContactPage.jsx:207
+#: src/features/public/pages/ContactPage.jsx:302
 msgid "Nombre completo"
 msgstr "フルネーム"
 
@@ -2016,6 +2020,10 @@ msgstr "定義された順序"
 msgid "Oscuro"
 msgstr "ダーク"
 
+#: src/features/public/pages/ContactPage.jsx:127
+msgid "Otro"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:423
 msgid "Pago pendiente"
 msgstr "支払い保留中"
@@ -2083,11 +2091,11 @@ msgstr "共同試験シミュレータープラットフォーム：IT、クラ�
 msgid "Plataforma de certificación profesional"
 msgstr "プロフェッショナル認定プラットフォーム"
 
-#: src/features/public/pages/ContactPage.jsx:280
+#: src/features/public/pages/ContactPage.jsx:375
 msgid "política de privacidad"
 msgstr "プライバシーポリシー"
 
-#: src/features/public/pages/ContactPage.jsx:167
+#: src/features/public/pages/ContactPage.jsx:262
 msgid "Política de privacidad →"
 msgstr "プライバシーポリシー →"
 
@@ -2210,7 +2218,7 @@ msgstr "プライバシー"
 msgid "Privacidad primero"
 msgstr "プライバシー優先"
 
-#: src/features/public/pages/ContactPage.jsx:139
+#: src/features/public/pages/ContactPage.jsx:234
 msgid "Privacidad y legal"
 msgstr "プライバシーと法的事項"
 
@@ -2298,7 +2306,7 @@ msgstr "自動更新を再開"
 msgid "Rechazar"
 msgstr "拒否"
 
-#: src/features/public/pages/ContactPage.jsx:190
+#: src/features/public/pages/ContactPage.jsx:285
 msgid "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
 msgstr "メッセージを受信しました。最大2営業日以内に返信いたします。"
 
@@ -2319,7 +2327,7 @@ msgstr "リマインダー"
 msgid "Recordatorios, rutinas e insignias"
 msgstr "リマインダー・ルーティン・バッジ"
 
-#: src/features/public/pages/ContactPage.jsx:157
+#: src/features/public/pages/ContactPage.jsx:252
 msgid "Recursos útiles"
 msgstr "便利なリソース"
 
@@ -2444,6 +2452,10 @@ msgstr "間隔反復"
 #: src/features/results/ResultsPage.jsx:328
 msgid "Repetir simulacro"
 msgstr "模擬試験をもう一度受ける"
+
+#: src/features/public/pages/ContactPage.jsx:126
+msgid "Reporte de contenido"
+msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:28
 msgid "Requerido"
@@ -2570,7 +2582,7 @@ msgstr "練習したい認定試験を選択してください。"
 msgid "Selecciona la definición correcta para cada término. Cada opción sólo se puede usar una vez."
 msgstr "各用語に対して正しい定義を選択してください。各選択肢は一度しか使用できません。"
 
-#: src/features/public/pages/ContactPage.jsx:248
+#: src/features/public/pages/ContactPage.jsx:339
 msgid "Selecciona un asunto…"
 msgstr "件名を選択…"
 
@@ -2732,9 +2744,13 @@ msgstr "クイック練習のみ"
 msgid "Solo son 3 pasos desde Safari"
 msgstr "Safariからわずか3ステップです"
 
-#: src/features/public/pages/ContactPage.jsx:130
+#: src/features/public/pages/ContactPage.jsx:225
 msgid "Soporte general"
 msgstr "一般サポート"
+
+#: src/features/public/pages/ContactPage.jsx:124
+msgid "Soporte técnico"
+msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:487
 msgid "Spaced repetition (Leitner 5 cajas)"
@@ -2796,7 +2812,7 @@ msgstr "テクニック："
 msgid "Términos"
 msgstr "利用規約"
 
-#: src/features/public/pages/ContactPage.jsx:172
+#: src/features/public/pages/ContactPage.jsx:267
 msgid "Términos de uso →"
 msgstr "利用規約 →"
 
@@ -2812,7 +2828,7 @@ msgstr "テスト効果 + 遅延フィードバック"
 #~ msgid "Texto extraído del PDF:"
 #~ msgstr "PDFから抽出したテキスト："
 
-#: src/features/public/pages/ContactPage.jsx:148
+#: src/features/public/pages/ContactPage.jsx:243
 msgid "Tiempo de respuesta"
 msgstr "応答時間"
 
@@ -2876,7 +2892,7 @@ msgid "Tu historial de exámenes, logros y progreso."
 msgstr "あなたの試験履歴、実績、進捗。"
 
 #: src/features/auth/pages/RegisterPage.jsx:94
-#: src/features/public/pages/ContactPage.jsx:218
+#: src/features/public/pages/ContactPage.jsx:313
 msgid "Tu nombre"
 msgstr "あなたの名前"
 
@@ -2896,7 +2912,7 @@ msgstr "テーマエリア別の進捗。ドメインをタップして集中練
 msgid "Tu sugerencia"
 msgstr "あなたの提案"
 
-#: src/features/public/pages/ContactPage.jsx:233
+#: src/features/public/pages/ContactPage.jsx:328
 msgid "tu@correo.com"
 msgstr "you@email.com"
 

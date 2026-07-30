@@ -33,7 +33,7 @@ msgstr "立即开始!"
 msgid "¡Gracias por tu sugerencia! La tendremos en cuenta."
 msgstr "感谢您的建议！我们会认真考虑。"
 
-#: src/features/public/pages/ContactPage.jsx:188
+#: src/features/public/pages/ContactPage.jsx:283
 msgid "¡Mensaje enviado!"
 msgstr "消息已发送！"
 
@@ -90,11 +90,11 @@ msgstr "忘记密码？"
 msgid "¿Salir de la sesión?"
 msgstr "退出此次会话？"
 
-#: src/features/public/pages/ContactPage.jsx:104
+#: src/features/public/pages/ContactPage.jsx:199
 msgid "¿Tienes alguna pregunta o problema con CertZen? Escríbenos y te respondemos lo antes posible."
 msgstr "对CertZen有疑问或问题？给我们留言，我们将尽快回复。"
 
-#: src/features/public/pages/ContactPage.jsx:114
+#: src/features/public/pages/ContactPage.jsx:209
 msgid "¿Tienes dudas, encontraste un bug o necesitas ayuda? Escríbenos y te respondemos en máximo"
 msgstr "有疑问、发现错误或需要帮助？给我们留言，我们将在"
 
@@ -284,7 +284,7 @@ msgstr "← 上一题"
 msgid "~5 min"
 msgstr "约5分钟"
 
-#: src/features/public/pages/ContactPage.jsx:149
+#: src/features/public/pages/ContactPage.jsx:244
 msgid "≤ 2 días hábiles"
 msgstr "≤ 2 个工作日"
 
@@ -358,7 +358,7 @@ msgstr "10 道题目 · 短会话"
 msgid "10 preguntas aleatorias con retroalimentación inmediata. Ideal para repasar en menos de 5 minutos."
 msgstr "10 道随机题目，即时反馈。适合在 5 分钟内复习。"
 
-#: src/features/public/pages/ContactPage.jsx:115
+#: src/features/public/pages/ContactPage.jsx:210
 msgid "2 días hábiles"
 msgstr "2 个工作日"
 
@@ -508,7 +508,7 @@ msgstr "暂不"
 msgid "Ajustes"
 msgstr "设置"
 
-#: src/features/public/pages/ContactPage.jsx:278
+#: src/features/public/pages/ContactPage.jsx:373
 msgid "Al enviar aceptas nuestra"
 msgstr "提交即表示你接受我们的"
 
@@ -600,7 +600,7 @@ msgstr "拖动或点击元素"
 msgid "Arriba a la derecha, y listo"
 msgstr "右上角,完成"
 
-#: src/features/public/pages/ContactPage.jsx:238
+#: src/features/public/pages/ContactPage.jsx:333
 msgid "Asunto"
 msgstr "主题"
 
@@ -709,7 +709,7 @@ msgstr "通过邮箱修改密码"
 msgid "Cambiar la contraseña"
 msgstr "修改密码"
 
-#: src/features/public/pages/ContactPage.jsx:124
+#: src/features/public/pages/ContactPage.jsx:219
 msgid "Canales de soporte"
 msgstr "支持渠道"
 
@@ -824,7 +824,7 @@ msgstr "折叠菜单"
 msgid "Cómo funciona"
 msgstr "工作原理"
 
-#: src/features/public/pages/ContactPage.jsx:162
+#: src/features/public/pages/ContactPage.jsx:257
 msgid "Cómo funciona CertZen →"
 msgstr "CertZen 如何运作 →"
 
@@ -875,8 +875,8 @@ msgstr "联系客服以删除账户"
 msgid "Contáctenos"
 msgstr "联系我们"
 
-#: src/features/public/pages/ContactPage.jsx:103
-#: src/features/public/pages/ContactPage.jsx:112
+#: src/features/public/pages/ContactPage.jsx:198
+#: src/features/public/pages/ContactPage.jsx:207
 msgid "Contacto"
 msgstr "联系"
 
@@ -902,7 +902,7 @@ msgstr "正确"
 #: src/features/auth/pages/LoginPage.jsx:91
 #: src/features/auth/pages/RegisterPage.jsx:100
 #: src/features/profile/pages/ProfilePage.jsx:355
-#: src/features/public/pages/ContactPage.jsx:223
+#: src/features/public/pages/ContactPage.jsx:318
 msgid "Correo electrónico"
 msgstr "邮箱"
 
@@ -970,6 +970,10 @@ msgstr "我觉得"
 msgid "Cronómetro real, navegación libre entre preguntas y revisión completa de errores al finalizar. El formato exacto del día del examen."
 msgstr "真实计时器、问题间自由导航以及完成时的完整错误审查。考试当天的确切格式。"
 
+#: src/features/public/pages/ContactPage.jsx:125
+msgid "Cuenta y facturación"
+msgstr ""
+
 #: src/features/profile/pages/SettingsPage.jsx:281
 msgid "Cuenta y privacidad"
 msgstr "账户与隐私"
@@ -1004,7 +1008,7 @@ msgstr "定义"
 msgid "Describe el contenido de este set…"
 msgstr "描述此考试集的内容…"
 
-#: src/features/public/pages/ContactPage.jsx:264
+#: src/features/public/pages/ContactPage.jsx:359
 msgid "Describe tu consulta con el mayor detalle posible…"
 msgstr "尽可能详细地描述你的咨询…"
 
@@ -1086,7 +1090,7 @@ msgstr "文件超过 10 MB。"
 #~ msgid "El archivo supera 2 MB."
 #~ msgstr "文件超过 2 MB。"
 
-#: src/features/public/pages/ContactPage.jsx:50
+#: src/features/public/pages/ContactPage.jsx:145
 msgid "El correo es obligatorio."
 msgstr "邮箱为必填项。"
 
@@ -1094,19 +1098,19 @@ msgstr "邮箱为必填项。"
 msgid "el día real"
 msgstr "真实考试日"
 
-#: src/features/public/pages/ContactPage.jsx:52
+#: src/features/public/pages/ContactPage.jsx:147
 msgid "El formato del correo no es válido."
 msgstr "邮箱格式无效。"
 
-#: src/features/public/pages/ContactPage.jsx:56
+#: src/features/public/pages/ContactPage.jsx:151
 msgid "El mensaje debe tener al menos 20 caracteres."
 msgstr "消息必须至少 20 个字符。"
 
-#: src/features/public/pages/ContactPage.jsx:55
+#: src/features/public/pages/ContactPage.jsx:150
 msgid "El mensaje es obligatorio."
 msgstr "消息为必填项。"
 
-#: src/features/public/pages/ContactPage.jsx:48
+#: src/features/public/pages/ContactPage.jsx:143
 msgid "El nombre es obligatorio."
 msgstr "名字为必填项。"
 
@@ -1157,7 +1161,7 @@ msgstr "选择学习模式"
 msgid "Elige tu nivel de confianza antes de confirmar"
 msgstr "确认前请选择你的把握等级"
 
-#: src/features/public/pages/ContactPage.jsx:54
+#: src/features/public/pages/ContactPage.jsx:149
 msgid "Elige un asunto."
 msgstr "选择主题。"
 
@@ -1238,7 +1242,7 @@ msgstr "在1%到100%之间。"
 msgid "Entre 1 y 300 minutos."
 msgstr "在1到300分钟之间。"
 
-#: src/features/public/pages/ContactPage.jsx:270
+#: src/features/public/pages/ContactPage.jsx:365
 #: src/features/suggestions/components/SuggestionModal.jsx:131
 msgid "Enviando…"
 msgstr "发送中…"
@@ -1251,11 +1255,11 @@ msgstr "仍然提交"
 msgid "Enviar examen"
 msgstr "提交考试"
 
-#: src/features/public/pages/ContactPage.jsx:270
+#: src/features/public/pages/ContactPage.jsx:365
 msgid "Enviar mensaje"
 msgstr "发送消息"
 
-#: src/features/public/pages/ContactPage.jsx:197
+#: src/features/public/pages/ContactPage.jsx:292
 msgid "Enviar otro mensaje"
 msgstr "发送另一条消息"
 
@@ -1263,7 +1267,7 @@ msgstr "发送另一条消息"
 msgid "Enviar sugerencia"
 msgstr "发送建议"
 
-#: src/features/suggestions/components/SuggestionFab.jsx:25
+#: src/features/suggestions/components/SuggestionFab.jsx:23
 msgid "Enviar una sugerencia"
 msgstr "发送建议"
 
@@ -1494,7 +1498,7 @@ msgstr "格式无效。仅允许 .pdf。"
 msgid "Formato similar al examen oficial: cronómetro, navegación libre y revisión de errores al finalizar."
 msgstr "与官方考试相似的格式：计时器、自由导航和结束时的错误审查。"
 
-#: src/features/public/pages/ContactPage.jsx:204
+#: src/features/public/pages/ContactPage.jsx:299
 msgid "Formulario de contacto"
 msgstr "联系表单"
 
@@ -1621,7 +1625,7 @@ msgstr "错误"
 msgid "Incorrectas"
 msgstr "错误"
 
-#: src/features/public/pages/ContactPage.jsx:121
+#: src/features/public/pages/ContactPage.jsx:216
 msgid "Información de contacto"
 msgstr "联系信息"
 
@@ -1770,7 +1774,7 @@ msgstr "最多 40 个字符。"
 msgid "Mejor nota"
 msgstr "最高分"
 
-#: src/features/public/pages/ContactPage.jsx:255
+#: src/features/public/pages/ContactPage.jsx:350
 msgid "Mensaje"
 msgstr "消息"
 
@@ -1924,7 +1928,7 @@ msgstr "未找到结果。"
 msgid "No se pudo calificar"
 msgstr "评分失败"
 
-#: src/features/public/pages/ContactPage.jsx:90
+#: src/features/public/pages/ContactPage.jsx:185
 msgid "No se pudo enviar el mensaje. Intenta de nuevo o escríbenos directamente a support@certzen.app."
 msgstr "无法发送消息。请重试或直接发送邮件至 support@certzen.app。"
 
@@ -1942,7 +1946,7 @@ msgstr "你没有权限编辑此套题。"
 msgid "Nombre"
 msgstr "姓名"
 
-#: src/features/public/pages/ContactPage.jsx:207
+#: src/features/public/pages/ContactPage.jsx:302
 msgid "Nombre completo"
 msgstr "全名"
 
@@ -2016,6 +2020,10 @@ msgstr "已定义顺序"
 msgid "Oscuro"
 msgstr "深色"
 
+#: src/features/public/pages/ContactPage.jsx:127
+msgid "Otro"
+msgstr ""
+
 #: src/features/profile/pages/ProfilePage.jsx:423
 msgid "Pago pendiente"
 msgstr "待付款"
@@ -2083,11 +2091,11 @@ msgstr "协作式考试模拟器平台：IT、云、健康、英语、Appian 等
 msgid "Plataforma de certificación profesional"
 msgstr "专业认证平台"
 
-#: src/features/public/pages/ContactPage.jsx:280
+#: src/features/public/pages/ContactPage.jsx:375
 msgid "política de privacidad"
 msgstr "隐私政策"
 
-#: src/features/public/pages/ContactPage.jsx:167
+#: src/features/public/pages/ContactPage.jsx:262
 msgid "Política de privacidad →"
 msgstr "隐私政策 →"
 
@@ -2210,7 +2218,7 @@ msgstr "隐私"
 msgid "Privacidad primero"
 msgstr "隐私优先"
 
-#: src/features/public/pages/ContactPage.jsx:139
+#: src/features/public/pages/ContactPage.jsx:234
 msgid "Privacidad y legal"
 msgstr "隐私和法律"
 
@@ -2298,7 +2306,7 @@ msgstr "重新启用自动续订"
 msgid "Rechazar"
 msgstr "拒绝"
 
-#: src/features/public/pages/ContactPage.jsx:190
+#: src/features/public/pages/ContactPage.jsx:285
 msgid "Recibimos tu mensaje y te responderemos en máximo 2 días hábiles."
 msgstr "我们已收到你的消息，将在最多 2 个工作日内回复。"
 
@@ -2319,7 +2327,7 @@ msgstr "提醒"
 msgid "Recordatorios, rutinas e insignias"
 msgstr "提醒、日程与徽章"
 
-#: src/features/public/pages/ContactPage.jsx:157
+#: src/features/public/pages/ContactPage.jsx:252
 msgid "Recursos útiles"
 msgstr "有用资源"
 
@@ -2444,6 +2452,10 @@ msgstr "间隔重复"
 #: src/features/results/ResultsPage.jsx:328
 msgid "Repetir simulacro"
 msgstr "重新进行模拟考试"
+
+#: src/features/public/pages/ContactPage.jsx:126
+msgid "Reporte de contenido"
+msgstr ""
 
 #: src/features/exam/pages/ExamPage.jsx:28
 msgid "Requerido"
@@ -2570,7 +2582,7 @@ msgstr "选择你想练习的认证考试。"
 msgid "Selecciona la definición correcta para cada término. Cada opción sólo se puede usar una vez."
 msgstr "为每个术语选择正确的定义。每个选项只能使用一次。"
 
-#: src/features/public/pages/ContactPage.jsx:248
+#: src/features/public/pages/ContactPage.jsx:339
 msgid "Selecciona un asunto…"
 msgstr "选择主题…"
 
@@ -2732,9 +2744,13 @@ msgstr "仅快速练习"
 msgid "Solo son 3 pasos desde Safari"
 msgstr "在 Safari 中只需 3 步"
 
-#: src/features/public/pages/ContactPage.jsx:130
+#: src/features/public/pages/ContactPage.jsx:225
 msgid "Soporte general"
 msgstr "一般支持"
+
+#: src/features/public/pages/ContactPage.jsx:124
+msgid "Soporte técnico"
+msgstr ""
 
 #: src/features/explore/pages/ExamSetLandingPage.jsx:487
 msgid "Spaced repetition (Leitner 5 cajas)"
@@ -2796,7 +2812,7 @@ msgstr "技术："
 msgid "Términos"
 msgstr "条款"
 
-#: src/features/public/pages/ContactPage.jsx:172
+#: src/features/public/pages/ContactPage.jsx:267
 msgid "Términos de uso →"
 msgstr "使用条款 →"
 
@@ -2812,7 +2828,7 @@ msgstr "测试效应 + 延迟反馈"
 #~ msgid "Texto extraído del PDF:"
 #~ msgstr "从PDF提取的文本："
 
-#: src/features/public/pages/ContactPage.jsx:148
+#: src/features/public/pages/ContactPage.jsx:243
 msgid "Tiempo de respuesta"
 msgstr "响应时间"
 
@@ -2876,7 +2892,7 @@ msgid "Tu historial de exámenes, logros y progreso."
 msgstr "你的考试历史、成就和进度。"
 
 #: src/features/auth/pages/RegisterPage.jsx:94
-#: src/features/public/pages/ContactPage.jsx:218
+#: src/features/public/pages/ContactPage.jsx:313
 msgid "Tu nombre"
 msgstr "您的姓名"
 
@@ -2896,7 +2912,7 @@ msgstr "按主题领域的进度。点击某个领域以进行针对性练习。
 msgid "Tu sugerencia"
 msgstr "您的建议"
 
-#: src/features/public/pages/ContactPage.jsx:233
+#: src/features/public/pages/ContactPage.jsx:328
 msgid "tu@correo.com"
 msgstr "you@email.com"
 
