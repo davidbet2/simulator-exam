@@ -4,8 +4,15 @@ const { onSchedule } = require('firebase-functions/v2/scheduler')
 const { defineSecret } = require('firebase-functions/params')
 const { initializeApp } = require('firebase-admin/app')
 const { getFirestore } = require('firebase-admin/firestore')
+const { getDatabase } = require('firebase-admin/database')
+const { getAuth } = require('firebase-admin/auth')
+const { randomUUID } = require('crypto')
 
-initializeApp()
+// databaseURL must be explicit — Admin SDK cannot reliably auto-detect the
+// Realtime Database instance URL in the Cloud Functions Gen2 runtime.
+initializeApp({
+  databaseURL: 'https://simulatorexam-dec4b-default-rtdb.firebaseio.com',
+})
 
 // ─── Secrets ──────────────────────────────────────────────────────────────────
 // Turnstile secret key stored in Firebase Secret Manager (never in client code).
@@ -479,6 +486,63 @@ exports.sendSuggestionEmail = onCall(
     return { ok: true, createdAt: createdAt.toISOString() }
   }
 )
+
+// ─── Single-session enforcement (SPEC 06 v2 — RTDB + custom claims) ──────────
+// The client can never write users/{uid}.activeSessionId or /sessions/{uid}
+// directly (blocked by firestore.rules / database.rules.json) — only these
+// Admin-SDK-backed functions may rotate the session marker, so clearing
+// localStorage/IndexedDB on the client cannot forge or bypass it.
+
+/**
+ * Called right after a successful sign-in (email/password, Google, register).
+ * Mints a new sessionId, becomes the single source of truth in RTDB
+ * (used for the realtime "kick" listener) and Firestore (used by security
+ * rules), and stamps it as a custom claim so rules can verify it per-request
+ * without a get() roundtrip.
+ */
+exports.rotateSession = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'Login required')
+  }
+  const uid = request.auth.uid
+  // The caller generates and persists the id to its own localStorage BEFORE
+  // this call resolves (see rotateSession() in useAuthStore.js) — writing
+  // the value the client already committed to, rather than a fresh
+  // server-generated one, avoids a race where the RTDB listener (attached
+  // independently by onAuthStateChanged) observes the new remote value
+  // before the caller's own localStorage write lands, causing a spurious
+  // self-logout. A UUID-shaped string is accepted as-is; anything else
+  // falls back to a server-generated id (does not affect security — the
+  // value's origin doesn't matter, only Admin SDK can ever write it).
+  const requestedId = request.data?.sessionId
+  const sessionId = typeof requestedId === 'string' && /^[0-9a-f-]{36}$/i.test(requestedId)
+    ? requestedId
+    : randomUUID()
+
+  await Promise.all([
+    getDatabase().ref(`sessions/${uid}`).set({ sessionId, updatedAt: Date.now() }),
+    getFirestore().doc(`users/${uid}`).update({ activeSessionId: sessionId }),
+    getAuth().setCustomUserClaims(uid, { sessionId }),
+  ])
+
+  return { sessionId }
+})
+
+/** Called on manual logout — clears the session marker everywhere. */
+exports.clearSession = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'Login required')
+  }
+  const uid = request.auth.uid
+
+  await Promise.all([
+    getDatabase().ref(`sessions/${uid}`).remove(),
+    getFirestore().doc(`users/${uid}`).update({ activeSessionId: null }),
+    getAuth().setCustomUserClaims(uid, null),
+  ])
+
+  return { ok: true }
+})
 
 /**
  * Public HTTP endpoint that returns featureFlags/global without requiring App Check.

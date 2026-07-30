@@ -7,30 +7,50 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
-import { auth, db, googleProvider } from '../firebase/firebase';
+import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { ref, onValue } from 'firebase/database';
+import { auth, db, rtdb, googleProvider } from '../firebase/firebase';
 import { analytics } from '../analytics/events';
 
 const SESSION_ID_KEY = 'certzen-session-id';
 
-/** Generates a new session id for the caller to write to Firestore first. */
-function generateSessionId() {
-  return crypto.randomUUID();
-}
+// True while THIS tab's own rotateSession() call is in flight. The RTDB
+// single-session listener (attached independently by onAuthStateChanged)
+// must not act on a mismatch while this is true — the ordering between
+// "onAuthStateChanged fires and attaches the listener" and "login()'s own
+// continuation writes localStorage" is not guaranteed by the SDK, so relying
+// on write-order alone to avoid a self-kick race is not enough on its own.
+let rotatingSession = false;
 
 /**
- * Persists the session id to localStorage. Must only be called AFTER the
- * matching Firestore write (activeSessionId) has been confirmed — otherwise
- * the single-session-enforcement listener in `init()` can observe the new
- * local id against the still-stale remote value and sign the user out of
- * their own, only session (race between login's own write and the snapshot
- * listener attached concurrently by onAuthStateChanged).
+ * Rotates the single-session marker via the rotateSession Cloud Function.
+ * The function is the only writer of users/{uid}.activeSessionId and
+ * /sessions/{uid} in RTDB (both blocked for direct client writes by
+ * firestore.rules / database.rules.json) — so unlike the previous
+ * client-writes-its-own-marker design, clearing localStorage cannot forge
+ * or bypass this. getIdToken(true) refreshes the sessionId custom claim in
+ * this tab immediately, ahead of its ~1h natural expiry.
+ *
+ * The sessionId is generated HERE (client-side) and persisted to
+ * localStorage synchronously, BEFORE the network round-trip to the Cloud
+ * Function — not after — so the local value is already correct by the time
+ * any listener could observe the corresponding remote write.
  */
-function persistSessionId(id) {
+async function rotateSession(user) {
+  rotatingSession = true;
   try {
-    localStorage.setItem(SESSION_ID_KEY, id);
-  } catch (e) {
-    console.warn('[auth] failed to persist session id:', e?.message);
+    const sessionId = crypto.randomUUID();
+    try {
+      localStorage.setItem(SESSION_ID_KEY, sessionId);
+    } catch (e) {
+      console.warn('[auth] failed to persist session id:', e?.message);
+    }
+    await httpsCallable(getFunctions(), 'rotateSession')({ sessionId });
+    await user.getIdToken(true);
+    return sessionId;
+  } finally {
+    rotatingSession = false;
   }
 }
 
@@ -78,11 +98,16 @@ export const useAuthStore = create((set) => ({
     }
 
     let unsubscribeProfile = null;
+    let unsubscribeSession = null;
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      // Tear down any previous profile listener
+      // Tear down any previous listeners
       if (unsubscribeProfile) {
         unsubscribeProfile();
         unsubscribeProfile = null;
+      }
+      if (unsubscribeSession) {
+        unsubscribeSession();
+        unsubscribeSession = null;
       }
       if (firebaseUser) {
         // Initial fetch (admin check + first profile snapshot)
@@ -91,23 +116,7 @@ export const useAuthStore = create((set) => ({
         // Live profile updates — webhook/sync mutations propagate instantly
         unsubscribeProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (snap) => {
           if (!snap.exists()) return;
-          // Ignore cached snapshots (e.g. on reconnect) — only server-confirmed
-          // data can trigger a single-session logout, to avoid false positives.
-          if (snap.metadata.fromCache) return;
           const profile = snap.data();
-          // Single-session enforcement: if another device/browser logged in and
-          // rotated activeSessionId, this session is stale — sign it out.
-          let localSessionId = null;
-          try {
-            localSessionId = localStorage.getItem(SESSION_ID_KEY);
-          } catch (e) {
-            console.warn('[auth] failed to read session id:', e?.message);
-          }
-          if (profile.activeSessionId && localSessionId && profile.activeSessionId !== localSessionId) {
-            signOut(auth);
-            set({ sessionClosedMessage: 'Tu sesión se cerró porque iniciaste sesión en otro dispositivo.' });
-            return;
-          }
           set({
             isPro:                profile.plan === 'pro',
             plan:                 profile.plan ?? 'free',
@@ -118,12 +127,35 @@ export const useAuthStore = create((set) => ({
             dodoSubscriptionId:   profile.dodoSubscriptionId ?? null,
           });
         });
+        // Single-session enforcement — RTDB is the server-verified source of
+        // truth (only rotateSession/clearSession Cloud Functions can write
+        // /sessions/{uid}, see database.rules.json). If another device/
+        // browser rotates the session, this websocket listener fires within
+        // seconds and this stale session signs itself out.
+        unsubscribeSession = onValue(ref(rtdb, `sessions/${firebaseUser.uid}`), (snap) => {
+          // Skip while this tab's own rotateSession() is in flight — the
+          // remote write it's about to (or just did) make isn't a foreign
+          // takeover, and the ordering vs. this listener isn't guaranteed.
+          if (rotatingSession) return;
+          const remoteSessionId = snap.val()?.sessionId ?? null;
+          let localSessionId = null;
+          try {
+            localSessionId = localStorage.getItem(SESSION_ID_KEY);
+          } catch (e) {
+            console.warn('[auth] failed to read session id:', e?.message);
+          }
+          if (remoteSessionId && localSessionId && remoteSessionId !== localSessionId) {
+            signOut(auth);
+            set({ sessionClosedMessage: 'Tu sesión se cerró porque iniciaste sesión en otro dispositivo.' });
+          }
+        });
       } else {
         set({ user: null, isAdmin: false, isPro: false, plan: 'free', displayName: null, isLoading: false });
       }
     });
     return () => {
       if (unsubscribeProfile) unsubscribeProfile();
+      if (unsubscribeSession) unsubscribeSession();
       unsubscribe();
     };
   },
@@ -132,9 +164,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null, sessionClosedMessage: null });
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
-      const sessionId = generateSessionId();
-      await updateDoc(doc(db, 'users', result.user.uid), { activeSessionId: sessionId });
-      persistSessionId(sessionId);
+      await rotateSession(result.user);
       analytics.login({ method: 'email' });
       // onAuthStateChanged handles the state update
     } catch (err) {
@@ -146,7 +176,6 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null, sessionClosedMessage: null });
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const sessionId = generateSessionId();
       // Create user profile if first time
       const userRef = doc(db, 'users', result.user.uid);
       const existing = await getDoc(userRef);
@@ -157,10 +186,9 @@ export const useAuthStore = create((set) => ({
             email:          result.user.email,
             displayName:    result.user.displayName ?? result.user.email.split('@')[0],
             plan:           'free',
-            activeSessionId: sessionId,
             createdAt:      serverTimestamp(),
           });
-          persistSessionId(sessionId);
+          await rotateSession(result.user);
           analytics.signUp({ method: 'google' });
         } catch (profileErr) {
           // Auth succeeded but profile write failed — log and surface to UI.
@@ -170,8 +198,7 @@ export const useAuthStore = create((set) => ({
           return;
         }
       } else {
-        await updateDoc(userRef, { activeSessionId: sessionId });
-        persistSessionId(sessionId);
+        await rotateSession(result.user);
         analytics.login({ method: 'google' });
       }
       // onAuthStateChanged handles the state update
@@ -188,17 +215,15 @@ export const useAuthStore = create((set) => ({
       // Firestore write — prevents a race condition where security rules
       // evaluate request.auth as null immediately after account creation.
       await result.user.getIdToken();
-      const sessionId = generateSessionId();
       // Write profile — this must succeed before proceeding.
       await setDoc(doc(db, 'users', result.user.uid), {
         uid:            result.user.uid,
         email,
         displayName:    displayName ?? email.split('@')[0],
         plan:           'free',
-        activeSessionId: sessionId,
         createdAt:      serverTimestamp(),
       });
-      persistSessionId(sessionId);
+      await rotateSession(result.user);
       // Email verification intentionally skipped — app uses Google Sign-In;
       // Firebase Auth identity is guaranteed by Google OAuth.
       analytics.signUp({ method: 'email' });
@@ -222,9 +247,9 @@ export const useAuthStore = create((set) => ({
   logout: async () => {
     if (auth.currentUser) {
       try {
-        await updateDoc(doc(db, 'users', auth.currentUser.uid), { activeSessionId: null });
+        await httpsCallable(getFunctions(), 'clearSession')();
       } catch (e) {
-        console.warn('[auth] failed to clear activeSessionId on logout:', e?.message);
+        console.warn('[auth] failed to clear session on logout:', e?.message);
       }
     }
     try {

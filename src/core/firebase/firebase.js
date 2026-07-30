@@ -7,6 +7,7 @@ import {
   browserPopupRedirectResolver,
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -36,6 +37,10 @@ export const auth = initializeAuth(app, {
   popupRedirectResolver: browserPopupRedirectResolver,
 });
 export const db = getFirestore(app);
+// Realtime Database — used for the single-session-enforcement websocket
+// listener (see useAuthStore.js). Requires VITE_FIREBASE_DATABASE_URL when
+// the RTDB instance isn't the project's regional default.
+export const rtdb = getDatabase(app, import.meta.env.VITE_FIREBASE_DATABASE_URL);
 export const googleProvider = new GoogleAuthProvider();
 // Always show the account picker so users can choose or register with a different account.
 // Wrapped in try/catch defensively — some SDK versions throw if called at module load

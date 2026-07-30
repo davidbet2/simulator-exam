@@ -62,14 +62,17 @@ service cloud.firestore {
       // On create, owners cannot seed themselves into any privileged tier.
       allow create: if request.auth != null && request.auth.uid == uid
         && (!('plan' in request.resource.data) || request.resource.data.plan == 'free')
-        && !request.resource.data.keys().hasAny(['isPro','role','verifiedAuthor','reputationScore','banned']);
+        && !request.resource.data.keys().hasAny(['isPro','role','verifiedAuthor','reputationScore','banned','activeSessionId']);
       allow update: if request.auth != null && (
         // Admins can update any user (plan, banned, notes, etc.)
         isAdmin()
-        // Owners cannot change any privileged field.
+        // Owners cannot change any privileged field. activeSessionId is
+        // exclusively rotated by the rotateSession/clearSession Cloud
+        // Functions (Admin SDK bypasses rules) — single-session enforcement
+        // would be trivially bypassable if a client could write it directly.
         || (request.auth.uid == uid
             && !request.resource.data.diff(resource.data).affectedKeys()
-                  .hasAny(['plan','isPro','role','verifiedAuthor','reputationScore','banned']))
+                  .hasAny(['plan','isPro','role','verifiedAuthor','reputationScore','banned','activeSessionId']))
       );
     }
 
