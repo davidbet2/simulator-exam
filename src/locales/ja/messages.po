@@ -29,6 +29,10 @@ msgstr "今すぐ始めよう!"
 #~ msgid "¡Felicitaciones! Aprobaste"
 #~ msgstr "おめでとうございます!合格です"
 
+#: src/features/suggestions/components/SuggestionModal.jsx:69
+msgid "¡Gracias por tu sugerencia! La tendremos en cuenta."
+msgstr "ご提案ありがとうございます！参考にさせていただきます。"
+
 #: src/features/public/pages/ContactPage.jsx:188
 msgid "¡Mensaje enviado!"
 msgstr "メッセージを送信しました！"
@@ -247,6 +251,10 @@ msgstr "{passed}件合格"
 #: src/features/profile/pages/ProfilePage.jsx:269
 msgid "{passed} aprobados"
 msgstr "{passed}件合格"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:107
+msgid "{star} estrellas"
+msgstr "{star}つ星"
 
 #: src/features/profile/pages/ProfilePage.jsx:733
 msgid "{totalExams} examen"
@@ -663,6 +671,10 @@ msgstr "タイトル、説明、タグで検索…"
 msgid "Buscar sets de examen"
 msgstr "試験セットを検索"
 
+#: src/features/suggestions/components/SuggestionModal.jsx:64
+msgid "Buzón de sugerencias"
+msgstr "提案ボックス"
+
 #: src/features/explore/pages/ExamSetLandingPage.jsx:411
 msgid "Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje."
 msgstr "各モードは認知学習科学に裏付けられた異なるテクニックを活用します。"
@@ -670,6 +682,14 @@ msgstr "各モードは認知学習科学に裏付けられた異なるテクニ
 #: src/features/explore/pages/ExamSetLandingPage.jsx:508
 msgid "Calibración metacognitiva (Brainscape CBR · Dunning-Kruger)"
 msgstr "メタ認知キャリブレーション（Brainscape CBR · ダニング=クルーガー）"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:98
+msgid "Calificación (opcional)"
+msgstr "評価（任意）"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:100
+msgid "Calificación de 1 a 5 estrellas"
+msgstr "1から5つ星の評価"
 
 #. placeholder {0}: averageValue.toFixed(1)
 #. placeholder {1}: count === 1 ? 'voto' : 'votos'
@@ -754,6 +774,7 @@ msgid "Categorías / Etiquetas (opcional)"
 msgstr "カテゴリ / タグ（任意）"
 
 #: src/features/results/ResultsPage.jsx:197
+#: src/features/suggestions/components/SuggestionModal.jsx:72
 msgid "Cerrar"
 msgstr "閉じる"
 
@@ -952,6 +973,10 @@ msgstr "本物のタイマー、問題間の自由なナビゲーション、終
 #: src/features/profile/pages/SettingsPage.jsx:281
 msgid "Cuenta y privacidad"
 msgstr "アカウントとプライバシー"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:88
+msgid "Cuéntanos qué mejorarías o qué te gustaría ver…"
+msgstr "改善してほしい点や見てみたい機能を教えてください…"
 
 #: src/components/layout/PublicLayout.jsx:48
 #: src/features/profile/pages/ProfilePage.jsx:247
@@ -1214,6 +1239,7 @@ msgid "Entre 1 y 300 minutos."
 msgstr "1〜300分の間で入力してください。"
 
 #: src/features/public/pages/ContactPage.jsx:270
+#: src/features/suggestions/components/SuggestionModal.jsx:131
 msgid "Enviando…"
 msgstr "送信中…"
 
@@ -1232,6 +1258,14 @@ msgstr "メッセージを送信"
 #: src/features/public/pages/ContactPage.jsx:197
 msgid "Enviar otro mensaje"
 msgstr "別のメッセージを送信"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:131
+msgid "Enviar sugerencia"
+msgstr "提案を送信"
+
+#: src/features/suggestions/components/SuggestionFab.jsx:25
+msgid "Enviar una sugerencia"
+msgstr "提案を送信する"
 
 #: src/features/creator/pages/EditExamPage.jsx:162
 msgid "Error al cargar el set."
@@ -2858,6 +2892,10 @@ msgstr "進捗は自動保存されます。次回は続きから再開できま
 msgid "Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada."
 msgstr "テーマエリア別の進捗。ドメインをタップして集中練習。"
 
+#: src/features/suggestions/components/SuggestionModal.jsx:79
+msgid "Tu sugerencia"
+msgstr "あなたの提案"
+
 #: src/features/public/pages/ContactPage.jsx:233
 msgid "tu@correo.com"
 msgstr "you@email.com"
@@ -2994,6 +3032,10 @@ msgstr "ホームに戻る"
 #: src/features/flashcards/pages/FlashcardsPage.jsx:74
 msgid "Volver al set"
 msgstr "セットに戻る"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:136
+msgid "Ya enviaste una sugerencia hace poco. Intenta de nuevo en unos minutos."
+msgstr "最近すでに提案を送信しています。数分後にもう一度お試しください。"
 
 #: src/features/welcome/WelcomePage.jsx:446
 msgid "Ya tengo cuenta"

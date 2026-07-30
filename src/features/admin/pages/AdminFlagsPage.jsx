@@ -24,6 +24,7 @@ const FLAG_META = [
   { key: 'adsEnabled',          label: 'Publicidad (AdSense)',   desc: 'Muestra banners de publicidad a usuarios free y visitantes. Desactiva para retirar todos los anuncios.' },
   { key: 'pwaPromptEnabled',    label: 'Banner de instalación PWA', desc: 'Muestra el banner/toast que invita a instalar CertZen como app. Desactiva para ocultarlo en toda la app sin deploy.' },
   { key: 'promoBannerEnabled',  label: 'Banner promocional',    desc: 'Muestra el banner de promoción/cupón en / y /home. Configura el contenido y la audiencia debajo.' },
+  { key: 'suggestionsBoxEnabled', label: 'Buzón de sugerencias', desc: 'Muestra el botón flotante de sugerencias en la app autenticada (excepto durante el examen).' },
   { key: 'maintenanceMode',      label: 'Modo mantenimiento',    desc: 'Bloquea el acceso a todo excepto el panel admin. ¡Cuidado!', danger: true },
 ];
 

@@ -10,6 +10,7 @@ import { CookieConsentBanner } from '../../features/consent/components/CookieCon
 import { usePwaInstall } from '../../features/pwa/hooks/usePwaInstall';
 import { PwaInstallPrompt } from '../../features/pwa/components/PwaInstallPrompt';
 import { PromoBanner } from '../../features/promo/components/PromoBanner';
+import { SuggestionFab } from '../../features/suggestions/components/SuggestionFab';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
@@ -111,6 +112,7 @@ export function AppRouter() {
       <Suspense fallback={<PageLoader />}>
       <MaintenanceGate>
       <PromoBannerSlot />
+      <SuggestionFab />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<RootRoute />} />

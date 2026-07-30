@@ -29,6 +29,10 @@ msgstr "Inizia ora!"
 #~ msgid "¡Felicitaciones! Aprobaste"
 #~ msgstr "Congratulazioni! Hai superato"
 
+#: src/features/suggestions/components/SuggestionModal.jsx:69
+msgid "¡Gracias por tu sugerencia! La tendremos en cuenta."
+msgstr "Grazie per il tuo suggerimento! Lo terremo in considerazione."
+
 #: src/features/public/pages/ContactPage.jsx:188
 msgid "¡Mensaje enviado!"
 msgstr "Messaggio inviato!"
@@ -247,6 +251,10 @@ msgstr "{passed} superato"
 #: src/features/profile/pages/ProfilePage.jsx:269
 msgid "{passed} aprobados"
 msgstr "{passed} superati"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:107
+msgid "{star} estrellas"
+msgstr "{star} stelle"
 
 #: src/features/profile/pages/ProfilePage.jsx:733
 msgid "{totalExams} examen"
@@ -663,6 +671,10 @@ msgstr "Cerca per titolo, descrizione o tag…"
 msgid "Buscar sets de examen"
 msgstr "Cerca set di esame"
 
+#: src/features/suggestions/components/SuggestionModal.jsx:64
+msgid "Buzón de sugerencias"
+msgstr "Casella dei suggerimenti"
+
 #: src/features/explore/pages/ExamSetLandingPage.jsx:411
 msgid "Cada modo aprovecha una técnica distinta respaldada por la ciencia cognitiva del aprendizaje."
 msgstr "Ogni modalità sfrutta una tecnica diversa supportata dalla scienza cognitiva dell'apprendimento."
@@ -670,6 +682,14 @@ msgstr "Ogni modalità sfrutta una tecnica diversa supportata dalla scienza cogn
 #: src/features/explore/pages/ExamSetLandingPage.jsx:508
 msgid "Calibración metacognitiva (Brainscape CBR · Dunning-Kruger)"
 msgstr "Calibrazione metacognitiva (Brainscape CBR · Dunning-Kruger)"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:98
+msgid "Calificación (opcional)"
+msgstr "Valutazione (opzionale)"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:100
+msgid "Calificación de 1 a 5 estrellas"
+msgstr "Valutazione da 1 a 5 stelle"
 
 #. placeholder {0}: averageValue.toFixed(1)
 #. placeholder {1}: count === 1 ? 'voto' : 'votos'
@@ -754,6 +774,7 @@ msgid "Categorías / Etiquetas (opcional)"
 msgstr "Categorie / Etichette (facoltativo)"
 
 #: src/features/results/ResultsPage.jsx:197
+#: src/features/suggestions/components/SuggestionModal.jsx:72
 msgid "Cerrar"
 msgstr "Chiudi"
 
@@ -952,6 +973,10 @@ msgstr "Cronometro reale, navigazione libera tra le domande e revisione completa
 #: src/features/profile/pages/SettingsPage.jsx:281
 msgid "Cuenta y privacidad"
 msgstr "Account e privacy"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:88
+msgid "Cuéntanos qué mejorarías o qué te gustaría ver…"
+msgstr "Dicci cosa miglioreresti o cosa vorresti vedere…"
 
 #: src/components/layout/PublicLayout.jsx:48
 #: src/features/profile/pages/ProfilePage.jsx:247
@@ -1214,6 +1239,7 @@ msgid "Entre 1 y 300 minutos."
 msgstr "Tra 1 e 300 minuti."
 
 #: src/features/public/pages/ContactPage.jsx:270
+#: src/features/suggestions/components/SuggestionModal.jsx:131
 msgid "Enviando…"
 msgstr "Invio in corso…"
 
@@ -1232,6 +1258,14 @@ msgstr "Invia messaggio"
 #: src/features/public/pages/ContactPage.jsx:197
 msgid "Enviar otro mensaje"
 msgstr "Invia un altro messaggio"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:131
+msgid "Enviar sugerencia"
+msgstr "Invia suggerimento"
+
+#: src/features/suggestions/components/SuggestionFab.jsx:25
+msgid "Enviar una sugerencia"
+msgstr "Invia un suggerimento"
 
 #: src/features/creator/pages/EditExamPage.jsx:162
 msgid "Error al cargar el set."
@@ -2858,6 +2892,10 @@ msgstr "I tuoi progressi vengono salvati automaticamente. Puoi riprendere da dov
 msgid "Tu progreso por área temática. Toca un dominio para practicarlo de forma focalizada."
 msgstr "Il tuo progresso per area tematica. Tocca un dominio per esercitarti in modo mirato."
 
+#: src/features/suggestions/components/SuggestionModal.jsx:79
+msgid "Tu sugerencia"
+msgstr "Il tuo suggerimento"
+
 #: src/features/public/pages/ContactPage.jsx:233
 msgid "tu@correo.com"
 msgstr "tu@email.com"
@@ -2994,6 +3032,10 @@ msgstr "Torna alla home"
 #: src/features/flashcards/pages/FlashcardsPage.jsx:74
 msgid "Volver al set"
 msgstr "Torna al set"
+
+#: src/features/suggestions/components/SuggestionModal.jsx:136
+msgid "Ya enviaste una sugerencia hace poco. Intenta de nuevo en unos minutos."
+msgstr "Hai già inviato un suggerimento di recente. Riprova tra qualche minuto."
 
 #: src/features/welcome/WelcomePage.jsx:446
 msgid "Ya tengo cuenta"

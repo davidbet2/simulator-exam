@@ -361,6 +361,125 @@ exports.sendContactEmail = onCall(
   }
 )
 
+// sendSuggestionEmail — stores a suggestion in Firestore and forwards it to
+// the admin inbox. Called from the SuggestionModal FAB (see SPEC 11).
+// Auth is required so uid/email come from the verified token, never the body.
+// Reuses the same secrets as sendContactEmail (RESEND_API_KEY, CONTACT_EMAIL).
+const SUGGESTION_COOLDOWN_MS = 5 * 60 * 1000
+
+exports.sendSuggestionEmail = onCall(
+  {
+    cors: true,
+    secrets: [RESEND_SECRET, CONTACT_EMAIL],
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Login required')
+    }
+
+    const uid   = request.auth.uid
+    const email = request.auth.token.email
+    if (!email) {
+      throw new HttpsError('invalid-argument', 'No email on auth token')
+    }
+
+    const { message, rating } = request.data ?? {}
+
+    if (typeof message !== 'string' || message.trim().length < 10 || message.trim().length > 1000) {
+      throw new HttpsError('invalid-argument', 'Invalid message length')
+    }
+    if (rating !== null && rating !== undefined
+        && (!Number.isInteger(rating) || rating < 1 || rating > 5)) {
+      throw new HttpsError('invalid-argument', 'Invalid rating')
+    }
+
+    const cleanMessage = message.trim()
+    const cleanRating  = Number.isInteger(rating) ? rating : null
+
+    const db = getFirestore()
+
+    const lastSnap = await db.collection('suggestions')
+      .where('uid', '==', uid)
+      .orderBy('createdAt', 'desc')
+      .limit(1)
+      .get()
+
+    if (!lastSnap.empty) {
+      const lastCreatedAt = lastSnap.docs[0].data().createdAt?.toDate?.() ?? null
+      if (lastCreatedAt && Date.now() - lastCreatedAt.getTime() < SUGGESTION_COOLDOWN_MS) {
+        throw new HttpsError('resource-exhausted', 'Please wait before sending another suggestion')
+      }
+    }
+
+    const createdAt = new Date()
+    await db.collection('suggestions').add({
+      uid,
+      email,
+      message:   cleanMessage,
+      rating:    cleanRating,
+      createdAt,
+    })
+
+    const apiKey  = RESEND_SECRET.value()
+    const toEmail = CONTACT_EMAIL.value()
+
+    if (!apiKey || !toEmail) {
+      console.warn('sendSuggestionEmail: RESEND_API_KEY or CONTACT_EMAIL not configured')
+      throw new HttpsError('internal', 'Email service not configured')
+    }
+
+    {
+      const safeEmail   = escapeHtml(email)
+      const safeMessage = escapeHtml(cleanMessage)
+      const ratingLabel = cleanRating ? `${'⭐'.repeat(cleanRating)} (${cleanRating}/5)` : 'Sin calificación'
+
+      const { Resend } = require('resend')
+      const resend = new Resend(apiKey)
+
+      const { error } = await resend.emails.send({
+        from:    'CertZen <soporte@certzen.app>',
+        to:      toEmail,
+        replyTo: email,
+        subject: '[CertZen Sugerencia] Nueva sugerencia de usuario',
+        html: `
+          <!DOCTYPE html>
+          <html lang="es">
+          <head><meta charset="UTF-8" /><title>Sugerencia CertZen</title></head>
+          <body style="margin:0;padding:32px;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+            <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e2e8f0;padding:32px;">
+              <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;">Buzón de sugerencias — CertZen</p>
+              <h2 style="margin:0 0 24px;font-size:18px;font-weight:700;color:#0f172a;">Nueva sugerencia</h2>
+              <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+                <tr>
+                  <td style="padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;width:100px">Usuario</td>
+                  <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#6366f1;"><a href="mailto:${safeEmail}" style="color:#6366f1;">${safeEmail}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;">Rating</td>
+                  <td style="padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;color:#0f172a;">${ratingLabel}</td>
+                </tr>
+              </table>
+              <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:24px;">
+                <p style="margin:0;font-size:13px;color:#334155;line-height:1.7;white-space:pre-wrap;">${safeMessage}</p>
+              </div>
+              <p style="margin:0;font-size:11px;color:#94a3b8;">Responde directamente a este email — el Reply-To apunta a ${safeEmail}</p>
+            </div>
+          </body>
+          </html>
+        `,
+      })
+
+      if (error) {
+        console.error('sendSuggestionEmail: Resend error', error)
+        throw new HttpsError('internal', 'Failed to send email')
+      }
+    }
+
+    console.log(`sendSuggestionEmail: saved suggestion from ${email}`)
+    return { ok: true, createdAt: createdAt.toISOString() }
+  }
+)
+
 /**
  * Public HTTP endpoint that returns featureFlags/global without requiring App Check.
  * Used as fallback by useFeatureFlags when App Check blocks the Firestore SDK

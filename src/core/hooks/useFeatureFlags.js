@@ -26,6 +26,7 @@ export const DEFAULT_FLAGS = {
   promoBannerShowAnonymous:  true,
   promoBannerShowFree:       true,
   promoBannerShowPro:        false,
+  suggestionsBoxEnabled:     false,
 };
 
 /**
