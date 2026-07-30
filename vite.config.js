@@ -34,13 +34,26 @@ export default defineConfig({
         skipWaiting: true,
         clientsClaim: true,
         // PNGs excluidos del precache — dolphin assets son grandes y cambian frecuentemente
-        globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+        // html excluido del precache: el documento debe revalidarse siempre contra el
+        // servidor (ver runtimeCaching abajo) para no servir headers de seguridad (CSP) obsoletos.
+        globPatterns: ['**/*.{js,css,ico,svg,woff2}'],
         globIgnores: ['**/dolphin_full_system/**'],
         // Never let the SW intercept Firebase Auth popup/redirect handler routes.
         // Without this, /__/auth/handler gets served from the SW cache (index.html)
         // instead of the Firebase Hosting auth endpoint, breaking Google sign-in popups.
         navigateFallbackDenylist: [/^\/__\//],
         runtimeCaching: [
+          {
+            // Documento HTML (navegación): red primero, con fallback a cache si no hay red.
+            // Garantiza que cambios de seguridad (ej. CSP en firebase.json) lleguen sin
+            // requerir un hard reload manual del usuario.
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'html-cache',
+              networkTimeoutSeconds: 5,
+            },
+          },
           {
             // NetworkFirst: siempre intenta red primero → garantiza assets frescos en cada deploy
             urlPattern: /\/dolphin_full_system\/.*/i,
