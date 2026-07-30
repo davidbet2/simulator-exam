@@ -71,6 +71,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://certzen.app/exam-sets/1LtmjfUZQWghtEx7KmSV</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://certzen.app/exam-sets/academic-vocabulary-advanced</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
