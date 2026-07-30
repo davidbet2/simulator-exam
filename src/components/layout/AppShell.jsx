@@ -529,7 +529,7 @@ function TopBar({ authed }) {
   }
 
   return (
-    <header className="sticky top-0 z-20 h-16 md:h-[4.5rem]">
+    <header className="relative z-20 h-16 md:h-[4.5rem]">
       <div className="h-full flex items-center gap-3 px-4 sm:px-6">
         <form onSubmit={onSubmit} className="flex-1 max-w-xl mx-auto relative" ref={containerRef} role="search">
           <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zen-ink/40 dark:text-white/40 pointer-events-none" />

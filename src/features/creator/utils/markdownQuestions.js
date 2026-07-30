@@ -85,7 +85,10 @@ export function parseMarkdownToQuestions(markdown) {
     if (/^#{1,6}\s/.test(line)) continue
     if (!cur) continue
 
-    if ((m = line.match(OPTION_RE))) {
+    // Once an answer has been recorded, a line that merely looks like an
+    // option ("A . API Keys:" inside a per-option explanation breakdown) is
+    // explanation text, not a new option — options only ever precede the answer.
+    if (cur.answer.length === 0 && (m = line.match(OPTION_RE))) {
       const key = m[1].toUpperCase()
       cur.options[key] = stripMd(m[2])
       lastKey = key

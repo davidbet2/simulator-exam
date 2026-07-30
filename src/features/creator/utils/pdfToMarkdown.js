@@ -133,6 +133,18 @@ export function bodyFontSize(lines) {
   return best
 }
 
+// Matches "A) text", "A. text", "A] text" and the dash-delimited variant used
+// by exam-dump style PDFs ("A- text", with no space before the dash).
+const OPTION_LINE_RE = /^[([{]?\s*([A-Ha-h])(?:[.)\]]\s+|-\s*)(.+)$/
+// Header-only section labels ("Options:", "Answer:", "Explanation:") used by
+// exam-dump PDFs that put the value on the following line(s) instead of
+// inline. Matching these lets us gate option detection to the right section
+// (so explanation text like "A . API Keys:" isn't mistaken for an option)
+// and capture the answer value from the line that follows.
+const OPTIONS_HEADER_RE = /^options?\s*[:：]?\s*$/i
+const ANSWER_HEADER_RE = /^(?:answer|ans|respuesta|correct\s*answer|key)\s*[:：]?\s*$/i
+const EXPLANATION_HEADER_RE = /^(?:explicaci[oó]n|explanation)\s*[:：]?\s*$/i
+
 export function linesToCanonicalMarkdown(lines) {
   const out = []
   // Tracks the current question block for bold-answer inference.
@@ -154,25 +166,45 @@ export function linesToCanonicalMarkdown(lines) {
   for (const line of lines) {
     const t = line.text
     let m
+
+    // Metadata noise emitted by some exam-dump PDFs — not part of the question.
+    if (/^Question\s*Type\s*[:：]/i.test(t)) continue
+
     if ((m = t.match(/^(?:Q(?:uestion)?\s*)?(\d{1,4})[.)]\s*(.+)$/i))) {
       closeBlock()
       out.push('', `# ${m[1]}. ${m[2]}`)
-      block = { options: [], hasAnswer: false }
+      block = { options: [], hasAnswer: false, section: 'question' }
     } else if ((m = t.match(/^Q(?:uestion)?\s*#?\s*(\d{1,4})\b\s*(?:\(.*\))?\s*[:.]?\s*$/i))) {
       // Header-only line ("Question #16 (1 Point)") — the question text
       // follows on the next line(s), so the block opens with no text yet.
       closeBlock()
       out.push('', `# ${m[1]}.`)
-      block = { options: [], hasAnswer: false }
-    } else if ((m = t.match(/^[([{]?\s*([A-Ha-h])\s*[.)\]]\s+(.+)$/))) {
+      block = { options: [], hasAnswer: false, section: 'question' }
+    } else if (OPTIONS_HEADER_RE.test(t)) {
+      if (block) block.section = 'options'
+    } else if (
+      block?.section !== 'answer' && block?.section !== 'explanation' &&
+      (m = t.match(OPTION_LINE_RE))
+    ) {
       const key = m[1].toUpperCase()
       out.push(`- ${key}) ${line.bold ? `**${m[2]}**` : m[2]}`)
       block?.options.push({ key, bold: line.bold })
+      if (block) block.section = 'options'
     } else if ((m = t.match(/^(answer|ans|respuesta|correct\s*answer|key)\s*[:：]\s*(.+)$/i))) {
       out.push(`> Respuesta: ${m[2].trim()}`)
-      if (block) block.hasAnswer = true
+      if (block) { block.hasAnswer = true; block.section = 'explanation' }
+    } else if (ANSWER_HEADER_RE.test(t)) {
+      if (block) block.section = 'answer'
     } else if ((m = t.match(/^(explicaci[oó]n|explanation)\s*[:：]\s*(.+)$/i))) {
       out.push(`> Explicación: ${m[2].trim()}`)
+      if (block) block.section = 'explanation'
+    } else if (EXPLANATION_HEADER_RE.test(t)) {
+      if (block) block.section = 'explanation'
+    } else if (block?.section === 'answer') {
+      // Value line right after a header-only "Answer:" — e.g. "C, E, F".
+      out.push(`> Respuesta: ${t.trim()}`)
+      block.hasAnswer = true
+      block.section = 'explanation'
     } else {
       out.push(line.bold && t.length < 90 ? `**${t}**` : t)
     }
@@ -232,8 +264,16 @@ export async function pdfToMarkdown(file) {
     allLines.push(...orderLinesForReading(lines))
   }
 
+  // Repeated running header/footer ("Sample PDF — Page 3") sit in a much
+  // smaller font than the body text — strip them so they don't get glued
+  // onto the surrounding question/explanation as noise.
+  const bodySize = bodyFontSize(allLines)
+  const contentLines = allLines.filter(
+    (l) => !(l.size <= bodySize * 0.85 && /page\s*\d+\s*$/i.test(l.text)),
+  )
+
   return {
-    markdown: linesToCanonicalMarkdown(allLines),
+    markdown: linesToCanonicalMarkdown(contentLines),
     pageCount: pdf.numPages,
     emptyPages,
   }
