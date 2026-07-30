@@ -1,18 +1,108 @@
-﻿import { useId, useState } from 'react';
+﻿import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { ChevronDown } from 'lucide-react';
 import { SEOHead } from '../../../components/SEOHead';
 import { PublicLayout } from '../../../components/layout/PublicLayout';
 import { GlassCard } from '../../../components/glass/GlassCard';
 import { GlassButton } from '../../../components/glass/GlassButton';
 
-const buildSubjects = (t) => [
-  { value: 'support', label: t`Soporte técnico` },
-  { value: 'billing', label: t`Cuenta y facturación` },
-  { value: 'content', label: t`Reporte de contenido` },
-  { value: 'other',   label: t`Otro` },
-];
+function SubjectSelect({ id, name, value, options, placeholder, onChange, error, inputClass, errorInputClass }) {
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const rootRef = useRef(null);
+  const listboxId = `${id}-listbox`;
+  const selected = options.find(o => o.value === value) ?? null;
+
+  useEffect(() => {
+    if (!open) return;
+    function handlePointerDown(e) {
+      if (!rootRef.current?.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handlePointerDown);
+    return () => document.removeEventListener('mousedown', handlePointerDown);
+  }, [open]);
+
+  function commit(index) {
+    const option = options[index];
+    if (!option) return;
+    onChange(option.value);
+    setOpen(false);
+  }
+
+  function handleTriggerKeyDown(e) {
+    if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) {
+      e.preventDefault();
+      if (!open) {
+        setActiveIndex(Math.max(0, options.findIndex(o => o.value === value)));
+        setOpen(true);
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        commit(activeIndex);
+      } else if (e.key === 'ArrowDown') {
+        setActiveIndex(i => Math.min(options.length - 1, i + 1));
+      } else if (e.key === 'ArrowUp') {
+        setActiveIndex(i => Math.max(0, i - 1));
+      }
+    } else if (e.key === 'Escape' && open) {
+      e.preventDefault();
+      setOpen(false);
+    }
+  }
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        id={id}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listboxId}
+        aria-required="true"
+        aria-invalid={!!error}
+        onClick={() => {
+          setActiveIndex(Math.max(0, options.findIndex(o => o.value === value)));
+          setOpen(o => !o);
+        }}
+        onKeyDown={handleTriggerKeyDown}
+        className={`${inputClass} flex items-center justify-between text-left ${error ? errorInputClass : ''} ${!selected ? 'text-zen-ink/50 dark:text-white/40' : ''}`}
+      >
+        <span>{selected ? selected.label : placeholder}</span>
+        <ChevronDown size={16} className="shrink-0 opacity-60" aria-hidden="true" />
+      </button>
+
+      {open && (
+        <ul
+          id={listboxId}
+          role="listbox"
+          aria-label={placeholder}
+          tabIndex={-1}
+          className="absolute z-50 mt-1.5 max-h-60 w-full overflow-auto rounded-zen border border-glass-light-border bg-white shadow-lg dark:border-glass-dark-border dark:bg-[#1f2937]"
+        >
+          {options.map((o, i) => (
+            <li
+              key={o.value}
+              role="option"
+              aria-selected={o.value === value}
+              onMouseDown={(e) => { e.preventDefault(); commit(i); }}
+              onMouseEnter={() => setActiveIndex(i)}
+              className={`cursor-pointer px-3 py-2.5 text-sm transition-colors ${
+                i === activeIndex
+                  ? 'bg-zen/15 text-zen dark:bg-white/10 dark:text-indigo-300'
+                  : 'text-zen-ink dark:text-white'
+              }`}
+            >
+              {o.label}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Hidden native input keeps the value participating in form semantics (validation focus target). */}
+      <input type="hidden" name={name} value={value} />
+    </div>
+  );
+}
 
 function Field({ label, id, error, children }) {
   return (
@@ -30,7 +120,12 @@ function Field({ label, id, error, children }) {
 
 export function ContactPage() {
   const { t } = useLingui();
-  const SUBJECTS = buildSubjects(t);
+  const SUBJECTS = [
+    { value: 'support', label: t`Soporte técnico` },
+    { value: 'billing', label: t`Cuenta y facturación` },
+    { value: 'content', label: t`Reporte de contenido` },
+    { value: 'other',   label: t`Otro` },
+  ];
   const formId = useId();
   const nameId = `${formId}-name`;
   const emailId = `${formId}-email`;
@@ -236,20 +331,20 @@ export function ContactPage() {
                 </Field>
 
                 <Field label={t`Asunto`} id={subjectId} error={errors.subject}>
-                  <select
+                  <SubjectSelect
                     id={subjectId}
                     name="subject"
                     value={form.subject}
-                    onChange={handleChange}
-                    aria-required="true"
-                    aria-invalid={!!errors.subject}
-                    className={`${inputClass} ${errors.subject ? errorInputClass : ''}`}
-                  >
-                    <option value="">{t`Selecciona un asunto…`}</option>
-                    {SUBJECTS.map(s => (
-                      <option key={s.value} value={s.value}>{s.label}</option>
-                    ))}
-                  </select>
+                    options={SUBJECTS}
+                    placeholder={t`Selecciona un asunto…`}
+                    onChange={(value) => {
+                      setForm(prev => ({ ...prev, subject: value }));
+                      setErrors(prev => ({ ...prev, subject: undefined }));
+                    }}
+                    error={errors.subject}
+                    inputClass={inputClass}
+                    errorInputClass={errorInputClass}
+                  />
                 </Field>
 
                 <Field label={t`Mensaje`} id={messageId} error={errors.message}>

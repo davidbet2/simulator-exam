@@ -194,6 +194,14 @@ html.dark ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
 
 html.dark .bg-white { background-color: #1f2937 !important; }
 
+/* Native <select> dropdown popups are OS-rendered: Chromium/Windows ignores
+ * author `color` on unselected <option> rows in dark mode, painting them
+ * with the system text color on a dark background (invisible text).
+ * Forcing color-scheme:light keeps the popup on the readable light palette
+ * regardless of the app's dark theme; the closed control keeps its own
+ * Tailwind styling untouched. */
+html.dark select { color-scheme: light !important; }
+
 /* Card shadow softer on dark */
 html.dark .card {
   background: #1f2937;
