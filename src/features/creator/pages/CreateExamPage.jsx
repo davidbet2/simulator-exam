@@ -118,7 +118,7 @@ function QuestionRow({ q, index, onEdit, onDelete }) {
 export function CreateExamPage() {
   const { t } = useLingui()
   const TYPE_LABELS = buildTypeLabels(t)
-  const { user, isPro } = useAuthStore()
+  const { user, isPro, displayName } = useAuthStore()
   const navigate = useNavigate()
   const maxQuestions = isPro ? PRO_QUESTION_LIMIT : FREE_QUESTION_LIMIT
 
@@ -217,19 +217,19 @@ export function CreateExamPage() {
     try {
       const tagsArr = tags.split(',').map((tag) => tag.trim()).filter(Boolean)
       const setRef = await addDoc(collection(db, 'examSets'), {
-        title:         title.trim(),
-        description:   description.trim(),
+        title:            title.trim(),
+        description:      description.trim(),
         domain,
-        tags:          tagsArr,
-        ownerUid:      user.uid,
-        ownerName:     user.displayName ?? user.email,
-        published:     true,
-        questionCount: questions.length,
-        timeMinutes:   Number(timeMinutes),
-        passPercent:   Number(passPercent),
-        attempts:      0,
-        official:      false,
-        createdAt:     serverTimestamp(),
+        tags:             tagsArr,
+        ownerUid:         user.uid,
+        ownerDisplayName: displayName ?? user.email.split('@')[0],
+        published:        true,
+        questionCount:    questions.length,
+        timeMinutes:      Number(timeMinutes),
+        passPercent:      Number(passPercent),
+        attempts:         0,
+        official:         false,
+        createdAt:        serverTimestamp(),
       })
 
       await Promise.all(

@@ -58,6 +58,7 @@ const ExamSetCard = memo(function ExamSetCard({ set, needle }) {
           official={!!set.official}
           ownerEmail={set.ownerEmail}
           ownerDisplayName={set.ownerDisplayName}
+          ownerName={set.ownerName}
         />
 
         {set.description && (

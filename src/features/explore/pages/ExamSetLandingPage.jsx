@@ -313,6 +313,7 @@ export function ExamSetLandingPage() {
               official={!!set.official}
               ownerEmail={set.ownerEmail}
               ownerDisplayName={set.ownerDisplayName}
+              ownerName={set.ownerName}
               size="md"
             />
           </div>

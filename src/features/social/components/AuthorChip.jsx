@@ -8,9 +8,10 @@ import { Trans } from '@lingui/react/macro';
  *   official       (bool)   — show "CertZen" oficial badge
  *   ownerEmail     (string) — raw email (fallback for displayName)
  *   ownerDisplayName (string) — optional denormalized name
+ *   ownerName      (string) — legacy denormalized name field (pre-rename)
  *   size           — 'sm' | 'md' (default 'sm')
  */
-export function AuthorChip({ official, ownerEmail, ownerDisplayName, size = 'sm' }) {
+export function AuthorChip({ official, ownerEmail, ownerDisplayName, ownerName, size = 'sm' }) {
   const textSize = size === 'md' ? 'text-sm' : 'text-xs';
   const iconSize = size === 'md' ? 14 : 12;
 
@@ -23,9 +24,11 @@ export function AuthorChip({ official, ownerEmail, ownerDisplayName, size = 'sm'
     );
   }
 
-  // Community author: displayName if available, otherwise email prefix (masked)
+  // Community author: displayName if available, otherwise legacy name/email prefix (masked)
+  const legacyName = ownerName?.includes('@') ? ownerName.split('@')[0] : ownerName;
   const label =
     ownerDisplayName
+      ?? legacyName
       ?? (ownerEmail ? ownerEmail.split('@')[0] : 'anónimo');
 
   return (
