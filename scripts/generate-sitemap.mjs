@@ -122,7 +122,7 @@ Allow: /
 
 Disallow: /admin
 Disallow: /admin/*
-Disallow: /exam
+Disallow: /exam$
 Disallow: /results
 Disallow: /dashboard
 Disallow: /profile
