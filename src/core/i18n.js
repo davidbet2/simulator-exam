@@ -32,20 +32,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { i18n } from '@lingui/core';
-import { messages as esMsgs } from '../locales/es/messages.mjs';
-import { messages as enMsgs } from '../locales/en/messages.mjs';
-import { messages as frMsgs } from '../locales/fr/messages.mjs';
-import { messages as ptMsgs } from '../locales/pt/messages.mjs';
-import { messages as deMsgs } from '../locales/de/messages.mjs';
-import { messages as itMsgs } from '../locales/it/messages.mjs';
-import { messages as zhMsgs } from '../locales/zh/messages.mjs';
-import { messages as jaMsgs } from '../locales/ja/messages.mjs';
 
-const compiledCatalogs = {
-  es: esMsgs,
-  en: enMsgs, fr: frMsgs, pt: ptMsgs,
-  de: deMsgs, it: itMsgs, zh: zhMsgs, ja: jaMsgs,
-};
+// Each locale's compiled Lingui catalog (~1 chunk per language) is loaded
+// on demand instead of all 8 upfront — only the active language's strings
+// ship in the initial bundle. Unknown/not-yet-loaded msgids fall back to
+// the source Spanish text (see note below), so there's no flash of missing
+// copy while a catalog is still in flight.
+const localeCatalogLoaders = import.meta.glob('../locales/*/messages.mjs');
 
 const STORAGE_KEY = 'certzen:lang';
 
@@ -493,18 +486,28 @@ export function useTranslation() {
 //      source text IS the msgid, so translations live keyed by that text.
 //
 // Unknown msgids fall back to the source Spanish, which keeps the UI legible
-// while the migration is in progress.
+// while the migration is in progress — including the brief moment before a
+// locale's catalog has finished loading.
 // ---------------------------------------------------------------------------
-for (const id of VALID_LANGS) {
-  i18n.load(id, compiledCatalogs[id] ?? {});
+const loadedLocales = new Set();
+
+async function ensureLocaleLoaded(id) {
+  if (loadedLocales.has(id) || !VALID_LANGS.has(id)) return;
+  const loader = localeCatalogLoaders[`../locales/${id}/messages.mjs`];
+  if (!loader) return;
+  const mod = await loader();
+  i18n.load(id, mod.messages ?? {});
+  loadedLocales.add(id);
 }
-i18n.activate(useLangStore.getState().lang);
+
+const initialLang = useLangStore.getState().lang;
+i18n.activate(initialLang); // activates immediately; catalog fills in once loaded below
+ensureLocaleLoaded(initialLang);
 
 // Keep Lingui in sync with the Zustand store.
 useLangStore.subscribe((state) => {
-  if (VALID_LANGS.has(state.lang)) {
-    i18n.activate(state.lang);
-  }
+  if (!VALID_LANGS.has(state.lang)) return;
+  ensureLocaleLoaded(state.lang).then(() => i18n.activate(state.lang));
 });
 
 export { i18n };

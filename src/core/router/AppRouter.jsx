@@ -5,15 +5,20 @@ import { useAuthStore } from '../store/useAuthStore';
 import { useFeatureFlags } from '../hooks/useFeatureFlags';
 import { MaintenancePage } from '../../features/public/pages/MaintenancePage';
 import { analytics } from '../analytics/events';
-import { StickyAdBar } from '../../features/ads/components/StickyAdBar';
-import { CookieConsentBanner } from '../../features/consent/components/CookieConsentBanner';
 import { usePwaInstall } from '../../features/pwa/hooks/usePwaInstall';
-import { PwaInstallPrompt } from '../../features/pwa/components/PwaInstallPrompt';
-import { PromoBanner } from '../../features/promo/components/PromoBanner';
-import { SuggestionFab } from '../../features/suggestions/components/SuggestionFab';
 
 // Eager — landing page loads immediately
 import { WelcomePage } from '../../features/welcome/WelcomePage';
+
+// Chrome overlays (ad bar, cookie banner, PWA prompt, promo banner, suggestion FAB) —
+// none are part of the critical first render, so they're lazy-loaded and each gets
+// its own Suspense boundary (fallback null: they're free-floating overlays, no
+// layout to reserve space for while they load).
+const StickyAdBar        = lazy(() => import('../../features/ads/components/StickyAdBar').then(m => ({ default: m.StickyAdBar })));
+const CookieConsentBanner = lazy(() => import('../../features/consent/components/CookieConsentBanner').then(m => ({ default: m.CookieConsentBanner })));
+const PwaInstallPrompt   = lazy(() => import('../../features/pwa/components/PwaInstallPrompt').then(m => ({ default: m.PwaInstallPrompt })));
+const PromoBanner        = lazy(() => import('../../features/promo/components/PromoBanner').then(m => ({ default: m.PromoBanner })));
+const SuggestionFab      = lazy(() => import('../../features/suggestions/components/SuggestionFab').then(m => ({ default: m.SuggestionFab })));
 
 // Lazy-loaded — split into separate chunks for faster initial load
 const ExamPage           = lazy(() => import('../../features/exam/pages/ExamPage').then(m => ({ default: m.ExamPage })));
@@ -111,8 +116,8 @@ export function AppRouter() {
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
       <MaintenanceGate>
-      <PromoBannerSlot />
-      <SuggestionFab />
+      <Suspense fallback={null}><PromoBannerSlot /></Suspense>
+      <Suspense fallback={null}><SuggestionFab /></Suspense>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<RootRoute />} />
@@ -211,9 +216,11 @@ export function AppRouter() {
       </Routes>
       </MaintenanceGate>
       </Suspense>
-      {!pwaPromptEligible && <StickyAdBar />}
-      <CookieConsentBanner />
-      <PwaInstallPrompt />
+      <Suspense fallback={null}>
+        {!pwaPromptEligible && <StickyAdBar />}
+        <CookieConsentBanner />
+        <PwaInstallPrompt />
+      </Suspense>
     </BrowserRouter>
   );
 }

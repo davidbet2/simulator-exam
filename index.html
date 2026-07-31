@@ -24,19 +24,18 @@
       gtag('js', new Date());
       gtag('config', 'G-8D9V2T76SG', { send_page_view: false });
     </script>
-    <!-- GTM loads GA4 — container GTM-MXR43F8H -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MXR43F8H');</script>
+    <!-- GTM (loads GA4, container GTM-MXR43F8H) and the Meta Pixel script tag
+         are injected later, on idle/timeout — see bootstrapThirdPartyScripts.js
+         below. dataLayer.push/fbq queue calls made before that, so no events
+         are lost, only the network fetch + execution is deferred. -->
 
-    <!-- Meta Pixel — gated on ad_storage consent granted (same Consent Mode v2 signal as GA4 above) -->
+    <!-- Meta Pixel stub — defines fbq/queueing synchronously so early
+         fbq() calls (e.g. on consent granted) queue correctly; the actual
+         fbevents.js script tag is injected by bootstrapThirdPartyScripts.js -->
     <script>
       !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window,
       document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
       window.__metaPixelReady = false;
@@ -72,8 +71,9 @@
       } catch (e) {}
     </script>
 
-    <!-- Google AdSense verification -->
-    <script id="google-adsense-client" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5212382372889604" crossorigin="anonymous"></script>
+    <!-- Defers the actual GTM + Meta Pixel script tags to idle/timeout.
+         AdSense is loaded separately, conditionally, by AdBanner.jsx. -->
+    <script type="module" src="/src/core/scripts/bootstrapThirdPartyScripts.js"></script>
 
     <!-- Primary SEO -->
     <title>CertZen — Simula el Examen. Aprueba al Primero.</title>
