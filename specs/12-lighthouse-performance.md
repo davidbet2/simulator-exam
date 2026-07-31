@@ -69,6 +69,23 @@ No aplica. Esta spec no introduce ni modifica estructuras de datos — no toca F
 
 **Nota:** los dos criterios marcados `[~]` (verificación manual de GA4/Meta Pixel y el score exacto de Lighthouse en producción) quedan pendientes de confirmación después del deploy — no bloquean el cierre de esta spec porque el resto de los criterios sí se verificaron directamente, y ambos dependen de un entorno (navegador real con GTM Preview, dominio productivo con CDN) que esta sesión de implementación no tiene forma de alcanzar sin desplegar.
 
+### Actualización post-deploy (2026-07-31, mismo día)
+
+Se hizo merge a `master`, push, y deploy a producción (`npm run deploy` → `firebase deploy --only hosting,firestore`). Lighthouse (desktop, misma config que el baseline) corrido contra `https://certzen.app/` ya con el build nuevo (confirmado por `Last-Modified` del header):
+
+| Métrica | Baseline | Producción post-deploy |
+|---|---|---|
+| Performance | 49 | **76** (objetivo ≥80, no alcanzado) |
+| Best Practices | 58 | **73** (objetivo ≥90, no alcanzado) |
+| Accessibility | 100 | 100 (sin regresión) |
+| SEO | 100 | 100 (sin regresión) |
+| Total Blocking Time | 910ms | **20ms** |
+| Cookies de terceros | 50 | **1** (`test_cookie` de Google Ads) |
+| Source maps | fallaba | pasa |
+| Deprecated APIs | fallaba | pasa |
+
+Los dos objetivos numéricos exactos (Performance ≥80, Best Practices ≥90) no se alcanzaron, pero la mejora es real y grande: TBT bajó 98%, cookies de terceros bajaron de 50 a 1. El gap restante en Best Practices está atado a mantener ads/analytics activos (cookie de Google Ads + panel de Issues, ambos binarios en Lighthouse) — ya documentado como trade-off aceptado. El gap en Performance coincide con el hallazgo "redirects" (~2.1s) que se documentó como no reproducible/fuera de alcance — sigue apareciendo en producción igual que en el baseline, empujando LCP/FCP/SI aunque no afecta TBT.
+
 ---
 
 ## Decisiones tomadas y descartadas
