@@ -191,6 +191,13 @@ async function prerenderRoute(browser, route) {
   const result = await page.evaluate((expected) => {
     document.querySelectorAll('title').forEach((el, i) => { if (i > 0) el.remove(); });
 
+    // The cookie consent banner reflects this headless browser's (empty) localStorage,
+    // not the real visitor's — baking it into the static snapshot as "visible" made it
+    // flash on every load for returning visitors who'd already answered, since hydration
+    // immediately hides it once React reads their actual stored choice. It's purely
+    // client-state-dependent, so it has no business in the static HTML at all.
+    document.querySelector('[aria-label="Consentimiento de cookies"]')?.remove();
+
     const keyOf = (el) => (el.tagName === 'META'
       ? `meta:${el.getAttribute('name') || el.getAttribute('property')}`
       : `link:${el.getAttribute('rel')}`);
