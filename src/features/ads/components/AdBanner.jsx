@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Trans } from '@lingui/react/macro';
 import { useUserPlan } from '../../plans/hooks/useUserPlan';
 import { useFeatureFlags } from '../../../core/hooks/useFeatureFlags';
+import { onIdleOrTimeout } from '../../../core/scripts/deferredThirdPartyScripts';
 
 const ETHICAL_ADS_SCRIPT = 'https://media.ethicalads.io/media/client/ethicalads.min.js';
 const SCRIPT_ID = 'ethical-ads-client';
@@ -39,18 +40,21 @@ export function AdBanner({
   // null = waiting, true = filled, false = unfilled
   const [adFilled, setAdFilled] = useState(null);
 
-  // ── Google AdSense loader ──────────────────────────────────────────────────
+  // ── Google AdSense loader (deferred to idle/timeout, keeps it off the
+  //    main thread during initial load) ─────────────────────────────────────
   useEffect(() => {
     if (isLoading || isPro || !adsenseId) return;
 
-    if (!document.getElementById(ADSENSE_SCRIPT_ID)) {
-      const script = document.createElement('script');
-      script.id = ADSENSE_SCRIPT_ID;
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`;
-      script.async = true;
-      script.crossOrigin = 'anonymous';
-      document.head.appendChild(script);
-    }
+    onIdleOrTimeout(() => {
+      if (!document.getElementById(ADSENSE_SCRIPT_ID)) {
+        const script = document.createElement('script');
+        script.id = ADSENSE_SCRIPT_ID;
+        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`;
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+      }
+    });
   }, [isLoading, isPro, adsenseId]);
 
   // ── Google AdSense push (call once per mount) ─────────────────────────────

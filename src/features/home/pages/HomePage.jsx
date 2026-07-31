@@ -18,8 +18,10 @@ import { GlassCard } from '../../../components/glass/GlassCard';
 import { GlassButton } from '../../../components/glass/GlassButton';
 import { GlassBadge } from '../../../components/glass/GlassBadge';
 import { getDomain, DOMAINS } from '../../../core/constants/domains';
-import robotHeroDark from '../../../assets/mascot/robot-hero-dark.webp';
-import robotHeroLight from '../../../assets/mascot/robot-hero-light.webp';
+import robotHeroDark320 from '../../../assets/mascot/robot-hero-dark-320.webp';
+import robotHeroDark640 from '../../../assets/mascot/robot-hero-dark-640.webp';
+import robotHeroLight320 from '../../../assets/mascot/robot-hero-light-320.webp';
+import robotHeroLight640 from '../../../assets/mascot/robot-hero-light-640.webp';
 
 function greetingKey() {
   const h = new Date().getHours();
@@ -261,8 +263,25 @@ export function HomePage() {
 
               <div className="hidden sm:block shrink-0">
                 <div className="relative h-40 w-40 select-none overflow-hidden rounded-full border border-glass-light-border shadow-zen-glass dark:border-glass-dark-border" aria-hidden="true">
-                  <img src={robotHeroLight} alt="" className="h-full w-full object-cover dark:hidden" width="320" height="320" />
-                  <img src={robotHeroDark} alt="" className="hidden h-full w-full object-cover dark:block" width="320" height="320" loading="lazy" />
+                  <img
+                    src={robotHeroLight320}
+                    srcSet={`${robotHeroLight320} 320w, ${robotHeroLight640} 640w`}
+                    sizes="160px"
+                    alt=""
+                    className="h-full w-full object-cover dark:hidden"
+                    width="320"
+                    height="320"
+                  />
+                  <img
+                    src={robotHeroDark320}
+                    srcSet={`${robotHeroDark320} 320w, ${robotHeroDark640} 640w`}
+                    sizes="160px"
+                    alt=""
+                    className="hidden h-full w-full object-cover dark:block"
+                    width="320"
+                    height="320"
+                    loading="lazy"
+                  />
                 </div>
               </div>
             </div>
