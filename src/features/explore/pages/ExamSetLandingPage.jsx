@@ -266,6 +266,16 @@ export function ExamSetLandingPage() {
     },
   };
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://certzen.app/' },
+      { '@type': 'ListItem', position: 2, name: domain.label, item: `https://certzen.app/explore/${set.domain}` },
+      { '@type': 'ListItem', position: 3, name: set.title, item: canonicalUrl },
+    ],
+  };
+
   // Free plan only unlocks Práctica Rápida (mode=quick) — every other mode requires Pro.
   const launchMode = (params) => {
     if (!user) { navigate('/register'); return; }
@@ -295,7 +305,7 @@ export function ExamSetLandingPage() {
         image="https://certzen.app/og-image.png"
         ogType="article"
         keywords={set.tags?.length > 0 ? set.tags.join(', ') : undefined}
-        jsonLd={jsonLd}
+        jsonLd={[jsonLd, breadcrumbJsonLd]}
       />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
@@ -305,7 +315,7 @@ export function ExamSetLandingPage() {
         {/* Hero */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex flex-wrap items-center gap-2 mb-3">
-            <Link to={`/explore?domain=${set.domain}`}>
+            <Link to={`/explore/${set.domain}`}>
               <GlassBadge tone="brand">{domain.icon} {domain.label}</GlassBadge>
             </Link>
             {set.level && <GlassBadge tone="neutral">{set.level}</GlassBadge>}
@@ -555,7 +565,7 @@ export function ExamSetLandingPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 <Tag size={12} className="text-zen-ink/40 dark:text-white/40" />
                 {set.tags.map((t) => (
-                  <Link key={t} to={`/explore?domain=${set.domain}`}>
+                  <Link key={t} to={`/explore/${set.domain}`}>
                     <span className="rounded-full border border-glass-light-border bg-glass-light-1 px-2 py-0.5 text-xs text-zen-ink/70 transition-colors hover:border-zen/40 hover:text-zen-ink dark:border-glass-dark-border dark:bg-glass-dark-1 dark:text-white/60 dark:hover:text-white">
                       #{t}
                     </span>

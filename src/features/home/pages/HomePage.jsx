@@ -37,6 +37,7 @@ const DOMAIN_TINTS = {
   rose:    'bg-pink-500/15 text-pink-600 dark:text-pink-300',
   emerald: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300',
   amber:   'bg-amber-500/15 text-amber-600 dark:text-amber-300',
+  lime:    'bg-lime-500/15 text-lime-600 dark:text-lime-300',
   slate:   'bg-glass-light-2 text-zen-ink/60 dark:bg-glass-dark-2 dark:text-white/60',
 };
 
@@ -83,7 +84,7 @@ function SetCard({ set }) {
 // ── Category tile ──────────────────────────────────────────────────────────
 function CategoryTile({ domain }) {
   return (
-    <Link to={`/explore?domain=${domain.id}`}>
+    <Link to={`/explore/${domain.id}`}>
       <GlassCard className="flex flex-col items-center justify-center gap-2.5 p-4 hover:border-zen/40 transition-colors">
         <span className={`flex h-11 w-11 items-center justify-center rounded-xl text-xl ${DOMAIN_TINTS[domain.color] ?? DOMAIN_TINTS.slate}`} aria-hidden>
           {domain.icon}

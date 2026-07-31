@@ -111,9 +111,9 @@ export function SEOHead({
       {image && <meta name="twitter:image" content={image} />}
       {image && <meta name="twitter:image:alt" content={fullTitle} />}
 
-      {jsonLd && (
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
-      )}
+      {jsonLd && (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).filter(Boolean).map((schema, i) => (
+        <script key={schema['@type'] ?? i} type="application/ld+json">{JSON.stringify(schema)}</script>
+      ))}
     </Helmet>
   );
 }

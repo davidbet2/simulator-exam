@@ -140,6 +140,7 @@ export function AppRouter() {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/payment-success" element={<ProtectedRoute requireUser><PaymentSuccessPage /></ProtectedRoute>} />
         <Route path="/explore" element={<ExploreExamsPage />} />
+        <Route path="/explore/:domain" element={<ExploreExamsPage />} />
         <Route path="/exam-sets/:slug" element={<ExamSetLandingPage />} />
         {/* /flashcards/:slug is public: the "demo" slug runs client-side with hardcoded
             questions, same pattern as /exam. Real sets enforce auth inside FlashcardsPage

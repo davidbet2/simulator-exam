@@ -47,6 +47,20 @@ export const DOMAINS = [
     description: 'Lógica, aptitud numérica y verbal.',
     color: 'amber',
   },
+  {
+    id: 'business',
+    label: 'Negocios & Marketing',
+    icon: '💼',
+    description: 'Google Analytics, Google Ads, Salesforce, HubSpot y marketing digital.',
+    color: 'blue',
+  },
+  {
+    id: 'sports',
+    label: 'Deportes & Fitness',
+    icon: '🏋️',
+    description: 'CrossFit, Yoga, Pilates y entrenamiento deportivo.',
+    color: 'lime',
+  },
 ];
 
 export const DOMAIN_IDS = DOMAINS.map((d) => d.id);

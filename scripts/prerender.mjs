@@ -51,10 +51,13 @@ const EXPECTED_TITLES = {
   '/explore': 'Explorar exámenes de certificación',
 };
 const STATIC_ROUTES = Object.keys(EXPECTED_TITLES);
-// Domain-filtered explore routes (/explore?domain=X) are intentionally NOT prerendered:
-// static hosting resolves a request to a file by pathname only, so every domain filter
-// would collide on the same dist/explore.html. They stay CSR-only (fine — Googlebot
-// renders JS; only the social-unfurl case this script targets needs a static file).
+// Domain category pages now live at a real pathname (/explore/:domain), so each one
+// can be prerendered to its own static file (dist/explore/<domain>.html) — unlike the
+// legacy /explore?domain=X form, which stays CSR-only since query strings can't map to
+// distinct static files. Keep this list in sync with DOMAINS in
+// src/core/constants/domains.js and generate-sitemap.mjs's DOMAIN_ROUTES.
+const DOMAIN_IDS = ['it', 'security', 'agile', 'health', 'english', 'logic', 'business', 'sports'];
+const DOMAIN_ROUTES = DOMAIN_IDS.map((d) => `/explore/${d}`);
 
 const BLOCKED_HOSTS = [
   'googletagmanager.com',
@@ -233,8 +236,8 @@ async function main() {
   console.log('🖨️  Prerendering public routes…');
 
   const setRoutes = await fetchExamSetSlugs();
-  const routes = [...STATIC_ROUTES, ...setRoutes];
-  console.log(`   · ${routes.length} routes to prerender (${setRoutes.length} exam sets)`);
+  const routes = [...STATIC_ROUTES, ...DOMAIN_ROUTES, ...setRoutes];
+  console.log(`   · ${routes.length} routes to prerender (${DOMAIN_ROUTES.length} domains, ${setRoutes.length} exam sets)`);
 
   rmSync(STAGING_DIR, { recursive: true, force: true });
   mkdirSync(STAGING_DIR, { recursive: true });

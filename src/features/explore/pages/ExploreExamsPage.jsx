@@ -1,11 +1,12 @@
 ﻿import { useState, useEffect, useMemo, memo, useRef } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, BookOpen, Users, Plus, X, Loader2 } from 'lucide-react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useExploreQuery, normalize } from '../hooks/useExploreQuery';
 import { useAuthStore } from '../../../core/store/useAuthStore';
-import { getDomain } from '../../../core/constants/domains';
+import { getDomain, DOMAIN_BY_ID } from '../../../core/constants/domains';
+import { DOMAIN_SEO_CONTENT } from '../../../core/constants/domainSeoContent';
 import { SEOHead } from '../../../components/SEOHead';
 import { AppShell } from '../../../components/layout/AppShell';
 import { PublicLayout } from '../../../components/layout/PublicLayout';
@@ -92,8 +93,11 @@ export function ExploreExamsPage() {
   const { t } = useLingui();
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const { domain: domainParam } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeDomain = searchParams.get('domain') ?? '';
+  const legacyDomain = searchParams.get('domain');
+  const rawDomain = domainParam ?? legacyDomain ?? '';
+  const activeDomain = DOMAIN_BY_ID[rawDomain] ? rawDomain : '';
   const [search, setSearch] = useState(() => searchParams.get('q') ?? '');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIdx, setActiveIdx] = useState(-1);
@@ -172,12 +176,39 @@ export function ExploreExamsPage() {
     }
   }
 
+  const seoContent = activeDomain ? DOMAIN_SEO_CONTENT[activeDomain] : null;
+
+  const breadcrumbJsonLd = activeDomain ? {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://certzen.app/' },
+      { '@type': 'ListItem', position: 2, name: getDomain(activeDomain).label, item: `https://certzen.app/explore/${activeDomain}` },
+    ],
+  } : null;
+
+  const faqJsonLd = seoContent?.faq?.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: seoContent.faq.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: t(q),
+      acceptedAnswer: { '@type': 'Answer', text: t(a) },
+    })),
+  } : null;
+
   const pageTitle = activeDomain
     ? t`Exámenes de ${getDomain(activeDomain).label}`
     : t`Explorar exámenes de certificación`;
   const pageDescription = activeDomain
     ? t`Simulacros gratuitos de ${getDomain(activeDomain).label}. Preguntas basadas en exam guides públicos. Estudia y evalúate en línea.`
     : t`Plataforma colaborativa de simuladores de examen: IT, Cloud, Salud, Inglés, Appian y más. Exploración gratis, regístrate para practicar.`;
+
+  // Legacy `/explore?domain=X` links redirect to the clean `/explore/:domain` path.
+  if (!domainParam && legacyDomain && DOMAIN_BY_ID[legacyDomain]) {
+    const q = searchParams.get('q');
+    return <Navigate to={`/explore/${legacyDomain}${q ? `?q=${encodeURIComponent(q)}` : ''}`} replace />;
+  }
 
   const Shell = user ? AppShell : PublicLayout;
 
@@ -186,8 +217,9 @@ export function ExploreExamsPage() {
       <SEOHead
         title={pageTitle}
         description={pageDescription}
-        path={`/explore${activeDomain ? `?domain=${activeDomain}` : ''}`}
+        path={activeDomain ? `/explore/${activeDomain}` : '/explore'}
         image="https://certzen.app/og-image.png"
+        jsonLd={[breadcrumbJsonLd, faqJsonLd]}
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
@@ -200,6 +232,11 @@ export function ExploreExamsPage() {
               <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60">
                 <Trans>Sets oficiales y de la comunidad. Estudia gratis, regístrate para guardar tu progreso.</Trans>
               </p>
+              {seoContent?.intro && (
+                <p className="mt-3 max-w-3xl text-sm text-zen-ink/70 dark:text-white/60">
+                  {t(seoContent.intro)}
+                </p>
+              )}
             </div>
             {user && (
               <GlassButton onClick={() => navigate('/create-exam')}>
@@ -339,6 +376,30 @@ export function ExploreExamsPage() {
             </div>
           )}
         </div>
+
+        {seoContent?.faq?.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+            className="space-y-3"
+          >
+            <h2 className="text-lg font-bold">
+              {t`Preguntas frecuentes sobre ${getDomain(activeDomain).label}`}
+            </h2>
+            <div className="space-y-2">
+              {seoContent.faq.map((item) => (
+                <details
+                  key={item.q.id ?? t(item.q)}
+                  className="group rounded-xl border border-glass-light-border bg-glass-light-2 p-4 backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2"
+                >
+                  <summary className="cursor-pointer list-none text-sm font-semibold text-zen-ink marker:content-none dark:text-white">
+                    {t(item.q)}
+                  </summary>
+                  <p className="mt-2 text-sm text-zen-ink/70 dark:text-white/60">{t(item.a)}</p>
+                </details>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {!user && !loading && sets.length > 0 && (
           <motion.div

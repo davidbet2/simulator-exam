@@ -36,44 +36,44 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://certzen.app/explore?domain=appian</loc>
+    <loc>https://certzen.app/explore/it</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://certzen.app/explore?domain=it</loc>
+    <loc>https://certzen.app/explore/security</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://certzen.app/explore?domain=security</loc>
+    <loc>https://certzen.app/explore/agile</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://certzen.app/explore?domain=agile</loc>
+    <loc>https://certzen.app/explore/health</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://certzen.app/explore?domain=health</loc>
+    <loc>https://certzen.app/explore/english</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://certzen.app/explore?domain=english</loc>
+    <loc>https://certzen.app/explore/logic</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://certzen.app/explore?domain=logic</loc>
+    <loc>https://certzen.app/explore/business</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://certzen.app/exam-sets/1LtmjfUZQWghtEx7KmSV</loc>
+    <loc>https://certzen.app/explore/sports</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://certzen.app/exam-sets/academic-vocabulary-advanced</loc>

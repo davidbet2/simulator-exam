@@ -9,6 +9,8 @@ export const DOMAINS = [
   { id: 'health',   label: 'Salud',           icon: '🏥', description: 'Primeros auxilios, anatomía y fundamentos de salud.',            color: 'rose' },
   { id: 'english',  label: 'Inglés (CEFR)',   icon: '🇬🇧', description: 'Niveles A1 a C2 según el Marco Común Europeo.',                  color: 'emerald' },
   { id: 'logic',    label: 'Razonamiento',    icon: '🧠', description: 'Lógica, aptitud numérica y verbal.',                             color: 'amber' },
+  { id: 'business', label: 'Negocios & Marketing', icon: '💼', description: 'Google Analytics, Google Ads, Salesforce, HubSpot y marketing digital.', color: 'blue' },
+  { id: 'sports',   label: 'Deportes & Fitness',   icon: '🏋️', description: 'CrossFit, Yoga, Pilates y entrenamiento deportivo.',              color: 'lime' },
 ];
 
 export const DOMAIN_BY_ID = Object.fromEntries(DOMAINS.map((d) => [d.id, d]));

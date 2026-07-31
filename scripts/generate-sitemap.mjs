@@ -48,8 +48,8 @@ const STATIC_ROUTES = [
   { loc: '/contact',  priority: '0.4', changefreq: 'yearly' },
 ];
 
-const DOMAIN_ROUTES = ['appian', 'it', 'security', 'agile', 'health', 'english', 'logic'].map((d) => ({
-  loc: `/explore?domain=${d}`,
+const DOMAIN_ROUTES = ['it', 'security', 'agile', 'health', 'english', 'logic', 'business', 'sports'].map((d) => ({
+  loc: `/explore/${d}`,
   priority: '0.8',
   changefreq: 'weekly',
 }));
