@@ -4,6 +4,7 @@ import { Trans } from '@lingui/react/macro';
 import { useUserPlan } from '../../plans/hooks/useUserPlan';
 import { useFeatureFlags } from '../../../core/hooks/useFeatureFlags';
 import { onIdleOrTimeout } from '../../../core/scripts/deferredThirdPartyScripts';
+import { readStoredConsent } from '../../consent/consent';
 
 const ETHICAL_ADS_SCRIPT = 'https://media.ethicalads.io/media/client/ethicalads.min.js';
 const SCRIPT_ID = 'ethical-ads-client';
@@ -39,11 +40,22 @@ export function AdBanner({
   const insRef = useRef(null);
   // null = waiting, true = filled, false = unfilled
   const [adFilled, setAdFilled] = useState(null);
+  // Google AdSense carries third-party ad cookies, so it only loads once the
+  // user has granted consent (Consent Mode v2 ad_storage) — see consent.js.
+  const [adConsentGranted, setAdConsentGranted] = useState(() => readStoredConsent() === 'granted');
+
+  useEffect(() => {
+    function handleConsentChange(event) {
+      setAdConsentGranted(event.detail.granted === true);
+    }
+    window.addEventListener('certzen:consent-changed', handleConsentChange);
+    return () => window.removeEventListener('certzen:consent-changed', handleConsentChange);
+  }, []);
 
   // ── Google AdSense loader (deferred to idle/timeout, keeps it off the
   //    main thread during initial load) ─────────────────────────────────────
   useEffect(() => {
-    if (isLoading || isPro || !adsenseId) return;
+    if (isLoading || isPro || !adsenseId || !adConsentGranted) return;
 
     onIdleOrTimeout(() => {
       if (!document.getElementById(ADSENSE_SCRIPT_ID)) {
@@ -55,22 +67,22 @@ export function AdBanner({
         document.head.appendChild(script);
       }
     });
-  }, [isLoading, isPro, adsenseId]);
+  }, [isLoading, isPro, adsenseId, adConsentGranted]);
 
   // ── Google AdSense push (call once per mount) ─────────────────────────────
   useEffect(() => {
-    if (isLoading || isPro || !adsenseId || pushedRef.current) return;
+    if (isLoading || isPro || !adsenseId || !adConsentGranted || pushedRef.current) return;
     try {
       pushedRef.current = true;
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {
       // adsbygoogle already filled — safe to ignore
     }
-  }, [isLoading, isPro, adsenseId]);
+  }, [isLoading, isPro, adsenseId, adConsentGranted]);
 
   // ── Detect AdSense filled / unfilled via MutationObserver ────────────────
   useEffect(() => {
-    if (!adsenseId || !adSlot || isPro) return;
+    if (!adsenseId || !adSlot || isPro || !adConsentGranted) return;
     const el = insRef.current;
     if (!el) return;
 
@@ -85,7 +97,7 @@ export function AdBanner({
     // After 4s with no response from AdSense (e.g. account under review), hide the space
     const timer = setTimeout(check, 4000);
     return () => { observer.disconnect(); clearTimeout(timer); };
-  }, [adsenseId, adSlot, isPro]);
+  }, [adsenseId, adSlot, isPro, adConsentGranted]);
 
   // ── EthicalAds loader ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -106,10 +118,12 @@ export function AdBanner({
   if (isLoading || isPro || !flags.adsEnabled) return null;
 
   // ── Google AdSense ad unit ─────────────────────────────────────────────────
-  // Only render a manual <ins> placement when a specific adSlot is provided.
-  // Without adSlot, the script is still loaded (enables Auto Ads from the
-  // AdSense dashboard) but we fall through to the visible sponsor placeholder.
-  if (adsenseId && adSlot) {
+  // Only render a manual <ins> placement when a specific adSlot is provided
+  // and the user has granted ad-cookie consent. Without adSlot, the script is
+  // still loaded (enables Auto Ads from the AdSense dashboard) but we fall
+  // through to the visible sponsor placeholder. Without consent, we skip
+  // Google entirely and fall through to EthicalAds/house ad instead.
+  if (adsenseId && adSlot && adConsentGranted) {
     // Hide if AdSense explicitly said unfilled or timed out without response
     if (adFilled === false) return null;
     return (

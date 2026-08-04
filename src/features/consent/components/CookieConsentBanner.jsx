@@ -8,9 +8,10 @@ import { CONSENT_STORAGE_KEY, updateConsent, readStoredConsent } from '../consen
 /**
  * CookieConsentBanner — pide consentimiento GDPR/LGPD para Consent Mode v2.
  *
- * Sin este banner, analytics_storage queda en 'denied' para siempre (default
- * de index.html), lo que impide a GA4/GTM medir usuarios — nunca se envía
- * un 'consent update' a 'granted'.
+ * Sin este banner, ad_storage/analytics_storage quedan en 'denied' para
+ * siempre (default de index.html): GA4/GTM no mide usuarios y AdBanner no
+ * carga el script de Google AdSense (ver certzen:consent-changed en
+ * consent.js) — nunca se envía un 'consent update' a 'granted'.
  */
 export function CookieConsentBanner() {
   const [visible, setVisible] = useState(() => readStoredConsent() === null);
@@ -28,7 +29,8 @@ export function CookieConsentBanner() {
       <GlassCard variant="elevated" className="mx-auto flex max-w-2xl flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <p className="text-sm text-zen-ink/80 dark:text-white/70">
           <Trans>
-            Usamos cookies para medir el uso del sitio y mejorar tu experiencia. Lee más en nuestra{' '}
+            Usamos cookies para medir el uso del sitio y, si lo aceptas, para mostrarte anuncios de Google AdSense personalizados.
+            Lee más en nuestra{' '}
             <Link to="/privacy" className="underline text-zen hover:text-zen-violet">
               Política de Privacidad
             </Link>.

@@ -3,7 +3,7 @@ import { SEOHead } from '../../../components/SEOHead';
 import { PublicLayout } from '../../../components/layout/PublicLayout';
 import { GlassCard } from '../../../components/glass/GlassCard';
 
-const LAST_UPDATED = '13 de abril de 2026';
+const LAST_UPDATED = '4 de agosto de 2026';
 
 function Section({ id, title, children }) {
   return (
@@ -74,7 +74,8 @@ export function PrivacyPage() {
             </ul>
             <p>
               <strong className="font-semibold text-zen-ink dark:text-white">No vendemos ni alquilamos</strong> tu información personal a terceros.
-              No usamos tus datos para publicidad comportamental de terceros.
+              Si aceptas cookies publicitarias (ver sección 5), Google AdSense puede usar tu actividad en el sitio para mostrarte
+              anuncios personalizados; si las rechazas, solo mostramos anuncios propios de CertZen sin seguimiento.
             </p>
           </Section>
 
@@ -89,13 +90,44 @@ export function PrivacyPage() {
 
           <Section id="cookies" title="5. Cookies y almacenamiento local">
             <p>
-              CertZen <strong className="font-semibold text-zen-ink dark:text-white">no utiliza cookies de seguimiento ni publicidad</strong>.
-              Usamos exclusivamente:
+              Usamos <code className="bg-glass-light-2 dark:bg-glass-dark-2 px-1 rounded text-xs">sessionStorage</code> exclusivamente
+              para guardar el progreso de un examen en curso (se borra al cerrar el navegador). Este almacenamiento no requiere consentimiento
+              porque no rastrea al usuario ni se comparte con terceros.
+            </p>
+            <p className="mt-2">
+              Adicionalmente, al visitar el sitio te pedimos consentimiento (banner de cookies) para las siguientes categorías,
+              gestionadas mediante Google Consent Mode v2:
             </p>
             <ul className="list-disc ml-5 space-y-1">
-              <li><code className="bg-glass-light-2 dark:bg-glass-dark-2 px-1 rounded text-xs">sessionStorage</code>: para guardar el progreso de un examen en curso (se borra al cerrar el navegador)</li>
-              
+              <li>
+                <strong className="font-semibold text-zen-ink dark:text-white">Cookies de análisis (Google Analytics 4 / Google Tag Manager)</strong>:
+                nos ayudan a entender cómo se usa el sitio (páginas visitadas, eventos, rendimiento). Solo se activan si aceptas.
+              </li>
+              <li>
+                <strong className="font-semibold text-zen-ink dark:text-white">Cookies de publicidad (Google AdSense)</strong>:
+                si aceptas, Google puede colocar cookies de terceros para mostrarte anuncios personalizados según tu actividad de navegación.
+                Si rechazas o no respondes, no cargamos el script de AdSense y en su lugar mostramos únicamente anuncios propios de
+                CertZen (sin cookies ni seguimiento) o, cuando esté configurado, anuncios contextuales de EthicalAds, una red que no
+                usa cookies de seguimiento.
+              </li>
+              <li>
+                <strong className="font-semibold text-zen-ink dark:text-white">Meta (Facebook) Pixel</strong>: solo se inicializa
+                si aceptas las cookies de publicidad; se usa para medir la efectividad de campañas en redes sociales.
+              </li>
             </ul>
+            <p className="mt-2">
+              Puedes cambiar tu decisión en cualquier momento borrando las cookies de tu navegador para este sitio, lo que te
+              volverá a mostrar el banner de consentimiento en tu próxima visita. Más información sobre cómo Google usa estos
+              datos en{' '}
+              <a
+                href="https://policies.google.com/technologies/partner-sites"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-zen underline hover:text-zen-violet dark:text-indigo-300 dark:hover:text-indigo-200"
+              >
+                policies.google.com/technologies/partner-sites
+              </a>.
+            </p>
           </Section>
 
           <Section id="rights" title="6. Tus derechos">
