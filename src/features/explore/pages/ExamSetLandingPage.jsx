@@ -111,9 +111,10 @@ function ModeCard({
   );
 }
 
-function QuestionPreview({ q, index, locked }) {
+function QuestionPreview({ q, index }) {
   const { t } = useLingui();
   const options = q.options ?? {};
+  const correctKeys = new Set(q.answer ?? []);
   return (
     <GlassCard>
       <div className="space-y-3 p-5">
@@ -127,17 +128,30 @@ function QuestionPreview({ q, index, locked }) {
         </div>
         <h3 className="text-sm font-medium leading-relaxed">{q.question}</h3>
         <ul className="space-y-1.5">
-          {Object.entries(options).map(([key, val]) => (
-            <li key={key} className="flex gap-2 text-xs text-zen-ink/70 dark:text-white/60">
-              <span className="w-5 shrink-0 font-semibold text-zen-ink/50 dark:text-white/40">{key}.</span>
-              <span>{val}</span>
-            </li>
-          ))}
+          {Object.entries(options).map(([key, val]) => {
+            const isCorrect = correctKeys.has(key);
+            return (
+              <li
+                key={key}
+                className={`flex items-start gap-2 rounded-lg px-2 py-1 text-xs ${
+                  isCorrect
+                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+                    : 'text-zen-ink/70 dark:text-white/60'
+                }`}
+              >
+                <span className="w-5 shrink-0 font-semibold">{key}.</span>
+                <span className="flex-1">{val}</span>
+                {isCorrect && <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" />}
+              </li>
+            );
+          })}
         </ul>
-        {locked && (
-          <div className="flex items-center gap-2 border-t border-glass-light-border pt-2 text-xs text-zen-ink/50 dark:border-glass-dark-border dark:text-white/40">
-            <Lock size={12} />
-            <Trans>Regístrate para ver la respuesta y explicación.</Trans>
+        {q.explanation && (
+          <div className="border-t border-glass-light-border pt-2 dark:border-glass-dark-border">
+            <p className="mb-1 text-xs font-semibold text-zen-ink/60 dark:text-white/50">
+              <Trans>Explicación</Trans>
+            </p>
+            <p className="text-xs leading-relaxed text-zen-ink/70 dark:text-white/60">{q.explanation}</p>
           </div>
         )}
       </div>
@@ -584,11 +598,13 @@ export function ExamSetLandingPage() {
           >
             <div>
               <h2 className="text-xl font-bold"><Trans>Vista previa</Trans></h2>
-              <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60">{t`Primeras ${preview.length} preguntas del set.`}</p>
+              <p className="mt-1 text-sm text-zen-ink/70 dark:text-white/60">
+                {t`Primeras ${preview.length} preguntas del set, con respuesta y explicación incluidas.`}
+              </p>
             </div>
             <div className="grid grid-cols-1 gap-3">
               {preview.map((q, i) => (
-                <QuestionPreview key={q.id} q={q} index={i} locked={!user} />
+                <QuestionPreview key={q.id} q={q} index={i} />
               ))}
             </div>
           </motion.section>
