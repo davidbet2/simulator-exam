@@ -114,6 +114,12 @@ export function PrivacyPage() {
                 <strong className="font-semibold text-zen-ink dark:text-white">Meta (Facebook) Pixel</strong>: solo se inicializa
                 si aceptas las cookies de publicidad; se usa para medir la efectividad de campañas en redes sociales.
               </li>
+              <li>
+                <strong className="font-semibold text-zen-ink dark:text-white">Cookies de análisis (Microsoft Clarity)</strong>:
+                solo se activa si aceptas las cookies de análisis; genera mapas de calor de clicks/scroll y grabaciones de sesión
+                para entender cómo interactúas con el sitio. El contenido de preguntas, respuestas y resultados de tus exámenes
+                se enmascara automáticamente en las grabaciones y nunca es visible para nosotros a través de esta herramienta.
+              </li>
             </ul>
             <p className="mt-2">
               Puedes cambiar tu decisión en cualquier momento borrando las cookies de tu navegador para este sitio, lo que te
