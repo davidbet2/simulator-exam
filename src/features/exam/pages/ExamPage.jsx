@@ -377,7 +377,9 @@ export function ExamPage() {
 
   return (
     <PageBackground>
-    <div className="h-screen flex flex-col p-2 sm:p-4 lg:p-6">
+    {/* data-clarity-mask hides question/answer text from Clarity session recordings
+        while still tracking clicks/scroll for the heatmap — see spec 13. */}
+    <div className="h-screen flex flex-col p-2 sm:p-4 lg:p-6" data-clarity-mask="true">
       <SEOHead title={t`Examen`} description={t`Sesión de práctica de examen de certificación.`} path="/exam" noindex />
       <div className="w-full max-w-7xl mx-auto flex-1 min-h-0 flex flex-col overflow-hidden rounded-2xl border border-glass-light-border bg-glass-light-2 shadow-zen-glass backdrop-blur-md dark:border-glass-dark-border dark:bg-glass-dark-2 dark:shadow-none">
 

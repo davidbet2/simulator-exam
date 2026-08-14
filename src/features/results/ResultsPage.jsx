@@ -173,6 +173,9 @@ export function ResultsPage() {
 
   return (
     <PageBackground>
+    {/* data-clarity-mask hides question/answer/score text from Clarity session
+        recordings while still tracking clicks/scroll for the heatmap — see spec 13. */}
+    <div data-clarity-mask="true">
       <SEOHead title={t`Resultados`} description={t`Resultados de tu examen de práctica.`} path="/results" noindex />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
@@ -331,6 +334,7 @@ export function ResultsPage() {
           </GlassCard>
         </motion.div>
       </div>
+    </div>
     </PageBackground>
   );
 }

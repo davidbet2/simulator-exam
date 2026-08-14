@@ -156,6 +156,9 @@ export function ReviewPage() {
 
   return (
     <PageBackground>
+    {/* data-clarity-mask hides question/answer/explanation text from Clarity session
+        recordings while still tracking clicks/scroll for the heatmap — see spec 13. */}
+    <div data-clarity-mask="true">
       <SEOHead title={t`Revisión`} description={t`Revisa tus respuestas pregunta por pregunta.`} path="/results/review" noindex />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
@@ -267,6 +270,7 @@ export function ReviewPage() {
           </div>
         )}
       </div>
+    </div>
     </PageBackground>
   );
 }
