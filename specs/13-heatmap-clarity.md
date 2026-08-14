@@ -71,6 +71,14 @@ No aplica. Esta spec no introduce ni modifica estructuras de datos propias (Fire
 
 ---
 
+## Actualización post-deploy (2026-08-14, mismo día)
+
+Tras el deploy a producción, se verificó en `certzen.app` con sesión real (consentimiento ya `granted`) que `www.clarity.ms/tag/y2biy4wll9` cargaba, pero **no llegaban datos al dashboard de Clarity**. Causa raíz encontrada: el `Content-Security-Policy` en `firebase.json` no incluía ningún dominio `clarity.ms`, así que el navegador bloqueaba silenciosamente la carga de `scripts.clarity.ms` (la librería real de tracking) y los beacons de datos a `e.clarity.ms/collect` — solo el primer script "tag" llegaba a network por no depender de esos subdominios.
+
+**Fix aplicado:** se agregó `https://*.clarity.ms` a `script-src`, `img-src` y `connect-src` en `firebase.json` (siguiendo la guía oficial de Microsoft Clarity, que usa múltiples subdominios de datos). Se desplegó solo el cambio de headers de Hosting (`firebase deploy --only hosting`, sin rebuild) y se confirmó que quedó fuera de este spec original — se documenta aquí porque es parte necesaria para que el spec funcione end-to-end, no un tema separado.
+
+Este hallazgo también aplica al tag de Clarity que ya existía en GTM (documentado arriba): sin este fix de CSP, tampoco esa carga habría podido enviar datos.
+
 ## Riesgos identificados
 
 - **El snippet de Clarity podría no exponer una API pública de "unload" para desactivarlo tras cargar** — si el usuario retira el consentimiento después de haberlo otorgado (revocación), el script ya cargado seguiría corriendo hasta el siguiente refresh de página. Mitigación: documentar como limitación conocida, consistente con cómo se maneja hoy AdSense/Meta Pixel (tampoco tienen unload dinámico en este proyecto).
