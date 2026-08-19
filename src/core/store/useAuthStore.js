@@ -6,6 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
   sendPasswordResetEmail,
+  sendEmailVerification,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { getFunctions, httpsCallable } from 'firebase/functions';
@@ -14,6 +15,16 @@ import { auth, db, rtdb, googleProvider } from '../firebase/firebase';
 import { analytics } from '../analytics/events';
 
 const SESSION_ID_KEY = 'certzen-session-id';
+
+// After the user clicks the verification/reset link, Firebase redirects them
+// here — the app's custom action handler (see AuthActionPage.jsx), which
+// applies the oobCode itself instead of Firebase's default firebaseapp.com
+// page. window.location.origin keeps this correct across localhost, preview
+// deploys, and production without hardcoding a domain.
+const ACTION_CODE_SETTINGS = {
+  url: `${window.location.origin}/auth/action`,
+  handleCodeInApp: false,
+};
 
 // True while THIS tab's own rotateSession() call is in flight. The RTDB
 // single-session listener (attached independently by onAuthStateChanged)
@@ -224,8 +235,7 @@ export const useAuthStore = create((set) => ({
         createdAt:      serverTimestamp(),
       });
       await rotateSession(result.user);
-      // Email verification intentionally skipped — app uses Google Sign-In;
-      // Firebase Auth identity is guaranteed by Google OAuth.
+      await sendEmailVerification(result.user, ACTION_CODE_SETTINGS);
       analytics.signUp({ method: 'email' });
       // onAuthStateChanged handles the state update
     } catch (err) {
@@ -235,13 +245,13 @@ export const useAuthStore = create((set) => ({
   },
 
   resendVerification: async () => {
-    // No-op: email verification is not used in this app.
+    if (auth.currentUser) {
+      await sendEmailVerification(auth.currentUser, ACTION_CODE_SETTINGS);
+    }
   },
 
   resetPassword: async (email) => {
-    // NOTE: ACTION_CODE_SETTINGS omitted until certzen.app is whitelisted
-    // in Firebase Console → Authentication → Authorized Domains.
-    await sendPasswordResetEmail(auth, email);
+    await sendPasswordResetEmail(auth, email, ACTION_CODE_SETTINGS);
   },
 
   logout: async () => {
