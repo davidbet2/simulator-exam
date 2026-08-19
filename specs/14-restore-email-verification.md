@@ -101,6 +101,23 @@ Esto no rompe el envío existente vía Cloudflare Email Routing (se conserva su 
 
 ---
 
+## Addendum 2 — migración a Resend para verificación/reset (2026-08-19)
+
+El editor de plantillas de Firebase Console quedó bloqueado del lado de Firebase ("no se pueden actualizar las plantillas de correo electrónico de este proyecto"), incluso para cambios triviales — sin ETA de resolución. Esto hacía imposible aplicar una plantilla de marca (diseño provisto por el usuario, estilo oscuro consistente con `sendWelcomeEmail`) a los correos de verificación/reset mientras se dependiera del sistema de envío propio de Firebase Auth.
+
+**Cambio de arquitectura:** en vez de `sendEmailVerification`/`sendPasswordResetEmail` del SDK cliente de Firebase Auth, se añadieron dos Cloud Functions callables en `functions/index.js`:
+
+- `sendVerificationEmail` — requiere `request.auth`, genera el link real de Firebase (`getAuth().generateEmailVerificationLink`) y lo envía por Resend con HTML de marca.
+- `sendPasswordResetEmailCustom` — recibe `{ email }`, genera el link (`generatePasswordResetLink`), protege contra enumeración de cuentas (silencia `auth/user-not-found`), y envía por Resend.
+
+Ambas reutilizan `RESEND_API_KEY` (ya configurado) y el mismo `ACTION_URL` (`https://certzen.app/auth/action`), así que `AuthActionPage.jsx` sigue procesando el `oobCode` exactamente igual — el único cambio es el transporte del correo, no el mecanismo de verificación de Firebase Auth en sí.
+
+`useAuthStore.js` (`register()`, `resendVerification()`, `resetPassword()`) ahora llama a estas Cloud Functions vía `httpsCallable` en vez del SDK cliente de `firebase/auth`. Se eliminaron `ACTION_CODE_SETTINGS`, `sendEmailVerification` y `sendPasswordResetEmail` del cliente por quedar sin uso.
+
+**Nota de deploy:** el CLI de Firebase falló con `Cannot determine backend specification. Timeout after 10000` en Node 24 (el sistema tiene Node 24, `functions/package.json` declara `engines.node: "22"`). Se resolvió con la variable de entorno `FUNCTIONS_DISCOVERY_TIMEOUT=60` en el comando de deploy — no requirió downgrade de Node ni cambios de configuración.
+
+---
+
 ## What is **not** in this spec
 
 - Cambios a `VerifyEmailPage.jsx`, `AuthActionPage.jsx` o el badge de `ProfilePage.jsx`.

@@ -278,6 +278,218 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;')
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// sendVerificationEmail / sendPasswordResetEmailCustom — branded replacements
+// for Firebase Auth's built-in verification/reset emails.
+//
+// Firebase Auth's own email delivery only supports customization through the
+// Console template editor (Authentication → Templates), which this project's
+// account currently cannot save changes to ("no se pueden actualizar las
+// plantillas de correo electrónico de este proyecto" — a Firebase-side
+// restriction, not something fixable from here). Rather than wait on that,
+// these callables generate the same real Firebase oobCode link with the
+// Admin SDK (generateEmailVerificationLink / generatePasswordResetLink) and
+// deliver it ourselves via Resend — same transport as sendWelcomeEmail above,
+// same %LINK%-style branded HTML. The generated link still lands on
+// /auth/action?mode=verifyEmail|resetPassword&oobCode=..., so
+// AuthActionPage.jsx keeps handling it exactly as before.
+//
+// Secrets: RESEND_API_KEY (already configured, re-used from sendWelcomeEmail)
+// ─────────────────────────────────────────────────────────────────────────────
+const ACTION_URL = 'https://certzen.app/auth/action'
+
+function emailShell({ badgeIcon, title, subtitle, bodyHtml, ctaHref, ctaLabel, extraHtml, footerNote }) {
+  return `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>${title}</title>
+    </head>
+    <body style="margin:0;padding:0;background:#0d0d20;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#0d0d20;padding:40px 20px;">
+        <tr>
+          <td align="center">
+            <table width="560" cellpadding="0" cellspacing="0" bgcolor="#15142f" style="background-image:linear-gradient(160deg,#0F0F2A 0%,#1A0E3C 55%,#0D1F3C 100%);background-color:#15142f;border-radius:20px;border:1px solid #2a2450;overflow:hidden;">
+              <tr>
+                <td style="padding:44px 40px 0;">
+                  <table cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="width:34px;height:34px;background:#6366f1;background-image:linear-gradient(0deg,#6366f1 0%,#8b5cf6 100%);border-radius:10px;text-align:center;vertical-align:middle;font-size:16px;">🛡️</td>
+                      <td style="padding-left:10px;color:#ffffff;font-size:19px;font-weight:700;">CertZen</td>
+                    </tr>
+                  </table>
+
+                  <div style="margin:30px 0 0;width:64px;height:64px;background:#6366f1;background-image:linear-gradient(0deg,#6366f1 0%,#8b5cf6 100%);border-radius:16px;text-align:center;line-height:64px;font-size:28px;">${badgeIcon}</div>
+
+                  <h1 style="margin:22px 0 10px;font-size:26px;line-height:1.25;font-weight:800;color:#ffffff;letter-spacing:-0.3px;">${title}</h1>
+                  <p style="margin:0 0 26px;font-size:15px;line-height:1.55;color:rgba(255,255,255,0.6);">${subtitle}</p>
+
+                  ${bodyHtml}
+
+                  <table cellpadding="0" cellspacing="0" width="100%" style="margin:26px 0 0;">
+                    <tr>
+                      <td align="center" style="background:#6366f1;background-image:linear-gradient(0deg,#6366f1 0%,#8b5cf6 100%);border-radius:14px;">
+                        <a href="${ctaHref}" style="display:block;padding:16px 24px;color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;text-align:center;">${ctaLabel}</a>
+                      </td>
+                    </tr>
+                  </table>
+
+                  ${extraHtml || ''}
+
+                  <p style="margin:22px 0 0;font-size:12px;line-height:1.5;color:rgba(255,255,255,0.35);word-break:break-all;">
+                    Si el botón no funciona, copia y pega este enlace: <a href="${ctaHref}" style="color:#8b8bf5;">${ctaHref}</a>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:28px 40px 40px;">
+                  <div style="height:1px;background:rgba(255,255,255,0.08);margin-bottom:20px;"></div>
+                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.4);">CertZen — Simulador de certificaciones</p>
+                  <p style="margin:0;font-size:12px;line-height:1.5;color:rgba(255,255,255,0.4);">${footerNote}</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+  `
+}
+
+function verificationEmailHtml({ name, link }) {
+  return emailShell({
+    badgeIcon: '📩',
+    title: 'Verifica tu correo electrónico',
+    subtitle: 'Confirma que esta dirección te pertenece para asegurar tu cuenta en CertZen.',
+    bodyHtml: `
+      <p style="margin:0 0 4px;font-size:15px;line-height:1.6;color:rgba(255,255,255,0.6);">Hola, ${escapeHtml(name)}:</p>
+      <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(255,255,255,0.6);">Recibimos tu registro en CertZen. Para activar tu cuenta y acceder a los simulacros, confirma tu correo electrónico con el botón de abajo.</p>
+    `,
+    ctaHref: link,
+    ctaLabel: 'Verificar mi correo',
+    extraHtml: `
+      <p style="margin:20px 0 0;font-size:13px;line-height:1.5;color:rgba(255,255,255,0.4);">Si no creaste una cuenta en CertZen, puedes ignorar este correo sin problema.</p>
+    `,
+    footerNote: 'Recibiste este correo porque te registraste en certzen.app. Si no fuiste tú, ignóralo.',
+  })
+}
+
+function passwordResetEmailHtml({ link }) {
+  return emailShell({
+    badgeIcon: '🔑',
+    title: 'Restablece tu contraseña',
+    subtitle: 'Recibimos una solicitud para cambiar la contraseña de tu cuenta en CertZen.',
+    bodyHtml: `
+      <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(255,255,255,0.6);">Haz clic en el botón siguiente para crear una contraseña nueva. Por seguridad, este enlace es válido solo un tiempo limitado y puede usarse una sola vez.</p>
+    `,
+    ctaHref: link,
+    ctaLabel: 'Restablecer contraseña',
+    extraHtml: `
+      <table cellpadding="0" cellspacing="0" width="100%" style="margin:16px 0 0;background:#241521;border:1px solid rgba(251,113,133,0.25);border-radius:14px;">
+        <tr>
+          <td style="padding:14px 16px;font-size:13px;line-height:1.5;color:rgba(255,255,255,0.6);">
+            ⚠️ Si no solicitaste este cambio, ignora este correo: tu contraseña actual seguirá sin cambios.
+          </td>
+        </tr>
+      </table>
+    `,
+    footerNote: 'Recibiste este correo porque se solicitó un restablecimiento para tu cuenta en certzen.app.',
+  })
+}
+
+exports.sendVerificationEmail = onCall(
+  { secrets: [RESEND_SECRET] },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Login required')
+    }
+    const user = await getAuth().getUser(request.auth.uid)
+    if (!user.email) {
+      throw new HttpsError('failed-precondition', 'La cuenta no tiene correo asociado.')
+    }
+    if (user.emailVerified) {
+      return { alreadyVerified: true }
+    }
+
+    const link = await getAuth().generateEmailVerificationLink(user.email, {
+      url: ACTION_URL,
+      handleCodeInApp: false,
+    })
+
+    const apiKey = RESEND_SECRET.value()
+    if (!apiKey) {
+      console.warn('sendVerificationEmail: RESEND_API_KEY not set — skipping')
+      throw new HttpsError('internal', 'Servicio de correo no disponible.')
+    }
+    const { Resend } = require('resend')
+    const resend = new Resend(apiKey)
+    const name = user.displayName || user.email.split('@')[0]
+
+    const { error } = await resend.emails.send({
+      from: 'CertZen <hola@certzen.app>',
+      to: user.email,
+      subject: 'Verifica tu correo en CertZen 🔐',
+      html: verificationEmailHtml({ name, link }),
+    })
+
+    if (error) {
+      console.error('sendVerificationEmail: Resend error', error)
+      throw new HttpsError('internal', 'No se pudo enviar el correo de verificación.')
+    }
+    console.log(`sendVerificationEmail: sent to ${user.email}`)
+    return { sent: true }
+  }
+)
+
+exports.sendPasswordResetEmailCustom = onCall(
+  { secrets: [RESEND_SECRET] },
+  async (request) => {
+    const email = request.data?.email
+    if (!email || typeof email !== 'string') {
+      throw new HttpsError('invalid-argument', 'Email requerido.')
+    }
+
+    let link
+    try {
+      link = await getAuth().generatePasswordResetLink(email, {
+        url: ACTION_URL,
+        handleCodeInApp: false,
+      })
+    } catch (err) {
+      // Don't reveal whether the email exists (OWASP A07 — account enumeration).
+      if (err.code === 'auth/user-not-found') {
+        return { sent: true }
+      }
+      throw err
+    }
+
+    const apiKey = RESEND_SECRET.value()
+    if (!apiKey) {
+      console.warn('sendPasswordResetEmailCustom: RESEND_API_KEY not set — skipping')
+      throw new HttpsError('internal', 'Servicio de correo no disponible.')
+    }
+    const { Resend } = require('resend')
+    const resend = new Resend(apiKey)
+
+    const { error } = await resend.emails.send({
+      from: 'CertZen <hola@certzen.app>',
+      to: email,
+      subject: 'Restablece tu contraseña en CertZen 🔑',
+      html: passwordResetEmailHtml({ link }),
+    })
+
+    if (error) {
+      console.error('sendPasswordResetEmailCustom: Resend error', error)
+      throw new HttpsError('internal', 'No se pudo enviar el correo.')
+    }
+    console.log(`sendPasswordResetEmailCustom: sent to ${email}`)
+    return { sent: true }
+  }
+)
+
 exports.sendContactEmail = onCall(
   {
     cors: true,

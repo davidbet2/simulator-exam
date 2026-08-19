@@ -5,8 +5,6 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
-  sendPasswordResetEmail,
-  sendEmailVerification,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { getFunctions, httpsCallable } from 'firebase/functions';
@@ -16,15 +14,12 @@ import { analytics } from '../analytics/events';
 
 const SESSION_ID_KEY = 'certzen-session-id';
 
-// After the user clicks the verification/reset link, Firebase redirects them
-// here — the app's custom action handler (see AuthActionPage.jsx), which
-// applies the oobCode itself instead of Firebase's default firebaseapp.com
-// page. window.location.origin keeps this correct across localhost, preview
-// deploys, and production without hardcoding a domain.
-const ACTION_CODE_SETTINGS = {
-  url: `${window.location.origin}/auth/action`,
-  handleCodeInApp: false,
-};
+// Verification/reset emails are sent by the sendVerificationEmail /
+// sendPasswordResetEmailCustom Cloud Functions (via Resend, branded HTML) —
+// not by Firebase Auth's own template system, whose Console editor this
+// project currently cannot save changes to. Both functions generate the
+// same real oobCode link and route it through /auth/action, so
+// AuthActionPage.jsx keeps handling verification/reset exactly as before.
 
 // True while THIS tab's own rotateSession() call is in flight. The RTDB
 // single-session listener (attached independently by onAuthStateChanged)
@@ -235,7 +230,7 @@ export const useAuthStore = create((set) => ({
         createdAt:      serverTimestamp(),
       });
       await rotateSession(result.user);
-      await sendEmailVerification(result.user, ACTION_CODE_SETTINGS);
+      await httpsCallable(getFunctions(), 'sendVerificationEmail')();
       analytics.signUp({ method: 'email' });
       // onAuthStateChanged handles the state update
     } catch (err) {
@@ -246,12 +241,12 @@ export const useAuthStore = create((set) => ({
 
   resendVerification: async () => {
     if (auth.currentUser) {
-      await sendEmailVerification(auth.currentUser, ACTION_CODE_SETTINGS);
+      await httpsCallable(getFunctions(), 'sendVerificationEmail')();
     }
   },
 
   resetPassword: async (email) => {
-    await sendPasswordResetEmail(auth, email, ACTION_CODE_SETTINGS);
+    await httpsCallable(getFunctions(), 'sendPasswordResetEmailCustom')({ email });
   },
 
   logout: async () => {

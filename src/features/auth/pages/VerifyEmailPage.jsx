@@ -29,12 +29,8 @@ export function VerifyEmailPage() {
       await resendVerification();
       setSent(true);
       setTimeout(() => setSent(false), 5000);
-    } catch (err) {
-      setResendError(
-        err?.code === 'auth/too-many-requests'
-          ? 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.'
-          : 'No se pudo reenviar el correo. Inténtalo de nuevo.'
-      );
+    } catch {
+      setResendError('No se pudo reenviar el correo. Inténtalo de nuevo.');
     } finally {
       setSending(false);
     }
