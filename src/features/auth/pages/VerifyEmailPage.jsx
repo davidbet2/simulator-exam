@@ -13,6 +13,7 @@ export function VerifyEmailPage() {
   const [sending, setSending] = useState(false);
   const [checking, setChecking] = useState(false);
   const [notYet, setNotYet] = useState(false);
+  const [resendError, setResendError] = useState('');
 
   // If user is already verified or not logged in, redirect
   if (!user) return null;
@@ -23,10 +24,20 @@ export function VerifyEmailPage() {
 
   async function handleResend() {
     setSending(true);
-    await resendVerification();
-    setSending(false);
-    setSent(true);
-    setTimeout(() => setSent(false), 5000);
+    setResendError('');
+    try {
+      await resendVerification();
+      setSent(true);
+      setTimeout(() => setSent(false), 5000);
+    } catch (err) {
+      setResendError(
+        err?.code === 'auth/too-many-requests'
+          ? 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.'
+          : 'No se pudo reenviar el correo. Inténtalo de nuevo.'
+      );
+    } finally {
+      setSending(false);
+    }
   }
 
   async function handleCheckVerified() {
@@ -76,6 +87,12 @@ export function VerifyEmailPage() {
         {notYet && (
           <div className="rounded-zen border border-zen-warning/30 bg-zen-warning/10 px-4 py-2 text-sm text-amber-600 dark:text-zen-warning">
             Aún no hemos recibido la confirmación. Revisa tu bandeja de entrada o spam.
+          </div>
+        )}
+
+        {resendError && (
+          <div className="rounded-zen border border-zen-danger/30 bg-zen-danger/10 px-4 py-2 text-sm text-zen-danger">
+            {resendError}
           </div>
         )}
 
